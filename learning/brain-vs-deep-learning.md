@@ -99,6 +99,7 @@ or continual learning demands it. See [[build-a-brain-like-learner]].
 - [[learning-and-plasticity]] - the biological rules.
 - [[brain-inspired-learning-algorithms]] - runnable versions.
 - [[predictive-processing]] - the predictive coding account.
+- [[efficient-brain-like-learning]] - methods for the energy and sample-efficiency gaps.
 - [[memory-systems]] - CLS and catastrophic forgetting.
 - [[language-and-llms]] - LLM activations compared with brain recordings, and the data gap.
 - [[key-papers]] - one-line findings of every paper cited here.

@@ -76,6 +76,7 @@ active at any moment. That sparsity is a large part of why it runs on ~20 W.
 - [[neurons-and-synapses]] - where spikes come from.
 - [[predictive-processing]] - a theory of what cortical computation is *for*.
 - [[spiking-neural-networks]] - simulate these codes.
+- [[efficient-brain-like-learning]] - put sparse, event-driven updates into a learner, with measurements.
 - [[brain-rhythms-and-oscillations]] - spike timing against theta and gamma rhythms.
 - [[dendritic-computation]] - single neurons compute more than a weighted sum.
 - [Brain World](../game/world/) - a 3D creature whose tone-hearing neurons use gain modulation: sound scales their visual drive.
