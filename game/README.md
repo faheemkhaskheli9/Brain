@@ -108,7 +108,7 @@ listen, read and write from reward alone. Save and Load keep a trained brain as 
 
 ```
 python -m http.server 8000        # from the repo root, then open http://localhost:8000/game/world/
-node game/world/test_brain.mjs    # headless check, about 20 s
+node game/world/test_brain.mjs    # headless check, about 90 s
 ```
 
 See [world/README.md](world/README.md) for the curriculum, the brain and its limits.
