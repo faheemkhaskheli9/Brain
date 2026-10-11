@@ -62,24 +62,26 @@ class STDP:
 T_BELL, T_JUICE, TD_ALPHA = 2, 8, 0.5  # time steps; game gain
 
 
-def td_trial(V, bell, juice, alpha=TD_ALPHA, gamma=1.0):
+def td_trial(V, bell, juice, alpha=TD_ALPHA, gamma=1.0, t_juice=T_JUICE):
     """Run one trial and update V in place.
 
     V[k] is the value k steps after the bell. Before the bell (or with no bell) the
-    state predicts nothing and has value 0. The trial ends at T_JUICE.
+    state predicts nothing and has value 0, and so does every state from T_JUICE on.
+    The trial ends at T_JUICE, or later if t_juice (at most T_JUICE + 2) delays the juice.
     Returns the TD error per time step: the simulated dopamine signal.
     """
     def state(t):
         return t - T_BELL if bell and t >= T_BELL else None
 
+    def value(s):
+        return 0.0 if s is None or s >= len(V) else V[s]
+
     delta = np.zeros(T_JUICE + 3)
-    for t in range(1, T_JUICE + 1):
+    for t in range(1, max(T_JUICE, t_juice) + 1):
         prev, now = state(t - 1), state(t)
-        r = 1.0 if juice and t == T_JUICE else 0.0
-        v_now = 0.0 if now is None or t == T_JUICE else V[now]
-        v_prev = 0.0 if prev is None else V[prev]
-        delta[t] = r + gamma * v_now - v_prev
-        if prev is not None:
+        r = 1.0 if juice and t == t_juice else 0.0
+        delta[t] = r + gamma * value(now) - value(prev)
+        if prev is not None and prev < len(V):
             V[prev] += alpha * delta[t]
     return delta
 
