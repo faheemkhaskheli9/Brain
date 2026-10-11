@@ -120,6 +120,7 @@ Benchmarks that test brain-like *learning*, not just accuracy:
 - [[start-here]] - map of the whole KB.
 - [[brain-vs-deep-learning]] - why these stages target what deep learning lacks.
 - [[memory-systems]] - the CLS design behind stage 3.
+- [[spatial-navigation]] - cognitive maps and the successor representation, a structured memory for an agent.
 - [[whole-brain-emulation-projects]] - the other route: copying a real brain.
 
 ## References

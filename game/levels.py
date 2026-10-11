@@ -1,4 +1,4 @@
-"""The ten Brain Lab levels. Each one drives a model from sim.py on a tkinter canvas."""
+"""The eleven Brain Lab levels. Each one drives a model from sim.py on a tkinter canvas."""
 import tkinter as tk
 
 import numpy as np
@@ -967,4 +967,129 @@ class Zoo(Level):
                           font=SMALL, fill=MUTED)
 
 
-LEVELS = [Spark, Wire, Lesion, Dopamine, Remember, Sleep, Predict, TinyBrain, Pattern, Zoo]
+class Home(Level):
+    title = "Find your way home"
+    tag, tag_note = "HYPOTHESIS", ("Place, grid and head-direction cells are measured. That grid cells do the "
+                                   "brain's path integration is the leading theory, not settled.")
+    goal = "Find the hidden food, then head home in one straight line and land on the nest."
+    intro = ("Your brain keeps a map. Place cells in the hippocampus fire at one spot each; grid cells next "
+             "door fire on a hexagonal lattice that tiles the whole room, like graph paper. By adding up its "
+             "own steps (path integration) an animal knows where it is even in the dark, and can run "
+             "straight home along a path it never took.\n\nArrow keys move the creature (pink). The ring "
+             "is where it thinks it is. Each step is sensed with a little noise. The circles around the "
+             "three posts are landmark place fields.")
+    debrief = ("Adding up noisy steps drifts: the error grows the farther you walk, like the chart below. "
+               "A landmark you recognise snaps the estimate back, which is why place fields anchor to visible "
+               "cues. The straight run home was a shortcut you never walked: the home vector came from the "
+               "map, not from memory of the route. Desert ants do this with no landmarks over tens of metres "
+               "(Müller and Wehner 1988), and an AI agent trained to path-integrate grew grid-like units "
+               "on its own (Banino et al. 2018).")
+    kb = "function/spatial-navigation.md"
+    hint = "After you find the food, walk through a post's circle so your estimate resets, then press H at once."
+    STEP, FOUND_R, HOME_R, FAR = 0.03, 0.06, 0.08, 0.4   # FAR: H only works this far from the nest
+    AX, AY, SIDE = 30, 20, 400
+    FOOD_SPOTS = ((0.9, 0.55), (0.55, 0.92), (0.92, 0.92), (0.6, 0.55))
+
+    @staticmethod
+    def sweep():
+        xs = [10, 25, 50, 100, 150, 200]
+        return ("Miss distance vs steps walked, no landmarks", "steps walked", "median miss (arena widths)",
+                xs, [float(np.median([sim.homing_error(n, seed) for seed in range(40)])) for n in xs])
+
+    def build(self):
+        self.nav = sim.Navigator()
+        self.food = np.array(self.FOOD_SPOTS[np.random.default_rng().integers(len(self.FOOD_SPOTS))])
+        self.found, self.fixed = False, False
+        self.trail = [tuple(sim.NEST)]
+        self.landmarks = self.check("Landmark correction (place cells)", True)
+        self.button("Head home  (H)", self.go_home)
+        c = self.canvas
+        n = 40   # one grid cell's firing map, drawn as the arena's background
+        cell = self.SIDE / n
+        for i in range(n):
+            for j in range(n):
+                rate = sim.grid_rate(((i + 0.5) / n, 1 - (j + 0.5) / n))
+                c.create_rectangle(self.AX + i * cell, self.AY + j * cell, self.AX + (i + 1) * cell,
+                                   self.AY + (j + 1) * cell, fill=mix(GLASS, LILAC, rate), outline="")
+        c.create_rectangle(self.AX, self.AY, self.AX + self.SIDE, self.AY + self.SIDE, outline=MUTED, width=2)
+        r = sim.PLACE_R * self.SIDE
+        for lx, ly in sim.LANDMARKS:
+            x, y = self.px(lx, ly)
+            c.create_oval(x - r, y - r, x + r, y + r, outline=VIOLET, dash=(4, 3))
+            c.create_rectangle(x - 5, y - 5, x + 5, y + 5, fill=INK, outline="")
+        x, y = self.px(*sim.NEST)
+        r = self.HOME_R * self.SIDE
+        c.create_oval(x - r, y - r, x + r, y + r, fill=mix(GLASS, PINK, 0.25), outline=PINK)
+        c.create_text(x, y, text="nest", font=SMALL, fill=INK)
+        for k, line in enumerate(("pink dot: where it is", "ring: where it thinks it is",
+                                  "squares: landmark posts", "dashed circles: their place fields",
+                                  "shading: one grid cell's firing fields")):
+            c.create_text(450, 40 + k * 22, text=line, anchor="w", font=SMALL, fill=MUTED)
+        self.path = c.create_line(0, 0, 0, 0, fill=PINK, width=2)
+        self.ring = c.create_oval(0, 0, 0, 0, outline=VIOLET, width=3)
+        self.dot = c.create_oval(0, 0, 0, 0, fill=PINK, outline="")
+        self.draw()
+        self.say("Use the arrow keys to search for food.")
+
+    def px(self, x, y):
+        return self.AX + x * self.SIDE, self.AY + (1 - y) * self.SIDE
+
+    def key(self, keysym):
+        d = {"Left": (-1, 0), "Right": (1, 0), "Up": (0, 1), "Down": (0, -1)}.get(keysym)
+        if d:
+            self.move(*d)
+        elif keysym.lower() == "h":
+            self.go_home()
+
+    def move(self, dx, dy):
+        if self.over:
+            return
+        self.nav.landmarks = self.landmarks.get()
+        drift = self.nav.error()
+        reset = self.nav.move(dx * self.STEP, dy * self.STEP)
+        self.fixed |= reset and self.found and drift > 0.05   # a landmark fixed real drift on the way home
+        self.trail.append(tuple(self.nav.true))
+        if not self.found and np.linalg.norm(self.nav.true - self.food) < self.FOUND_R:
+            self.found = True
+            x, y = self.px(*self.food)
+            self.canvas.create_oval(x - 9, y - 9, x + 9, y + 9, fill=INK, outline="")
+        self.draw()
+        msg = "Food found. Now press H to run straight home." if self.found else "Searching for food."
+        msg += (f"\n\nEstimate is off by {self.nav.error():.2f}\nWalked {self.nav.travelled:.1f} arena widths"
+                f"\nGrid cell firing at your estimate  {sim.grid_rate(self.nav.est):.0%}")
+        if reset:
+            msg += "\n\nA landmark's place cells reset your position."
+        self.say(msg)
+
+    def go_home(self):
+        if self.over:
+            return
+        if not self.found:
+            return self.say("Find the food first, then head home.")
+        start, drift = self.nav.true.copy(), self.nav.error()
+        straight = float(np.linalg.norm(start - sim.NEST))
+        if straight < self.FAR:
+            return self.say("You can nearly see the nest from here. Head home from farther out, "
+                            "where only your map knows the way.")
+        miss = self.nav.home()
+        self.canvas.create_line(*self.px(*start), *self.px(*self.nav.true), fill=VIOLET, width=3,
+                                dash=(8, 4), arrow="last")
+        self.draw()
+        msg = f"Missed the nest by {miss:.2f}. Your estimate was off by {drift:.2f} when you set out."
+        if miss >= self.HOME_R:
+            return self.fail(msg)
+        shortcut = self.nav.travelled >= 3 * straight
+        self.win(1 + shortcut + self.fixed,
+                 f"Home. Your route out was {self.nav.travelled:.1f} arena widths; the way back was {straight:.2f}.")
+
+    def draw(self):
+        c = self.canvas
+        c.coords(self.path, *[v for p in self.trail for v in self.px(*p)] * (1 if len(self.trail) > 1 else 2))
+        x, y = self.px(*self.nav.true)
+        c.coords(self.dot, x - 6, y - 6, x + 6, y + 6)
+        x, y = self.px(*self.nav.est)
+        c.coords(self.ring, x - 12, y - 12, x + 12, y + 12)
+        c.tag_raise(self.ring)
+
+
+LEVELS = [Spark, Wire, Lesion, Dopamine, Remember, Sleep, Predict, TinyBrain, Pattern, Zoo, Home]

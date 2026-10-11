@@ -336,3 +336,64 @@ def firing_pattern(spikes, T=ZOO_T):
     if bursts:
         return "irregular"
     return "fast spiking" if len(spikes) / T * 1000 >= 50 else "regular spiking"
+
+
+# --- Grid cells (function/spatial-navigation.md) ---
+def grid_rate(pos, spacing=0.25):
+    """A grid cell's firing (0..1) at pos: three plane waves 60° apart make a hexagonal lattice."""
+    k = 4 * math.pi / (math.sqrt(3) * spacing)
+    pos = np.asarray(pos, float)
+    s = sum(math.cos(k * (pos[0] * math.cos(t) + pos[1] * math.sin(t))) for t in (0, math.pi / 3, 2 * math.pi / 3))
+    return (s + 1.5) / 4.5
+
+
+# --- Path integration with landmark correction (function/spatial-navigation.md) ---
+NEST = (0.1, 0.1)
+LANDMARKS = ((0.75, 0.3), (0.3, 0.75), (0.8, 0.85))
+PLACE_R = 0.08     # game gain: radius of a landmark's place field, in arena units
+NAV_NOISE = 0.35   # game gain: self-motion noise per step, as a fraction of the step length
+
+
+class Navigator:
+    """A forager that knows where it is only by adding up its own steps (path integration).
+
+    The estimate drifts because every step is sensed with noise. With landmarks on, standing in a
+    landmark's place field resets the estimate to the true position.
+    """
+
+    def __init__(self, landmarks=True, seed=None):
+        self.landmarks = landmarks
+        self.true, self.est = np.array(NEST), np.array(NEST)
+        self.rng = np.random.default_rng(seed)
+        self.travelled = 0.0
+
+    def move(self, dx, dy):
+        """Step by (dx, dy), stopped at the arena walls. Returns True if a landmark reset the estimate."""
+        new = np.clip(self.true + (dx, dy), 0, 1)
+        step = new - self.true
+        self.true = new
+        size = float(np.linalg.norm(step))
+        self.travelled += size
+        self.est = self.est + step + self.rng.normal(0, NAV_NOISE * size, 2)
+        if self.landmarks and any(np.linalg.norm(self.true - L) < PLACE_R for L in LANDMARKS):
+            self.est = self.true.copy()
+            return True
+        return False
+
+    def error(self):
+        return float(np.linalg.norm(self.est - self.true))
+
+    def home(self):
+        """Walk the home vector in one straight line, stopped by the walls. Returns the miss distance."""
+        self.true = np.clip(self.true + (np.array(NEST) - self.est), 0, 1)
+        self.est = np.array(NEST)
+        return float(np.linalg.norm(self.true - NEST))
+
+
+def homing_error(steps, seed=0, step=0.03):
+    """Wander for steps with no landmarks, then head home. Returns the miss distance."""
+    nav, rng, heading = Navigator(landmarks=False, seed=seed), np.random.default_rng(seed + 1000), 0.8
+    for _ in range(steps):
+        heading += rng.normal(0, 0.6)
+        nav.move(step * math.cos(heading), step * math.sin(heading))
+    return nav.home()
