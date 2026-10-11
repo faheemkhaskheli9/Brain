@@ -150,6 +150,7 @@ saved.
 - [[brain-vs-deep-learning]] - sample efficiency as an open frontier.
 - [[sleep-and-memory-consolidation]] - replay as the biological basis of method 5.
 - [[build-a-brain-like-learner]] - the architecture these methods would speed up.
+- [[open-questions-register]] - the k-WTA and priors questions above are issues #82 and #83.
 
 ## References
 - Lennie (2003) "The cost of cortical computation", *Curr Biol* 13:493. doi:10.1016/S0960-9822(03)00135-0
