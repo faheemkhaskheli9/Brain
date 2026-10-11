@@ -261,3 +261,19 @@ class Forager:
             self.eaten += 1
             self._respawn()
         return delta if self.dopamine else 0.0
+
+
+# --- Hebbian learning with Oja's rule (learning/brain-inspired-learning-algorithms.md, Oja 1982) ---
+OJA_COV = np.array([[3.0, 1.0], [1.0, 1.0]])  # input covariance, as in the topic file
+
+
+def oja_step(w, x, rate, decay=True):
+    """One input. Hebb alone is y*x; Oja's decay term -y^2*w keeps |w| near 1."""
+    y = w @ x
+    return w + rate * y * (x - y * w if decay else x)
+
+
+def alignment(w, C=OJA_COV):
+    """|cos| between w and the input's first principal component (1.0 = found it)."""
+    pc1 = np.linalg.eigh(C)[1][:, -1]
+    return float(abs(w @ pc1) / max(np.linalg.norm(w), 1e-12))

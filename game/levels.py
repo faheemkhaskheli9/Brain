@@ -1,4 +1,4 @@
-"""The eight Brain Lab levels. Each one drives a model from sim.py on a tkinter canvas."""
+"""The nine Brain Lab levels. Each one drives a model from sim.py on a tkinter canvas."""
 import tkinter as tk
 
 import numpy as np
@@ -227,80 +227,118 @@ class Wire(Level):
                                fill=VIOLET, outline="", tags="live")
 
 
-# Main jobs from anatomy/brain-structure-overview.md
+# Main jobs from anatomy/brain-structure-overview.md; lesion effects and their sources are in
+# its "What lesions show" section. Each entry: position, job, role, deficit, evidence.
 REGIONS = {
     "Prefrontal cortex": ((150, 140), "Hold a phone number in mind while you dial it",
-                          "working memory, goals and cognitive control"),
+                          "working memory, goals and cognitive control",
+                          "It repeats a number back at once, but loses it after a few seconds' delay.",
+                          "Funahashi, Bruce & Goldman-Rakic 1993 (monkeys)"),
     "Neocortex": ((380, 100), "Recognise a friend's face in a crowd",
-                  "perception, language, reasoning and planning"),
+                  "perception, language, reasoning and planning",
+                  "It sees eyes, nose and mouth but cannot tell whose face it is. It knows friends by voice.",
+                  "acquired prosopagnosia, Barton 2008"),
     "Basal ganglia": ((220, 200), "Pick the action that paid off before, until it becomes a habit",
-                      "action selection and habits, learned from dopamine"),
+                      "action selection and habits, learned from dopamine",
+                      "It remembers every practice session, yet the habit never forms.",
+                      "Parkinson's patients, Knowlton, Mangels & Squire 1996"),
     "Thalamus": ((400, 190), "Gate which sensory signals reach the cortex",
-                 "relay and gating of signals into the cortex"),
+                 "relay and gating of signals into the cortex",
+                 "Its eyes and skin still work, but touch from one side of the body no longer gets through.",
+                 "thalamic strokes, Schmahmann 2003"),
     "Amygdala": ((240, 280), "Fear a dog that bit you once",
-                 "emotional salience and fear learning"),
+                 "emotional salience and fear learning",
+                 "It walks straight up to the dog that bit it. It can tell you about the bite but shows no fear.",
+                 "Bechara et al. 1995; patient S.M., Feinstein et al. 2011"),
     "Hippocampus": ((420, 260), "Remember where you parked this morning",
-                    "fast episodic memory and spatial maps"),
+                    "fast episodic memory and spatial maps",
+                    "It forgets where it parked within minutes. Childhood memories and old skills are intact.",
+                    "patient H.M., Scoville & Milner 1957"),
     "Cerebellum": ((540, 320), "Time a hand movement to catch a ball",
-                   "fine motor timing and error correction"),
+                   "fine motor timing and error correction",
+                   "It reaches too late and overshoots. Every movement is clumsy and badly timed.",
+                   "cerebellar ataxia, Holmes 1917"),
     "Brainstem and hypothalamus": ((380, 380), "Keep you breathing and send dopamine to the whole brain",
-                                   "vital functions, drives and the neuromodulators"),
+                                   "vital functions, drives and the neuromodulators",
+                                   "It stops breathing on its own, and the dopamine signal to the brain goes silent.",
+                                   "textbook (Kandel et al. 2021)"),
 }
 
 
-class BrainMap(Level):
-    title = "Brain map"
-    goal = "Match all 8 jobs to their brain region with no more than 3 wrong clicks."
-    intro = ("The brain is not one network. It is a set of specialised parts wired in loops, "
-             "each with its own way of learning.\n\nEach job below is led mainly by one region. "
-             "Click that region. Real behaviour always involves many regions at once; this "
-             "matches each job to the region that leads it.")
-    debrief = ("Cortex learns slowly and predictively. The hippocampus stores episodes in one shot. "
-               "The basal ganglia learn actions from dopamine, and the cerebellum learns timing from "
-               "error signals. A brain-like AI would need several kinds of learner, not one big network.")
+class Lesion(Level):
+    title = "Lesion lab"
+    tag_note = ("The deficits come from classic patient and animal studies. Real lesions are rarely this "
+                "clean, and every behaviour uses many regions at once.")
+    goal = "Lesion each hidden region and name it from what breaks. At most 3 wrong names."
+    intro = ("Much of what we know about brain regions comes from damage. When a stroke, an injury or "
+             "surgery takes out one part, the behaviour that breaks shows what that part was doing.\n\n"
+             "This brain does 8 jobs. Its regions are hidden. Click a region to lesion it and watch which "
+             "job fails, then name the region. Clicking another region heals the first one.")
+    debrief = ("Each lesion took out one kind of learner. Losing the hippocampus stops new episodes but "
+               "spares old memories, because those have moved to the cortex. Losing the basal ganglia "
+               "stops habits forming while the memory of practising survives: two memory systems, broken "
+               "separately. A brain-like AI would need several kinds of learner, not one big network.")
     kb = "anatomy/brain-structure-overview.md"
 
     def build(self):
-        self.order = list(np.random.default_rng().permutation(list(REGIONS)))
-        self.mistakes, self.boxes = 0, {}
+        self.cut, self.named, self.mistakes = None, set(), 0
+        self.boxes, self.labels, self.names = {}, {}, {}
         c = self.canvas
         c.create_oval(50, 50, 620, 350, outline=MUTED, width=2, fill=mix(GLASS, LILAC, 0.4))
         c.create_rectangle(350, 330, 410, 420, outline=MUTED, width=2, fill=mix(GLASS, LILAC, 0.4))
         c.create_text(70, 30, text="front", anchor="w", font=SMALL, fill=MUTED)
         c.create_text(600, 30, text="back", anchor="e", font=SMALL, fill=MUTED)
-        for name, ((x, y), _, _) in REGIONS.items():
-            r = c.create_rectangle(x - 80, y - 17, x + 80, y + 17, fill=GLASS, outline=VIOLET, width=2)
-            t = c.create_text(x, y, text=name, font=SMALL, fill=INK, width=150)
-            for item in (r, t):
-                c.tag_bind(item, "<Button-1>", lambda e, n=name: self.pick(n))
-            self.boxes[name] = r
-        self.job = tk.Label(self.side, font=PROSE, fg=VIOLET, bg=GLASS, wraplength=260, justify="left")
-        self.job.pack(fill="x")
-        self.next_job()
+        for name, ((x, y), *_) in REGIONS.items():
+            self.boxes[name] = c.create_rectangle(x - 80, y - 17, x + 80, y + 17, fill=GLASS, outline=VIOLET, width=2)
+            self.labels[name] = c.create_text(x, y, text="?", font=SMALL, fill=INK, width=150)
+            for item in (self.boxes[name], self.labels[name]):
+                c.tag_bind(item, "<Button-1>", lambda e, n=name: self.lesion(n))
+        self.job = c.create_text(16, 362, anchor="nw", font=UI, fill=INK, width=270)
+        grid = tk.Frame(self.side, bg=GLASS)
+        grid.pack(fill="x")
+        for k, name in enumerate(np.random.default_rng().permutation(list(REGIONS))):
+            self.names[name] = tk.Button(grid, text=name, command=lambda n=name: self.name(n), font=SMALL,
+                                         fg=INK, bg=LILAC, activebackground=VIOLET, activeforeground=GLASS,
+                                         relief="flat", takefocus=0, cursor="hand2", wraplength=125, pady=1)
+            self.names[name].grid(row=k // 2, column=k % 2, sticky="nswe", padx=1, pady=1)
+        grid.columnconfigure((0, 1), weight=1)
+        self.show_jobs()
+        self.say("Click a hidden region on the slide to lesion it.")
 
-    def next_job(self):
-        self.job.config(text=f"Job {9 - len(self.order)} of 8:\n{REGIONS[self.order[0]][1]}")
-
-    def pick(self, name):
-        if self.over or name not in self.order:
-            return
-        want = self.order[0]
-        if name == want:
-            self.canvas.itemconfig(self.boxes[name], fill=LILAC)
-            self.order.pop(0)
-            msg = f"Yes. {name}: {REGIONS[name][2]}."
-            if not self.order:
-                self.job.config(text="")
-                self.win(3 if self.mistakes == 0 else 2 if self.mistakes == 1 else 1, msg)
-                return
-            self.next_job()
+    def show_jobs(self):
+        if self.cut is None:
+            self.canvas.itemconfig(self.job, text="All 8 jobs work.", fill=INK)
         else:
+            self.canvas.itemconfig(self.job, text=f"7 of 8 jobs work. Broken:\n✗ {REGIONS[self.cut][1]}", fill=PINK)
+
+    def lesion(self, name):
+        if self.over:
+            return
+        self.cut = name
+        for n, box in self.boxes.items():
+            self.canvas.itemconfig(box, fill=PINK if n == name else LILAC if n in self.named else GLASS)
+        self.show_jobs()
+        self.say(f"Lesioned.\n\n{REGIONS[name][3]}" + ("" if name in self.named else "\n\nWhich region is it?"))
+
+    def name(self, guess):
+        if self.over:
+            return
+        if self.cut is None or self.cut in self.named:
+            return self.say("Lesion a region you have not named yet, then pick its name.")
+        cut = self.cut
+        if guess != cut:
             self.mistakes += 1
-            self.canvas.itemconfig(self.boxes[name], fill=PINK)
-            self.canvas.after(400, lambda: self.canvas.itemconfig(self.boxes[name], fill=GLASS))
-            msg = f"Not quite. {name} does {REGIONS[name][2]}.\nWrong clicks {self.mistakes} of 3"
-            if self.mistakes > 3:
-                return self.fail(msg)
+            msg = f"Not quite. {guess} does {REGIONS[guess][2]}.\nWrong names {self.mistakes} of 3"
+            return self.fail(msg) if self.mistakes > 3 else self.say(msg)
+        self.named.add(cut)
+        self.canvas.itemconfig(self.labels[cut], text=cut)
+        self.canvas.itemconfig(self.boxes[cut], fill=LILAC)
+        self.names[cut].config(state="disabled", bg=GLASS)
+        self.cut = None
+        self.show_jobs()
+        msg = f"Yes. {cut}: {REGIONS[cut][2]}.\nEvidence: {REGIONS[cut][4]}."
+        if len(self.named) == len(REGIONS):
+            return self.win(3 if self.mistakes == 0 else 2 if self.mistakes == 1 else 1, msg)
         self.say(msg)
 
 
@@ -712,4 +750,101 @@ class TinyBrain(Level):
                 c.create_line(x, base, x, base - max(min(d, 1), -1) * 25, fill=PINK if d > 0 else VIOLET, width=3)
 
 
-LEVELS = [Spark, Wire, BrainMap, Dopamine, Remember, Sleep, Predict, TinyBrain]
+class Pattern(Level):
+    title = "Find the pattern"
+    tag, tag_note = "HYPOTHESIS", ("Hebbian plasticity and synaptic normalisation are observed at real "
+                                   "synapses. Oja's rule is a mathematical model of the pair, not a measured rule.")
+    goal = "Line the neuron's weights up with the main direction of its inputs, and keep their length near 1."
+    intro = ("Hebb's rule: neurons that fire together wire together. A synapse grows each time its input "
+             "and the neuron's output are active at once. Applied alone it has a flaw: strong synapses make "
+             "the output bigger, which makes them grow faster still.\n\nThis neuron has two input synapses. "
+             "Each dot is one input it sees, and the arrow is its weights. Feed it inputs, set the learning "
+             "rate, and decide whether to switch on Oja's forgetting term.")
+    debrief = ("Pure Hebb finds the right direction but its weights run away. Oja's term, −y²w, makes each "
+               "synapse forget in proportion to the output, which holds the weight length at 1. What is left "
+               "is the first principal component: the direction the inputs vary most along. A neuron learned "
+               "PCA from local information only (Oja 1982). Stack many such neurons with a little "
+               "competition and you get sparse coding, the leading model of how V1 cells learn edge detectors.")
+    kb = "learning/brain-inspired-learning-algorithms.md"
+    CX, CY, DOT, ARROW, HOLD, LIMIT = 230, 220, 40, 120, 100, 4.0   # px per input unit, px per weight unit
+
+    def build(self):
+        self.rng = np.random.default_rng()
+        self.w, self.samples, self.streak = np.array([0.4, -0.3]), 0, 0
+        self.running = self.ran_away = False
+        self.recent, self.note = [], ""
+        self.decay = self.check("Oja's forgetting term (−y²w)")
+        tk.Label(self.side, text="Learning rate", font=UI, fg=INK, bg=GLASS, anchor="w").pack(fill="x")
+        self.rate = tk.Scale(self.side, from_=1, to=50, orient="horizontal", bg=GLASS, troughcolor=LILAC,
+                             highlightthickness=0, activebackground=VIOLET, sliderrelief="flat", length=240,
+                             font=SMALL, fg=MUTED)
+        self.rate.set(10)
+        self.rate.pack(fill="x")
+        self.feed = self.button("Feed inputs  (Space)", self.toggle)
+        self.button("Reset weights", self.reset)
+        c = self.canvas
+        c.create_oval(self.CX - self.ARROW, self.CY - self.ARROW, self.CX + self.ARROW, self.CY + self.ARROW,
+                      outline=MUTED, dash=(2, 4))
+        c.create_text(self.CX + self.ARROW * 0.72, self.CY - self.ARROW * 0.72 - 12, text="|w| = 1",
+                      font=SMALL, fill=MUTED)
+        c.create_text(20, 20, text="dots: inputs the neuron sees     arrow: its two synaptic weights",
+                      anchor="w", font=SMALL, fill=MUTED)
+        self.arrow = c.create_line(0, 0, 0, 0, fill=VIOLET, width=4, arrow="last", arrowshape=(14, 16, 6))
+        self.draw()
+        self.say("Press Feed to start.")
+
+    def toggle(self):
+        if not self.over:
+            self.running = not self.running
+            self.feed.config(text="Pause  (Space)" if self.running else "Feed inputs  (Space)")
+
+    def key(self, keysym):
+        if keysym == "space":
+            self.toggle()
+
+    def reset(self):
+        if not self.over:
+            self.w, self.streak = np.array([0.4, -0.3]), 0
+
+    def learn(self, n):
+        """Feed n inputs through the rule. Returns True once the win condition has held for HOLD inputs."""
+        X = self.rng.multivariate_normal([0, 0], sim.OJA_COV, size=n)
+        for x in X:
+            self.w = sim.oja_step(self.w, x, self.rate.get() / 1000, self.decay.get())
+            self.samples += 1
+            if not np.isfinite(self.w).all() or np.linalg.norm(self.w) > self.LIMIT:
+                self.ran_away = True
+                self.reset()
+                self.note = (f"\n\nRunaway at input {self.samples}: the weights grew without limit and were "
+                             "reset. Strong synapses made the output bigger, which made them grow faster.")
+                break
+            good = sim.alignment(self.w) > 0.98 and abs(np.linalg.norm(self.w) - 1) < 0.1
+            self.streak = self.streak + 1 if good else 0
+        self.recent = (self.recent + list(X))[-200:]
+        return self.streak >= self.HOLD
+
+    def tick(self):
+        if self.over or not self.running:
+            return
+        done = self.learn(2)
+        self.draw()
+        norm = np.linalg.norm(self.w)
+        msg = (f"Direction match  {sim.alignment(self.w):.0%}  (goal 98%)\nWeight length  {norm:.2f}  "
+               f"(goal 0.9 to 1.1)\nInputs  {self.samples}")
+        if done:
+            return self.win(1 + self.ran_away + (self.samples <= 300), msg)
+        self.say(msg + self.note)
+
+    def draw(self):
+        c = self.canvas
+        c.delete("dots")
+        for x, y in self.recent:
+            px, py = self.CX + x * self.DOT, self.CY - y * self.DOT
+            if 0 < px < W and 0 < py < H:
+                c.create_oval(px - 2, py - 2, px + 2, py + 2, fill=PINK, outline="", tags="dots")
+        c.tag_lower("dots")
+        wx, wy = self.w * self.ARROW
+        c.coords(self.arrow, self.CX, self.CY, self.CX + wx, self.CY - wy)
+
+
+LEVELS = [Spark, Wire, Lesion, Dopamine, Remember, Sleep, Predict, TinyBrain, Pattern]

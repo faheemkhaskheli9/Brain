@@ -51,11 +51,20 @@ def test_wire():
     assert won and won[0] >= 1, lvl.syn.w
 
 
-def test_brain_map():
-    lvl, won = start(levels.BrainMap)
-    while lvl.order:
-        lvl.pick(lvl.order[0])
-    assert won == [3]
+def test_lesion():
+    lvl, won = start(levels.Lesion)
+    lvl.name("Thalamus")                  # nothing lesioned yet: not a mistake
+    for name in levels.REGIONS:
+        lvl.lesion(name)
+        shown = lvl.canvas.itemcget(lvl.job, "text")
+        assert levels.REGIONS[name][1] in shown, "the lesioned region's job must break"
+        lvl.name(name)
+    assert won == [3] and lvl.mistakes == 0
+    lvl, won = start(levels.Lesion)
+    lvl.lesion("Hippocampus")
+    for _ in range(4):
+        lvl.name("Amygdala")
+    assert lvl.over and not won, "a 4th wrong name fails the level"
 
 
 def test_dopamine():
@@ -123,8 +132,26 @@ def test_tiny_brain():
     assert not play_tiny_brain(False, True), "no dopamine, no learning"
 
 
+def play_pattern(decay, rate):
+    lvl, won = start(levels.Pattern)
+    lvl.rng = sim.np.random.default_rng(0)
+    lvl.decay.set(decay)
+    lvl.rate.set(rate)
+    lvl.toggle()
+    ticks(lvl, 1000)
+    return lvl, won
+
+
+def test_pattern():
+    for rate in (1, 10, 50):
+        lvl, won = play_pattern(False, rate)
+        assert not won and lvl.ran_away, f"pure Hebb at rate {rate} should run away, never win"
+    lvl, won = play_pattern(True, 10)
+    assert won == [2] and lvl.samples <= 300, (won, lvl.samples)   # efficient, but no runaway seen
+
+
 def test_every_level_covered():
-    played = {"Spark", "Wire", "BrainMap", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain"}
+    played = {"Spark", "Wire", "Lesion", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain", "Pattern"}
     assert {cls.__name__ for cls in levels.LEVELS} == played
 
 

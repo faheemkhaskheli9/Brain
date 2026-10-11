@@ -22,17 +22,19 @@ Each level opens once the one before it is won.
 |---|---|---|---|---|---|
 | 1 | Spark | Click (or Space) to send 10 ms pulses of current into a neuron and watch its voltage | Exactly 5 spikes in 500 ms of model time | Leaky integrate-and-fire with a refractory period | [spiking-neural-networks](../simulation/spiking-neural-networks.md) |
 | 2 | Wire together | Fire input A, input B (keys A, B) and the output neuron (Space) | Synapse A above 0.8 and B below 0.2 | STDP pair rule, ~20 ms window | [learning-and-plasticity](../function/learning-and-plasticity.md) |
-| 3 | Brain map | Click the region that leads each of 8 jobs | All 8 with at most 3 wrong clicks | Region table from the topic file | [brain-structure-overview](../anatomy/brain-structure-overview.md) |
+| 3 | Lesion lab | Lesion one hidden region at a time, see which of 8 jobs breaks, name the region | All 8 named with at most 3 wrong names | Region and lesion tables from the topic file (H.M., Parkinson's, S.M., ...) | [brain-structure-overview](../anatomy/brain-structure-overview.md) |
 | 4 | Be the dopamine | Run bell and juice trials for a TD learner and watch its dopamine | The burst moves to the bell, then a dip appears when juice is withheld | TD(0), `δ = r + γV(s') − V(s)` | [learning-and-plasticity](../function/learning-and-plasticity.md) |
 | 5 | Remember me | Draw or generate 8 × 8 patterns, store them, recall from fragments | 3+ memories pass a recall test, then recall breaks as you add more | Hopfield network (64 neurons, capacity about 9) | [memory-systems](../function/memory-systems.md) |
 | 6 | Sleep on it | Learn task B day by day, with or without sleep replay of task A | B at 90% while A stays at 80% or above | Linear associator, local delta rule, interleaved replay | [memory-systems](../function/memory-systems.md) |
 | 7 | Guess what's next | Set how much a belief trusts noisy senses while a dot moves behind a screen | Tracking error under 0.05 for 12 s | Prediction plus gain × prediction error | [predictive-processing](../function/predictive-processing.md) |
 | 8 | Tiny brain | Switch dopamine and the eligibility trace on or off, then run a forager | 10 meals within 400 steps | Actor-critic three-factor rule (trace × dopamine) | [build-a-brain-like-learner](../guides/build-a-brain-like-learner.md) |
+| 9 | Find the pattern (bonus) | Feed 2-D inputs to one neuron, set its learning rate, switch Oja's forgetting term on or off | Weights line up with the inputs' first principal component at length ≈ 1, held for 100 inputs | Hebb vs Oja's rule, `Δw = ηy(x − yw)` | [brain-inspired-learning-algorithms](../learning/brain-inspired-learning-algorithms.md) |
 
 Every level has an intro card, the play screen and a debrief that explains what happened
 and links its topic file. Each intro is tagged **Established** or **Hypothesis**, as the
-topic files are. Levels 6–8 are tagged Hypothesis, with a line saying which part is
-settled and which is theory.
+topic files are. Levels 6–9 are tagged Hypothesis, with a line saying which part is
+settled and which is theory. Level 9 comes after the boss so existing save files keep
+their level numbers.
 
 Stars: 1 for a win; 2 and 3 for an efficient win or a bonus. The bonus is a debrief point
 worth seeing, for example juice with no bell in level 4.
@@ -60,7 +62,8 @@ game/
   - recall breaks past capacity;
   - without replay task A is forgotten, and with replay it is kept;
   - the tracker has a gain sweet spot;
-  - the forager needs both dopamine and the trace to win within 400 steps.
+  - the forager needs both dopamine and the trace to win within 400 steps;
+  - Oja's rule finds the first principal component at length 1, and pure Hebb blows up.
 - `eval.py` checks models against real brain data instead, one row per reference, and
   exits non-zero if a row fails. It is a per-level table, not one "brain-likeness" score.
   Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,

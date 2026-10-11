@@ -81,6 +81,17 @@ def test_forager_needs_dopamine_and_trace():
     assert full < 400 < no_trace < no_da, (full, no_trace, no_da)
 
 
+def test_oja_finds_pc1_and_hebb_explodes():
+    X = np.random.default_rng(0).multivariate_normal([0, 0], sim.OJA_COV, size=2000)
+    w = h = np.array([0.1, -0.5])
+    for x in X:
+        w = sim.oja_step(w, x, 0.005)
+    assert sim.alignment(w) > 0.99 and abs(np.linalg.norm(w) - 1) < 0.1, w
+    for x in X[:500]:
+        h = sim.oja_step(h, x, 0.005, decay=False)
+    assert np.linalg.norm(h) > 5, "pure Hebb should grow without bound"
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
