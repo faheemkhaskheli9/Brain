@@ -46,6 +46,26 @@ different learning rules, which matters a lot when you try to copy it.
 | **Prefrontal cortex** | Working memory, goals, cognitive control | Gated by dopamine | Recurrent controller, context window |
 | **Brainstem and hypothalamus** | Vital functions, arousal, drives; source of the neuromodulators | Mostly innate | Reward function, global "learning-rate" signals |
 
+### What lesions show
+Much of the table above was first learned from damage: lose one region and the
+behaviour that breaks shows what it was doing. These are **established** classic
+cases. Real lesions are rarely confined to one region.
+
+| Region lost | What breaks | What survives | Source |
+|---|---|---|---|
+| Hippocampus (both sides) | Forming new episodic memories | Older memories, skills, intelligence | Patient H.M., Scoville & Milner 1957 |
+| Basal ganglia (Parkinson's disease) | Gradual habit learning from feedback | Memory of the training episodes | Knowlton, Mangels & Squire 1996 |
+| Amygdala | Conditioned fear | Knowing the facts of what happened | Bechara et al. 1995; patient S.M., Feinstein et al. 2011 |
+| Dorsolateral prefrontal cortex | Holding a location in mind over a delay | Responding when no delay is needed | Funahashi, Bruce & Goldman-Rakic 1993 (monkeys) |
+| Occipitotemporal cortex (face areas) | Recognising faces (prosopagnosia) | Recognising people by voice | Barton 2008 |
+| Cerebellum | Smooth, well-timed movement (ataxia) | Strength and sensation | Holmes 1917 |
+| Thalamus | Sensation from the opposite side of the body | The sense organs themselves | Schmahmann 2003 |
+| Brainstem | Breathing, arousal; it holds the dopamine nuclei | - | Kandel et al. 2021 |
+
+The hippocampus and basal ganglia rows form a **double dissociation**: each
+lesion spares what the other one breaks. That is the classic evidence for
+separate memory systems ([[memory-systems]]). Brain Lab level 3 is built on this table.
+
 ### Wiring principles
 - **Hierarchy with feedback.** Visual cortex runs V1 → V2 → V4 → IT. Feedback
   connections are at least as numerous as feedforward ones.
@@ -79,3 +99,11 @@ different learning rules, which matters a lot when you try to copy it.
 - Azevedo et al. (2009) "Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically scaled-up primate brain", *J Comp Neurol*. doi:10.1002/cne.21974
 - Herculano-Houzel (2012) "The remarkable, yet not extraordinary, human brain as a scaled-up primate brain and its associated cost", *PNAS*. doi:10.1073/pnas.1201895109
 - Kandel et al., *Principles of Neural Science* (6th ed., 2021), the standard textbook.
+- Scoville & Milner (1957) "Loss of recent memory after bilateral hippocampal lesions", *J Neurol Neurosurg Psychiatry* 20:11. doi:10.1136/jnnp.20.1.11
+- Knowlton, Mangels & Squire (1996) "A neostriatal habit learning system in humans", *Science* 273:1399. doi:10.1126/science.273.5280.1399
+- Bechara et al. (1995) "Double dissociation of conditioning and declarative knowledge relative to the amygdala and hippocampus in humans", *Science* 269:1115. doi:10.1126/science.7652558
+- Feinstein et al. (2011) "The human amygdala and the induction and experience of fear", *Curr Biol* 21:34. doi:10.1016/j.cub.2010.11.042
+- Funahashi, Bruce & Goldman-Rakic (1993) "Dorsolateral prefrontal lesions and oculomotor delayed-response performance", *J Neurosci* 13:1479. doi:10.1523/JNEUROSCI.13-04-01479.1993
+- Barton (2008) "Structure and function in acquired prosopagnosia: lessons from a series of 10 patients with brain damage", *J Neuropsychol* 2:197. doi:10.1348/174866407x214172
+- Holmes (1917) "The symptoms of acute cerebellar injuries due to gunshot injuries", *Brain* 40:461. doi:10.1093/brain/40.4.461
+- Schmahmann (2003) "Vascular syndromes of the thalamus", *Stroke* 34:2264. doi:10.1161/01.STR.0000087786.38997.9E
