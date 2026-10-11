@@ -79,9 +79,15 @@ game/
   Level 2 has rows against Bi & Poo 1998: sign of the timing window and its width pass,
   but the rule is symmetric while their potentiation is about 2.7x their depression (gap).
   Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,
-  dip and late burst when reward is delayed). Level 6 has qualitative rows against the
+  dip and late burst when reward is delayed). Level 5 has no human dataset that fits, so
+  its row is an internal check against theory: capacity near 0.138 N (Amit et al. 1985).
+  Level 6 has qualitative rows against the
   human savings curve (Murre & Dros 2015): forgetting is front-loaded, and replay mostly
-  stops it. Level 1 waits on Allen Cell Types data (issue #24).
+  stops it. Level 7 is scored against human pursuit of a hidden target: the belief keeps
+  moving while the dot is hidden, but it does not slow down the way eye velocity does (gap).
+  Level 8 is scored against striatal dopamine ramps near a goal (Howe et al. 2013): value
+  ramps, but plain TD error is flat once learned (gap). Level 1 waits on Allen Cell Types
+  data (issue #24).
 
 ## Not done yet
 

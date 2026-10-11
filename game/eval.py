@@ -82,6 +82,32 @@ def level4_td():
     ]
 
 
+AMIT = "Amit, Gutfreund & Sompolinsky 1985 (Phys Rev Lett 55:1530), theory, not recordings"
+
+
+def hopfield_capacity(n, seed, ok=0.9):
+    """Random patterns stored before mean recall overlap (10% of bits flipped) drops below ok."""
+    rng = np.random.default_rng(seed)
+    net = sim.Hopfield(n)
+    while True:
+        net.store(rng.choice([-1.0, 1.0], n))
+        if np.mean(net.test(seed=seed)) < ok:
+            return len(net.patterns) - 1
+
+
+def level5_hopfield():
+    """Level 5 Hopfield net vs its theoretical capacity (issue #28). No human dataset fits."""
+    n, seeds = 64, 10   # level 5's network size
+    caps = [hopfield_capacity(n, s) for s in range(seeds)]
+    alpha = np.mean(caps) / n
+    return [
+        # 0.138 N is the limit for large N; small nets hold somewhat more on this lenient
+        # criterion (mean overlap, not every pattern), so the band is 0.10-0.20 N.
+        (5, AMIT, "internal check: capacity near 0.138 N random patterns",
+         f"{alpha:.3f} N ({min(caps)}-{max(caps)} of {n} over {seeds} seeds)", 0.10 <= alpha <= 0.20),
+    ]
+
+
 MURRE = "Murre & Dros 2015 (PLOS ONE 10:e0120644), Table 3"
 # Savings at 20 min, 1 h, 9 h, 1 d, 2 d, 6 d, 31 d, read from the table image (doi:10.1371/journal.pone.0120644.t003).
 SAVINGS_DAYS = [20 / 1440, 1 / 24, 9 / 24, 1, 2, 6, 31]
@@ -123,7 +149,68 @@ def level6_forgetting():
     ]
 
 
-ROWS = [level2_stdp, level4_td, level6_forgetting]
+PURSUIT = "Becker & Fuchs 1985 (Exp Brain Res 57:562); Orban de Xivry et al. 2006 (J Neurophysiol 95:418)"
+
+
+def level7_occlusion(gain=0.2, seconds=12.0, dt=0.02):
+    """Level 7 tracker behind the occluder vs human smooth pursuit of a hidden target (issue #28)."""
+    world, tr = sim.DotWorld(0), sim.Tracker(gain)
+    err, frozen, runs, last = [], [], [], None   # runs: belief velocities, one list per occlusion
+    hidden = False
+    for _ in range(int(seconds / dt)):
+        obs = world.step(dt)
+        pos = tr.step(obs, dt)
+        if obs is not None:
+            last, hidden = obs, False
+            continue
+        if not hidden:
+            runs.append([])
+            hidden = True
+        err.append(abs(pos - world.x))
+        frozen.append(abs(last - world.x))
+        runs[-1].append((world.v, tr.vel))
+    same_dir = all(np.sign(v) == np.sign(b) for run in runs for v, b in run)
+    ratio = np.mean([run[-1][1] / run[0][1] for run in runs])
+    return [
+        # Eyes keep moving with a hidden target instead of stopping where it vanished.
+        (7, PURSUIT, "prediction continues while hidden: belief moves with the target, beats freeze-at-last-seen",
+         f"direction {'right' if same_dir else 'WRONG'} throughout, error {np.mean(err):.3f} vs frozen {np.mean(frozen):.3f}",
+         same_dir and np.mean(err) < np.mean(frozen)),
+        # Human eye velocity decays toward a plateau scaled to target speed; the alpha-beta
+        # tracker coasts at a constant velocity until the target reappears.
+        (7, PURSUIT, "velocity decays during occlusion",
+         f"belief speed at end / start of each occlusion {ratio:.2f} (1.00 = no decay)", None),
+    ]
+
+
+HOWE = "Howe et al. 2013 (Nature 500:575); Hamid et al. 2016 (Nat Neurosci 19:117)"
+
+
+def level8_ramp(learn=3000, probe=2000):
+    """Level 8 forager vs striatal dopamine ramps as rats approach a goal (issue #28)."""
+    f = sim.Forager(seed=0)
+    for _ in range(learn):
+        f.step()
+    V, delta = {}, {}
+    for _ in range(probe):
+        d = 2 * (f.size - 1) - f.pos[0] - f.pos[1]   # steps to food
+        V.setdefault(d, []).append(f.V[f._s(f.pos)])
+        delta.setdefault(d, []).append(f.step())
+    dist = sorted(V)
+    v = [np.mean(V[d]) for d in dist]
+    td = [np.mean(delta[d]) for d in dist]
+    return [
+        # Hamid et al. read the ramp as value; reading model V as dopamine is that hypothesis.
+        (8, HOWE, "hypothesis (dopamine = value): signal ramps up as the goal nears",
+         f"V {v[-1]:.2f} at {dist[-1]} steps -> {v[0]:.2f} at {dist[0]}",
+         all(a > b for a, b in zip(v, v[1:]))),
+        # Plain TD error goes flat once every state's value is learned, so it cannot ramp.
+        (8, HOWE, "TD error itself ramps up as the goal nears",
+         f"mean TD error {td[-1]:+.3f} at {dist[-1]} steps, {td[0]:+.3f} at {dist[0]}", None),
+    ]
+
+
+ROWS = [level2_stdp, level4_td, level5_hopfield, level6_forgetting, level7_occlusion, level8_ramp]
 
 
 def main():
