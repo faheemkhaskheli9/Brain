@@ -21,7 +21,8 @@ Start at [guides/start-here.md](guides/start-here.md), or browse [INDEX.md](INDE
 
 Every topic file has YAML frontmatter (title, tags, use_cases, status, sources).
 `python build_index.py` regenerates `INDEX.md` and checks `[[links]]`. The rules
-for adding topics are in [AGENTS.md](AGENTS.md).
+for adding topics are in [AGENTS.md](AGENTS.md); how to send a correction or review
+a draft is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 `pip install .` installs the one dependency (numpy, Python 3.10+). `ruff check .`
 lints; CI runs it with the index, code-block and game checks.

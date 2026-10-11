@@ -1,0 +1,29 @@
+name: New topic
+description: Propose a topic the knowledge base does not cover yet
+labels: [kb-improvement]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Topic
+      placeholder: Cerebellum and motor learning
+    validations:
+      required: true
+  - type: dropdown
+    id: folder
+    attributes:
+      label: Folder
+      options: [anatomy, function, learning, simulation, guides]
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What question would it answer, and which existing topics would link to it?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Key sources
+      description: Reviews or textbooks the topic would cite.
