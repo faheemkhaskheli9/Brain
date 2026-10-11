@@ -46,6 +46,7 @@ game/
   play.py        tkinter shell: menu, intro, level, debrief, save file
   test_sim.py    plain asserts on sim.py
   test_levels.py drives each level headlessly: a good play wins, a bad one does not
+  eval.py        brain-match scorecard: models vs published recordings
 ```
 
 - **Biological constants** (LIF time constant and thresholds, the ~20 ms STDP window,
@@ -60,6 +61,11 @@ game/
   - without replay task A is forgotten, and with replay it is kept;
   - the tracker has a gain sweet spot;
   - the forager needs both dopamine and the trace to win within 400 steps.
+- `eval.py` checks models against real brain data instead, one row per reference, and
+  exits non-zero if a row fails. It is a per-level table, not one "brain-likeness" score.
+  Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,
+  dip and late burst when reward is delayed). Levels 1, 2 and 6 wait on digitized data
+  (issues #24, #25, #27).
 
 ## Not done yet
 

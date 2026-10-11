@@ -20,5 +20,7 @@ jobs:
         run: python run_code_blocks.py
       - name: Game models
         run: python game/test_sim.py
+      - name: Models match published brain data
+        run: python game/eval.py
       - name: Every game level can be won
         run: xvfb-run python game/test_levels.py
