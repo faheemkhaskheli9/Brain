@@ -63,6 +63,7 @@ adds a third factor:
 - **Acetylcholine**: signals uncertainty and novelty, raises plasticity and
   bottom-up attention. **Noradrenaline**: surprise, arousal, "reset" of network
   state. **Serotonin**: patience and time horizon, aversive prediction (less settled).
+  Details and the meta-parameter hypothesis: [[neuromodulators]].
 
 ### 4. Homeostatic plasticity
 Neurons keep their average firing rate in range by scaling all their synapses up
@@ -104,6 +105,7 @@ limited regions; how much this happens in the adult human hippocampus is debated
 - [[spiking-neural-networks]] - STDP and three-factor rules in code.
 - [[brain-inspired-learning-algorithms]] - Hebbian, Oja and predictive coding in code.
 - [[memory-systems]] - consolidation and replay.
+- [[neuromodulators]] - ACh, NE and serotonin beyond dopamine.
 
 ## References
 - Bi & Poo (1998) "Synaptic modifications in cultured hippocampal neurons", *J Neurosci* 18:10464. doi:10.1523/JNEUROSCI.18-24-10464.1998

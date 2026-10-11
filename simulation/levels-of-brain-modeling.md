@@ -87,6 +87,7 @@ Rough orders of magnitude (Sandberg & Bostrom 2008 give the detailed analysis):
 - [[spiking-neural-networks]] - code for LIF and Izhikevich and the simulators.
 - [[whole-brain-emulation-projects]] - who is simulating what.
 - [[neuromorphic-hardware]] - chips built for the LIF level.
+- [[evaluating-brain-models]] - scoring a model against the brain at each level.
 
 ## References
 - Marr (1982) *Vision*. W.H. Freeman.

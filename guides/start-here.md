@@ -26,15 +26,17 @@ use the question table to jump to one file.
 2. [[neurons-and-synapses]] - the components.
 3. [[neural-coding-and-computation]] - how spikes carry information.
 4. [[learning-and-plasticity]] - how synapses learn.
-5. [[memory-systems]] - how memories form and consolidate.
-6. [[spatial-navigation]] - place cells, grid cells and the brain's map.
-7. [[predictive-processing]] - how perception works (leading theory).
+5. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
+6. [[memory-systems]] - how memories form and consolidate.
+7. [[spatial-navigation]] - place cells, grid cells and the brain's map.
+8. [[predictive-processing]] - how perception works (leading theory).
 
 **Path B: simulate the brain**
 1. [[levels-of-brain-modeling]] - choose the level of detail.
 2. [[spiking-neural-networks]] - code neurons, STDP, simulators.
 3. [[neuromorphic-hardware]] - chips that run it efficiently.
 4. [[whole-brain-emulation-projects]] - connectomes and real-brain simulations.
+5. [[evaluating-brain-models]] - test whether a model is actually brain-like.
 
 **Path C: make a computer learn like a brain**
 1. [[brain-vs-deep-learning]] - the gap to close.
@@ -54,11 +56,13 @@ forager, Oja's rule, a neuron zoo and path integration with grid cells. See
 | What is an action potential? | [[neurons-and-synapses]] |
 | Why is the brain so energy-efficient? | [[neural-coding-and-computation]] |
 | What are Hebbian learning, STDP and dopamine RPE? | [[learning-and-plasticity]] |
+| What do acetylcholine, noradrenaline and serotonin do? | [[neuromodulators]] |
 | How does the brain avoid catastrophic forgetting? | [[memory-systems]] |
 | What are place cells and grid cells? How does an animal find its way home? | [[spatial-navigation]] |
 | What is predictive coding / the free-energy principle? | [[predictive-processing]] |
 | Hodgkin-Huxley vs LIF? How much compute for a whole brain? | [[levels-of-brain-modeling]] |
 | How do I simulate a spiking network in Python? | [[spiking-neural-networks]] |
+| How do I measure whether my model is brain-like (RSA, Brain-Score)? | [[evaluating-brain-models]] |
 | Loihi, SpiNNaker, TrueNorth? | [[neuromorphic-hardware]] |
 | FlyWire, MICrONS, Blue Brain, can we upload a brain? | [[whole-brain-emulation-projects]] |
 | Can the brain do backprop? | [[brain-vs-deep-learning]] |
@@ -75,3 +79,4 @@ forager, Oja's rule, a neuron zoo and path integration with grid cells. See
 ## Related
 - [[glossary]] - terms used across the KB.
 - [[build-a-brain-like-learner]] - the practical goal of this KB.
+- [[evaluating-brain-models]] - how to check the result against the brain.
