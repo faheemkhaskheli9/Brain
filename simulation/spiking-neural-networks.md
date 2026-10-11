@@ -148,6 +148,7 @@ lif = snn.Leaky(beta=0.9, spike_grad=surrogate.fast_sigmoid())  # drop-in PyTorc
 - [[learning-and-plasticity]] - the biology behind STDP and three-factor rules.
 - [[neuromorphic-hardware]] - running SNNs efficiently.
 - [[build-a-brain-like-learner]] - SNNs in stage 2 of the roadmap.
+- [Brain Lab](../game/README.md) - level 1, *Spark*: drive a leaky integrate-and-fire neuron to exactly five spikes.
 
 ## References
 - Izhikevich (2003), *IEEE Trans Neural Networks* 14:1569. doi:10.1109/TNN.2003.820440

@@ -34,6 +34,28 @@ different learning rules, which matters a lot when you try to copy it.
 | Power | ~20 W, about 20% of the body's resting energy use | Herculano-Houzel 2012 |
 | Cortical thickness | 2-4 mm, folded; 6 layers | textbook |
 
+The rows can be checked against each other. The derived numbers below are
+arithmetic on the table, not new measurements.
+
+```python
+neurons, cortex, cerebellum = 86e9, 16e9, 69e9   # Azevedo et al. 2009
+synapses = (1e14, 1e15)                          # order-of-magnitude range
+watts = 20                                       # Herculano-Houzel 2012
+
+assert cortex + cerebellum <= neurons            # the rest: brainstem, thalamus, basal ganglia...
+share = cerebellum / neurons
+assert 0.75 < share < 0.85, share                # "about 80% of all neurons"
+per_neuron = [s / neurons for s in synapses]     # ~1,200 to ~12,000 synapses per neuron
+assert per_neuron[0] < 1e4 < per_neuron[1]       # brackets ~10,000 per pyramidal cell
+print(f"cerebellum {share:.0%} of neurons; outside cortex and cerebellum {(neurons - cortex - cerebellum) / 1e9:.0f} billion")
+print(f"synapses per neuron {per_neuron[0]:,.0f} to {per_neuron[1]:,.0f}")
+print(f"power per neuron {watts / neurons * 1e9:.2f} nW")
+```
+
+The 10^14 to 10^15 range brackets the ~10,000 synapses of one pyramidal cell
+([[neurons-and-synapses]]), and the 20 W works out to about a quarter of a nanowatt
+per neuron.
+
 ### The major subsystems
 | Region | Main job | Learning style | AI analogue |
 |---|---|---|---|
@@ -97,6 +119,7 @@ separate memory systems ([[memory-systems]]). Brain Lab level 3 is built on this
 - [[action-selection-and-motor-control]] - basal ganglia, cerebellum and motor cortex in detail.
 - [[attention-and-working-memory]] - prefrontal cortex and thalamus in attention and working memory.
 - [[glia-and-energy-budget]] - the glial half of the cell count, and what the 20 W is spent on.
+- [Brain Lab](../game/README.md) - level 3, *Lesion lab*: name each region from what breaks when it is lesioned.
 
 ## References
 - Azevedo et al. (2009) "Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically scaled-up primate brain", *J Comp Neurol*. doi:10.1002/cne.21974

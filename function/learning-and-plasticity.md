@@ -108,6 +108,7 @@ limited regions; how much this happens in the adult human hippocampus is debated
 - [[neuromodulators]] - ACh, NE and serotonin beyond dopamine.
 - [[brain-development-and-critical-periods]] - when plasticity is high, and what closes it.
 - [Brain World](../game/world/) - TD dopamine and eligibility traces teaching a 3D creature five skills in a row.
+- [Brain Lab](../game/README.md) - level 2, *Wire together* (STDP), and level 4, *Be the dopamine* (TD error moving to the cue).
 
 ## References
 - Bi & Poo (1998) "Synaptic modifications in cultured hippocampal neurons", *J Neurosci* 18:10464. doi:10.1523/JNEUROSCI.18-24-10464.1998

@@ -155,6 +155,7 @@ background and a noisy path integrator with landmark resets (`game/sim.py`).
 - [[build-a-brain-like-learner]] - where a predictive map fits in the roadmap.
 - [[brain-structure-overview]] - where the hippocampus and entorhinal cortex sit.
 - [[brain-rhythms-and-oscillations]] - theta, and place cells' phase precession against it.
+- [Brain Lab](../game/README.md) - level 11, *Find your way home*: noisy path integration, landmark resets and a grid cell's map.
 
 ## References
 - O'Keefe & Dostrovsky (1971) "The hippocampus as a spatial map. Preliminary evidence from unit activity in the freely-moving rat", *Brain Research* 34:171. doi:10.1016/0006-8993(71)90358-1

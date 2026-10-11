@@ -88,6 +88,7 @@ Rough orders of magnitude (Sandberg & Bostrom 2008 give the detailed analysis):
 - [[whole-brain-emulation-projects]] - who is simulating what.
 - [[neuromorphic-hardware]] - chips built for the LIF level.
 - [[evaluating-brain-models]] - scoring a model against the brain at each level.
+- [Brain Lab](../game/README.md) - level 10, *Neuron zoo*: four Izhikevich firing patterns against one LIF neuron.
 
 ## References
 - Marr (1982) *Vision*. W.H. Freeman.
