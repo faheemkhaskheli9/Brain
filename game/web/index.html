@@ -34,7 +34,7 @@
 </head>
 <body>
 <main>
-  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a></nav>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#dopamine">4 Be the dopamine</a></nav>
   <h1 id="title"></h1>
   <p class="intro" id="intro"></p>
   <div class="play">
@@ -51,7 +51,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Brain Lab levels 1 and 2 in the browser. The models are game/sim.py, run by Pyodide;
+// Brain Lab levels 1, 2 and 4 in the browser. The models are game/sim.py, run by Pyodide;
 // this file only mirrors each levels.py class's text, clock, drawing and win check.
 const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -197,6 +197,77 @@ const LEVELS = {
       line(510, this.wy(0.8), 640, this.wy(0.8), "--violet", 1, [4, 3]);
       line(510, this.wy(0.2), 640, this.wy(0.2), "--pink", 1, [4, 3]);
       text("synapse strength", 575, 40);
+    },
+  },
+
+  dopamine: {
+    title: "Be the dopamine",
+    goal: "Make the dopamine burst move from the juice to the bell. Then withhold the juice and cause a dip.",
+    intro: "Dopamine neurons do not signal reward itself. They signal reward prediction error: a burst when things " +
+      "are better than expected, nothing when they are as expected, a dip when they are worse. A temporal-difference " +
+      "(TD) learner computes the same signal, δ = r + γV(s′) − V(s). Each button runs one trial. The bars show the " +
+      "learner's dopamine at each moment.",
+    debrief: "Once the bell predicts the juice, the surprise, and the burst, moves to the bell. Missing juice is worse " +
+      "than predicted, so dopamine dips at the moment the juice was due. Juice with no bell is still a surprise. Real " +
+      "dopamine neurons do all three (Schultz, Dayan and Montague 1997), one of the strongest links between " +
+      "neuroscience and AI.",
+    kb: ["function/learning-and-plasticity.md", "learning and plasticity"],
+    hint: "Run bell-and-juice trials until the bell bar is tall and the juice bar is gone, then ring with no juice.",
+    label: "Bar chart of the learner's dopamine at each moment of the last trial, with a line chart across trials.",
+    buttons: [["Ring bell, give juice", null, s => s.trial(true, true)], ["Ring bell, no juice", null, s => s.trial(true, false)],
+              ["Juice, no bell", null, s => s.trial(false, true)]],
+    ZERO: 160, SCALE: 100, X0: 70, STEP: 52,
+    reset() {
+      if (this.V) this.V.destroy();
+      Object.assign(this, { V: sim.td_values(), trials: 0, learned: false, surprise: false, history: [],
+                            d: new Array(sim.T_JUICE + 3).fill(0), bell: null, juice: null });
+      say("Run a trial to see the dopamine response.");
+    },
+    canvasClick() {},
+    trial(bell, juice) {
+      const p = sim.td_trial(this.V, bell, juice), d = Array.from(p.toJs()); p.destroy();
+      Object.assign(this, { d, bell, juice });
+      this.trials += 1;
+      const db = d[sim.T_BELL], dj = d[sim.T_JUICE], f = v => `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
+      this.history.push([db, dj]);
+      let msg = `Trial ${this.trials}\nDopamine at bell  ${f(db)}\nDopamine at juice time  ${f(dj)}`;
+      if (bell && juice && db >= 0.8 && dj <= 0.2 && !this.learned) {
+        this.learned = true;
+        msg += "\n\nThe burst has moved to the bell. Now try a trial without juice.";
+      } else if (this.learned && !bell && juice) {
+        this.surprise = true;
+      }
+      if (this.learned && bell && !juice && dj <= -0.5) {
+        return end(`Won. ${stars(1 + this.surprise + (this.trials <= 25))}\n\n${msg}\n\nA dip: the predicted juice never came.`, true);
+      }
+      say(msg);
+    },
+    tick() {},
+    draw() {
+      line(40, this.ZERO, W - 30, this.ZERO, "--muted");
+      text("dopamine (TD error) this trial", 40, 30, "left", "--muted", 12);
+      this.d.forEach((v, t) => {
+        if (Math.abs(v) <= 1e-3) return;
+        const x = this.X0 + t * this.STEP, y = this.ZERO - v * this.SCALE;
+        ctx.fillStyle = css(v > 0 ? "--pink" : "--violet");
+        ctx.fillRect(x - 14, Math.min(y, this.ZERO), 28, Math.abs(v) * this.SCALE);
+      });
+      for (const [t, label, on] of [[sim.T_BELL, "bell", this.bell], [sim.T_JUICE, "juice", this.juice]]) {
+        text(label, this.X0 + t * this.STEP, this.ZERO + this.SCALE + 20, "center", on ? "--ink" : "--muted", 15);
+      }
+      const top = 340, bot = 430, mid = (top + bot) / 2;
+      text("across trials:  at bell (violet), at juice time (pink)", 40, top - 14, "left", "--muted", 12);
+      line(40, mid, W - 30, mid, "--lilac");
+      if (this.history.length < 2) return;
+      const n = Math.max(this.history.length - 1, 30);
+      for (const [i, color] of [[0, "--violet"], [1, "--pink"]]) {
+        ctx.strokeStyle = css(color); ctx.lineWidth = 2; ctx.beginPath();
+        this.history.forEach((h, k) => {
+          const x = 40 + k * (W - 70) / n, y = mid - h[i] * (bot - top) / 2;
+          k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        });
+        ctx.stroke();
+      }
     },
   },
 };
