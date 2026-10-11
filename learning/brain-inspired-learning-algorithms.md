@@ -164,6 +164,7 @@ experiences it can *learn from*, not just ones that are rewarded.
 - [[brain-vs-deep-learning]] - where these rules stand against backprop.
 - [[spiking-neural-networks]] - STDP in spiking neurons.
 - [[build-a-brain-like-learner]] - how to combine them into one system.
+- [[sleep-and-memory-consolidation]] - the biology behind replay and offline "sleep" phases.
 
 ## References
 - Oja (1982) "Simplified neuron model as a principal component analyzer", *J Math Biol* 15:267. doi:10.1007/BF00275687
