@@ -41,6 +41,11 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 
 - **Senses:** a 15-ray retina (RGB times nearness), a 5×5 fovea that resolves the letter on the
   object in a ±0.2 rad central cone, three cochlea bands, leg position and the pen pad.
+- **Fovea memory:** a decaying trace of the fovea (×0.9 per step), so the last letter seen stays
+  in its senses for a few steps after the gaze moves on. Each leg push turns 0.3 rad, wider than
+  the fovea, so a letter is in view for only a step or two. This is a crude stand-in for working
+  memory (persistent activity in prefrontal cortex). It is a model choice, not a claim about how
+  reading works.
 - **Expansion:** 1,000 fixed random units, as in cerebellar granule cells or the mushroom body. Each
   one is driven by one local patch of a sense, and sound scales that drive by a random gain (gain
   modulation). An additive mix learned the tone tasks far too slowly.
@@ -63,9 +68,16 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 `test_brain.mjs` asserts every stage is learned within 20,000 episodes. It then asserts that after
 graduation each skill stays well above chance: grasp ≥ 0.7, listen ≥ 0.5, read ≥ 0.4, write ≥ 0.5.
 Chance is about 0.33 for listen and read, and 1/18 for write. Seed 1 (the page's first brain) passes:
-grasp 0.81, listen 0.68, read 0.52, write 0.71. CI runs seeds 1–3.
+grasp 0.80, listen 0.67, read 0.85, write 0.69. CI runs seeds 1–3.
 
-Across seeds 1–10, 9 pass everything. The tenth (seed 9) keeps read at 0.38, just under the mark.
+Across seeds 1–10, 9 pass everything. The tenth (seed 5) keeps read at 0.37, just under the mark.
+The fovea memory mainly speeds up reading. On seed 1, read passes in 2,951 episodes instead of
+5,699, and it keeps 0.85 instead of 0.52. Over seeds 1–10, read takes 5,400 episodes on average
+instead of 6,300, and keeps 0.55 instead of 0.51 (seed 9's 0.38 becomes 0.51, seed 5's 0.53
+drops to 0.37). The effect varies a lot between seeds, so the read mark stays at 0.4. A "look"
+saccade action that turned the gaze to the next object was tried with it. It sped reading up on
+some seeds, but one or two of ten never learned to read, so it was dropped.
+
 With the earlier 600 units and no gating, only 5 of 10 passed: the rest stalled on listen or read,
 or kept them too weakly. Most of the gain came from the larger layer: 1,000 units without gating pass
 8 of 10. Gating adds a little on top, mostly to listening (mean kept listen 0.70 against 0.62 without

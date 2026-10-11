@@ -96,7 +96,7 @@
         <h2>What it senses and does</h2>
         <div class="senses">
           <span title="15 rays fanned across its field of view. Each square is the colour it sees in that direction; brighter means nearer.">Retina</span><div id="retina"></div>
-          <span title="A 5×5 patch at the centre of its gaze, sharp enough to make out the letter on a cube straight ahead.">Fovea</span><div id="fovea"></div>
+          <span title="A 5×5 patch at the centre of its gaze, sharp enough to make out the letter on a cube straight ahead. A letter it has just seen fades out slowly: a short memory of it.">Fovea</span><div id="fovea"></div>
           <span title="Three frequency bands, like places along the inner ear. The band that lights up is the tone it hears.">Cochlea</span><div id="cochlea"></div>
           <span title="The action it just chose.">Doing</span><strong id="doing">–</strong>
           <span title="The skill this episode trains. Earlier skills come back now and then so it does not forget them.">Task</span><span id="task"></span>
@@ -109,7 +109,7 @@
 
   <section class="how">
     <h2>How its brain works</h2>
-    <p>Each step its senses are a 15-ray colour retina, a 5×5 fovea that can resolve letters, three cochlea
+    <p>Each step its senses are a 15-ray colour retina, a 5×5 fovea that can resolve letters (with a short, fading memory of the last one), three cochlea
       bands (one per tone, which you hear too) and the position of its legs. A fixed random layer of 1,000
       neurons mixes them, and sound scales each neuron's visual response up or down, the way attention scales
       responses in visual cortex. Each skill switches off a fixed random half of that layer, so skills
@@ -288,7 +288,7 @@ function updatePanel() {
     const c = [0, 1, 2].map(k => Math.min(255, Math.round(r[i * 3 + k] * 330)));
     el.style.background = `rgb(${c})`;
   });
-  foveaEls.forEach((el, i) => { el.style.opacity = 0.06 + 0.94 * Math.min(1, world.fovea[i] * 1.6); });
+  foveaEls.forEach((el, i) => { el.style.opacity = 0.06 + 0.94 * Math.min(1, Math.max(world.fovea[i], 0.5 * world.memory[i]) * 1.6); });
   const tone = performance.now() < freezeUntil && frozen ? frozen.tone : world.tone;
   cochEls.forEach((el, k) => el.classList.toggle("on", tone === k));
   const a = world.lastAction;
