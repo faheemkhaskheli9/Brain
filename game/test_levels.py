@@ -150,8 +150,20 @@ def test_pattern():
     assert won == [2] and lvl.samples <= 300, (won, lvl.samples)   # efficient, but no runaway seen
 
 
+def test_zoo():
+    lvl, won = start(levels.Zoo)
+    lvl.run()                                    # default sliders are already regular spiking
+    lvl.set(20, 0.12, -65, 0)                    # strong current, fast recovery: fast spiking
+    lvl.run()
+    assert not won and lvl.found == {"regular spiking", "fast spiking"}, lvl.found
+    for a, b, c, d in list(sim.IZH_PRESETS.values())[1:3]:
+        lvl.set(10, a, c, d)
+        lvl.run()
+    assert won == [3] and lvl.runs == 4, (won, lvl.runs)
+
+
 def test_every_level_covered():
-    played = {"Spark", "Wire", "Lesion", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain", "Pattern"}
+    played = {"Spark", "Wire", "Lesion", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain", "Pattern", "Zoo"}
     assert {cls.__name__ for cls in levels.LEVELS} == played
 
 
