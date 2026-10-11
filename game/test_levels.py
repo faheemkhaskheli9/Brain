@@ -162,12 +162,49 @@ def test_zoo():
     assert won == [3] and lvl.runs == 4, (won, lvl.runs)
 
 
+def walk_to(lvl, target):
+    """Arrow-key walk to a point (true position) along x, then y."""
+    for axis, keys in ((0, ("Left", "Right")), (1, ("Down", "Up"))):
+        while abs(lvl.nav.true[axis] - target[axis]) > levels.Home.STEP / 2:
+            lvl.key(keys[int(lvl.nav.true[axis] < target[axis])])
+
+
+def play_home(landmarks, via_landmark, seed=0):
+    lvl, won = start(levels.Home)
+    lvl.nav = sim.Navigator(seed=seed)
+    lvl.food = sim.np.array([0.9, 0.55])
+    lvl.landmarks.set(landmarks)
+    lvl.key("h")                                   # before the food: not allowed yet
+    assert not lvl.over
+    for spot in [(0.9, 0.1), (0.9, 0.9), (0.1, 0.9), (0.9, 0.55)]:   # a long search
+        walk_to(lvl, spot)
+    if via_landmark:
+        walk_to(lvl, sim.LANDMARKS[0])
+    lvl.key("h")
+    return lvl, won
+
+
+def test_home():
+    lvl, won = play_home(True, True)
+    assert won == [3], (won, lvl.nav.travelled, lvl.fixed)   # long route, landmark fixed real drift
+    lvl, won = start(levels.Home)
+    lvl.food = sim.np.array([0.6, 0.55])
+    walk_to(lvl, lvl.food)
+    walk_to(lvl, sim.NEST)                         # walk back by sight, then press H
+    lvl.key("h")
+    assert lvl.found and not lvl.over, "H next to the nest is refused: no map needed there"
+    misses = sum(not play_home(False, False, seed)[1] for seed in range(10))
+    assert misses >= 6, f"pure path integration over a long route should usually miss, missed {misses}/10"
+
+
 def test_debrief_sweeps_show_the_lesson():
     *_, xs, ys = levels.Predict.sweep()
     best = ys.index(min(ys))
     assert 0 < best < len(xs) - 1, "tracking error should have a sweet spot inside the gain range"
     *_, xs, ys = levels.Remember.sweep()
     assert ys[2] > 0.95 and ys[-1] < 0.8, "3 memories recall, 20 do not"
+    *_, xs, ys = levels.Home.sweep()
+    assert ys[-1] > 2 * ys[0], "path-integration error should grow with distance walked"
 
 
 def test_hint_on_failure():
@@ -180,7 +217,7 @@ def test_hint_on_failure():
 
 
 def test_every_level_covered():
-    played = {"Spark", "Wire", "Lesion", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain", "Pattern", "Zoo"}
+    played = {"Spark", "Wire", "Lesion", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain", "Pattern", "Zoo", "Home"}
     assert {cls.__name__ for cls in levels.LEVELS} == played
 
 

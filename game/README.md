@@ -30,14 +30,16 @@ Each level opens once the one before it is won.
 | 8 | Tiny brain | Switch dopamine and the eligibility trace on or off, then run a forager | 10 meals within 400 steps | Actor-critic three-factor rule (trace × dopamine) | [build-a-brain-like-learner](../guides/build-a-brain-like-learner.md) |
 | 9 | Find the pattern (bonus) | Feed 2-D inputs to one neuron, set its learning rate, switch Oja's forgetting term on or off | Weights line up with the inputs' first principal component at length ≈ 1, held for 100 inputs | Hebb vs Oja's rule, `Δw = ηy(x − yw)` | [brain-inspired-learning-algorithms](../learning/brain-inspired-learning-algorithms.md) |
 | 10 | Neuron zoo (bonus) | Set current and the Izhikevich parameters a, c, d; an LIF neuron gets the same current | The Izhikevich neuron has fired regular, intrinsically bursting, chattering and fast spiking | Izhikevich 2003 vs LIF, patterns named from interspike intervals | [levels-of-brain-modeling](../simulation/levels-of-brain-modeling.md) |
+| 11 | Find your way home (bonus) | Search the arena for food with the arrow keys, then press H to run straight home on the creature's own position estimate (at least 0.4 arena widths out); landmark place fields can reset your position estimate | Land within reach of the nest | Noisy path integration with landmark resets; one grid cell's hexagonal firing map | [spatial-navigation](../function/spatial-navigation.md) |
 
 Every level has an intro card, the play screen and a debrief that explains what happened
 and links its topic file. Levels that run on their own clock (1, 2, 7, 8, 9) have Pause (P)
 and Step (N). A one-line hint appears after a failed attempt or 45 s without a win. The
-debriefs for levels 5 and 7 plot the model's what-if sweep: recall against memories stored,
-and tracking error against gain. Each intro is tagged **Established** or **Hypothesis**, as the
-topic files are. Levels 6–9 are tagged Hypothesis, with a line saying which part is
-settled and which is theory. Levels 9 and 10 come after the boss so existing save files
+debriefs for levels 5, 7 and 11 plot the model's what-if sweep: recall against memories stored,
+tracking error against gain, and how far path integration misses home against steps walked.
+Each intro is tagged **Established** or **Hypothesis**, as the
+topic files are. Levels 6–9 and 11 are tagged Hypothesis, with a line saying which part is
+settled and which is theory. Levels 9–11 come after the boss so existing save files
 keep their level numbers.
 
 Stars: 1 for a win; 2 and 3 for an efficient win or a bonus. The bonus is a debrief point
@@ -68,7 +70,9 @@ game/
   - the tracker has a gain sweet spot;
   - the forager needs both dopamine and the trace to win within 400 steps;
   - Oja's rule finds the first principal component at length 1, and pure Hebb blows up;
-  - the four Izhikevich 2003 presets fire their named patterns, and the LIF never bursts.
+  - the four Izhikevich 2003 presets fire their named patterns, and the LIF never bursts;
+  - the grid cell's map repeats along three directions 60° apart, path integration drifts
+    more the farther it walks, and a landmark resets it.
 - `eval.py` checks models against real brain data instead, one row per reference, and
   exits non-zero if a row fails. It is a per-level table, not one "brain-likeness" score.
   Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,

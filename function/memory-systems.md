@@ -131,6 +131,7 @@ mathematically equivalent to attention.
 - [[brain-inspired-learning-algorithms]] - EWC and replay in code.
 - [[build-a-brain-like-learner]] - CLS as stage 3 of the roadmap.
 - [[brain-structure-overview]] - where these regions sit.
+- [[spatial-navigation]] - the hippocampus as a map: place and grid cells, cognitive maps.
 
 ## References
 - McClelland, McNaughton & O'Reilly (1995) "Why there are complementary learning systems in the hippocampus and neocortex", *Psychological Review* 102:419. doi:10.1037/0033-295X.102.3.419

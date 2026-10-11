@@ -27,7 +27,8 @@ use the question table to jump to one file.
 3. [[neural-coding-and-computation]] - how spikes carry information.
 4. [[learning-and-plasticity]] - how synapses learn.
 5. [[memory-systems]] - how memories form and consolidate.
-6. [[predictive-processing]] - how perception works (leading theory).
+6. [[spatial-navigation]] - place cells, grid cells and the brain's map.
+7. [[predictive-processing]] - how perception works (leading theory).
 
 **Path B: simulate the brain**
 1. [[levels-of-brain-modeling]] - choose the level of detail.
@@ -40,10 +41,10 @@ use the question table to jump to one file.
 2. [[brain-inspired-learning-algorithms]] - runnable learning rules.
 3. [[build-a-brain-like-learner]] - the staged project roadmap.
 
-**Path D: learn by playing.** `python game/play.py` runs Brain Lab, nine levels
+**Path D: learn by playing.** `python game/play.py` runs Brain Lab, eleven levels
 in which you operate the models from these files: a spiking neuron, STDP, a lesion
 lab, dopamine, Hopfield memory, sleep replay, predictive tracking, a three-factor
-forager and Oja's rule. See
+forager, Oja's rule, a neuron zoo and path integration with grid cells. See
 [game/README.md](../game/README.md).
 
 ## Question → file
@@ -54,6 +55,7 @@ forager and Oja's rule. See
 | Why is the brain so energy-efficient? | [[neural-coding-and-computation]] |
 | What are Hebbian learning, STDP and dopamine RPE? | [[learning-and-plasticity]] |
 | How does the brain avoid catastrophic forgetting? | [[memory-systems]] |
+| What are place cells and grid cells? How does an animal find its way home? | [[spatial-navigation]] |
 | What is predictive coding / the free-energy principle? | [[predictive-processing]] |
 | Hodgkin-Huxley vs LIF? How much compute for a whole brain? | [[levels-of-brain-modeling]] |
 | How do I simulate a spiking network in Python? | [[spiking-neural-networks]] |

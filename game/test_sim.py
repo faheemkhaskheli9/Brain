@@ -99,6 +99,27 @@ def test_izhikevich_presets_fire_their_patterns_and_lif_never_bursts():
     assert lif <= {"too few spikes", "regular spiking", "fast spiking"}, lif
 
 
+def test_grid_cell_is_hexagonal():
+    p, s = np.array([0.3, 0.2]), 0.25
+    for angle in (np.pi / 6, np.pi / 2, 5 * np.pi / 6):   # the three lattice directions
+        assert abs(sim.grid_rate(p) - sim.grid_rate(p + s * np.array([np.cos(angle), np.sin(angle)]))) < 1e-9
+    assert abs(sim.grid_rate(p) - sim.grid_rate(p + [s / 2, 0])) > 0.1, "half a spacing off-lattice differs"
+
+
+def test_path_integration_drifts_and_landmarks_reset_it():
+    short = np.median([sim.homing_error(20, seed) for seed in range(40)])
+    long = np.median([sim.homing_error(200, seed) for seed in range(40)])
+    assert long > 2 * short, (short, long)
+    nav = sim.Navigator(seed=0)
+    for _ in range(30):
+        nav.move(0.02, 0.0)
+    lx, ly = sim.LANDMARKS[0]
+    while nav.true[0] < lx - 0.01 or nav.true[1] < ly - 0.01:   # walk onto the first landmark
+        nav.move(0.0 if nav.true[0] >= lx - 0.01 else 0.02, 0.0 if nav.true[1] >= ly - 0.01 else 0.02)
+    assert nav.error() == 0.0
+    assert nav.home() < 1e-9, "a corrected estimate homes exactly, by a path never walked"
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):
