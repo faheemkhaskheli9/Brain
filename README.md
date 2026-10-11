@@ -7,7 +7,9 @@ A knowledge base on the human brain, covering three questions:
 3. **How do we build a digital version that learns like it?** Models, simulators,
    brain-inspired learning algorithms and a build roadmap (`simulation/`, `learning/`).
 
-Start at [guides/start-here.md](guides/start-here.md), or browse [INDEX.md](INDEX.md).
+Start at [guides/start-here.md](guides/start-here.md), follow a reading list for
+ML engineers, neuroscience students or players in
+[guides/learning-paths.md](guides/learning-paths.md), or browse [INDEX.md](INDEX.md).
 
 ## Layout
 
