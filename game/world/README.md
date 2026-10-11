@@ -85,6 +85,12 @@ or kept them too weakly. Most of the gain came from the larger layer: 1,000 unit
 it). Interleaving one network across four tasks still keeps some interference, and reading is
 still the weakest skill.
 
+Gating did not let replay drop. With replay at 0.15 instead of 0.3, over seeds 1–10, 9 still pass,
+and the write stage passes sooner (7,200 episodes on average instead of 8,800). Mean kept scores
+barely move: grasp 0.78 (was 0.82), listen 0.66 (0.69), read 0.55 (0.55), write 0.69 (0.66). But
+seed 8 never learns to read within 20,000 episodes, and seed 1 keeps read at 0.52 instead of 0.85.
+So replay stays at 0.3.
+
 Last, it saves and reloads the brain and checks that the copy takes the same 2,000 actions as the
 original.
 
