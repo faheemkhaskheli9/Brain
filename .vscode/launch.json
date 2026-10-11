@@ -1,0 +1,80 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Brain Lab: play",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/play.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Brain Lab: scorecard (eval.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/eval.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Brain Lab: test_sim",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/test_sim.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Brain Lab: test_levels",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/test_levels.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Brain Lab: serve web + world (http://localhost:8000/game/)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "http.server",
+      "args": ["8000"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "World: test_brain.mjs",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/test_brain.mjs",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "World: perform.mjs (--seed 1)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/perform.mjs",
+      "args": ["--seed", "1"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "KB: build_index",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/build_index.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "KB: run_code_blocks",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/run_code_blocks.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python: current file",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    }
+  ]
+}

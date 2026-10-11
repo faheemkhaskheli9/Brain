@@ -38,7 +38,7 @@
 </head>
 <body>
 <main>
-  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a><a href="#predict">7 Guess what's next</a><a href="#tiny">8 Tiny brain</a></nav>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a><a href="#predict">7 Guess what's next</a><a href="#tiny">8 Tiny brain</a><a href="#pattern">9 Find the pattern</a><a href="#zoo">10 Neuron zoo</a><a href="#home">11 Find your way home</a></nav>
   <h1 id="title"></h1>
   <p class="tag" id="tag"></p>
   <p class="intro" id="intro"></p>
@@ -56,7 +56,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Brain Lab levels 1 to 8 in the browser. The models are game/sim.py, run by Pyodide;
+// All 11 Brain Lab levels in the browser. The models are game/sim.py, run by Pyodide;
 // this file only mirrors each levels.py class's text, clock, drawing and win check.
 const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -74,6 +74,27 @@ function line(x1, y1, x2, y2, color, width = 1, dash = []) {
   ctx.strokeStyle = css(color); ctx.lineWidth = width; ctx.setLineDash(dash);
   ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
 }
+function arrow(x1, y1, x2, y2, color, width, dash = []) {
+  line(x1, y1, x2, y2, color, width, dash);
+  const a = Math.atan2(y2 - y1, x2 - x1), head = 4 * width;
+  ctx.fillStyle = css(color); ctx.beginPath(); ctx.moveTo(x2, y2);
+  for (const s of [-1, 1]) ctx.lineTo(x2 - head * Math.cos(a + s * 0.4), y2 - head * Math.sin(a + s * 0.4));
+  ctx.fill();
+}
+function circle(x, y, r, fill, stroke, width = 1, dash = []) {
+  ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
+  if (fill) { ctx.fillStyle = css(fill); ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = css(stroke); ctx.lineWidth = width; ctx.setLineDash(dash); ctx.stroke(); ctx.setLineDash([]); }
+}
+function slider(id, label, min, max, step, value) {
+  const l = Object.assign(document.createElement("label"), { htmlFor: id, textContent: label });
+  const i = Object.assign(document.createElement("input"), { id, type: "range", min, max, step, value, disabled: !sim });
+  i.style.width = "100%";
+  return [l, i];
+}
+const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
+// A returned numpy array or tuple as a plain JS array, with its proxy freed.
+const js = p => { const v = p.toJs(); p.destroy(); return Array.from(v); };
 function say(s) { $("status").textContent = s; }
 const stars = n => "★".repeat(n) + "☆".repeat(3 - n);
 
@@ -520,9 +541,7 @@ const LEVELS = {
     x: pos => 40 + pos * (W - 70),
     ey: err => 420 - Math.min(err, 0.15) * 1050,
     controls() {
-      const label = Object.assign(document.createElement("label"), { htmlFor: "gain", textContent: "Trust in your senses" });
-      const input = Object.assign(document.createElement("input"), { id: "gain", type: "range", min: 1, max: 100, value: 3, disabled: !sim });
-      input.style.width = "100%";
+      const [label, input] = slider("gain", "Trust in your senses", 1, 100, 1, 3);
       input.oninput = () => this.setGain(input.value);
       return [label, input];
     },
@@ -644,6 +663,244 @@ const LEVELS = {
       this.deltas.slice(-150).forEach((d, k) => {
         if (Math.abs(d) > 0.01) line(40 + k * 4, base, 40 + k * 4, base - Math.max(Math.min(d, 1), -1) * 25, d > 0 ? "--pink" : "--violet", 3);
       });
+    },
+  },
+
+  pattern: {
+    title: "Find the pattern",
+    tag: ["Hypothesis", "Hebbian plasticity and synaptic normalisation are observed at real synapses. Oja's rule " +
+      "is a mathematical model of the pair, not a measured rule."],
+    goal: "Line the neuron's weights up with the main direction of its inputs, and keep their length near 1.",
+    intro: "Hebb's rule: neurons that fire together wire together. A synapse grows each time its input and the " +
+      "neuron's output are active at once. Applied alone it has a flaw: strong synapses make the output bigger, " +
+      "which makes them grow faster still. This neuron has two input synapses. Each dot is one input it sees, and " +
+      "the arrow is its weights. Feed it inputs, set the learning rate, and decide whether to switch on Oja's " +
+      "forgetting term.",
+    debrief: "Pure Hebb finds the right direction but its weights run away. Oja's term, −y²w, makes each synapse " +
+      "forget in proportion to the output, which holds the weight length at 1. What is left is the first principal " +
+      "component: the direction the inputs vary most along. A neuron learned PCA from local information only (Oja " +
+      "1982). Stack many such neurons with a little competition and you get sparse coding, the leading model of how " +
+      "V1 cells learn edge detectors.",
+    kb: ["learning/brain-inspired-learning-algorithms.md", "brain-inspired learning algorithms"],
+    hint: "Pure Hebb always runs away. Switch on Oja's term and keep the learning rate low.",
+    label: "A scatter of the inputs the neuron sees and an arrow for its two synaptic weights.",
+    buttons: [["Oja's forgetting term (−y²w)", null, s => s.toggleOja()], ["Feed inputs (Space)", "Space", s => s.toggle()],
+              ["Reset weights", null, s => { s.w = [0.4, -0.3]; s.streak = 0; }]],
+    CX: 230, CY: 220, DOT: 40, ARROW: 120, HOLD: 100, LIMIT: 4,   // px per input unit, px per weight unit
+    controls() { return slider("rate", "Learning rate", 1, 50, 1, 10); },
+    btn(i) { return $("controls").querySelectorAll("button")[i]; },
+    reset() {
+      this.oja ||= py.runPython("import numpy as np, sim\nlambda w, x, r, d: sim.oja_step(np.array(w), np.array(x), r, d)");
+      if (!this.L) {   // Cholesky factor of sim.OJA_COV, to draw inputs with that covariance
+        const [[a, b], [, c]] = js(sim.OJA_COV).map(r => Array.from(r)), l0 = Math.sqrt(a), l1 = b / l0;
+        this.L = [l0, l1, Math.sqrt(c - l1 * l1)];
+      }
+      Object.assign(this, { w: [0.4, -0.3], samples: 0, streak: 0, running: false, ranAway: false, decay: false,
+                            recent: [], note: "" });
+      $("rate").value = 10;
+      this.btn(0).setAttribute("aria-pressed", "false"); this.btn(1).textContent = "Feed inputs (Space)";
+      say("Press Feed to start.");
+    },
+    canvasClick() {},
+    toggleOja() { this.decay = !this.decay; this.btn(0).setAttribute("aria-pressed", this.decay); },
+    toggle() { this.running = !this.running; this.btn(1).textContent = this.running ? "Pause (Space)" : "Feed inputs (Space)"; },
+    align() { const p = py.toPy(this.w), a = sim.alignment(p); p.destroy(); return a; },
+    learn(n) {
+      const rate = $("rate").value / 1000;
+      for (let k = 0; k < n; k++) {
+        const z = gauss(), x = [this.L[0] * z, this.L[1] * z + this.L[2] * gauss()];
+        this.recent.push(x);
+        const pw = py.toPy(this.w), px = py.toPy(x);
+        this.w = js(this.oja(pw, px, rate, this.decay)); pw.destroy(); px.destroy();
+        this.samples += 1;
+        const norm = Math.hypot(...this.w);
+        if (!this.w.every(Number.isFinite) || norm > this.LIMIT) {
+          Object.assign(this, { ranAway: true, w: [0.4, -0.3], streak: 0 });
+          this.note = `\n\nRunaway at input ${this.samples}: the weights grew without limit and were reset. ` +
+            "Strong synapses made the output bigger, which made them grow faster.";
+          break;
+        }
+        this.streak = this.align() > 0.98 && Math.abs(norm - 1) < 0.1 ? this.streak + 1 : 0;
+      }
+      this.recent = this.recent.slice(-200);
+      return this.streak >= this.HOLD;
+    },
+    tick() {
+      if (!this.running) return;
+      const done = this.learn(2);
+      const msg = `Direction match  ${pct(this.align())}  (goal 98%)\nWeight length  ${Math.hypot(...this.w).toFixed(2)}  ` +
+        `(goal 0.9 to 1.1)\nInputs  ${this.samples}`;
+      if (done) return end(`Won. ${stars(1 + this.ranAway + (this.samples <= 300))}\n\n${msg}`, true);
+      say(msg + this.note);
+    },
+    draw() {
+      for (const [x, y] of this.recent) {
+        const px = this.CX + x * this.DOT, py_ = this.CY - y * this.DOT;
+        if (px > 0 && px < W && py_ > 0 && py_ < H) circle(px, py_, 2, "--pink");
+      }
+      circle(this.CX, this.CY, this.ARROW, null, "--muted", 1, [2, 4]);
+      text("|w| = 1", this.CX + this.ARROW * 0.72, this.CY - this.ARROW * 0.72 - 12, "center", "--muted", 12);
+      text("dots: inputs the neuron sees     arrow: its two synaptic weights", 20, 20, "left", "--muted", 12);
+      arrow(this.CX, this.CY, this.CX + this.w[0] * this.ARROW, this.CY - this.w[1] * this.ARROW, "--violet", 4);
+    },
+  },
+
+  zoo: {
+    title: "Neuron zoo",
+    goal: "Make the Izhikevich neuron fire all four patterns: regular, bursting, chattering, fast.",
+    intro: "Cortical neurons do not all fire alike. Pyramidal cells fire regularly and slow down, some fire a burst " +
+      "and then settle, some fire burst after burst, and inhibitory interneurons fire fast and steady. Two model " +
+      "neurons get the same constant current. The top one is the level 1 neuron (leaky integrate-and-fire). The " +
+      "bottom one is Izhikevich's: two equations and four numbers. a is how fast a recovery current builds, c is " +
+      "the voltage it resets to after a spike, d is how much recovery each spike adds (b stays at 0.2). Set them " +
+      "and press Run.",
+    debrief: "Four numbers turned one equation into four cell types. The recovery variable u is the trick: a high " +
+      "reset c with a small kick d lets spikes come in bursts, a large d slows the cell down, a fast a lets it fire " +
+      "quickly without tiring. The leaky integrate-and-fire neuron has no recovery variable, so it can only fire " +
+      "faster or slower, never in bursts. This is why large simulations that care about firing patterns use " +
+      "Izhikevich neurons (Izhikevich 2003).",
+    kb: ["simulation/levels-of-brain-modeling.md", "levels of brain modeling"],
+    hint: "Keep a at 0.02: c -55 with d 4 bursts once, c -50 with d 2 chatters. Fast spiking needs a near 0.1.",
+    label: "Voltage traces of a leaky integrate-and-fire neuron (top) and an Izhikevich neuron (bottom) under the same current.",
+    buttons: [["Run 300 ms (Space)", "Space", s => s.run()]],
+    TOP: 130, BOTTOM: 330, LEFT: 40,   // y of the two traces' resting lines, x of their start
+    TARGETS: ["regular spiking", "intrinsically bursting", "chattering", "fast spiking"],
+    SLIDERS: [["current", 0, 20, 1, 10], ["a", 0.01, 0.12, 0.01, 0.02], ["c (mV)", -70, -45, 1, -65], ["d", 0, 10, 1, 8]],
+    controls() { return this.SLIDERS.flatMap(([name, ...range], i) => slider(`zoo${i}`, name, ...range)); },
+    reset() {
+      Object.assign(this, { found: new Set(), runs: 0, traces: null });
+      this.SLIDERS.forEach(([, , , , v], i) => { $(`zoo${i}`).value = v; });
+      say("Found  none yet\n\nSet a, c and d, then press Run.");
+    },
+    canvasClick() {},
+    // sim returns (spike times, voltage trace); name the pattern before freeing the proxies.
+    trace(p) { const s = p.get(0), kind = sim.firing_pattern(s), v = js(p.get(1)); p.destroy(); return [js(s), v, kind]; },
+    run() {
+      const [I, a, c, d] = this.SLIDERS.map((_, i) => +$(`zoo${i}`).value);
+      this.runs += 1;
+      this.traces = [this.trace(sim.lif_run(I)), this.trace(sim.izhikevich(a, 0.2, c, d, I))];
+      const kind = this.traces[1][2];
+      if (this.TARGETS.includes(kind)) this.found.add(kind);
+      const msg = `Izhikevich  ${kind}\nLIF  ${this.traces[0][2]}\n\nFound  ` +
+        (this.TARGETS.filter(t => this.found.has(t)).join(", ") || "none yet") + `\nRuns  ${this.runs}`;
+      if (this.found.size === this.TARGETS.length) return end(`Won. ${stars(1 + (this.runs <= 8) + (this.runs <= 5))}\n\n${msg}`, true);
+      say(msg);
+    },
+    tick() {},
+    draw() {
+      const span = W - this.LEFT - 20;
+      for (let ms = 0; ms <= sim.ZOO_T; ms += 100) text(`${ms} ms`, this.LEFT + ms / sim.ZOO_T * span, H - 14, "center", "--muted", 12);
+      if (!this.traces) return;
+      [[this.TOP, "leaky integrate-and-fire"], [this.BOTTOM, "Izhikevich"]].forEach(([y0, label], k) => {
+        const [spikes, v, kind] = this.traces[k];
+        text(`${label}:  ${kind}`, this.LEFT, y0 - 100, "left", "--ink", 15);
+        ctx.strokeStyle = css("--violet"); ctx.lineWidth = 2; ctx.beginPath();
+        v.forEach((mv, i) => {
+          const x = this.LEFT + i * span / v.length, y = y0 - (mv + 70) * 0.8;
+          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        });
+        ctx.stroke();
+        for (const t of spikes) { const x = this.LEFT + t / sim.ZOO_T * span; line(x, y0 + 22, x, y0 + 34, "--pink", 2); }
+      });
+    },
+  },
+
+  home: {
+    title: "Find your way home",
+    tag: ["Hypothesis", "Place, grid and head-direction cells are measured. That grid cells do the brain's path " +
+      "integration is the leading theory, not settled."],
+    goal: "Find the hidden food, then head home in one straight line and land on the nest.",
+    intro: "Your brain keeps a map. Place cells in the hippocampus fire at one spot each; grid cells next door fire " +
+      "on a hexagonal lattice that tiles the whole room, like graph paper. By adding up its own steps (path " +
+      "integration) an animal knows where it is even in the dark, and can run straight home along a path it never " +
+      "took. Arrow keys move the creature (pink). The ring is where it thinks it is. Each step is sensed with a " +
+      "little noise. The circles around the three posts are landmark place fields.",
+    debrief: "Adding up noisy steps drifts: the error grows the farther you walk. A landmark you recognise snaps the " +
+      "estimate back, which is why place fields anchor to visible cues. The straight run home was a shortcut you " +
+      "never walked: the home vector came from the map, not from memory of the route. Desert ants do this with no " +
+      "landmarks over tens of metres (Müller and Wehner 1988), and an AI agent trained to path-integrate grew " +
+      "grid-like units on its own (Banino et al. 2018).",
+    kb: ["function/spatial-navigation.md", "spatial navigation"],
+    hint: "After you find the food, walk through a post's circle so your estimate resets, then press H at once.",
+    label: "An arena seen from above with the nest, three landmark posts and the creature. Arrow keys move it; H heads home.",
+    buttons: [["Landmark correction (place cells)", null, s => s.toggle()], ["Head home (H)", "KeyH", s => s.goHome()]],
+    STEP: 0.03, FOUND_R: 0.06, HOME_R: 0.08, FAR: 0.4,   // FAR: H only works this far from the nest
+    AX: 30, AY: 20, SIDE: 400,
+    FOOD_SPOTS: [[0.9, 0.55], [0.55, 0.92], [0.92, 0.92], [0.6, 0.55]],
+    px(x, y) { return [this.AX + x * this.SIDE, this.AY + (1 - y) * this.SIDE]; },
+    reset() {
+      if (this.nav) this.nav.destroy();
+      // One grid cell's firing map (40 × 40, column by column from the top), drawn as the arena's background.
+      this.grid ||= js(py.runPython("import sim\n[[sim.grid_rate(((i + .5) / 40, 1 - (j + .5) / 40)) " +
+                                    "for j in range(40)] for i in range(40)]"));
+      this.nest ||= js(sim.NEST); this.posts ||= js(sim.LANDMARKS);
+      Object.assign(this, { nav: sim.Navigator(), food: this.FOOD_SPOTS[Math.floor(Math.random() * 4)], found: false,
+                            fixed: false, landmarks: true, trail: [this.nest], est: this.nest, run: null });
+      $("controls").children[0].setAttribute("aria-pressed", "true");
+      say("Use the arrow keys to search for food.");
+    },
+    canvasClick() {},
+    toggle() { this.landmarks = !this.landmarks; $("controls").children[0].setAttribute("aria-pressed", this.landmarks); },
+    key(e) {
+      const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+      if (d) { e.preventDefault(); this.move(...d); }
+    },
+    move(dx, dy) {
+      this.nav.landmarks = this.landmarks;
+      const drift = this.nav.error(), reset = this.nav.move(dx * this.STEP, dy * this.STEP);
+      this.fixed ||= reset && this.found && drift > 0.05;   // a landmark fixed real drift on the way home
+      const at = js(this.nav.true), est = this.nav.est;
+      this.trail.push(at);
+      this.found ||= Math.hypot(at[0] - this.food[0], at[1] - this.food[1]) < this.FOUND_R;
+      let msg = this.found ? "Food found. Now press H to run straight home." : "Searching for food.";
+      msg += `\n\nEstimate is off by ${this.nav.error().toFixed(2)}\nWalked ${this.nav.travelled.toFixed(1)} arena widths` +
+        `\nGrid cell firing at your estimate  ${pct(sim.grid_rate(est))}`;
+      this.est = js(est);
+      if (reset) msg += "\n\nA landmark's place cells reset your position.";
+      say(msg);
+    },
+    goHome() {
+      if (!this.found) return say("Find the food first, then head home.");
+      const start = this.trail.at(-1), drift = this.nav.error();
+      const straight = Math.hypot(start[0] - this.nest[0], start[1] - this.nest[1]);
+      if (straight < this.FAR) {
+        return say("You can nearly see the nest from here. Head home from farther out, where only your map knows the way.");
+      }
+      const miss = this.nav.home(), travelled = this.nav.travelled;
+      Object.assign(this, { run: [start, js(this.nav.true)], est: this.nest });
+      const msg = `Missed the nest by ${miss.toFixed(2)}. Your estimate was off by ${drift.toFixed(2)} when you set out.`;
+      if (miss >= this.HOME_R) return end(msg);
+      end(`Won. ${stars(1 + (travelled >= 3 * straight) + this.fixed)}\n\nHome. Your route out was ` +
+          `${travelled.toFixed(1)} arena widths; the way back was ${straight.toFixed(2)}.\n${msg}`, true);
+    },
+    tick() {},
+    draw() {
+      const cell = this.SIDE / 40, r = sim.PLACE_R * this.SIDE;
+      ctx.fillStyle = css("--lilac");   // alpha over glass = levels.py mix(GLASS, LILAC, rate)
+      this.grid.forEach((col, i) => col.forEach((rate, j) => {
+        ctx.globalAlpha = rate; ctx.fillRect(this.AX + i * cell, this.AY + j * cell, cell + 0.5, cell + 0.5);
+      }));
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = css("--muted"); ctx.lineWidth = 2; ctx.strokeRect(this.AX, this.AY, this.SIDE, this.SIDE);
+      for (const [lx, ly] of this.posts) {
+        const [x, y] = this.px(lx, ly);
+        circle(x, y, r, null, "--violet", 1, [4, 3]);
+        ctx.fillStyle = css("--ink"); ctx.fillRect(x - 5, y - 5, 10, 10);
+      }
+      const [nx, ny] = this.px(...this.nest);
+      ctx.globalAlpha = 0.25; circle(nx, ny, this.HOME_R * this.SIDE, "--pink"); ctx.globalAlpha = 1;
+      circle(nx, ny, this.HOME_R * this.SIDE, null, "--pink");
+      text("nest", nx, ny, "center", "--ink", 12);
+      if (this.found) circle(...this.px(...this.food), 9, "--ink");
+      ["pink dot: where it is", "ring: where it thinks it is", "squares: landmark posts",
+       "dashed circles: their place fields", "shading: one grid cell's firing fields"]
+        .forEach((s, k) => text(s, 450, 40 + k * 22, "left", "--muted", 12));
+      ctx.strokeStyle = css("--pink"); ctx.lineWidth = 2; ctx.beginPath();
+      this.trail.forEach((p, k) => k ? ctx.lineTo(...this.px(...p)) : ctx.moveTo(...this.px(...p)));
+      ctx.stroke();
+      if (this.run) arrow(...this.px(...this.run[0]), ...this.px(...this.run[1]), "--violet", 3, [8, 4]);
+      circle(...this.px(...(this.run ? this.run[1] : this.trail.at(-1))), 6, "--pink");
+      circle(...this.px(...this.est), 12, null, "--violet", 3);
     },
   },
 };
