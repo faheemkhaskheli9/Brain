@@ -50,6 +50,30 @@ Build: LIF and Izhikevich neurons, Hebbian/Oja and STDP in numpy.
 Done when: one neuron discovers a correlated input group with no labels.
 Read: [[neurons-and-synapses]], [[spiking-neural-networks]], [[learning-and-plasticity]].
 
+A minimal version of that test, with a rate neuron and Oja's rule
+([[brain-inspired-learning-algorithms]]) before you move to spikes:
+
+```python
+import numpy as np
+
+rng = np.random.default_rng(0)
+n_in, group = 20, 5                          # inputs 0-4 share one hidden cause
+w = rng.uniform(0, 0.1, n_in)
+eta = 0.01                                   # learning rate (a tuning knob)
+for _ in range(5000):
+    x = rng.normal(0, 1, n_in) * 0.5         # independent noise on every input
+    x[:group] += rng.normal()                # plus a shared signal on the group
+    y = w @ x
+    w += eta * y * (x - y * w)               # Oja's rule: Hebb plus a forgetting term
+in_group = np.abs(w[:group]).mean()
+out_group = np.abs(w[group:]).mean()
+print(f"mean |w| on the correlated group {in_group:.2f}, on the rest {out_group:.2f}, |w| = {np.linalg.norm(w):.2f}")
+assert in_group > 5 * out_group              # the neuron found the group, with no labels
+assert abs(np.linalg.norm(w) - 1) < 0.1      # and Oja's term kept the weights bounded
+```
+
+It prints a mean weight of 0.45 on the group against 0.03 on the rest, at length 1.01.
+
 ### Stage 2: A self-organising sensory layer (2-4 weeks)
 Build: a spiking layer with STDP + lateral inhibition (winner-take-all) +
 homeostasis, trained unsupervised on MNIST, as in Diehl & Cook (2015). Then try
@@ -123,6 +147,7 @@ Benchmarks that test brain-like *learning*, not just accuracy:
 - [[spatial-navigation]] - cognitive maps and the successor representation, a structured memory for an agent.
 - [[whole-brain-emulation-projects]] - the other route: copying a real brain.
 - [Brain World](../game/world/) - stages 3 and 5 in one embodied creature: actor-critic, traces and replay.
+- [Brain Lab](../game/README.md) - level 8, *Tiny brain*: a forager that needs both dopamine and an eligibility trace.
 
 ## References
 - Hassabis, Kumaran, Summerfield & Botvinick (2017) "Neuroscience-Inspired Artificial Intelligence", *Neuron* 95:245. doi:10.1016/j.neuron.2017.06.011

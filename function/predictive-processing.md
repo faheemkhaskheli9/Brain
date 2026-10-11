@@ -83,6 +83,7 @@ specific process models can be tested.
 - [[brain-inspired-learning-algorithms]] - a runnable predictive coding network.
 - [[emotion-amygdala-and-interoception]] - interoceptive inference: the same scheme applied to the body.
 - [[brain-vs-deep-learning]] - predictive coding as a backprop alternative.
+- [Brain Lab](../game/README.md) - level 7, *Guess what's next*: set the gain on prediction errors while tracking a hidden dot.
 
 ## References
 - Rao & Ballard (1999) "Predictive coding in the visual cortex", *Nature Neuroscience* 2:79. doi:10.1038/4580

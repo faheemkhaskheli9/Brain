@@ -38,6 +38,52 @@ sum plus nonlinearity used in artificial networks.
 
 Hodgkin and Huxley (1952) captured this in four differential equations, which
 is still the gold-standard biophysical neuron model ([[levels-of-brain-modeling]]).
+The four variables are the voltage V and three gates: m (Na+ activation), h (Na+
+inactivation) and n (K+ activation). The squid axon they modelled rests near -65 mV,
+a little above the -70 mV typical of mammalian neurons.
+
+```python
+import numpy as np
+
+# Hodgkin-Huxley (1952) squid axon, modern sign convention, rest near -65 mV.
+# Units: mV, ms, uA/cm^2, mS/cm^2, uF/cm^2. Constants as in Dayan & Abbott (2001), ch. 5.
+C, gNa, gK, gL = 1.0, 120.0, 36.0, 0.3
+ENa, EK, EL = 50.0, -77.0, -54.4
+
+def rates(V):
+    an = 0.01 * (V + 55) / (1 - np.exp(-(V + 55) / 10)); bn = 0.125 * np.exp(-(V + 65) / 80)
+    am = 0.1 * (V + 40) / (1 - np.exp(-(V + 40) / 10));  bm = 4.0 * np.exp(-(V + 65) / 18)
+    ah = 0.07 * np.exp(-(V + 65) / 20);                   bh = 1 / (1 + np.exp(-(V + 35) / 10))
+    return an, bn, am, bm, ah, bh
+
+def run(I, T=100.0, dt=0.01):
+    V = -65.0
+    an, bn, am, bm, ah, bh = rates(V)
+    n, m, h = an / (an + bn), am / (am + bm), ah / (ah + bh)   # start at rest
+    trace = np.empty(int(T / dt))
+    for k in range(trace.size):
+        an, bn, am, bm, ah, bh = rates(V)
+        INa, IK, IL = gNa * m**3 * h * (V - ENa), gK * n**4 * (V - EK), gL * (V - EL)
+        V += dt * (I - INa - IK - IL) / C
+        n += dt * (an * (1 - n) - bn * n)
+        m += dt * (am * (1 - m) - bm * m)
+        h += dt * (ah * (1 - h) - bh * h)
+        trace[k] = V
+    spikes = int(np.sum((trace[1:] >= 0) & (trace[:-1] < 0)))   # upward crossings of 0 mV
+    return trace, spikes
+
+for I in (1.0, 10.0, 20.0):
+    v, s = run(I)
+    print(f"I = {I:4.1f} uA/cm^2: {s:2d} spikes in 100 ms, peak {v.max():5.1f} mV, trough {v.min():5.1f} mV")
+
+assert run(1.0)[1] == 0                      # below threshold: no spike
+v, s10 = run(10.0)
+assert s10 >= 5 and v.max() > 20 and v.min() < -70   # repetitive spikes, overshoot, undershoot
+assert run(20.0)[1] > s10                    # more current, higher rate
+```
+
+At 10 uA/cm^2 it fires 7 spikes in 100 ms, each peaking near +40 mV and undershooting
+to about -75 mV, below rest: steps 2 and 3 above, from the equations alone.
 
 ### Synapses
 - **Chemical synapse.** A spike → Ca2+ influx → vesicles release transmitter →
@@ -102,3 +148,4 @@ cortical neuron's input-output behaviour at millisecond precision.
 - Hodgkin & Huxley (1952), *J Physiol* 117:500-544. doi:10.1113/jphysiol.1952.sp004764
 - Beniaguev, Segev & London (2021) "Single cortical neurons as deep artificial neural networks", *Neuron*. doi:10.1016/j.neuron.2021.07.002
 - Kandel et al., *Principles of Neural Science* (6th ed.).
+- Dayan & Abbott, *Theoretical Neuroscience* (MIT Press, 2001), chapter 5: the Hodgkin-Huxley constants used in the code.

@@ -145,6 +145,7 @@ assert err(W_sleep, XB, YB) < 0.05                             # and B is still 
 - [[learning-and-plasticity]] - the synaptic changes replay drives.
 - [[spatial-navigation]] - the place cells whose replay was first recorded.
 - [Brain World](../game/world/) - replay keeps a creature's old skills while it learns new ones.
+- [Brain Lab](../game/README.md) - level 6, *Sleep on it*: learn task B with or without replay of task A.
 
 ## References
 - Rasch & Born (2013) "About sleep's role in memory", *Physiol Rev* 93:681. doi:10.1152/physrev.00032.2012

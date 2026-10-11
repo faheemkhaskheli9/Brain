@@ -99,6 +99,16 @@ claims the page marks as established are that dopamine signals reward prediction
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
 is enough for a real brain's version of these skills is a hypothesis.
 
+## The science behind it
+
+| Mechanism here | Topic file |
+|---|---|
+| Dopamine as TD error, eligibility traces, three-factor rule | [learning-and-plasticity](../../function/learning-and-plasticity.md) |
+| Replay of earlier skills against forgetting | [memory-systems](../../function/memory-systems.md), [sleep-and-memory-consolidation](../../function/sleep-and-memory-consolidation.md) |
+| Sound scaling visual drive (gain modulation) | [neural-coding-and-computation](../../function/neural-coding-and-computation.md) |
+| Task-context gating, fovea memory as working memory | [attention-and-working-memory](../../function/attention-and-working-memory.md) |
+| Actor-critic plus replay as one learner | [build-a-brain-like-learner](../../guides/build-a-brain-like-learner.md) |
+
 ## Not done yet
 
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.

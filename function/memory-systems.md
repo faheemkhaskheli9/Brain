@@ -134,6 +134,7 @@ mathematically equivalent to attention.
 - [[spatial-navigation]] - the hippocampus as a map: place and grid cells, cognitive maps.
 - [[sleep-and-memory-consolidation]] - sleep stages, ripples and replay in detail; synaptic homeostasis.
 - [Brain World](../game/world/) - interleaved replay stops a creature forgetting old skills as it learns new ones.
+- [Brain Lab](../game/README.md) - level 5, *Remember me* (Hopfield recall and capacity), and level 6, *Sleep on it* (interleaved replay).
 
 ## References
 - McClelland, McNaughton & O'Reilly (1995) "Why there are complementary learning systems in the hippocampus and neocortex", *Psychological Review* 102:419. doi:10.1037/0033-295X.102.3.419
