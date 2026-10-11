@@ -1,0 +1,24 @@
+name: Science correction
+description: A number, claim or label in a topic does not match its source
+labels: [documentation]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: Topic file
+      placeholder: function/memory-systems.md
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What the topic says
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What it should say, and the source
+      description: A DOI or link to the paper or official page.
+    validations:
+      required: true

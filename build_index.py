@@ -9,7 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 ORDER = ("guides", "anatomy", "function", "learning", "simulation")
-SKIP = {"README.md", "AGENTS.md", "INDEX.md", "_template.md", "LICENSE-CONTENT.md"}
+SKIP = {"README.md", "AGENTS.md", "INDEX.md", "_template.md", "LICENSE-CONTENT.md",
+        "CONTRIBUTING.md", "SECURITY.md"}
 
 
 def frontmatter(text):
