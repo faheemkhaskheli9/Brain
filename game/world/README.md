@@ -108,6 +108,7 @@ is enough for a real brain's version of these skills is a hypothesis.
 | Sound scaling visual drive (gain modulation) | [neural-coding-and-computation](../../function/neural-coding-and-computation.md) |
 | Task-context gating, fovea memory as working memory | [attention-and-working-memory](../../function/attention-and-working-memory.md) |
 | Actor-critic plus replay as one learner | [build-a-brain-like-learner](../../guides/build-a-brain-like-learner.md) |
+| Save brain and Load brain: what the file holds and why | [saving-and-reusing-a-trained-brain](../../simulation/saving-and-reusing-a-trained-brain.md) |
 
 ## Not done yet
 

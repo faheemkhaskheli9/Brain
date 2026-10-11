@@ -146,6 +146,7 @@ Benchmarks that test brain-like *learning*, not just accuracy:
 - [[memory-systems]] - the CLS design behind stage 3.
 - [[spatial-navigation]] - cognitive maps and the successor representation, a structured memory for an agent.
 - [[whole-brain-emulation-projects]] - the other route: copying a real brain.
+- [[saving-and-reusing-a-trained-brain]] - what a save of a learner must hold, and learning more after loading.
 - [Brain World](../game/world/) - stages 3 and 5 in one embodied creature: actor-critic, traces and replay.
 - [Brain Lab](../game/README.md) - level 8, *Tiny brain*: a forager that needs both dopamine and an eligibility trace.
 
