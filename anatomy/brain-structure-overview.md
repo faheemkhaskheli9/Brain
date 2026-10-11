@@ -96,6 +96,7 @@ separate memory systems ([[memory-systems]]). Brain Lab level 3 is built on this
 - [[levels-of-brain-modeling]] - at what level of detail to simulate these regions.
 - [[action-selection-and-motor-control]] - basal ganglia, cerebellum and motor cortex in detail.
 - [[attention-and-working-memory]] - prefrontal cortex and thalamus in attention and working memory.
+- [[glia-and-energy-budget]] - the glial half of the cell count, and what the 20 W is spent on.
 
 ## References
 - Azevedo et al. (2009) "Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically scaled-up primate brain", *J Comp Neurol*. doi:10.1002/cne.21974
