@@ -28,9 +28,10 @@ use the question table to jump to one file.
 4. [[learning-and-plasticity]] - how synapses learn.
 5. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
 6. [[memory-systems]] - how memories form and consolidate.
-7. [[spatial-navigation]] - place cells, grid cells and the brain's map.
-8. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
-9. [[predictive-processing]] - how perception works (leading theory).
+7. [[sleep-and-memory-consolidation]] - what sleep does to memory: replay and downscaling.
+8. [[spatial-navigation]] - place cells, grid cells and the brain's map.
+9. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
+10. [[predictive-processing]] - how perception works (leading theory).
 
 **Path B: simulate the brain**
 1. [[levels-of-brain-modeling]] - choose the level of detail.
@@ -64,6 +65,7 @@ learns to walk, grasp, listen, read and write from dopamine alone: run
 | What are Hebbian learning, STDP and dopamine RPE? | [[learning-and-plasticity]] |
 | What do acetylcholine, noradrenaline and serotonin do? | [[neuromodulators]] |
 | How does the brain avoid catastrophic forgetting? | [[memory-systems]] |
+| What happens to memories during sleep? | [[sleep-and-memory-consolidation]] |
 | What are place cells and grid cells? How does an animal find its way home? | [[spatial-navigation]] |
 | How does vision work? Why are CNNs compared to visual cortex? | [[sensory-systems-and-vision]] |
 | What is predictive coding / the free-energy principle? | [[predictive-processing]] |

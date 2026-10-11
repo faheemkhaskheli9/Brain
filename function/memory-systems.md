@@ -132,6 +132,7 @@ mathematically equivalent to attention.
 - [[build-a-brain-like-learner]] - CLS as stage 3 of the roadmap.
 - [[brain-structure-overview]] - where these regions sit.
 - [[spatial-navigation]] - the hippocampus as a map: place and grid cells, cognitive maps.
+- [[sleep-and-memory-consolidation]] - sleep stages, ripples and replay in detail; synaptic homeostasis.
 - [Brain World](../game/world/) - interleaved replay stops a creature forgetting old skills as it learns new ones.
 
 ## References
