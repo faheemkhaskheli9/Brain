@@ -13,6 +13,7 @@ python -m http.server 8000        # from the repo root
 # open http://localhost:8000/game/world/
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
+node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -94,6 +95,35 @@ So replay stays at 0.3.
 Last, it saves and reloads the brain and checks that the copy takes the same 2,000 actions as the
 original.
 
+## Perform mode: using a trained brain
+
+`world.perform(key)` locks every episode to one skill and turns learning off: the brain acts and
+still computes dopamine, but no weight, success window, log entry or stage changes. `perform(null)`
+goes back to training. A save made while performing resumes training on its own stage.
+`perform.mjs` scores a save this way (`--seed N` trains that seed to graduation in memory instead).
+With learning on, every action and random draw is the same as before, so training episode counts
+did not change.
+
+With learning off, exploring is no longer needed for learning, so a skill can take its most likely
+action (greedy) instead of sampling. That only helps some skills. `node game/world/perform.mjs
+--seed N --greedy ""` (all sampling) against `--greedy walk,grasp,listen,read,write` (all greedy),
+500 episodes per skill on each seed's graduation brain:
+
+| Skill | Sampling (seeds 1, 2, 3) | Greedy (seeds 1, 2, 3) |
+|---|---|---|
+| walk | 0.99, 0.99, 0.79 | 1.00, 1.00, 1.00 |
+| grasp | 0.81, 0.75, 0.83 | 0.67, 0.58, 0.72 |
+| listen | 0.66, 0.72, 0.59 | 0.29, 0.77, 0.40 |
+| read | 0.85, 0.61, 0.50 | 0.62, 0.36, 0.14 |
+| write | 0.67, 0.52, 0.64 | 1.00, 1.00, 1.00 |
+
+So `GAINS.performGreedy` is walk and write, the default for `perform`. Grasp, listen and read are
+searches: a fixed policy turns the same way from the same view forever, and in a partially
+observed task the best memoryless policy can be stochastic (Singh, Jaakkola and Jordan 1994). A
+temperature between 0 and 1 for the search skills is the next knob to try (untested).
+`test_brain.mjs` performs each kept skill for 200 episodes on the trained brain, asserts it stays
+at the kept bar, and asserts the weights and stage are unchanged.
+
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
@@ -121,3 +151,5 @@ is enough for a real brain's version of these skills is a hypothesis.
 
 - Masse, Grant and Freedman (2018) "Alleviating catastrophic forgetting using context-dependent
   gating and synaptic stabilization", *PNAS* 115:E10467. doi:10.1073/pnas.1803839115
+- Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
+  Markovian decision processes", *Proceedings of ICML 1994*, 284-292.
