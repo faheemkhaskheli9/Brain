@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain Lab: Spark</title>
+<style>
+  /* Palette from game/levels.py: a stained histology slide (glass, cresyl violet, eosin pink) */
+  :root { --glass: #F7F2F6; --lilac: #E6DCEE; --muted: #6F6890; --violet: #5B3A8C; --pink: #D9637E; --ink: #2A2550; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--glass); color: var(--ink);
+         font: 16px/1.5 Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-weight: 600; font-size: 1.75rem; margin: 0 0 4px; }
+  .intro { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 68ch; margin: 0 0 20px; }
+  .play { display: flex; gap: 20px; flex-wrap: wrap; }
+  canvas { flex: 1 1 520px; width: 100%; max-width: 660px; aspect-ratio: 3 / 2; border: 1px solid var(--lilac);
+           background: var(--glass); cursor: crosshair; touch-action: manipulation; }
+  aside { flex: 0 1 270px; }
+  .goal { font-weight: 600; }
+  #status { white-space: pre-line; min-height: 5.5em; }
+  #hint { color: var(--violet); font-size: .875rem; }
+  button { font: inherit; color: var(--ink); background: var(--lilac); border: 0; padding: 8px 14px; margin: 4px 0;
+           cursor: pointer; width: 100%; }
+  button:hover, button:focus-visible { background: var(--violet); color: var(--glass); }
+  button:focus-visible, canvas:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+  button:disabled { opacity: .5; cursor: wait; }
+  .debrief { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 68ch; }
+  a { color: var(--violet); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Spark</h1>
+  <p class="intro">A neuron adds up the charge that flows onto its membrane. When the voltage reaches threshold
+    it fires a spike, drops below its resting level and is silent for a moment. Charge also leaks away, so input
+    that arrives slowly never adds up. Each click (or Space) sends a 10 ms pulse of current into this model neuron.
+    Time runs 20 times slower than real so you can watch it.</p>
+  <div class="play">
+    <canvas id="slide" width="660" height="440" tabindex="0" aria-label="Membrane voltage plot. Click or press Space to inject current."></canvas>
+    <aside>
+      <p class="goal">Fire exactly 5 spikes before the 500 ms window ends.</p>
+      <button id="inject" disabled>Loading the model…</button>
+      <button id="again" hidden>Try again</button>
+      <p id="status" role="status"></p>
+      <p id="hint" hidden>One click stays below threshold. Two quick clicks fire one spike, so send 5 pairs spread out.</p>
+    </aside>
+  </div>
+  <p class="debrief" id="debrief" hidden>You used temporal summation: pulses that arrive close together add up
+    before the leak drains them away. Too many in a row and the neuron keeps firing. This is the leaky
+    integrate-and-fire model, the workhorse of spiking simulations. Real neurons add ion-channel detail
+    (Hodgkin-Huxley), but threshold, leak and reset are the core.
+    Read more: <a href="../../simulation/spiking-neural-networks.md">spiking neural networks</a>.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+// Spark (level 1) in the browser. The neuron is game/sim.py's LIF, run by Pyodide;
+// this file only mirrors levels.Spark's clock, drawing and win check.
+const W = 660, H = 440, WINDOW = 500, TICK_MS = 20;
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const $ = id => document.getElementById(id);
+const ctx = $("slide").getContext("2d");
+let sim, neuron, t, pulses, clicks, spikes, points, over, timer;
+
+const x = ms => 60 + ms * (W - 110) / WINDOW;
+const y = v => H - 50 - (v + 80) * (H - 100) / 45;
+
+function draw() {
+  ctx.fillStyle = css("--glass"); ctx.fillRect(0, 0, W, H);
+  ctx.font = "13px Bahnschrift, system-ui, sans-serif"; ctx.fillStyle = css("--muted"); ctx.strokeStyle = css("--muted");
+  ctx.lineWidth = 1;
+  for (const [v, label, dash] of [[sim.V_TH, "threshold  -55 mV", [6, 4]], [sim.V_REST, "rest  -70 mV", [2, 4]]]) {
+    ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(60, y(v)); ctx.lineTo(W - 20, y(v)); ctx.stroke();
+    ctx.textAlign = "right"; ctx.fillText(label, W - 20, y(v) - 6);
+  }
+  ctx.setLineDash([]); ctx.textAlign = "center";
+  for (let ms = 0; ms <= WINDOW; ms += 100) ctx.fillText(`${ms} ms`, x(ms), H - 18);
+  ctx.font = "15px Bahnschrift, system-ui, sans-serif";
+  ctx.fillText("Click anywhere on the slide to inject current", W / 2, 28);
+  ctx.strokeStyle = css("--violet"); ctx.lineWidth = 2; ctx.beginPath();
+  points.forEach(([ts, v], i) => i ? ctx.lineTo(x(ts), y(v)) : ctx.moveTo(x(ts), y(v)));
+  ctx.stroke();
+  ctx.strokeStyle = css("--pink"); ctx.lineWidth = 4;
+  for (const [ts, v] of points) if (v === -40) { ctx.beginPath(); ctx.moveTo(x(ts), y(sim.V_TH)); ctx.lineTo(x(ts), y(-40)); ctx.stroke(); }
+}
+
+function reset() {
+  neuron = sim.LIF(); t = 0; pulses = []; clicks = 0; spikes = 0; over = false;
+  points = [[0, sim.V_REST]];
+  $("again").hidden = true; $("debrief").hidden = true; $("hint").hidden = true; $("inject").disabled = false;
+  $("status").textContent = "Waiting for your first click.";
+  draw();
+}
+
+function end(text, won) {
+  over = true; $("inject").disabled = true; $("again").hidden = false;
+  $("status").textContent = text;
+  if (won) $("debrief").hidden = false; else $("hint").hidden = false;
+}
+
+function tick() {
+  if (over || !clicks) return;
+  const current = 2.0 * pulses.length;
+  pulses = pulses.filter(p => p > 1).map(p => p - 1);
+  t += 1;
+  if (neuron.step(current, 1.0)) { spikes += 1; points.push([t, -40]); }
+  points.push([t, neuron.v]);
+  draw();
+  $("status").textContent = `Spikes  ${spikes} of 5\nClicks  ${clicks}\nTime  ${t} ms`;
+  if (spikes > 5) {
+    end(`${spikes} spikes. While the current stays high the neuron keeps firing, so stop clicking once you are close.`);
+  } else if (t >= WINDOW) {
+    if (spikes === 5) {
+      const stars = clicks <= 10 ? 3 : clicks <= 15 ? 2 : 1;
+      end(`Won: 5 spikes from ${clicks} clicks. ${"★".repeat(stars)}${"☆".repeat(3 - stars)}`, true);
+    } else {
+      end(`${spikes} spikes. Click in quick bursts: pulses close together add up before the charge leaks away.`);
+    }
+  }
+}
+
+function click() {
+  if (neuron && !over) { pulses.push(10); clicks += 1; }
+}
+
+async function main() {
+  try {
+    const py = await loadPyodide();
+    await py.loadPackage("numpy");
+    const src = await fetch("../sim.py");
+    if (!src.ok) throw new Error(`could not fetch game/sim.py (HTTP ${src.status})`);
+    py.FS.writeFile("sim.py", await src.text());
+    sim = py.pyimport("sim");
+  } catch (e) {
+    $("inject").textContent = "Model failed to load";
+    $("status").textContent = `${e.message}. Serve the repo over HTTP (python -m http.server from the repo root) and open /game/web/.`;
+    return;
+  }
+  $("inject").textContent = "Inject current (Space)";
+  $("inject").onclick = click;
+  $("again").onclick = reset;
+  $("slide").onclick = click;
+  document.addEventListener("keydown", e => {
+    if (e.code === "Space" && e.target.tagName !== "BUTTON") { e.preventDefault(); click(); }
+  });
+  reset();
+  timer = setInterval(tick, TICK_MS);
+}
+main();
+</script>
+</body>
+</html>
