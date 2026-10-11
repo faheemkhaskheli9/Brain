@@ -74,11 +74,14 @@ game/
   - the grid cell's map repeats along three directions 60° apart, path integration drifts
     more the farther it walks, and a landmark resets it.
 - `eval.py` checks models against real brain data instead, one row per reference, and
-  exits non-zero if a row fails. It is a per-level table, not one "brain-likeness" score.
+  exits non-zero if a row fails. A `gap` row is a known mismatch, printed but not scored.
+  It is a per-level table, not one "brain-likeness" score.
+  Level 2 has rows against Bi & Poo 1998: sign of the timing window and its width pass,
+  but the rule is symmetric while their potentiation is about 2.7x their depression (gap).
   Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,
   dip and late burst when reward is delayed). Level 6 has qualitative rows against the
   human savings curve (Murre & Dros 2015): forgetting is front-loaded, and replay mostly
-  stops it. Levels 1 and 2 wait on digitized data (issues #24, #25).
+  stops it. Level 1 waits on Allen Cell Types data (issue #24).
 
 ## Not done yet
 
