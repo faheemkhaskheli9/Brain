@@ -96,6 +96,7 @@ cortical neuron's input-output behaviour at millisecond precision.
 - [[brain-structure-overview]] - where these cells sit.
 - [[learning-and-plasticity]] - how synapses change.
 - [[spiking-neural-networks]] - simulating neurons in code.
+- [[dendritic-computation]] - NMDA spikes and the neuron as a two-layer network.
 
 ## References
 - Hodgkin & Huxley (1952), *J Physiol* 117:500-544. doi:10.1113/jphysiol.1952.sp004764

@@ -154,6 +154,7 @@ background and a noisy path integrator with landmark resets (`game/sim.py`).
 - [[learning-and-plasticity]] - the TD rule that learns both value and the successor representation.
 - [[build-a-brain-like-learner]] - where a predictive map fits in the roadmap.
 - [[brain-structure-overview]] - where the hippocampus and entorhinal cortex sit.
+- [[brain-rhythms-and-oscillations]] - theta, and place cells' phase precession against it.
 
 ## References
 - O'Keefe & Dostrovsky (1971) "The hippocampus as a spatial map. Preliminary evidence from unit activity in the freely-moving rat", *Brain Research* 34:171. doi:10.1016/0006-8993(71)90358-1
