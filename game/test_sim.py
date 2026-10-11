@@ -92,6 +92,13 @@ def test_oja_finds_pc1_and_hebb_explodes():
     assert np.linalg.norm(h) > 5, "pure Hebb should grow without bound"
 
 
+def test_izhikevich_presets_fire_their_patterns_and_lif_never_bursts():
+    for kind, params in sim.IZH_PRESETS.items():
+        assert sim.firing_pattern(sim.izhikevich(*params, 10)[0]) == kind, kind
+    lif = {sim.firing_pattern(sim.lif_run(I)[0]) for I in range(21)}
+    assert lif <= {"too few spikes", "regular spiking", "fast spiking"}, lif
+
+
 if __name__ == "__main__":
     for name, fn in list(globals().items()):
         if name.startswith("test_"):

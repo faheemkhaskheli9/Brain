@@ -1,4 +1,4 @@
-"""The nine Brain Lab levels. Each one drives a model from sim.py on a tkinter canvas."""
+"""The ten Brain Lab levels. Each one drives a model from sim.py on a tkinter canvas."""
 import tkinter as tk
 
 import numpy as np
@@ -847,4 +847,79 @@ class Pattern(Level):
         c.coords(self.arrow, self.CX, self.CY, self.CX + wx, self.CY - wy)
 
 
-LEVELS = [Spark, Wire, Lesion, Dopamine, Remember, Sleep, Predict, TinyBrain, Pattern]
+class Zoo(Level):
+    title = "Neuron zoo"
+    goal = "Make the Izhikevich neuron fire all four patterns: regular, bursting, chattering, fast."
+    intro = ("Cortical neurons do not all fire alike. Pyramidal cells fire regularly and slow down, some "
+             "fire a burst and then settle, some fire burst after burst, and inhibitory interneurons fire "
+             "fast and steady.\n\nTwo model neurons get the same constant current. The top one is the "
+             "level 1 neuron (leaky integrate-and-fire). The bottom one is Izhikevich's: two equations and "
+             "four numbers. a is how fast a recovery current builds, c is the voltage it resets to after "
+             "a spike, d is how much recovery each spike adds (b stays at 0.2). Set them and press Run.")
+    debrief = ("Four numbers turned one equation into four cell types. The recovery variable u is the trick: "
+               "a high reset c with a small kick d lets spikes come in bursts, a large d slows the cell "
+               "down, a fast a lets it fire quickly without tiring. The leaky integrate-and-fire neuron has "
+               "no recovery variable, so it can only fire faster or slower, never in bursts. This is why "
+               "large simulations that care about firing patterns use Izhikevich neurons (Izhikevich 2003).")
+    kb = "simulation/levels-of-brain-modeling.md"
+    TOP, BOTTOM, LEFT = 130, 330, 40   # y of the two traces' resting lines, x of their start
+    TARGETS = ("regular spiking", "intrinsically bursting", "chattering", "fast spiking")
+
+    def build(self):
+        self.found, self.runs = set(), 0
+        self.sliders = {}
+        for name, lo, hi, res, val in (("current", 0, 20, 1, 10), ("a", 0.01, 0.12, 0.01, 0.02),
+                                       ("c (mV)", -70, -45, 1, -65), ("d", 0, 10, 1, 8)):
+            tk.Label(self.side, text=name, font=UI, fg=INK, bg=GLASS, anchor="w").pack(fill="x")
+            s = tk.Scale(self.side, from_=lo, to=hi, resolution=res, orient="horizontal", bg=GLASS,
+                         troughcolor=LILAC, highlightthickness=0, activebackground=VIOLET, sliderrelief="flat",
+                         length=240, font=SMALL, fg=MUTED)
+            s.set(val)
+            s.pack(fill="x")
+            self.sliders[name] = s
+        self.button("Run 300 ms  (Space)", self.run)
+        self.say("Found  none yet\n\nSet a, c and d, then press Run.")
+
+    def key(self, keysym):
+        if keysym == "space":
+            self.run()
+
+    def set(self, current, a, c, d):
+        for name, v in zip(self.sliders, (current, a, c, d)):
+            self.sliders[name].set(v)
+
+    def run(self):
+        if self.over:
+            return
+        I, a, c, d = (s.get() for s in self.sliders.values())
+        self.runs += 1
+        lif, izh = sim.lif_run(I), sim.izhikevich(a, 0.2, c, d, I)
+        lif_kind, izh_kind = sim.firing_pattern(lif[0]), sim.firing_pattern(izh[0])
+        if izh_kind in self.TARGETS:
+            self.found.add(izh_kind)
+        self.draw(lif, lif_kind, izh, izh_kind)
+        msg = (f"Izhikevich  {izh_kind}\nLIF  {lif_kind}\n\nFound  "
+               + (", ".join(t for t in self.TARGETS if t in self.found) or "none yet")
+               + f"\nRuns  {self.runs}")
+        if len(self.found) == len(self.TARGETS):
+            return self.win(1 + (self.runs <= 8) + (self.runs <= 5), msg)
+        self.say(msg)
+
+    def draw(self, lif, lif_kind, izh, izh_kind):
+        c = self.canvas
+        c.delete("all")
+        for y0, (spikes, v), label in ((self.TOP, lif, "leaky integrate-and-fire"), (self.BOTTOM, izh, "Izhikevich")):
+            kind = lif_kind if y0 == self.TOP else izh_kind
+            c.create_text(self.LEFT, y0 - 100, text=f"{label}:  {kind}", anchor="w", font=UI, fill=INK)
+            pts = [p for i in range(len(v))
+                   for p in (self.LEFT + i * (W - self.LEFT - 20) / len(v), y0 - (v[i] + 70) * 0.8)]
+            c.create_line(*pts, fill=VIOLET, width=2)
+            for t in spikes:
+                x = self.LEFT + t / sim.ZOO_T * (W - self.LEFT - 20)
+                c.create_line(x, y0 + 22, x, y0 + 34, fill=PINK, width=2)
+        for ms in range(0, int(sim.ZOO_T) + 1, 100):
+            c.create_text(self.LEFT + ms / sim.ZOO_T * (W - self.LEFT - 20), H - 14, text=f"{ms} ms",
+                          font=SMALL, fill=MUTED)
+
+
+LEVELS = [Spark, Wire, Lesion, Dopamine, Remember, Sleep, Predict, TinyBrain, Pattern, Zoo]

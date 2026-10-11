@@ -29,12 +29,13 @@ Each level opens once the one before it is won.
 | 7 | Guess what's next | Set how much a belief trusts noisy senses while a dot moves behind a screen | Tracking error under 0.05 for 12 s | Prediction plus gain × prediction error | [predictive-processing](../function/predictive-processing.md) |
 | 8 | Tiny brain | Switch dopamine and the eligibility trace on or off, then run a forager | 10 meals within 400 steps | Actor-critic three-factor rule (trace × dopamine) | [build-a-brain-like-learner](../guides/build-a-brain-like-learner.md) |
 | 9 | Find the pattern (bonus) | Feed 2-D inputs to one neuron, set its learning rate, switch Oja's forgetting term on or off | Weights line up with the inputs' first principal component at length ≈ 1, held for 100 inputs | Hebb vs Oja's rule, `Δw = ηy(x − yw)` | [brain-inspired-learning-algorithms](../learning/brain-inspired-learning-algorithms.md) |
+| 10 | Neuron zoo (bonus) | Set current and the Izhikevich parameters a, c, d; an LIF neuron gets the same current | The Izhikevich neuron has fired regular, intrinsically bursting, chattering and fast spiking | Izhikevich 2003 vs LIF, patterns named from interspike intervals | [levels-of-brain-modeling](../simulation/levels-of-brain-modeling.md) |
 
 Every level has an intro card, the play screen and a debrief that explains what happened
 and links its topic file. Each intro is tagged **Established** or **Hypothesis**, as the
 topic files are. Levels 6–9 are tagged Hypothesis, with a line saying which part is
-settled and which is theory. Level 9 comes after the boss so existing save files keep
-their level numbers.
+settled and which is theory. Levels 9 and 10 come after the boss so existing save files
+keep their level numbers.
 
 Stars: 1 for a win; 2 and 3 for an efficient win or a bonus. The bonus is a debrief point
 worth seeing, for example juice with no bell in level 4.
@@ -63,12 +64,14 @@ game/
   - without replay task A is forgotten, and with replay it is kept;
   - the tracker has a gain sweet spot;
   - the forager needs both dopamine and the trace to win within 400 steps;
-  - Oja's rule finds the first principal component at length 1, and pure Hebb blows up.
+  - Oja's rule finds the first principal component at length 1, and pure Hebb blows up;
+  - the four Izhikevich 2003 presets fire their named patterns, and the LIF never bursts.
 - `eval.py` checks models against real brain data instead, one row per reference, and
   exits non-zero if a row fails. It is a per-level table, not one "brain-likeness" score.
   Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,
-  dip and late burst when reward is delayed). Levels 1, 2 and 6 wait on digitized data
-  (issues #24, #25, #27).
+  dip and late burst when reward is delayed). Level 6 has qualitative rows against the
+  human savings curve (Murre & Dros 2015): forgetting is front-loaded, and replay mostly
+  stops it. Levels 1 and 2 wait on digitized data (issues #24, #25).
 
 ## Not done yet
 

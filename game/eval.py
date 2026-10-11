@@ -9,6 +9,8 @@ Run: python game/eval.py   (exits 1 if any row fails)
 """
 import sys
 
+import numpy as np
+
 import sim
 
 SCHULTZ = "Schultz, Dayan & Montague 1997 (Science 275:1593)"
@@ -43,7 +45,48 @@ def level4_td():
     ]
 
 
-ROWS = [level4_td]
+MURRE = "Murre & Dros 2015 (PLOS ONE 10:e0120644), Table 3"
+# Savings at 20 min, 1 h, 9 h, 1 d, 2 d, 6 d, 31 d, read from the table image (doi:10.1371/journal.pone.0120644.t003).
+SAVINGS_DAYS = [20 / 1440, 1 / 24, 9 / 24, 1, 2, 6, 31]
+SAVINGS = {"Ebbinghaus 1885": [0.582, 0.442, 0.358, 0.337, 0.278, 0.254, 0.211],
+           "Dros 2015": [0.472, 0.373, 0.276, 0.317, 0.230, 0.168, 0.041]}
+
+
+def front_loaded(t, y):
+    """Share of the total loss already gone 1/8 of the way through the span (time axes rescaled)."""
+    t_eighth = t[0] + (t[-1] - t[0]) / 8
+    return (y[0] - np.interp(t_eighth, t, y)) / (y[0] - y[-1])
+
+
+def level6_forgetting():
+    """Level 6 forgetting of task A vs the human savings curve (issue #27). Shape only."""
+    DAYS, curves = 8, {}   # level 6's day budget (levels.Sleep.DAYS; levels imports tkinter)
+    for replay in (False, True):
+        a, b = sim.make_tasks()
+        net = sim.Associator()
+        net.train(*a, 50)
+        curves[replay] = [net.accuracy(*a)]
+        for _ in range(DAYS):
+            sim.sleep_day(net, a, b, replay)
+            curves[replay].append(net.accuracy(*a))
+    plain = curves[False]
+    model = front_loaded(np.arange(DAYS + 1), plain)
+    human = ", ".join(f"{k} {front_loaded(SAVINGS_DAYS, v):.0%}" for k, v in SAVINGS.items())
+    return [
+        # The day mapping is arbitrary and the model is a linear associator, so only the shape counts.
+        (6, MURRE, "qualitative: without replay, A decays fast then slowly (share of loss in first 1/8 of span)",
+         f"model {model:.0%} (A {plain[0]:.0%} -> {plain[-1]:.0%}); {human}",
+         all(x >= y for x, y in zip(plain, plain[1:])) and model >= 0.5),
+        # Murre & Dros review the evidence that sleep reduces forgetting (Jenkins & Dallenbach 1924
+        # onward) and find a jump at 24 h in Dros's curve. Replay as the cause is a hypothesis, and
+        # the model never shows the jump: accuracy only falls.
+        (6, MURRE, "qualitative, hypothesis: sleep replay sharply reduces forgetting",
+         f"A after {DAYS} days: {curves[True][-1]:.0%} with replay, {plain[-1]:.0%} without",
+         curves[True][-1] >= 0.8 > plain[-1]),
+    ]
+
+
+ROWS = [level4_td, level6_forgetting]
 
 
 def main():

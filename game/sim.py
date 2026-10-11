@@ -277,3 +277,62 @@ def alignment(w, C=OJA_COV):
     """|cos| between w and the input's first principal component (1.0 = found it)."""
     pc1 = np.linalg.eigh(C)[1][:, -1]
     return float(abs(w @ pc1) / max(np.linalg.norm(w), 1e-12))
+
+
+# --- Izhikevich neuron (simulation/levels-of-brain-modeling.md, spiking-neural-networks.md) ---
+# Izhikevich 2003, IEEE Trans Neural Networks 14:1569, Fig. 2: (a, b, c, d) per cortical cell type.
+IZH_PRESETS = {
+    "regular spiking": (0.02, 0.2, -65, 8),
+    "intrinsically bursting": (0.02, 0.2, -55, 4),
+    "chattering": (0.02, 0.2, -50, 2),
+    "fast spiking": (0.1, 0.2, -65, 2),
+}
+ZOO_T, ZOO_DT = 300.0, 0.25   # ms
+LIF_PER_IZH = 0.2             # game gain: nA of LIF current per Izhikevich current unit (10 -> 2 nA)
+
+
+def izhikevich(a, b, c, d, current, T=ZOO_T, dt=ZOO_DT):
+    """Constant current for T ms. Returns (spike times in ms, voltage trace in mV)."""
+    v, u, spikes, trace = -65.0, b * -65.0, [], []
+    for k in range(int(T / dt)):
+        v += dt * (0.04 * v * v + 5 * v + 140 - u + current)
+        u += dt * a * (b * v - u)
+        if v >= 30:
+            trace.append(30.0)
+            v, u = c, u + d
+            spikes.append(k * dt)
+        else:
+            trace.append(v)
+    return spikes, np.array(trace)
+
+
+def lif_run(current, T=ZOO_T, dt=ZOO_DT):
+    """The level 1 LIF neuron under the same constant current, scaled to nA."""
+    n, spikes, trace = LIF(), [], []
+    for k in range(int(T / dt)):
+        spiked = n.step(current * LIF_PER_IZH, dt)
+        if spiked:
+            spikes.append(k * dt)
+        trace.append(30.0 if spiked else n.v)
+    return spikes, np.array(trace)
+
+
+def firing_pattern(spikes, T=ZOO_T):
+    """Name a spike train's pattern from its interspike intervals.
+
+    A burst is 3+ spikes whose intervals are under a quarter of the longest one.
+    No bursts: fast spiking at 50 Hz or more, else regular spiking.
+    """
+    if len(spikes) < 3:
+        return "too few spikes"
+    isi = np.diff(spikes)
+    short = isi < 0.25 * isi.max()
+    runs = "".join("s" if s else "." for s in short).split(".")
+    bursts = sum(len(r) >= 2 for r in runs)
+    if bursts >= 2:
+        return "chattering"
+    if bursts == 1 and short[0] and short[1]:
+        return "intrinsically bursting"
+    if bursts:
+        return "irregular"
+    return "fast spiking" if len(spikes) / T * 1000 >= 50 else "regular spiking"
