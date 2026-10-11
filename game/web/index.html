@@ -11,7 +11,7 @@
   body { margin: 0; background: var(--glass); color: var(--ink);
          font: 16px/1.5 Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif; }
   main { max-width: 980px; margin: 0 auto; padding: 24px 16px; }
-  nav { display: flex; gap: 8px; margin: 0 0 16px; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
   nav a { padding: 4px 10px; text-decoration: none; background: var(--lilac); }
   nav a[aria-current] { background: var(--violet); color: var(--glass); }
   h1 { font-weight: 600; font-size: 1.75rem; margin: 0 0 4px; }
@@ -28,14 +28,19 @@
   button:hover, button:focus-visible { background: var(--violet); color: var(--glass); }
   button:focus-visible, canvas:focus-visible, nav a:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
   button:disabled { opacity: .5; cursor: wait; }
+  button[aria-pressed="false"]::before { content: "☐  "; }
+  button[aria-pressed="true"]::before { content: "☑  "; }
+  .tag { font-size: .8125rem; letter-spacing: .06em; color: var(--muted); margin: 0 0 8px; max-width: 68ch; }
+  .tag b { color: var(--violet); text-transform: uppercase; }
   .debrief { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 68ch; }
   a { color: var(--violet); }
 </style>
 </head>
 <body>
 <main>
-  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a></nav>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a></nav>
   <h1 id="title"></h1>
+  <p class="tag" id="tag"></p>
   <p class="intro" id="intro"></p>
   <div class="play">
     <canvas id="slide" width="660" height="440" tabindex="0"></canvas>
@@ -51,14 +56,15 @@
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Brain Lab levels 1 to 4 in the browser. The models are game/sim.py, run by Pyodide;
+// Brain Lab levels 1 to 6 in the browser. The models are game/sim.py, run by Pyodide;
 // this file only mirrors each levels.py class's text, clock, drawing and win check.
 const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const $ = id => document.getElementById(id);
 const ctx = $("slide").getContext("2d");
 const font = px => `${px}px Bahnschrift, system-ui, sans-serif`;
-let sim, level, over, hintTimer;
+const pct = v => `${Math.round(v * 100)}%`;
+let py, sim, level, over, hintTimer;
 
 function text(s, x, y, align = "center", color = "--muted", px = 13) {
   ctx.font = font(px); ctx.fillStyle = css(color); ctx.textAlign = align; ctx.textBaseline = "middle";
@@ -341,6 +347,159 @@ const LEVELS = {
       }
     },
   },
+
+  remember: {
+    title: "Remember me",
+    goal: "Store at least 3 memories and pass a recall test. Then keep storing until recall breaks.",
+    intro: "The hippocampus can store a memory in one go and recall the whole thing from a fragment. A Hopfield " +
+      "network does the same. Storing a pattern strengthens the connections between neurons that are active " +
+      "together; recall lets the network settle into the nearest stored pattern. Here 64 neurons form an 8 × 8 " +
+      "grid. Click and drag on the grid to draw.",
+    debrief: "Recall settles into an attractor: the stored pattern closest to the cue. Capacity is limited. Random " +
+      "patterns start to interfere at about 0.14 × N, about 9 for 64 neurons, and similar patterns, like hand " +
+      "drawings, interfere sooner. Modern Hopfield networks raise capacity sharply and are mathematically close to " +
+      "attention.",
+    kb: ["function/memory-systems.md", "memory systems"],
+    hint: "Similar drawings blur together. Store random patterns, press Test after each one, and keep going.",
+    label: "An 8 by 8 drawing grid on the left and thumbnails of the stored memories on the right. Click and drag to draw.",
+    buttons: [["Store drawing", null, s => s.store()], ["Store a random pattern", null, s => s.storeRandom()],
+              ["Recall from drawing", null, s => s.recall()], ["Test all memories", null, s => s.test()],
+              ["Clear drawing", null, s => s.state.fill(-1)]],
+    CELL: 40, X0: 30, Y0: 40,
+    reset() {
+      if (this.net) this.net.destroy();
+      Object.assign(this, { net: sim.Hopfield(64), state: new Array(64).fill(-1), patterns: [], results: [],
+                            passed: false, completed: false, recallSteps: 0, ink: 1 });
+      say("Draw a shape, then store it.");
+    },
+    canvasClick() {},
+    // Pointer down picks the ink (the opposite of the first cell touched); dragging keeps it.
+    paint(x, y, first) {
+      const col = Math.floor((x - this.X0) / this.CELL), row = Math.floor((y - this.Y0) / this.CELL);
+      if (col < 0 || col > 7 || row < 0 || row > 7 || this.recallSteps) return;
+      const i = row * 8 + col;
+      if (first) this.ink = -this.state[i];
+      this.state[i] = this.ink;
+    },
+    store() {
+      if (this.state.every(v => v < 0)) return say("The drawing is empty. Draw something first.");
+      const p = py.toPy(this.state); this.net.store(p); p.destroy();
+      this.patterns.push([...this.state]); this.results = [];
+      say(`${this.patterns.length} memories stored.`);
+    },
+    storeRandom() { this.state = Array.from({ length: 64 }, () => Math.random() < 0.5 ? 1 : -1); this.store(); },
+    recall() {
+      if (!this.patterns.length) return say("Store a memory first, then draw part of it and recall.");
+      this.recallSteps = 10;
+      say("Recalling…");
+    },
+    tick() {
+      if (!this.recallSteps) return;
+      this.recallSteps -= 1;
+      const s = py.toPy(this.state), p = this.net.update(s), next = Array.from(p.toJs()); s.destroy(); p.destroy();
+      const stable = next.every((v, i) => v === this.state[i]);
+      this.state = next;
+      if (stable || !this.recallSteps) {
+        this.recallSteps = 0; this.completed = true;
+        const best = Math.max(...this.patterns.map(m => m.reduce((sum, v, i) => sum + v * next[i], 0) / 64));
+        say(`Settled. Best match with a stored memory: ${pct(best)}.`);
+      }
+    },
+    test() {
+      const n = this.patterns.length;
+      if (n < 3) return say(`${n} stored. Store at least 3 memories first.`);
+      const p = this.net.test(); this.results = Array.from(p.toJs()); p.destroy();
+      const good = this.results.filter(r => r > 0.95).length;
+      let msg = `Each memory was corrupted by 10% and recalled.\n${good} of ${n} came back intact.`;
+      if (good === n) {
+        this.passed = true;
+        msg += "\n\nAll recalled. Keep storing memories until recall breaks.";
+      } else if (this.passed) {
+        return end(`Won. ${stars(1 + this.completed + (n >= 9))}\n\n${msg}\n\nRecall broke at ${n} memories.`, true);
+      }
+      say(msg);
+    },
+    draw() {
+      text("drawing / recall", this.X0, 20, "left", "--muted", 12);
+      ctx.lineWidth = 1;
+      this.state.forEach((v, i) => {
+        const x = this.X0 + (i % 8) * this.CELL, y = this.Y0 + Math.floor(i / 8) * this.CELL;
+        ctx.fillStyle = css(v > 0 ? "--violet" : "--glass"); ctx.fillRect(x, y, this.CELL, this.CELL);
+        ctx.strokeStyle = css("--lilac"); ctx.strokeRect(x, y, this.CELL, this.CELL);
+      });
+      text("stored memories", 390, 20, "left", "--muted", 12);
+      this.patterns.slice(0, 24).forEach((m, k) => {
+        const x0 = 390 + (k % 5) * 52, y0 = 40 + Math.floor(k / 5) * 52, r = this.results[k];
+        ctx.strokeStyle = css(r === undefined ? "--muted" : r > 0.95 ? "--violet" : "--pink");
+        ctx.lineWidth = 2; ctx.strokeRect(x0 - 3, y0 - 3, 46, 46);
+        ctx.fillStyle = css("--ink");
+        m.forEach((v, i) => { if (v > 0) ctx.fillRect(x0 + (i % 8) * 5, y0 + Math.floor(i / 8) * 5, 5, 5); });
+      });
+    },
+  },
+
+  sleep: {
+    title: "Sleep on it",
+    tag: ["Hypothesis", "Replay during sleep is observed in the hippocampus. That it is how the brain avoids " +
+      "forgetting is the leading theory, not settled."],
+    goal: "Learn task B to 90% while keeping task A at 80% or above.",
+    intro: "A network that learns new associations on the same synapses overwrites old ones. This is catastrophic " +
+      "forgetting. The brain seems to avoid it by replaying experience during sleep, mixing old memories in with " +
+      "the new. This network already knows task A: 8 associations. Task B is 8 new ones that look a lot like them. " +
+      "Each day it practises task B.",
+    debrief: "Learning B alone pulled the shared weights away from A. Mixing A back in while learning B finds weights " +
+      "that serve both. This is the complementary learning systems idea: the hippocampus stores episodes fast and " +
+      "replays them, so the cortex can learn slowly without overwriting what it knows. In AI the same trick is " +
+      "experience replay.",
+    kb: ["function/memory-systems.md", "memory systems"],
+    hint: "Switch on sleep replay before you learn task B.",
+    label: "Line chart of task A and task B accuracy for each day of practice.",
+    buttons: [["Sleep replay of task A", null, s => s.toggle()], ["Learn task B for a day", null, s => s.day()]],
+    DAYS: 8,
+    // Python's f(*task): pull X, Y out of the task's PyProxy tuple (spreading it destroys borrowed proxies).
+    unpack(task, f) { const X = task.get(0), Y = task.get(1), v = f(X, Y); X.destroy(); Y.destroy(); return v; },
+    acc(task) { return this.unpack(task, (X, Y) => this.net.accuracy(X, Y)); },
+    reset() {
+      for (const p of [this.net, this.a, this.b]) if (p) p.destroy();
+      const tasks = sim.make_tasks();
+      Object.assign(this, { a: tasks.get(0), b: tasks.get(1), net: sim.Associator(), forgot: false, replay: false });
+      tasks.destroy();
+      this.unpack(this.a, (X, Y) => this.net.train(X, Y, 50));
+      this.hist = [[this.acc(this.a), this.acc(this.b)]];
+      $("controls").children[0].setAttribute("aria-pressed", "false");
+      say(`Day 0\nTask A ${pct(this.hist[0][0])}\nTask B ${pct(this.hist[0][1])}`);
+    },
+    canvasClick() {},
+    toggle() { this.replay = !this.replay; $("controls").children[0].setAttribute("aria-pressed", this.replay); },
+    day() {
+      sim.sleep_day(this.net, this.a, this.b, this.replay);
+      const a = this.acc(this.a), b = this.acc(this.b);
+      this.hist.push([a, b]);
+      this.forgot ||= a < 0.8;
+      const days = this.hist.length - 1;
+      let msg = `Day ${days}${this.replay ? " (with replay)" : ""}\nTask A ${pct(a)}\nTask B ${pct(b)}`;
+      if (a >= 0.8 && b >= 0.9) return end(`Won. ${stars(1 + this.forgot + (days <= 4))}\n\n${msg}`, true);
+      if (a < 0.8) msg += "\n\nTask A is being forgotten.";
+      if (days >= this.DAYS) return end(`${msg}\n\nOut of days.`);
+      say(msg);
+    },
+    tick() {},
+    draw() {
+      const x = d => 60 + d * (W - 100) / this.DAYS, y = acc => 380 - acc * 320;
+      for (const acc of [0, 0.5, 1]) text(pct(acc), 50, y(acc), "right", "--muted", 12);
+      line(x(0), y(0.8), x(this.DAYS), y(0.8), "--violet", 1, [4, 3]);
+      line(x(0), y(0.9), x(this.DAYS), y(0.9), "--pink", 1, [4, 3]);
+      for (let d = 0; d <= this.DAYS; d++) text(String(d), x(d), 400, "center", "--muted", 12);
+      text("day", x(this.DAYS / 2), 425, "center", "--muted", 12);
+      [["--violet", "task A"], ["--pink", "task B"]].forEach(([color, name], i) => {
+        text(name, x(0) + 10 + i * 90, 30, "left", color, 15);
+        ctx.strokeStyle = ctx.fillStyle = css(color); ctx.lineWidth = 3; ctx.beginPath();
+        this.hist.forEach((h, d) => d ? ctx.lineTo(x(d), y(h[i])) : ctx.moveTo(x(d), y(h[i])));
+        ctx.stroke();
+        this.hist.forEach((h, d) => { ctx.beginPath(); ctx.arc(x(d), y(h[i]), 4, 0, 2 * Math.PI); ctx.fill(); });
+      });
+    },
+  },
 };
 
 function render() {
@@ -363,6 +522,9 @@ function open() {
   document.title = `Brain Lab: ${level.title}`;
   for (const a of document.querySelectorAll("nav a")) a.toggleAttribute("aria-current", a.hash === `#${id || "spark"}`);
   $("title").textContent = level.title;
+  const [tag, note] = level.tag || ["Established", ""];
+  $("tag").replaceChildren(Object.assign(document.createElement("b"), { textContent: tag }), note && `  ${note}`);
+  $("slide").style.touchAction = level.paint ? "none" : "";  // let a finger draw instead of scroll
   $("intro").textContent = level.intro;
   $("goal").textContent = level.goal;
   $("hint").textContent = `Hint: ${level.hint}`;
@@ -382,7 +544,7 @@ async function main() {
   open();
   window.addEventListener("hashchange", open);
   try {
-    const py = await loadPyodide();
+    py = await loadPyodide();
     await py.loadPackage("numpy");
     const src = await fetch("../sim.py");
     if (!src.ok) throw new Error(`could not fetch game/sim.py (HTTP ${src.status})`);
@@ -394,10 +556,13 @@ async function main() {
     return;
   }
   $("again").onclick = start;
-  $("slide").onclick = e => {
+  const at = e => {
     const r = e.currentTarget.getBoundingClientRect();
-    if (!over) level.canvasClick((e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height);
+    return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height];
   };
+  $("slide").onclick = e => { if (!over) level.canvasClick(...at(e)); };
+  $("slide").onpointerdown = e => { if (!over && level.paint) level.paint(...at(e), true); };
+  $("slide").onpointermove = e => { if (!over && level.paint && e.buttons) level.paint(...at(e), false); };
   document.addEventListener("keydown", e => {
     // Also when a button has focus, so Space fires the output rather than re-pressing that button.
     // Once the level is over, Space falls through to activate a focused "Try again".
