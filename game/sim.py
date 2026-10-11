@@ -59,6 +59,45 @@ class STDP:
         np.clip(self.w, 0, 1, out=self.w)
 
 
+# --- Lesion lab table (anatomy/brain-structure-overview.md) ---
+# Main jobs from anatomy/brain-structure-overview.md; lesion effects and their sources are in
+# its "What lesions show" section. Each entry: position, job, role, deficit, evidence.
+REGIONS = {
+    "Prefrontal cortex": ((150, 140), "Hold a phone number in mind while you dial it",
+                          "working memory, goals and cognitive control",
+                          "It repeats a number back at once, but loses it after a few seconds' delay.",
+                          "Funahashi, Bruce & Goldman-Rakic 1993 (monkeys)"),
+    "Neocortex": ((380, 100), "Recognise a friend's face in a crowd",
+                  "perception, language, reasoning and planning",
+                  "It sees eyes, nose and mouth but cannot tell whose face it is. It knows friends by voice.",
+                  "acquired prosopagnosia, Barton 2008"),
+    "Basal ganglia": ((220, 200), "Pick the action that paid off before, until it becomes a habit",
+                      "action selection and habits, learned from dopamine",
+                      "It remembers every practice session, yet the habit never forms.",
+                      "Parkinson's patients, Knowlton, Mangels & Squire 1996"),
+    "Thalamus": ((400, 190), "Gate which sensory signals reach the cortex",
+                 "relay and gating of signals into the cortex",
+                 "Its eyes and skin still work, but touch from one side of the body no longer gets through.",
+                 "thalamic strokes, Schmahmann 2003"),
+    "Amygdala": ((240, 280), "Fear a dog that bit you once",
+                 "emotional salience and fear learning",
+                 "It walks straight up to the dog that bit it. It can tell you about the bite but shows no fear.",
+                 "Bechara et al. 1995; patient S.M., Feinstein et al. 2011"),
+    "Hippocampus": ((420, 260), "Remember where you parked this morning",
+                    "fast episodic memory and spatial maps",
+                    "It forgets where it parked within minutes. Childhood memories and old skills are intact.",
+                    "patient H.M., Scoville & Milner 1957"),
+    "Cerebellum": ((540, 320), "Time a hand movement to catch a ball",
+                   "fine motor timing and error correction",
+                   "It reaches too late and overshoots. Every movement is clumsy and badly timed.",
+                   "cerebellar ataxia, Holmes 1917"),
+    "Brainstem and hypothalamus": ((380, 380), "Keep you breathing and send dopamine to the whole brain",
+                                   "vital functions, drives and the neuromodulators",
+                                   "It stops breathing on its own, and the dopamine signal to the brain goes silent.",
+                                   "textbook (Kandel et al. 2021)"),
+}
+
+
 # --- TD(0) dopamine model (function/learning-and-plasticity.md: d = r + gV(s') - V(s)) ---
 T_BELL, T_JUICE, TD_ALPHA = 2, 8, 0.5  # time steps; game gain
 
