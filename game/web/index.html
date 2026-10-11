@@ -34,7 +34,7 @@
 </head>
 <body>
 <main>
-  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#dopamine">4 Be the dopamine</a></nav>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a></nav>
   <h1 id="title"></h1>
   <p class="intro" id="intro"></p>
   <div class="play">
@@ -51,7 +51,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Brain Lab levels 1, 2 and 4 in the browser. The models are game/sim.py, run by Pyodide;
+// Brain Lab levels 1 to 4 in the browser. The models are game/sim.py, run by Pyodide;
 // this file only mirrors each levels.py class's text, clock, drawing and win check.
 const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -200,6 +200,77 @@ const LEVELS = {
     },
   },
 
+  lesion: {
+    title: "Lesion lab",
+    goal: "Lesion each hidden region and name it from what breaks. At most 3 wrong names.",
+    intro: "Much of what we know about brain regions comes from damage. When a stroke, an injury or surgery takes " +
+      "out one part, the behaviour that breaks shows what that part was doing. This brain does 8 jobs. Its regions " +
+      "are hidden. Click a region (or press its number, 1 to 8) to lesion it and watch which job fails, then name " +
+      "the region. Lesioning another region heals the first one.",
+    debrief: "Each lesion took out one kind of learner. Losing the hippocampus stops new episodes but spares old " +
+      "memories, because those have moved to the cortex. Losing the basal ganglia stops habits forming while the " +
+      "memory of practising survives: two memory systems, broken separately. A brain-like AI would need several " +
+      "kinds of learner, not one big network.",
+    kb: ["anatomy/brain-structure-overview.md", "brain structure overview"],
+    hint: "Match the broken job to a role: memory of places is the hippocampus, fear is the amygdala, timing is the cerebellum.",
+    label: "A brain with 8 hidden regions, numbered 1 to 8. Click one or press its number to lesion it.",
+    // Each entry of sim.REGIONS: [[x, y], job, role, deficit, evidence]. Name buttons are shuffled, as on desktop.
+    get buttons() {
+      if (!sim) return [["Loading the model…", null, () => {}]];
+      this.R = this.R || sim.REGIONS.toJs();
+      return [...this.R.keys()].sort(() => Math.random() - 0.5).map(n => [n, null, s => s.name(n)]);
+    },
+    reset() {
+      Object.assign(this, { cut: null, named: new Set(), mistakes: 0 });
+      say("Click a hidden region on the slide to lesion it.");
+    },
+    hit(x, y) { return [...this.R].find(([, [[cx, cy]]]) => Math.abs(x - cx) <= 80 && Math.abs(y - cy) <= 17)?.[0]; },
+    canvasClick(x, y) { const n = this.hit(x, y); if (n) this.lesion(n); },
+    key(e) { const k = +e.key; if (k >= 1 && k <= this.R.size) this.lesion([...this.R.keys()][k - 1]); },
+    lesion(n) {
+      this.cut = n;
+      say(`Lesioned.\n\n${this.R.get(n)[3]}` + (this.named.has(n) ? "" : "\n\nWhich region is it?"));
+    },
+    name(guess) {
+      if (this.cut === null || this.named.has(this.cut)) return say("Lesion a region you have not named yet, then pick its name.");
+      const cut = this.cut;
+      if (guess !== cut) {
+        this.mistakes += 1;
+        const msg = `Not quite. ${guess} does ${this.R.get(guess)[2]}.\nWrong names ${this.mistakes} of 3`;
+        return this.mistakes > 3 ? end(msg) : say(msg);
+      }
+      this.named.add(cut); this.cut = null;
+      for (const b of $("controls").children) if (b.textContent === cut) b.disabled = true;
+      const msg = `Yes. ${cut}: ${this.R.get(cut)[2]}.\nEvidence: ${this.R.get(cut)[4]}.`;
+      if (this.named.size === this.R.size) return end(`Won. ${stars(3 - Math.min(this.mistakes, 2))}\n\n${msg}`, true);
+      say(msg);
+    },
+    tick() {},
+    draw() {
+      ctx.fillStyle = css("--lilac"); ctx.strokeStyle = css("--muted"); ctx.lineWidth = 2;
+      ctx.fillRect(350, 330, 60, 90); ctx.strokeRect(350, 330, 60, 90);
+      ctx.beginPath(); ctx.ellipse(335, 200, 285, 150, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      text("front", 70, 30, "left", "--muted", 12); text("back", 600, 30, "right", "--muted", 12);
+      [...this.R].forEach(([n, [[x, y]]], i) => {
+        ctx.fillStyle = css(n === this.cut ? "--pink" : this.named.has(n) ? "--lilac" : "--glass");
+        ctx.fillRect(x - 80, y - 17, 160, 34);
+        ctx.strokeStyle = css("--violet"); ctx.strokeRect(x - 80, y - 17, 160, 34);
+        text(this.named.has(n) ? n : `${i + 1}  ?`, x, y, "center", "--ink", n.length > 20 && this.named.has(n) ? 11 : 13);
+      });
+      const broken = this.cut && this.R.get(this.cut)[1];
+      text(broken ? "7 of 8 jobs work. Broken:" : "All 8 jobs work.", 16, 372, "left", broken ? "--pink" : "--ink", 14);
+      if (!broken) return;
+      // Wrap at 270 px, as on desktop, so the job stays left of the brainstem box.
+      ctx.font = font(13);
+      let row = "✗", y = 394;
+      for (const w of broken.split(" ")) {
+        if (ctx.measureText(`${row} ${w}`).width > 270) { text(row, 16, y, "left", "--pink"); row = w; y += 18; }
+        else row += ` ${w}`;
+      }
+      text(row, 16, y, "left", "--pink");
+    },
+  },
+
   dopamine: {
     title: "Be the dopamine",
     goal: "Make the dopamine burst move from the juice to the bell. Then withhold the juice and cause a dip.",
@@ -323,14 +394,18 @@ async function main() {
     return;
   }
   $("again").onclick = start;
-  $("slide").onclick = () => { if (!over) level.canvasClick(); };
+  $("slide").onclick = e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    if (!over) level.canvasClick((e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height);
+  };
   document.addEventListener("keydown", e => {
     // Also when a button has focus, so Space fires the output rather than re-pressing that button.
     // Once the level is over, Space falls through to activate a focused "Try again".
     const hit = level.buttons.find(([, code]) => code === e.code);
     if (hit && !over) { e.preventDefault(); if (!e.repeat) hit[2](level); }
+    else if (!over && level.key) level.key(e);
   });
-  start();
+  open();  // again, now that levels can build their buttons from sim
   setInterval(() => { if (!over) { level.tick(); render(); } }, TICK_MS);
 }
 main();
