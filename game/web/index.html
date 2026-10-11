@@ -38,7 +38,7 @@
 </head>
 <body>
 <main>
-  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a></nav>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a><a href="#predict">7 Guess what's next</a></nav>
   <h1 id="title"></h1>
   <p class="tag" id="tag"></p>
   <p class="intro" id="intro"></p>
@@ -56,7 +56,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Brain Lab levels 1 to 6 in the browser. The models are game/sim.py, run by Pyodide;
+// Brain Lab levels 1 to 7 in the browser. The models are game/sim.py, run by Pyodide;
 // this file only mirrors each levels.py class's text, clock, drawing and win check.
 const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -500,6 +500,79 @@ const LEVELS = {
       });
     },
   },
+
+  predict: {
+    title: "Guess what's next",
+    tag: ["Hypothesis", "Predictive processing is a leading theory of the cortex, not a settled fact."],
+    goal: "Keep the tracking error under 0.05 for 12 seconds in a row.",
+    intro: "One theory says the brain does not wait for its senses. It predicts what comes next and corrects " +
+      "itself only by the prediction error. The ring is your brain's belief about a moving dot. Your senses are " +
+      "noisy (the pink flicker), and behind the grey screen you see nothing. The slider sets how much each " +
+      "prediction error moves the belief.",
+    debrief: "Trust the senses too much and the belief jumps with every bit of noise. Trust them too little and it " +
+      "lags behind. In between, the belief glides through the screen on its own prediction. Predictive coding calls " +
+      "this weighting precision, and attention may be the brain turning precision up where it matters.",
+    kb: ["function/predictive-processing.md", "predictive processing"],
+    hint: "Neither end of the slider works. Try about a fifth of the way along and leave it there.",
+    label: "A dot moving along a track behind a grey screen, the ring of your belief, and a chart of tracking error.",
+    buttons: [],
+    WINDOW: 600, TRACK_Y: 140, SMOOTH: 30,  // ticks = 12 s; plotted error is smoothed over 0.6 s
+    x: pos => 40 + pos * (W - 70),
+    ey: err => 420 - Math.min(err, 0.15) * 1050,
+    controls() {
+      const label = Object.assign(document.createElement("label"), { htmlFor: "gain", textContent: "Trust in your senses" });
+      const input = Object.assign(document.createElement("input"), { id: "gain", type: "range", min: 1, max: 100, value: 3, disabled: !sim });
+      input.style.width = "100%";
+      input.oninput = () => this.setGain(input.value);
+      return [label, input];
+    },
+    setGain(value) {
+      const g = value / 100;
+      this.tr.a = g; this.tr.b = g * g / (2 - g);   // same matched velocity gain as sim.Tracker
+      this.errs = [];
+    },
+    reset() {
+      for (const p of [this.world, this.tr]) if (p) p.destroy();
+      Object.assign(this, { world: sim.DotWorld(null), tr: sim.Tracker(0.03), errs: [], obs: null, pos: 0.5 });
+      this.screen ||= sim.DotWorld.OCCLUDER.toJs();
+      $("gain").value = 3;
+      say("Move the slider to set how much you trust your senses.");
+    },
+    canvasClick() {},
+    tick() {
+      const dt = TICK_MS / 1000;
+      this.obs = this.world.step(dt) ?? null;
+      this.pos = this.tr.step(this.obs, dt);
+      this.errs.push(Math.abs(this.pos - this.world.x));
+      if (this.errs.length > this.WINDOW) this.errs.shift();
+      const mean = this.errs.reduce((s, e) => s + e, 0) / this.errs.length;
+      const msg = `Error  ${mean.toFixed(3)}  (goal under 0.05)\nMeasured over ${Math.round(this.errs.length * TICK_MS / 1000)} of 12 s.\n\nMoving the slider restarts the 12 s.`;
+      if (this.errs.length === this.WINDOW && mean < 0.05) {
+        return end(`Won. ${stars(mean < 0.035 ? 3 : mean < 0.042 ? 2 : 1)}\n\nTracking error ${mean.toFixed(3)} over 12 s.`, true);
+      }
+      say(msg);
+    },
+    draw() {
+      const y = this.TRACK_Y, [lo, hi] = this.screen;
+      line(this.x(0), y, this.x(1), y, "--lilac", 2);
+      if (this.obs !== null) { ctx.fillStyle = css("--pink"); ctx.beginPath(); ctx.arc(this.x(this.obs), y, 5, 0, 2 * Math.PI); ctx.fill(); }
+      ctx.fillStyle = css("--muted"); ctx.fillRect(this.x(lo), y - 50, this.x(hi) - this.x(lo), 100);
+      ctx.strokeStyle = css("--violet"); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(this.x(this.pos), y, 14, 0, 2 * Math.PI); ctx.stroke();
+      text("error over the last 12 s", 40, 240, "left", "--muted", 12);
+      line(40, this.ey(0.05), W - 30, this.ey(0.05), "--pink", 1, [4, 3]);
+      text("0.05", W - 30, this.ey(0.05) - 8, "right", "--pink", 12);
+      if (this.errs.length < 2) return;
+      const k = Math.min(this.SMOOTH, this.errs.length), step = (W - 70) / this.WINDOW;
+      ctx.strokeStyle = css("--violet"); ctx.lineWidth = 2; ctx.beginPath();
+      for (let i = 0, sum = 0; i < this.errs.length; i++) {
+        sum += this.errs[i] - (i >= k ? this.errs[i - k] : 0);
+        if (i < k - 1) continue;
+        const px = 40 + (i - k + 1) * step, ey = this.ey(sum / k);
+        i === k - 1 ? ctx.moveTo(px, ey) : ctx.lineTo(px, ey);
+      }
+      ctx.stroke();
+    },
+  },
 };
 
 function render() {
@@ -532,7 +605,7 @@ function open() {
   $("debrief").textContent = `${level.debrief} Read more: `;
   const a = document.createElement("a");
   a.href = `../../${level.kb[0]}`; a.textContent = level.kb[1]; $("debrief").append(a, ".");
-  $("controls").replaceChildren(...level.buttons.map(([label, , act]) => {
+  $("controls").replaceChildren(...(level.controls ? level.controls() : []), ...level.buttons.map(([label, , act]) => {
     const b = document.createElement("button");
     b.textContent = label; b.disabled = !sim; b.onclick = () => { if (!over) act(level); };
     return b;

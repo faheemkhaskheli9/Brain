@@ -16,10 +16,10 @@ python game/test_levels.py # a scripted play wins every level (needs a display; 
 Progress (stars per level) is saved in `~/.brain_lab/save.json`. Delete it to start over.
 Each level opens once the one before it is won.
 
-**In a browser (levels 1 to 6 so far).** `game/web/index.html` runs Spark (`#spark`),
+**In a browser (levels 1 to 7 so far).** `game/web/index.html` runs Spark (`#spark`),
 Wire together (`#wire`), Lesion lab (`#lesion`), Be the dopamine (`#dopamine`), Remember me
-(`#remember`) and Sleep on it (`#sleep`) with the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing.
-The level 5 debrief has no recall sweep chart in the browser yet. The page
+(`#remember`), Sleep on it (`#sleep`) and Guess what's next (`#predict`) with the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing.
+The level 5 and 7 debriefs have no sweep chart in the browser yet. The page
 fetches `sim.py`, so serve the repo over HTTP: `python -m http.server` from the repo root,
 then open `http://localhost:8000/game/web/`. The first load downloads Pyodide and numpy
 from the jsDelivr CDN, so it takes a few seconds.
