@@ -11,7 +11,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: sudo apt-get install -y python3-tk xvfb
-      - run: pip install numpy
+      - run: pip install . ruff
+      - name: Lint
+        run: ruff check .
       - name: Index is current and links resolve
         run: |
           python build_index.py

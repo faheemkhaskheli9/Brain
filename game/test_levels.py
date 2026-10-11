@@ -156,7 +156,7 @@ def test_zoo():
     lvl.set(20, 0.12, -65, 0)                    # strong current, fast recovery: fast spiking
     lvl.run()
     assert not won and lvl.found == {"regular spiking", "fast spiking"}, lvl.found
-    for a, b, c, d in list(sim.IZH_PRESETS.values())[1:3]:
+    for a, _, c, d in list(sim.IZH_PRESETS.values())[1:3]:
         lvl.set(10, a, c, d)
         lvl.run()
     assert won == [3] and lvl.runs == 4, (won, lvl.runs)
