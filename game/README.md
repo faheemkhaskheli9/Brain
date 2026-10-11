@@ -16,8 +16,8 @@ python game/test_levels.py # a scripted play wins every level (needs a display; 
 Progress (stars per level) is saved in `~/.brain_lab/save.json`. Delete it to start over.
 Each level opens once the one before it is won.
 
-**In a browser (proof of concept, level 1 only).** `game/web/index.html` runs Spark with
-the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing. The page
+**In a browser (levels 1 and 2 so far).** `game/web/index.html` runs Spark (`#spark`) and
+Wire together (`#wire`) with the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing. The page
 fetches `sim.py`, so serve the repo over HTTP: `python -m http.server` from the repo root,
 then open `http://localhost:8000/game/web/`. The first load downloads Pyodide and numpy
 from the jsDelivr CDN, so it takes a few seconds.

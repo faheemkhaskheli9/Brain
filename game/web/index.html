@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brain Lab: Spark</title>
+<title>Brain Lab</title>
 <style>
   /* Palette from game/levels.py: a stained histology slide (glass, cresyl violet, eosin pink) */
   :root { --glass: #F7F2F6; --lilac: #E6DCEE; --muted: #6F6890; --violet: #5B3A8C; --pink: #D9637E; --ink: #2A2550; }
@@ -11,6 +11,9 @@
   body { margin: 0; background: var(--glass); color: var(--ink);
          font: 16px/1.5 Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif; }
   main { max-width: 980px; margin: 0 auto; padding: 24px 16px; }
+  nav { display: flex; gap: 8px; margin: 0 0 16px; }
+  nav a { padding: 4px 10px; text-decoration: none; background: var(--lilac); }
+  nav a[aria-current] { background: var(--violet); color: var(--glass); }
   h1 { font-weight: 600; font-size: 1.75rem; margin: 0 0 4px; }
   .intro { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 68ch; margin: 0 0 20px; }
   .play { display: flex; gap: 20px; flex-wrap: wrap; }
@@ -23,7 +26,7 @@
   button { font: inherit; color: var(--ink); background: var(--lilac); border: 0; padding: 8px 14px; margin: 4px 0;
            cursor: pointer; width: 100%; }
   button:hover, button:focus-visible { background: var(--violet); color: var(--glass); }
-  button:focus-visible, canvas:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+  button:focus-visible, canvas:focus-visible, nav a:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
   button:disabled { opacity: .5; cursor: wait; }
   .debrief { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 68ch; }
   a { color: var(--violet); }
@@ -31,99 +34,211 @@
 </head>
 <body>
 <main>
-  <h1>Spark</h1>
-  <p class="intro">A neuron adds up the charge that flows onto its membrane. When the voltage reaches threshold
-    it fires a spike, drops below its resting level and is silent for a moment. Charge also leaks away, so input
-    that arrives slowly never adds up. Each click (or Space) sends a 10 ms pulse of current into this model neuron.
-    Time runs 20 times slower than real so you can watch it.</p>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a></nav>
+  <h1 id="title"></h1>
+  <p class="intro" id="intro"></p>
   <div class="play">
-    <canvas id="slide" width="660" height="440" tabindex="0" aria-label="Membrane voltage plot. Click or press Space to inject current."></canvas>
+    <canvas id="slide" width="660" height="440" tabindex="0"></canvas>
     <aside>
-      <p class="goal">Fire exactly 5 spikes before the 500 ms window ends.</p>
-      <button id="inject" disabled>Loading the model…</button>
+      <p class="goal" id="goal"></p>
+      <div id="controls"><button disabled>Loading the model…</button></div>
       <button id="again" hidden>Try again</button>
       <p id="status" role="status"></p>
-      <p id="hint" hidden>One click stays below threshold. Two quick clicks fire one spike, so send 5 pairs spread out.</p>
+      <p id="hint" hidden></p>
     </aside>
   </div>
-  <p class="debrief" id="debrief" hidden>You used temporal summation: pulses that arrive close together add up
-    before the leak drains them away. Too many in a row and the neuron keeps firing. This is the leaky
-    integrate-and-fire model, the workhorse of spiking simulations. Real neurons add ion-channel detail
-    (Hodgkin-Huxley), but threshold, leak and reset are the core.
-    Read more: <a href="../../simulation/spiking-neural-networks.md">spiking neural networks</a>.</p>
+  <p class="debrief" id="debrief" hidden></p>
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Spark (level 1) in the browser. The neuron is game/sim.py's LIF, run by Pyodide;
-// this file only mirrors levels.Spark's clock, drawing and win check.
-const W = 660, H = 440, WINDOW = 500, TICK_MS = 20;
+// Brain Lab levels 1 and 2 in the browser. The models are game/sim.py, run by Pyodide;
+// this file only mirrors each levels.py class's text, clock, drawing and win check.
+const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const $ = id => document.getElementById(id);
 const ctx = $("slide").getContext("2d");
-let sim, neuron, t, pulses, clicks, spikes, points, over, timer;
+const font = px => `${px}px Bahnschrift, system-ui, sans-serif`;
+let sim, level, over, hintTimer;
 
-const x = ms => 60 + ms * (W - 110) / WINDOW;
-const y = v => H - 50 - (v + 80) * (H - 100) / 45;
-
-function draw() {
-  ctx.fillStyle = css("--glass"); ctx.fillRect(0, 0, W, H);
-  ctx.font = "13px Bahnschrift, system-ui, sans-serif"; ctx.fillStyle = css("--muted"); ctx.strokeStyle = css("--muted");
-  ctx.lineWidth = 1;
-  for (const [v, label, dash] of [[sim.V_TH, "threshold  -55 mV", [6, 4]], [sim.V_REST, "rest  -70 mV", [2, 4]]]) {
-    ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(60, y(v)); ctx.lineTo(W - 20, y(v)); ctx.stroke();
-    ctx.textAlign = "right"; ctx.fillText(label, W - 20, y(v) - 6);
-  }
-  ctx.setLineDash([]); ctx.textAlign = "center";
-  for (let ms = 0; ms <= WINDOW; ms += 100) ctx.fillText(`${ms} ms`, x(ms), H - 18);
-  ctx.font = "15px Bahnschrift, system-ui, sans-serif";
-  ctx.fillText("Click anywhere on the slide to inject current", W / 2, 28);
-  ctx.strokeStyle = css("--violet"); ctx.lineWidth = 2; ctx.beginPath();
-  points.forEach(([ts, v], i) => i ? ctx.lineTo(x(ts), y(v)) : ctx.moveTo(x(ts), y(v)));
-  ctx.stroke();
-  ctx.strokeStyle = css("--pink"); ctx.lineWidth = 4;
-  for (const [ts, v] of points) if (v === -40) { ctx.beginPath(); ctx.moveTo(x(ts), y(sim.V_TH)); ctx.lineTo(x(ts), y(-40)); ctx.stroke(); }
+function text(s, x, y, align = "center", color = "--muted", px = 13) {
+  ctx.font = font(px); ctx.fillStyle = css(color); ctx.textAlign = align; ctx.textBaseline = "middle";
+  ctx.fillText(s, x, y);
 }
-
-function reset() {
-  neuron = sim.LIF(); t = 0; pulses = []; clicks = 0; spikes = 0; over = false;
-  points = [[0, sim.V_REST]];
-  $("again").hidden = true; $("debrief").hidden = true; $("hint").hidden = true; $("inject").disabled = false;
-  $("status").textContent = "Waiting for your first click.";
-  draw();
+function line(x1, y1, x2, y2, color, width = 1, dash = []) {
+  ctx.strokeStyle = css(color); ctx.lineWidth = width; ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
 }
+function say(s) { $("status").textContent = s; }
+const stars = n => "★".repeat(n) + "☆".repeat(3 - n);
 
-function end(text, won) {
-  over = true; $("inject").disabled = true; $("again").hidden = false;
-  $("status").textContent = text;
+function end(msg, won) {
+  over = true; clearTimeout(hintTimer); $("again").hidden = false;
+  for (const b of $("controls").children) b.disabled = true;
+  say(msg); render();
   if (won) $("debrief").hidden = false; else $("hint").hidden = false;
 }
 
-function tick() {
-  if (over || !clicks) return;
-  const current = 2.0 * pulses.length;
-  pulses = pulses.filter(p => p > 1).map(p => p - 1);
-  t += 1;
-  if (neuron.step(current, 1.0)) { spikes += 1; points.push([t, -40]); }
-  points.push([t, neuron.v]);
-  draw();
-  $("status").textContent = `Spikes  ${spikes} of 5\nClicks  ${clicks}\nTime  ${t} ms`;
-  if (spikes > 5) {
-    end(`${spikes} spikes. While the current stays high the neuron keeps firing, so stop clicking once you are close.`);
-  } else if (t >= WINDOW) {
-    if (spikes === 5) {
-      const stars = clicks <= 10 ? 3 : clicks <= 15 ? 2 : 1;
-      end(`Won: 5 spikes from ${clicks} clicks. ${"★".repeat(stars)}${"☆".repeat(3 - stars)}`, true);
-    } else {
-      end(`${spikes} spikes. Click in quick bursts: pulses close together add up before the charge leaks away.`);
-    }
-  }
+const LEVELS = {
+  spark: {
+    title: "Spark",
+    goal: "Fire exactly 5 spikes before the 500 ms window ends.",
+    intro: "A neuron adds up the charge that flows onto its membrane. When the voltage reaches threshold it fires " +
+      "a spike, drops below its resting level and is silent for a moment. Charge also leaks away, so input that " +
+      "arrives slowly never adds up. Each click (or Space) sends a 10 ms pulse of current into this model neuron. " +
+      "Time runs 20 times slower than real so you can watch it.",
+    debrief: "You used temporal summation: pulses that arrive close together add up before the leak drains them " +
+      "away. Too many in a row and the neuron keeps firing. This is the leaky integrate-and-fire model, the " +
+      "workhorse of spiking simulations. Real neurons add ion-channel detail (Hodgkin-Huxley), but threshold, " +
+      "leak and reset are the core.",
+    kb: ["simulation/spiking-neural-networks.md", "spiking neural networks"],
+    hint: "One click stays below threshold. Two quick clicks fire one spike, so send 5 pairs spread out.",
+    label: "Membrane voltage plot. Click or press Space to inject current.",
+    buttons: [["Inject current (Space)", "Space", s => s.click()]],
+    WINDOW: 500,
+    x(ms) { return 60 + ms * (W - 110) / this.WINDOW; },
+    y(v) { return H - 50 - (v + 80) * (H - 100) / 45; },
+    reset() {
+      Object.assign(this, { neuron: sim.LIF(), t: 0, pulses: [], clicks: 0, spikes: 0, points: [[0, sim.V_REST]] });
+      say("Waiting for your first click.");
+    },
+    canvasClick() { this.click(); },
+    click() { this.pulses.push(10); this.clicks += 1; },
+    tick() {
+      if (!this.clicks) return;
+      const current = 2.0 * this.pulses.length;
+      this.pulses = this.pulses.filter(p => p > 1).map(p => p - 1);
+      this.t += 1;
+      if (this.neuron.step(current, 1.0)) { this.spikes += 1; this.points.push([this.t, -40]); }
+      this.points.push([this.t, this.neuron.v]);
+      say(`Spikes  ${this.spikes} of 5\nClicks  ${this.clicks}\nTime  ${this.t} ms`);
+      if (this.spikes > 5) {
+        end(`${this.spikes} spikes. While the current stays high the neuron keeps firing, so stop clicking once you are close.`);
+      } else if (this.t >= this.WINDOW) {
+        if (this.spikes === 5) {
+          end(`Won: 5 spikes from ${this.clicks} clicks. ${stars(this.clicks <= 10 ? 3 : this.clicks <= 15 ? 2 : 1)}`, true);
+        } else {
+          end(`${this.spikes} spikes. Click in quick bursts: pulses close together add up before the charge leaks away.`);
+        }
+      }
+    },
+    draw() {
+      for (const [v, label, dash] of [[sim.V_TH, "threshold  -55 mV", [6, 4]], [sim.V_REST, "rest  -70 mV", [2, 4]]]) {
+        line(60, this.y(v), W - 20, this.y(v), "--muted", 1, dash);
+        text(label, W - 20, this.y(v) - 10, "right");
+      }
+      for (let ms = 0; ms <= this.WINDOW; ms += 100) text(`${ms} ms`, this.x(ms), H - 22);
+      text("Click anywhere on the slide to inject current", W / 2, 24, "center", "--muted", 15);
+      ctx.strokeStyle = css("--violet"); ctx.lineWidth = 2; ctx.beginPath();
+      this.points.forEach(([t, v], i) => i ? ctx.lineTo(this.x(t), this.y(v)) : ctx.moveTo(this.x(t), this.y(v)));
+      ctx.stroke();
+      for (const [t, v] of this.points) if (v === -40) line(this.x(t), this.y(sim.V_TH), this.x(t), this.y(-40), "--pink", 4);
+    },
+  },
+
+  wire: {
+    title: "Wire together",
+    goal: "Make synapse A stronger than 0.8 and synapse B weaker than 0.2.",
+    intro: "Synapses change strength with use. In spike-timing-dependent plasticity (STDP), timing decides the " +
+      "direction. An input that fires just before the output neuron gets stronger; one that fires just after gets " +
+      "weaker. The window is about 20 ms. You are the experimenter. Press A or B to fire an input and Space to " +
+      "make the output neuron fire. Time runs 10 times slower than real.",
+    debrief: "Pre before post strengthens, because the input may have caused the spike. Post before pre weakens. " +
+      "Both inputs share one output neuron, so a badly timed output spike changes both synapses at once. STDP lets " +
+      "neurons learn causal order and pick up repeating patterns without a teacher (Markram et al. 1997; Bi and " +
+      "Poo 1998).",
+    kb: ["function/learning-and-plasticity.md", "learning and plasticity"],
+    hint: "Repeat A, then Space, then B, all quickly, and wait a second between rounds so the traces fade.",
+    label: "Spike raster of inputs A, B and the output, with bars for the two synapse strengths. Press A, B or Space.",
+    buttons: [["Fire input A (A)", "KeyA", s => s.fire(0)], ["Fire input B (B)", "KeyB", s => s.fire(1)],
+              ["Fire output (Space)", "Space", s => s.fire(2)]],
+    DT: 2.0, SPAN: 400.0,  // model ms per tick, ms shown on the raster
+    ROWS: [["Input A", 90], ["Input B", 170], ["Output", 250]],
+    wy: w => 360 - w * 300,
+    weights() { const p = this.syn.w, w = Array.from(p.toJs()); p.destroy(); return w; },
+    reset() {
+      if (this.syn) this.syn.destroy();
+      Object.assign(this, { syn: sim.STDP(2), t: 0, events: [], presses: 0 });
+      say("A 0.50   B 0.50\n\nFire an input, then the output a moment later.");
+    },
+    canvasClick() {},
+    fire(who) {
+      const before = this.weights();
+      who === 2 ? this.syn.post() : this.syn.pre(who);
+      this.events.push([this.t, who]);
+      this.presses += 1;
+      const [a, b] = this.weights();
+      const changes = [a, b].map((w, i) => [("AB")[i], w - before[i]]).filter(([, d]) => Math.abs(d) >= 0.005)
+        .map(([n, d]) => `${n} ${d >= 0 ? "+" : ""}${d.toFixed(2)}`).join(", ");
+      const msg = `A ${a.toFixed(2)}   B ${b.toFixed(2)}\n\nLast spike: ${changes || "no change (nothing within ~20 ms)"}\nPresses ${this.presses}`;
+      say(msg);
+      if (a > 0.8 && b < 0.2) {
+        end(`Won in ${this.presses} presses. ${stars(this.presses <= 14 ? 3 : this.presses <= 24 ? 2 : 1)}\n\n${msg}`, true);
+      }
+    },
+    tick() { this.t += this.DT; this.syn.decay(this.DT); },
+    draw() {
+      const x = t => 470 - (this.t - t) * 370 / this.SPAN;
+      ctx.fillStyle = css("--lilac");
+      for (const [t, who] of this.events) if (who === 2 && this.t - t <= this.SPAN) ctx.fillRect(x(t - 20), 70, 20 * 370 / this.SPAN, 120);
+      for (const [label, y] of this.ROWS) { text(label, 20, y, "left", "--ink", 15); line(100, y, 470, y, "--lilac"); }
+      for (const [t, who] of this.events) {
+        if (this.t - t > this.SPAN) continue;
+        const y = this.ROWS[who][1];
+        line(x(t), y - 18, x(t), y + 18, who === 2 ? "--pink" : "--violet", 3);
+      }
+      text(`last ${this.SPAN} ms, newest on the right`, 285, 300);
+      text("Shaded band: the 20 ms before each output spike. Inputs inside it get stronger.", 285, 330, "center", "--muted", 12);
+      const w = this.weights();
+      [540, 610].forEach((xc, i) => {
+        ctx.fillStyle = css("--violet"); ctx.fillRect(xc - 17, this.wy(w[i]), 34, 359 - this.wy(w[i]));
+        ctx.strokeStyle = css("--muted"); ctx.lineWidth = 1; ctx.strokeRect(xc - 18, 60, 36, 300);
+        text("AB"[i], xc, 380, "center", "--ink", 16);
+      });
+      line(510, this.wy(0.8), 640, this.wy(0.8), "--violet", 1, [4, 3]);
+      line(510, this.wy(0.2), 640, this.wy(0.2), "--pink", 1, [4, 3]);
+      text("synapse strength", 575, 40);
+    },
+  },
+};
+
+function render() {
+  ctx.fillStyle = css("--glass"); ctx.fillRect(0, 0, W, H);
+  level.draw();
 }
 
-function click() {
-  if (neuron && !over) { pulses.push(10); clicks += 1; }
+function start() {
+  over = false; clearTimeout(hintTimer);
+  $("again").hidden = true; $("debrief").hidden = true; $("hint").hidden = true;
+  for (const b of $("controls").children) b.disabled = false;
+  level.reset();
+  hintTimer = setTimeout(() => { $("hint").hidden = false; }, HINT_AFTER_MS);
+  render();
+}
+
+function open() {
+  const id = location.hash.slice(1);
+  level = LEVELS[id] || LEVELS.spark;
+  document.title = `Brain Lab: ${level.title}`;
+  for (const a of document.querySelectorAll("nav a")) a.toggleAttribute("aria-current", a.hash === `#${id || "spark"}`);
+  $("title").textContent = level.title;
+  $("intro").textContent = level.intro;
+  $("goal").textContent = level.goal;
+  $("hint").textContent = `Hint: ${level.hint}`;
+  $("slide").setAttribute("aria-label", level.label);
+  $("debrief").textContent = `${level.debrief} Read more: `;
+  const a = document.createElement("a");
+  a.href = `../../${level.kb[0]}`; a.textContent = level.kb[1]; $("debrief").append(a, ".");
+  $("controls").replaceChildren(...level.buttons.map(([label, , act]) => {
+    const b = document.createElement("button");
+    b.textContent = label; b.disabled = !sim; b.onclick = () => { if (!over) act(level); };
+    return b;
+  }));
+  if (sim) start(); else say("Loading the model (a few seconds the first time)…");
 }
 
 async function main() {
+  open();
+  window.addEventListener("hashchange", open);
   try {
     const py = await loadPyodide();
     await py.loadPackage("numpy");
@@ -132,19 +247,20 @@ async function main() {
     py.FS.writeFile("sim.py", await src.text());
     sim = py.pyimport("sim");
   } catch (e) {
-    $("inject").textContent = "Model failed to load";
-    $("status").textContent = `${e.message}. Serve the repo over HTTP (python -m http.server from the repo root) and open /game/web/.`;
+    $("controls").firstChild.textContent = "Model failed to load";
+    say(`${e.message}. Serve the repo over HTTP (python -m http.server from the repo root) and open /game/web/.`);
     return;
   }
-  $("inject").textContent = "Inject current (Space)";
-  $("inject").onclick = click;
-  $("again").onclick = reset;
-  $("slide").onclick = click;
+  $("again").onclick = start;
+  $("slide").onclick = () => { if (!over) level.canvasClick(); };
   document.addEventListener("keydown", e => {
-    if (e.code === "Space" && e.target.tagName !== "BUTTON") { e.preventDefault(); click(); }
+    // Also when a button has focus, so Space fires the output rather than re-pressing that button.
+    // Once the level is over, Space falls through to activate a focused "Try again".
+    const hit = level.buttons.find(([, code]) => code === e.code);
+    if (hit && !over) { e.preventDefault(); if (!e.repeat) hit[2](level); }
   });
-  reset();
-  timer = setInterval(tick, TICK_MS);
+  start();
+  setInterval(() => { if (!over) { level.tick(); render(); } }, TICK_MS);
 }
 main();
 </script>
