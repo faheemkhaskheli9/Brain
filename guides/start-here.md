@@ -17,7 +17,10 @@ sources:
 ## Summary
 This KB answers three questions in order: what the brain is made of, how it
 works, and how to build a computer that learns like it. Pick a path below, or
-use the question table to jump to one file.
+use the question table to jump to one file. For an ordered list by background
+(ML engineer, neuroscience student, player of the games), see [[learning-paths]].
+Theories of consciousness are all hypotheses and live in one file of their own:
+[[theories-of-consciousness]].
 
 ## Reading paths
 
@@ -85,6 +88,8 @@ learns to walk, grasp, listen, read and write from dopamine alone: run
 | EEG vs fMRI vs Neuropixels? Where can I download real brain recordings? | [[measuring-the-brain-and-open-datasets]] |
 | Loihi, SpiNNaker, TrueNorth? | [[neuromorphic-hardware]] |
 | FlyWire, MICrONS, Blue Brain, can we upload a brain? | [[whole-brain-emulation-projects]] |
+| Where is language in the brain? Do LLMs process language like brains? | [[language-and-llms]] |
+| What is global workspace theory or IIT? Could an AI be conscious? | [[theories-of-consciousness]] |
 | Can the brain do backprop? | [[brain-vs-deep-learning]] |
 | Code a learning rule without backprop | [[brain-inspired-learning-algorithms]] |
 | Plan a brain-like AI project | [[build-a-brain-like-learner]] |
