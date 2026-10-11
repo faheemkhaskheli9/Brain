@@ -78,6 +78,7 @@ specific process models can be tested.
   (seeking information that reduces uncertainty). See [[build-a-brain-like-learner]].
 
 ## Related
+- [[sensory-systems-and-vision]] - the visual hierarchy in detail, and CNNs as models of it.
 - [[neural-coding-and-computation]] - normalisation, gain and attention primitives.
 - [[brain-inspired-learning-algorithms]] - a runnable predictive coding network.
 - [[brain-vs-deep-learning]] - predictive coding as a backprop alternative.
