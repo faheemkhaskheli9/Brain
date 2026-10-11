@@ -145,6 +145,8 @@ assert r_a > 0.5 and abs(r_b) < 0.3
 - [[neuromorphic-hardware]] - the cost row in practice.
 - [[build-a-brain-like-learner]] - the evaluation plan for the roadmap.
 - [[neural-coding-and-computation]] - what the population codes being compared are.
+- [[measuring-the-brain-and-open-datasets]] - where the recordings come from and how to load them.
+- [[sensory-systems-and-vision]] - the visual hierarchy that Brain-Score models are scored against.
 
 ## References
 - Kriegeskorte, Mur & Bandettini (2008) "Representational similarity analysis - connecting the branches of systems neuroscience", *Front Syst Neurosci* 2:4. doi:10.3389/neuro.06.004.2008

@@ -29,7 +29,8 @@ use the question table to jump to one file.
 5. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
 6. [[memory-systems]] - how memories form and consolidate.
 7. [[spatial-navigation]] - place cells, grid cells and the brain's map.
-8. [[predictive-processing]] - how perception works (leading theory).
+8. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
+9. [[predictive-processing]] - how perception works (leading theory).
 
 **Path B: simulate the brain**
 1. [[levels-of-brain-modeling]] - choose the level of detail.
@@ -37,6 +38,7 @@ use the question table to jump to one file.
 3. [[neuromorphic-hardware]] - chips that run it efficiently.
 4. [[whole-brain-emulation-projects]] - connectomes and real-brain simulations.
 5. [[evaluating-brain-models]] - test whether a model is actually brain-like.
+6. [[measuring-the-brain-and-open-datasets]] - recording methods and the open data to test against.
 
 **Path C: make a computer learn like a brain**
 1. [[brain-vs-deep-learning]] - the gap to close.
@@ -59,10 +61,12 @@ forager, Oja's rule, a neuron zoo and path integration with grid cells. See
 | What do acetylcholine, noradrenaline and serotonin do? | [[neuromodulators]] |
 | How does the brain avoid catastrophic forgetting? | [[memory-systems]] |
 | What are place cells and grid cells? How does an animal find its way home? | [[spatial-navigation]] |
+| How does vision work? Why are CNNs compared to visual cortex? | [[sensory-systems-and-vision]] |
 | What is predictive coding / the free-energy principle? | [[predictive-processing]] |
 | Hodgkin-Huxley vs LIF? How much compute for a whole brain? | [[levels-of-brain-modeling]] |
 | How do I simulate a spiking network in Python? | [[spiking-neural-networks]] |
 | How do I measure whether my model is brain-like (RSA, Brain-Score)? | [[evaluating-brain-models]] |
+| EEG vs fMRI vs Neuropixels? Where can I download real brain recordings? | [[measuring-the-brain-and-open-datasets]] |
 | Loihi, SpiNNaker, TrueNorth? | [[neuromorphic-hardware]] |
 | FlyWire, MICrONS, Blue Brain, can we upload a brain? | [[whole-brain-emulation-projects]] |
 | Can the brain do backprop? | [[brain-vs-deep-learning]] |
