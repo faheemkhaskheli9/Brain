@@ -98,6 +98,12 @@ each row comes from.
 - Compare against a baseline that is *not* brain-inspired (a plain CNN or
   transformer) on the same rows; much of the alignment comes from scale and data,
   not brain-like mechanisms (an open question, see below).
+- Keep **correctness** and **evidence** apart. A unit test asks "does the code do what
+  I designed?"; an evaluation asks "how close is its output to a published
+  observation?". Passing the first says nothing about the second.
+- Record where each reference curve came from: paper or dataset, figure or cell id,
+  units, how it was digitised or transformed, and its license. Keep only small
+  redistributable arrays in the repo; download large datasets with a script.
 
 ## Code
 RSA in numpy: two "models" see the same 20 stimuli. One shares the brain's latent

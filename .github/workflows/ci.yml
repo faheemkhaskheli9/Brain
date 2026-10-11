@@ -2,6 +2,10 @@ name: CI
 
 on: [push, pull_request]
 
+# CI runs contributor code (topic code blocks), so the token stays read-only.
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest

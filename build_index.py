@@ -43,6 +43,8 @@ def main():
             errors.append(f"missing frontmatter: {rel}")
             continue
         prose = re.sub(r"```.*?```", "", text, flags=re.S)
+        if path.stem in topics:  # [[links]] resolve by filename, so stems must be unique
+            errors.append(f"duplicate topic name {path.stem}: {topics[path.stem][0]} and {rel}")
         topics[path.stem] = (rel, meta, re.findall(r"\[\[([^\]|#]+)", prose))
 
     for rel, _, links in topics.values():
