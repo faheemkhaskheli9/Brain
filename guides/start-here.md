@@ -40,6 +40,11 @@ use the question table to jump to one file.
 2. [[brain-inspired-learning-algorithms]] - runnable learning rules.
 3. [[build-a-brain-like-learner]] - the staged project roadmap.
 
+**Path D: learn by playing.** `python game/play.py` runs Brain Lab, eight levels
+in which you operate the models from these files: a spiking neuron, STDP, dopamine,
+Hopfield memory, sleep replay, predictive tracking and a three-factor forager. See
+[game/README.md](../game/README.md).
+
 ## Question → file
 | Question | File |
 |---|---|
