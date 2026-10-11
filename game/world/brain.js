@@ -54,7 +54,7 @@ const N_IN = RAYS * 3 + 2 + 3 + 25 + 6 + 1, FAN_IN = 8;
 // Game gains: tuning knobs so each stage learns in minutes, not measurements. A wrong grasp must
 // cost more than a whole episode of step costs, or grabbing anything beats searching.
 export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost: 0.005, wrongCost: 0.6,
-  hidden: 600, maxSteps: 150, replay: 0.3 };
+  hidden: 1000, maxSteps: 150, replay: 0.3, gate: 0.5 };
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
 
@@ -84,6 +84,12 @@ export class Brain {
       }
       this.bias[j] = -0.3 + 0.2 * gauss(rand);
     }
+    // Task-context gating (a hypothesis-level model of prefrontal top-down gating; Masse, Grant and
+    // Freedman 2018): each task switches off a fixed random share of the hidden units, so each
+    // skill mostly trains its own units and interferes less with the others. The raw senses stay
+    // shared. gate[c * HIDDEN + j] = 1 if unit j is on in task c.
+    this.gate = new Uint8Array(STAGES.length * HIDDEN);
+    for (let i = 0; i < this.gate.length; i++) this.gate[i] = rand() >= GAINS.gate ? 1 : 0;
     this.v = new Float32Array(this.nH);           // critic
     this.P = new Float32Array(N_ACT * this.nH);   // actor
     this.ev = new Float32Array(this.nH);
@@ -91,10 +97,11 @@ export class Brain {
     this.dopamine = 0; this.pi = new Float32Array(N_ACT);
   }
 
-  encode(x) {
-    const h = new Float32Array(this.nH);
+  encode(x, task) {
+    const h = new Float32Array(this.nH), gate = task * this.hidden;
     h.set(x);
     for (let j = 0; j < this.hidden; j++) {
+      if (!this.gate[gate + j]) continue;
       let gain = 1, drive = this.bias[j];   // the first three inputs are the cochlea bands
       for (let k = 0; k < FAN_IN; k++) {
         const v = this.wIn[j * FAN_IN + k] * x[this.idx[j * FAN_IN + k]];
@@ -184,7 +191,7 @@ export class World {
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
     if (this.tone >= 0) this.events.push({ type: "tone", tone: this.tone });
-    this.h = this.brain.encode(this.sense());
+    this.h = this.brain.encode(this.sense(), this.playing);
   }
 
   sense() {
@@ -288,7 +295,7 @@ export class World {
       b.learn(r, null);
       this.finish(success);
     } else {
-      this.h = b.encode(this.sense());
+      this.h = b.encode(this.sense(), this.playing);
       b.learn(r, this.h);
     }
     return { action: a, reward: r, done, success };
@@ -329,20 +336,22 @@ export class World {
   // have from that point. JSON.stringify(world) calls toJSON.
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
-    return { version: 1, rand: this.episodeRand, stage: this.stage, playing: this.playing, episode: this.episode,
+    return { version: 2, rand: this.episodeRand, stage: this.stage, playing: this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
-      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), v: arr(b.v), P: arr(b.P), hh: b.hh } };
+      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh } };
   }
 
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
     const w = new World(1), b = w.brain, ob = o && o.brain;
-    const ok = o && o.version === 1 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    const KEYS = ["idx", "wIn", "bias", "gate", "v", "P"];
+    const ok = o && o.version === 2 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
-      && ["idx", "wIn", "bias", "v", "P"].every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
-      && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && (ob.hh === undefined || Number.isFinite(ob.hh));
-    if (!ok) throw new Error("not a Brain World save, or saved with a different brain size");
-    for (const k of ["idx", "wIn", "bias", "v", "P"]) b[k].set(ob[k]);
+      && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
+      && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && ob.gate.every(g => g === 0 || g === 1)
+      && (ob.hh === undefined || Number.isFinite(ob.hh));
+    if (!ok) throw new Error("not a Brain World save, or saved by an older version or with a different brain size");
+    for (const k of KEYS) b[k].set(ob[k]);
     b.hh = ob.hh;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });

@@ -51,6 +51,13 @@
   .how { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 75ch; margin-top: 26px; }
   .how h2 { font-family: Bahnschrift, system-ui, sans-serif; font-size: 1.1rem; font-weight: 600; }
   a { color: var(--violet); }
+  #narrate { font-family: Cambria, Georgia, serif; font-size: 1.05rem; min-height: 3.2em; margin: 10px 0 0; }
+  #intro { max-width: 34rem; border: 0; border-left: 4px solid var(--violet); background: var(--glass); color: var(--ink); padding: 20px 24px; }
+  #intro::backdrop { background: rgba(42, 37, 80, .45); }
+  #intro h2 { margin: 0 0 8px; font-weight: 600; }
+  #intro p { font-family: Cambria, Georgia, serif; line-height: 1.6; margin: 0 0 10px; }
+  #intro button { background: var(--violet); color: var(--glass); margin-top: 6px; }
+  [title] { cursor: help; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 </style>
 <script type="importmap">
@@ -70,6 +77,7 @@
         <canvas id="world" tabindex="0" aria-label="3D view of the creature's room. Drag to orbit, scroll to zoom."></canvas>
         <p id="banner" role="status"></p>
       </div>
+      <p id="narrate"></p>
       <div class="controls">
         <button id="watch" aria-pressed="true">Watch</button>
         <button id="fast" aria-pressed="false">Fast forward</button>
@@ -79,31 +87,33 @@
         <button id="save">Save brain</button>
         <button id="load">Load brain</button>
         <input id="loadFile" type="file" accept=".json,application/json" hidden>
+        <button id="about">What is this?</button>
       </div>
     </div>
     <aside>
-      <section><h2>What it is learning</h2><ol id="stages"></ol></section>
+      <section><h2 title="Five skills, one after another. A skill passes when its success rate over the last 50 tries reaches the pink mark.">What it is learning</h2><ol id="stages"></ol></section>
       <section>
         <h2>What it senses and does</h2>
         <div class="senses">
-          <span>Retina</span><div id="retina"></div>
-          <span>Fovea</span><div id="fovea"></div>
-          <span>Cochlea</span><div id="cochlea"></div>
-          <span>Doing</span><strong id="doing">–</strong>
-          <span>Task</span><span id="task"></span>
+          <span title="15 rays fanned across its field of view. Each square is the colour it sees in that direction; brighter means nearer.">Retina</span><div id="retina"></div>
+          <span title="A 5×5 patch at the centre of its gaze, sharp enough to make out the letter on a cube straight ahead.">Fovea</span><div id="fovea"></div>
+          <span title="Three frequency bands, like places along the inner ear. The band that lights up is the tone it hears.">Cochlea</span><div id="cochlea"></div>
+          <span title="The action it just chose.">Doing</span><strong id="doing">–</strong>
+          <span title="The skill this episode trains. Earlier skills come back now and then so it does not forget them.">Task</span><span id="task"></span>
         </div>
       </section>
-      <section><h2>Dopamine (prediction error)</h2><canvas id="da" class="plot"></canvas></section>
-      <section><h2>Success rate over time</h2><canvas id="curve" class="plot"></canvas></section>
+      <section><h2 title="Above the line: things went better than it expected, so the actions it just took get stronger. Below: worse, so they weaken. Near zero: no surprise, nothing to learn.">Dopamine (prediction error)</h2><canvas id="da" class="plot"></canvas></section>
+      <section><h2 title="Share of successful episodes, 25 at a time. Vertical lines mark where it moved on to the next skill.">Success rate over time</h2><canvas id="curve" class="plot"></canvas></section>
     </aside>
   </div>
 
   <section class="how">
     <h2>How its brain works</h2>
     <p>Each step its senses are a 15-ray colour retina, a 5×5 fovea that can resolve letters, three cochlea
-      bands (one per tone, which you hear too) and the position of its legs. A fixed random layer of 600
+      bands (one per tone, which you hear too) and the position of its legs. A fixed random layer of 1,000
       neurons mixes them, and sound scales each neuron's visual response up or down, the way attention scales
-      responses in visual cortex. On top sits an actor (which action next) and a critic (how good is this
+      responses in visual cortex. Each skill switches off a fixed random half of that layer, so skills
+      mostly use different neurons (a hypothesis about how prefrontal cortex keeps tasks apart). On top sits an actor (which action next) and a critic (how good is this
       moment). Dopamine is the critic's surprise. Synapses that were recently active keep an eligibility
       trace, and they change only when that trace meets dopamine. There is no backpropagation and no
       programmed behaviour.</p>
@@ -118,6 +128,16 @@
       <a href="../../function/learning-and-plasticity.md">learning-and-plasticity</a>.</p>
   </section>
 </main>
+
+<dialog id="intro" aria-labelledby="introTitle">
+  <h2 id="introTitle">A brain learning from scratch</h2>
+  <p>The purple creature starts knowing nothing: not how to walk, not what food is.</p>
+  <p>Its only teacher is dopamine, a signal that fires when things go better than it expected. From that
+    alone it learns to walk, grasp food, follow a tone, read a letter and write one.</p>
+  <p>The line under the room says what it is doing. The panels on the right show what it senses and how far
+    it has come; hover any label for more.</p>
+  <form method="dialog"><button autofocus>Start watching</button></form>
+</dialog>
 
 <script type="module">
 import * as THREE from "three";
@@ -273,6 +293,25 @@ function updatePanel() {
   cochEls.forEach((el, k) => el.classList.toggle("on", tone === k));
   const a = world.lastAction;
   $("doing").textContent = a === undefined ? "–" : a < BODY.length ? BODY[a] : `pen: ${PEN[a - BODY.length]}`;
+  const say = narrate();
+  if ($("narrate").textContent !== say) $("narrate").textContent = say;
+}
+// One plain sentence on what the creature is doing right now, so a new viewer can follow it.
+const TONE = ["low", "middle", "high"], COLOUR = ["red", "green", "blue"];
+function narrate() {
+  if (paused) return "Paused.";
+  if (speed === "fast") return "Fast forward: many tries a second. Press Watch to follow one try at a time.";
+  const end = performance.now() < freezeUntil && frozen, v = end ? frozen : world, t = v.tone, L = t >= 0 ? LETTERS[t][0] : "";
+  if (end && v.mode !== "walk") return v.success
+    ? (v.mode === "write" ? `It wrote ${L}. ` : "Food. ") + "That beat its expectation, so dopamine rises and the steps that led here get stronger."
+    : (v.mode === "write" ? `That is not ${L}. ` : "No food this time. ") + "Worse than expected, so dopamine dips and those steps get weaker.";
+  return {
+    walk: "It is learning to walk: trying leg pushes and lifts at random, and keeping the ones that carry it forward.",
+    grasp: "It is searching the room for the food. To eat it, it must walk up close and grasp.",
+    listen: `It heard the ${TONE[t]} tone, which means the ${COLOUR[t]} ball is food. It is looking for that one.`,
+    read: `It heard the ${TONE[t]} tone, which names the letter ${L}. Every cube is white, so it must read the letters to find it.`,
+    write: `It heard the ${TONE[t]} tone, which names ${L}. It is drawing ${L} on the board with two pen strokes.`,
+  }[v.mode];
 }
 function plot(id, values, { lo, hi, zero, marks = [] }) {
   const cv = $(id), w = cv.clientWidth, h = cv.clientHeight, g = cv.getContext("2d");
@@ -400,6 +439,13 @@ $("loadFile").onchange = async e => {
   }
 };
 addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body) { e.preventDefault(); $("pause").click(); } });
+
+// First visit: say what this is before the creature and nine panels do. Storage can be blocked.
+$("about").onclick = () => $("intro").showModal();
+$("intro").onclose = () => { try { localStorage.setItem("brainWorldIntro", "1"); } catch {} };
+let seen = false;
+try { seen = localStorage.getItem("brainWorldIntro") === "1"; } catch {}
+if (!seen) $("intro").showModal();
 
 newBrain(1);
 requestAnimationFrame(frame);

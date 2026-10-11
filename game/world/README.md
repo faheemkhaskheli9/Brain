@@ -11,14 +11,19 @@ Here you watch the mechanisms work together in one learner.
 ```
 python -m http.server 8000        # from the repo root
 # open http://localhost:8000/game/world/
-node game/world/test_brain.mjs    # headless check, about 20 s
+node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
+node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
-`index.html` (3D view, panels, sound). Press **Fast forward** to reach graduation in under a minute.
+`index.html` (3D view, panels, sound). Press **Fast forward** to reach graduation in about two minutes.
 Then **Watch** shows it practising each skill, with the tones played aloud. **Save brain**
 downloads its weights and progress as JSON, and **Load brain** picks up from such a file, so a
 graduated creature does not need training again. A loaded brain restarts the episode it was saved in.
+
+A first visit opens a three-line intro (reopen it with **What is this?**). A caption under the room
+says in plain words what the creature is doing and why dopamine rose or dipped, and every panel label
+has a hover explanation.
 
 ## The curriculum
 
@@ -36,9 +41,14 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 
 - **Senses:** a 15-ray retina (RGB times nearness), a 5×5 fovea that resolves the letter on the
   object in a ±0.2 rad central cone, three cochlea bands, leg position and the pen pad.
-- **Expansion:** 600 fixed random units, as in cerebellar granule cells or the mushroom body. Each one
-  is driven by one local patch of a sense, and sound scales that drive by a random gain (gain
+- **Expansion:** 1,000 fixed random units, as in cerebellar granule cells or the mushroom body. Each
+  one is driven by one local patch of a sense, and sound scales that drive by a random gain (gain
   modulation). An additive mix learned the tone tasks far too slowly.
+- **Task-context gating:** each stage switches off a fixed random half of the expansion units, so
+  each skill mostly trains its own units while the raw senses stay shared (context-dependent gating,
+  Masse, Grant and Freedman 2018). The creature is told which task it is on, like an instruction
+  cue; inferring the task from what it sees is not modelled. That prefrontal cortex gates hidden
+  units this way is a hypothesis, not established.
 - **Actor-critic with traces:** dopamine is `δ = r + γV(s') − V(s)`. Weight change = trace × δ. There
   is no backprop.
 - **Habit:** after stage 1 the gait is automatic, so a pushed leg swings forward by reflex. Later
@@ -53,9 +63,15 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 `test_brain.mjs` asserts every stage is learned within 20,000 episodes. It then asserts that after
 graduation each skill stays well above chance: grasp ≥ 0.7, listen ≥ 0.5, read ≥ 0.4, write ≥ 0.5.
 Chance is about 0.33 for listen and read, and 1/18 for write. Seed 1 (the page's first brain) passes:
-grasp 0.87, listen 0.68, read 0.53, write 0.60. Across seeds 1–7, three pass everything. The others
-stall on listen or read within the episode budget, or keep listen just below 0.5. Interleaving one
-small network across four tasks keeps some interference, and reading is the weakest skill.
+grasp 0.81, listen 0.68, read 0.52, write 0.71. CI runs seeds 1–3.
+
+Across seeds 1–10, 9 pass everything. The tenth (seed 9) keeps read at 0.38, just under the mark.
+With the earlier 600 units and no gating, only 5 of 10 passed: the rest stalled on listen or read,
+or kept them too weakly. Most of the gain came from the larger layer: 1,000 units without gating pass
+8 of 10. Gating adds a little on top, mostly to listening (mean kept listen 0.70 against 0.62 without
+it). Interleaving one network across four tasks still keeps some interference, and reading is
+still the weakest skill.
+
 Last, it saves and reloads the brain and checks that the copy takes the same 2,000 actions as the
 original.
 
@@ -69,4 +85,9 @@ is enough for a real brain's version of these skills is a hypothesis.
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
 - Speech or spoken words instead of pure tones. Multi-letter words.
 - Physics-based limbs (joint torques) instead of discrete leg states.
-- A larger or growing network to cut interference between skills.
+- Inferring the task context from the senses instead of being told it.
+
+## References
+
+- Masse, Grant and Freedman (2018) "Alleviating catastrophic forgetting using context-dependent
+  gating and synaptic stabilization", *PNAS* 115:E10467. doi:10.1073/pnas.1803839115
