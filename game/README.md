@@ -1,0 +1,66 @@
+# Brain Lab: a playable brain simulation
+
+A desktop game in Python where you learn how the brain works by operating working
+models of it. Each level is one idea from this knowledge base. You win a level by
+making the simulated brain do something, not by answering a quiz.
+
+## Run
+
+```
+pip install numpy
+python game/play.py        # the game (tkinter ships with Python)
+python game/test_sim.py    # headless checks for every model
+```
+
+Progress (stars per level) is saved in `~/.brain_lab/save.json`. Delete it to start over.
+Each level opens once the one before it is won.
+
+## Levels
+
+| # | Level | You | Win when | Model in `sim.py` | Topic file |
+|---|---|---|---|---|---|
+| 1 | Spark | Click (or Space) to send 10 ms pulses of current into a neuron and watch its voltage | Exactly 5 spikes in 500 ms of model time | Leaky integrate-and-fire with a refractory period | [spiking-neural-networks](../simulation/spiking-neural-networks.md) |
+| 2 | Wire together | Fire input A, input B (keys A, B) and the output neuron (Space) | Synapse A above 0.8 and B below 0.2 | STDP pair rule, ~20 ms window | [learning-and-plasticity](../function/learning-and-plasticity.md) |
+| 3 | Brain map | Click the region that leads each of 8 jobs | All 8 with at most 3 wrong clicks | Region table from the topic file | [brain-structure-overview](../anatomy/brain-structure-overview.md) |
+| 4 | Be the dopamine | Run bell and juice trials for a TD learner and watch its dopamine | The burst moves to the bell, then a dip appears when juice is withheld | TD(0), `δ = r + γV(s') − V(s)` | [learning-and-plasticity](../function/learning-and-plasticity.md) |
+| 5 | Remember me | Draw or generate 8 × 8 patterns, store them, recall from fragments | 3+ memories pass a recall test, then recall breaks as you add more | Hopfield network (64 neurons, capacity about 9) | [memory-systems](../function/memory-systems.md) |
+| 6 | Sleep on it | Learn task B day by day, with or without sleep replay of task A | B at 90% while A stays at 80% or above | Linear associator, local delta rule, interleaved replay | [memory-systems](../function/memory-systems.md) |
+| 7 | Guess what's next | Set how much a belief trusts noisy senses while a dot moves behind a screen | Tracking error under 0.05 for 12 s | Prediction plus gain × prediction error | [predictive-processing](../function/predictive-processing.md) |
+| 8 | Tiny brain | Switch dopamine and the eligibility trace on or off, then run a forager | 10 meals within 400 steps | Actor-critic three-factor rule (trace × dopamine) | [build-a-brain-like-learner](../guides/build-a-brain-like-learner.md) |
+
+Every level has an intro card, the play screen and a debrief that explains what happened
+and links its topic file. Each intro is tagged **Established** or **Hypothesis**, as the
+topic files are. Levels 6–8 are tagged Hypothesis, with a line saying which part is
+settled and which is theory.
+
+Stars: 1 for a win; 2 and 3 for an efficient win or a bonus. The bonus is a debrief point
+worth seeing, for example juice with no bell in level 4.
+
+## How it is built
+
+```
+game/
+  sim.py         numpy models, no UI imports
+  levels.py      one class per level: text, canvas drawing, win check
+  play.py        tkinter shell: menu, intro, level, debrief, save file
+  test_sim.py    plain asserts on sim.py
+```
+
+- **Biological constants** (LIF time constant and thresholds, the ~20 ms STDP window,
+  Hopfield storage) are copied from the topic files and keep their sources there.
+- **Game gains** (learning rates, task sizes, step budgets) are tuning knobs. They make a
+  level winnable in a minute or two and are marked "game gain" in `sim.py`. They are not
+  measurements.
+- `test_sim.py` checks that each level's lesson actually holds in its model:
+  - the STDP sign flips with spike order;
+  - dopamine moves from the juice to the bell;
+  - recall breaks past capacity;
+  - without replay task A is forgotten, and with replay it is kept;
+  - the tracker has a gain sweet spot;
+  - the forager needs both dopamine and the trace to win within 400 steps.
+
+## Not done yet
+
+- Playtest with two people new to neuroscience and tune difficulty (issue #6).
+- Out of scope for now: sound, a web version (`sim.py` has no UI imports, so one could
+  reuse it), larger spiking networks.
