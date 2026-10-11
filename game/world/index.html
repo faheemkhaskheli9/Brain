@@ -76,6 +76,9 @@
         <button id="pause" aria-pressed="false">Pause</button>
         <button id="sound" aria-pressed="true">Sound on</button>
         <button id="restart">Start a new brain</button>
+        <button id="save">Save brain</button>
+        <button id="load">Load brain</button>
+        <input id="loadFile" type="file" accept=".json,application/json" hidden>
       </div>
     </div>
     <aside>
@@ -371,6 +374,31 @@ $("fast").onclick = () => setSpeed("fast");
 $("pause").onclick = () => { paused = !paused; $("pause").setAttribute("aria-pressed", paused); $("pause").textContent = paused ? "Resume" : "Pause"; };
 $("sound").onclick = () => { sound = !sound; $("sound").setAttribute("aria-pressed", sound); $("sound").textContent = sound ? "Sound on" : "Sound off"; };
 $("restart").onclick = () => { marks = []; newBrain(1 + Math.floor(Math.random() * 1e6)); };
+// Save: the brain plus this page's charts, as a JSON download. Load: the reverse.
+$("save").onclick = () => {
+  const data = JSON.stringify({ ...world.toJSON(), page: { daTrace, curve, bucket, stageStarts, stageDone, marks } });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
+  a.download = `brain-world-episode-${world.episode}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+$("load").onclick = () => $("loadFile").click();
+$("loadFile").onchange = async e => {
+  const file = e.target.files[0]; e.target.value = "";
+  if (!file) return;
+  try {
+    const o = JSON.parse(await file.text()), next = World.fromJSON(o), p = o.page || {};
+    world = next; frozen = null; freezeUntil = 0; buildStages();
+    const list = v => Array.isArray(v) ? v.filter(Number.isFinite) : [];
+    daTrace = list(p.daTrace); curve = list(p.curve); bucket = list(p.bucket); marks = list(p.marks);
+    stageStarts = list(p.stageStarts); stageDone = Array.isArray(p.stageDone) ? p.stageDone.map(x => x == null ? undefined : Number(x)) : [];
+    if (!stageStarts.length) stageStarts = [0];
+    stageStarts[world.stage] ??= world.episode;   // a save without page state: count from the load
+    $("banner").textContent = `Loaded a brain at episode ${world.episode}: ${world.graduated ? "graduated, practising every skill" : `learning "${STAGES[world.stage].name.toLowerCase()}"`}.`;
+  } catch (err) {
+    $("banner").textContent = `Could not load that file: ${err.message}`;
+  }
+};
 addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body) { e.preventDefault(); $("pause").click(); } });
 
 newBrain(1);

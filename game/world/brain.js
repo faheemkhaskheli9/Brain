@@ -6,14 +6,15 @@
 // recently used synapses; weights change only when trace x dopamine (a three-factor rule).
 // No backprop, no hand-coded behaviour. See guides/build-a-brain-like-learner.md.
 
-export function rng(seed) {   // mulberry32: seeded, so runs are repeatable
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6D2B79F5) >>> 0;
+export function rng(seed) {   // mulberry32: seeded, so runs are repeatable. f.state can be saved and set.
+  const f = () => {
+    const a = f.state = (f.state + 0x6D2B79F5) >>> 0;
     let t = Math.imul(a ^ (a >>> 15), a | 1);
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
+  f.state = seed >>> 0;
+  return f;
 }
 
 export const ARENA = 8, RAYS = 15, FOV = 1.4, FOVEA = 0.2, REACH = 1.0, OBJ_R = 0.4;
@@ -163,6 +164,7 @@ export class World {
 
   reset() {
     const R = this.rand, m = this.mode;
+    this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
     this.heading = R() * 2 * Math.PI;
     this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
@@ -321,6 +323,33 @@ export class World {
   }
 
   setStage(s) { this.stage = this.playing = s; this.windows[s] = []; this.reset(); }
+
+  // Save and load: weights (including the fixed random wiring) plus curriculum progress. A loaded
+  // world replays the current episode from its start, so it acts exactly as the saved one would
+  // have from that point. JSON.stringify(world) calls toJSON.
+  toJSON() {
+    const b = this.brain, arr = a => Array.from(a);
+    return { version: 1, rand: this.episodeRand, stage: this.stage, playing: this.playing, episode: this.episode,
+      graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
+      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), v: arr(b.v), P: arr(b.P), hh: b.hh } };
+  }
+
+  static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
+    const w = new World(1), b = w.brain, ob = o && o.brain;
+    const ok = o && o.version === 1 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+      && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
+      && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
+      && ["idx", "wIn", "bias", "v", "P"].every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
+      && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && (ob.hh === undefined || Number.isFinite(ob.hh));
+    if (!ok) throw new Error("not a Brain World save, or saved with a different brain size");
+    for (const k of ["idx", "wIn", "bias", "v", "P"]) b[k].set(ob[k]);
+    b.hh = ob.hh;
+    Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
+      passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
+    w.rand.state = o.rand >>> 0;
+    w.reset();
+    return w;
+  }
 
   successRate(s = this.stage) {
     const w = this.windows[s];
