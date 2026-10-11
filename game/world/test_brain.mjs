@@ -40,6 +40,32 @@ for (const seed of seeds.length ? seeds : [1]) {
     assert.deepEqual(b, a, `seed ${seed}: loaded brain diverged at step ${i}`);
   }
   console.log("  Save and load: same actions for 2000 steps");
+
+  // Perform mode: learning off, one skill per run. It still scores at the kept bar, and nothing
+  // the brain or the curriculum holds changes.
+  const before = JSON.stringify(w), rates = [];
+  for (const k in KEEP) {
+    w.perform(k);
+    while (w.perf.n < 200) { assert.equal(w.mode, k); w.step(); }
+    rates.push(`${k} ${(w.perf.ok / w.perf.n).toFixed(2)}`);
+    assert.ok(w.perf.ok / w.perf.n >= KEEP[k], `seed ${seed}: perform ${k} ${w.perf.ok / w.perf.n} < ${KEEP[k]}`);
+  }
+  w.perform(null);
+  const after = JSON.parse(JSON.stringify(w)), was = JSON.parse(before);
+  for (const k of ["P", "v", "hh"]) assert.deepEqual(after.brain[k], was.brain[k], `seed ${seed}: perform changed ${k}`);
+  assert.equal(after.stage, was.stage);
+  console.log("  Perform (learning off):", rates.join(", "));
 }
+
+// Perform mid-training leaves the curriculum alone, and a save made while performing resumes training.
+const t = new World(1);
+t.setStage(3);
+while (t.episode < 30) t.step();
+const snap = JSON.stringify({ e: t.episode, w: t.windows, l: t.log.length, s: t.stage, P: Array.from(t.brain.P) });
+t.perform("grasp");
+while (t.perf.n < 60) t.step();
+assert.equal(t.toJSON().playing, t.stage);
+assert.equal(JSON.stringify({ e: t.episode, w: t.windows, l: t.log.length, s: t.stage, P: Array.from(t.brain.P) }), snap);
+assert.throws(() => t.perform("fly"), /valid: walk, grasp/);
 assert.throws(() => World.fromJSON({ version: 1 }), /not a Brain World save/);
 console.log("ok");

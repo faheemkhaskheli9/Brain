@@ -55,7 +55,12 @@ const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 2
 // Game gains: tuning knobs so each stage learns in minutes, not measurements. A wrong grasp must
 // cost more than a whole episode of step costs, or grabbing anything beats searching.
 export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost: 0.005, wrongCost: 0.6,
-  hidden: 1000, maxSteps: 150, replay: 0.3, gate: 0.5, memory: 0.9 };
+  hidden: 1000, maxSteps: 150, replay: 0.3, gate: 0.5, memory: 0.9,
+  // Perform mode only: skills that take the most likely action instead of sampling. Walk and write
+  // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
+  // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
+  // Jordan 1994). See README "Perform mode".
+  performGreedy: ["walk", "write"] };
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
 
@@ -97,6 +102,8 @@ export class Brain {
     this.ev = new Float32Array(this.nH);
     this.eP = new Float32Array(N_ACT * this.nH);
     this.dopamine = 0; this.pi = new Float32Array(N_ACT);
+    this.learning = true;   // false = perform mode: act and compute dopamine, change no weight
+    this.greedy = false;    // argmax instead of sampling; only set with learning off
   }
 
   encode(x, task) {
@@ -129,24 +136,27 @@ export class Brain {
     for (const a of allowed) pi[a] /= z;
     let u = this.rand(), choice = allowed[allowed.length - 1];
     for (const a of allowed) { u -= pi[a]; if (u <= 0) { choice = a; break; } }
+    if (this.greedy) for (const a of allowed) if (pi[a] > pi[choice]) choice = a;
+    this.h = h;
+    if (!this.learning) return choice;
     const d = GAINS.gamma * GAINS.lambda;
     for (let i = 0; i < this.nH; i++) this.ev[i] = d * this.ev[i] + h[i];
     for (let a = 0; a < N_ACT; a++) {
       const g = allowed.includes(a) ? (a === choice) - pi[a] : 0, row = a * this.nH;
       for (let i = 0; i < this.nH; i++) this.eP[row + i] = d * this.eP[row + i] + g * h[i];
     }
-    this.h = h;
     return choice;
   }
 
   learn(r, hNext) {   // hNext null = episode over
+    const delta = r + (hNext ? GAINS.gamma * this.value(hNext) : 0) - this.value(this.h);
+    this.dopamine = delta;   // still computed in perform mode, so the panel shows surprise
+    if (!this.learning) return;
     // Step size over a running mean of |h|^2, not the current |h|^2: the trace holds past states,
     // and a small current one would blow the step up (it made the critic diverge).
     let hh = 0; for (let i = 0; i < this.nH; i++) hh += this.h[i] * this.h[i];
     this.hh = this.hh ? 0.99 * this.hh + 0.01 * hh : hh;
     const norm = 1 + this.hh;
-    const delta = r + (hNext ? GAINS.gamma * this.value(hNext) : 0) - this.value(this.h);
-    this.dopamine = delta;
     const av = GAINS.lrV / norm, ap = GAINS.lrP / norm;
     for (let i = 0; i < this.nH; i++) this.v[i] += av * delta * this.ev[i];
     for (let i = 0; i < this.eP.length; i++) this.P[i] += ap * delta * this.eP[i];
@@ -163,6 +173,7 @@ export class World {
     this.stage = 0; this.playing = 0; this.episode = 0; this.log = []; this.graduated = false;
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
     this.events = [];   // for the UI: {type: "tone"|"grasp"|"stroke"|"stage"|"graduated", ...}
+    this.task = -1; this.perf = { n: 0, ok: 0 };   // perform mode: the locked skill, and its score
     this.reset();
   }
 
@@ -310,6 +321,11 @@ export class World {
   }
 
   finish(success) {
+    if (this.task >= 0) {   // perform mode: score it, leave the curriculum alone
+      this.perf.n++; this.perf.ok += success ? 1 : 0;
+      this.reset();
+      return;
+    }
     this.episode++;
     const win = this.windows[this.playing];
     win.push(success ? 1 : 0);
@@ -339,12 +355,29 @@ export class World {
 
   setStage(s) { this.stage = this.playing = s; this.windows[s] = []; this.reset(); }
 
+  // Perform mode: use the brain with learning off, every episode on one skill. No weight, window,
+  // log or stage changes, so a saved brain can be used or checked without training it further.
+  // perform(null) goes back to training on `stage`.
+  perform(key, greedy = GAINS.performGreedy.includes(key)) {
+    const b = this.brain;
+    b.ev.fill(0); b.eP.fill(0);   // a half-done training episode's traces must not carry over
+    if (key === null) {
+      this.task = -1; b.learning = true; b.greedy = false; this.playing = this.stage;
+    } else {
+      const s = STAGES.findIndex(st => st.key === key);
+      if (s < 0) throw new Error(`unknown skill "${key}"; valid: ${STAGES.map(st => st.key).join(", ")}`);
+      this.task = this.playing = s; b.learning = false; b.greedy = greedy; this.perf = { n: 0, ok: 0 };
+    }
+    this.reset();
+  }
+
   // Save and load: weights (including the fixed random wiring) plus curriculum progress. A loaded
   // world replays the current episode from its start, so it acts exactly as the saved one would
   // have from that point. JSON.stringify(world) calls toJSON.
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
-    return { version: 3, rand: this.episodeRand, stage: this.stage, playing: this.playing, episode: this.episode,
+    // A save made while performing resumes training on its own stage.
+    return { version: 3, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh } };
   }
