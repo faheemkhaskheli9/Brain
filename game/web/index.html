@@ -38,7 +38,7 @@
 </head>
 <body>
 <main>
-  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a><a href="#predict">7 Guess what's next</a></nav>
+  <nav aria-label="Levels"><a href="#spark">1 Spark</a><a href="#wire">2 Wire together</a><a href="#lesion">3 Lesion lab</a><a href="#dopamine">4 Be the dopamine</a><a href="#remember">5 Remember me</a><a href="#sleep">6 Sleep on it</a><a href="#predict">7 Guess what's next</a><a href="#tiny">8 Tiny brain</a></nav>
   <h1 id="title"></h1>
   <p class="tag" id="tag"></p>
   <p class="intro" id="intro"></p>
@@ -56,7 +56,7 @@
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-// Brain Lab levels 1 to 7 in the browser. The models are game/sim.py, run by Pyodide;
+// Brain Lab levels 1 to 8 in the browser. The models are game/sim.py, run by Pyodide;
 // this file only mirrors each levels.py class's text, clock, drawing and win check.
 const W = 660, H = 440, TICK_MS = 20, HINT_AFTER_MS = 45000;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -571,6 +571,79 @@ const LEVELS = {
         i === k - 1 ? ctx.moveTo(px, ey) : ctx.lineTo(px, ey);
       }
       ctx.stroke();
+    },
+  },
+
+  tiny: {
+    title: "Tiny brain",
+    tag: ["Hypothesis", "Three-factor rules are observed at real synapses; that they are how whole animals learn " +
+      "to forage is a model, not a measurement."],
+    goal: "Get the creature to eat 10 times within 400 steps.",
+    intro: "Time to put pieces together. This creature starts in the top-left corner; the food is in the " +
+      "bottom-right. It has synapses that link where it is to which way it moves. A synapse used recently gets a " +
+      "tag (the eligibility trace). Dopamine, the reward prediction error, turns tags into lasting changes. Choose " +
+      "which parts to switch on, then run it.",
+    debrief: "Without dopamine nothing is learned: the creature wanders at random. Without the trace, only the last " +
+      "move before food gets credit, and learning crawls back one step at a time. With both, one meal teaches the " +
+      "whole path. This three-factor rule (tag × dopamine) is how real synapses are thought to solve credit " +
+      "assignment over time.",
+    kb: ["guides/build-a-brain-like-learner.md", "build a brain-like learner"],
+    hint: "It needs both parts: dopamine to learn at all, and the trace to credit the whole path.",
+    label: "A 5 by 5 grid with the creature, the food in the bottom-right corner and a chart of its dopamine.",
+    buttons: [["Dopamine (learning signal)", null, s => s.toggle(0)],
+              ["Eligibility trace (memory of recent moves)", null, s => s.toggle(1)], ["Run", null, s => s.run()]],
+    BUDGET: 400, CELL: 64, X0: 40, Y0: 30, SPEED: 2,
+    reset() {
+      if (this.agent) this.agent.destroy();
+      Object.assign(this, { parts: [false, false], agent: null, deltas: [], V: null, pos: null });
+      for (const b of [...$("controls").children].slice(0, 2)) b.setAttribute("aria-pressed", "false");
+      say("Pick the parts, then press Run. You can run as many times as you like.");
+    },
+    canvasClick() {},
+    toggle(i) { this.parts[i] = !this.parts[i]; $("controls").children[i].setAttribute("aria-pressed", this.parts[i]); },
+    run() {
+      if (this.agent) this.agent.destroy();
+      this.agent = sim.Forager(5, ...this.parts);
+      this.deltas = [];
+    },
+    tick() {
+      const f = this.agent;
+      if (!f) return;
+      for (let k = 0; k < this.SPEED && f.eaten < 10 && f.steps < this.BUDGET; k++) this.deltas.push(Number(f.step()));
+      const V = f.V, p = f.pos; this.V = Array.from(V.toJs()); this.pos = [p.get(0), p.get(1)]; V.destroy(); p.destroy();
+      const msg = `Food  ${f.eaten} of 10\nSteps  ${f.steps} of ${this.BUDGET}`;
+      if (f.eaten >= 10) return end(`Won. ${stars(f.steps <= 250 ? 3 : f.steps <= 320 ? 2 : 1)}\n\n${msg}`, true);
+      if (f.steps >= this.BUDGET) {
+        this.agent = null; f.destroy();
+        return say(`${msg}\n\nOut of steps. Change the parts and run again.`);
+      }
+      say(msg);
+    },
+    draw() {
+      const vmax = this.V ? Math.max(...this.V, 1e-6) : 1;
+      ctx.strokeStyle = css("--lilac"); ctx.lineWidth = 1;
+      for (let i = 0; i < 25; i++) {
+        const x = this.X0 + (i % 5) * this.CELL, y = this.Y0 + Math.floor(i / 5) * this.CELL;
+        if (this.V) {   // shade glass towards violet by learned value, as levels.py mix() does
+          ctx.globalAlpha = 0.75 * this.V[i] / vmax; ctx.fillStyle = css("--violet");
+          ctx.fillRect(x, y, this.CELL, this.CELL); ctx.globalAlpha = 1;
+        }
+        ctx.strokeRect(x, y, this.CELL, this.CELL);
+      }
+      const c = k => this.X0 + (k + 0.5) * this.CELL;
+      ctx.fillStyle = css("--ink"); ctx.fillRect(c(4) - 12, this.Y0 + 4.5 * this.CELL - 12, 24, 24);
+      if (this.pos) {
+        ctx.fillStyle = css("--pink"); ctx.beginPath();
+        ctx.arc(c(this.pos[0]), this.Y0 + (this.pos[1] + 0.5) * this.CELL, 16, 0, 2 * Math.PI); ctx.fill();
+      }
+      text("Shading: how much food each square", 380, 40, "left");
+      text("predicts (learned value).", 380, 58, "left");
+      text("dopamine, last 150 steps", 40, 365, "left");
+      const base = 405;
+      line(40, base, W - 30, base, "--lilac");
+      this.deltas.slice(-150).forEach((d, k) => {
+        if (Math.abs(d) > 0.01) line(40 + k * 4, base, 40 + k * 4, base - Math.max(Math.min(d, 1), -1) * 25, d > 0 ? "--pink" : "--violet", 3);
+      });
     },
   },
 };
