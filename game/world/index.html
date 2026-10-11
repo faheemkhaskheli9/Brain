@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain World</title>
+<style>
+  /* Palette from game/levels.py: a stained histology slide (glass, cresyl violet, eosin pink) */
+  :root { --glass: #F7F2F6; --lilac: #E6DCEE; --muted: #6F6890; --violet: #5B3A8C; --pink: #D9637E; --ink: #2A2550; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--glass); color: var(--ink);
+         font: 15px/1.5 Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-weight: 600; font-size: 1.9rem; margin: 0; letter-spacing: -.01em; }
+  .lede { font-family: Cambria, Georgia, serif; font-size: 1.05rem; line-height: 1.6; max-width: 70ch; margin: 4px 0 18px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+  .view { position: relative; }
+  #world { display: block; width: 100%; aspect-ratio: 3 / 2; border: 1px solid var(--lilac); background: var(--glass); }
+  #banner { position: absolute; left: 12px; bottom: 12px; right: 12px; margin: 0; padding: 8px 12px;
+            background: rgba(247, 242, 246, .92); border-left: 4px solid var(--violet); font-size: .95rem; }
+  #banner:empty { display: none; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+  button { font: inherit; color: var(--ink); background: var(--lilac); border: 0; padding: 8px 14px; cursor: pointer; }
+  button[aria-pressed="true"] { background: var(--violet); color: var(--glass); }
+  button:hover { outline: 1px solid var(--violet); }
+  button:focus-visible, a:focus-visible, #world:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+  aside h2 { font-size: 1rem; font-weight: 600; margin: 0 0 6px; }
+  aside section { margin: 0 0 18px; }
+  #stages { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+  #stages li { counter-increment: s; padding: 6px 0 8px 30px; position: relative; border-top: 1px solid var(--lilac); }
+  #stages li::before { content: counter(s); position: absolute; left: 0; top: 6px; width: 22px; height: 22px;
+                       border-radius: 50%; text-align: center; line-height: 22px; font-size: .8rem; background: var(--lilac); }
+  #stages li.done::before { content: "✓"; background: var(--violet); color: var(--glass); }
+  #stages li.now::before { background: var(--pink); color: var(--glass); }
+  #stages .name { font-weight: 600; }
+  #stages .about { font-family: Cambria, Georgia, serif; font-size: .9rem; margin: 2px 0 4px; }
+  #stages .meta { font-size: .8rem; color: var(--muted); }
+  #stages li:not(.now) .about { display: none; }
+  .bar { position: relative; height: 6px; background: var(--lilac); margin-top: 4px; }
+  .bar i { position: absolute; inset: 0 auto 0 0; background: var(--violet); }
+  .bar b { position: absolute; top: -3px; width: 2px; height: 12px; background: var(--pink); }
+  .senses { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; align-items: center; font-size: .85rem; }
+  #retina { display: grid; grid-template-columns: repeat(15, 1fr); gap: 2px; height: 22px; }
+  #retina span { background: #000; }
+  #fovea { display: grid; grid-template-columns: repeat(5, 12px); gap: 2px; }
+  #fovea span { width: 12px; height: 12px; background: var(--violet); opacity: .06; }
+  #cochlea { display: flex; gap: 6px; }
+  #cochlea span { padding: 1px 6px; background: var(--lilac); font-size: .8rem; }
+  #cochlea span.on { background: var(--pink); color: var(--glass); }
+  canvas.plot { display: block; width: 100%; height: 70px; border: 1px solid var(--lilac); background: #fff; }
+  .how { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 75ch; margin-top: 26px; }
+  .how h2 { font-family: Bahnschrift, system-ui, sans-serif; font-size: 1.1rem; font-weight: 600; }
+  a { color: var(--violet); }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<main>
+  <h1>Brain World</h1>
+  <p class="lede">A creature with eyes, ears, two legs, an arm and a pen. Nothing tells it what to do. It only
+    gets a dopamine signal when something goes better than it expected, and from that alone it learns five
+    skills in a row: walk, grasp, listen, read and write. Leave it running and watch it get there.</p>
+  <div class="layout">
+    <div>
+      <div class="view">
+        <canvas id="world" tabindex="0" aria-label="3D view of the creature's room. Drag to orbit, scroll to zoom."></canvas>
+        <p id="banner" role="status"></p>
+      </div>
+      <div class="controls">
+        <button id="watch" aria-pressed="true">Watch</button>
+        <button id="fast" aria-pressed="false">Fast forward</button>
+        <button id="pause" aria-pressed="false">Pause</button>
+        <button id="sound" aria-pressed="true">Sound on</button>
+        <button id="restart">Start a new brain</button>
+      </div>
+    </div>
+    <aside>
+      <section><h2>What it is learning</h2><ol id="stages"></ol></section>
+      <section>
+        <h2>What it senses and does</h2>
+        <div class="senses">
+          <span>Retina</span><div id="retina"></div>
+          <span>Fovea</span><div id="fovea"></div>
+          <span>Cochlea</span><div id="cochlea"></div>
+          <span>Doing</span><strong id="doing">–</strong>
+          <span>Task</span><span id="task"></span>
+        </div>
+      </section>
+      <section><h2>Dopamine (prediction error)</h2><canvas id="da" class="plot"></canvas></section>
+      <section><h2>Success rate over time</h2><canvas id="curve" class="plot"></canvas></section>
+    </aside>
+  </div>
+
+  <section class="how">
+    <h2>How its brain works</h2>
+    <p>Each step its senses are a 15-ray colour retina, a 5×5 fovea that can resolve letters, three cochlea
+      bands (one per tone, which you hear too) and the position of its legs. A fixed random layer of 600
+      neurons mixes them, and sound scales each neuron's visual response up or down, the way attention scales
+      responses in visual cortex. On top sits an actor (which action next) and a critic (how good is this
+      moment). Dopamine is the critic's surprise. Synapses that were recently active keep an eligibility
+      trace, and they change only when that trace meets dopamine. There is no backpropagation and no
+      programmed behaviour.</p>
+    <p>Settled science: dopamine signals reward prediction error, and plasticity needs a trace plus a
+      neuromodulator. Hypothesis: that this simple stack is enough for a real brain's versions of these
+      skills. Once walking is learned the gait becomes automatic, as practised skills move to habit circuits,
+      so the later stages choose steps, not leg lifts. One network learning skill after skill overwrites
+      the old ones (catastrophic forgetting), so about a third of the episodes rehearse an earlier skill,
+      as the hippocampus replays old experience between new learning. Not every new brain gets there:
+      some stall on listening or reading, as any learner can. Read more in
+      <a href="../../guides/build-a-brain-like-learner.md">build-a-brain-like-learner</a> and
+      <a href="../../function/learning-and-plasticity.md">learning-and-plasticity</a>.</p>
+  </section>
+</main>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { World, STAGES, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph } from "./brain.js";
+
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C = { glass: css("--glass"), lilac: css("--lilac"), muted: css("--muted"), violet: css("--violet"), pink: css("--pink"), ink: css("--ink") };
+
+// ---------- simulation state ----------
+let world, speed = "watch", paused = false, sound = true, lastStep = 0, freezeUntil = 0, frozen = null;
+let daTrace = [], curve = [], bucket = [], stageStarts = [0], stageDone = [];
+function newBrain(seed) {
+  world = new World(seed);
+  daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = [];
+  $("banner").textContent = "A new brain. It starts by flailing its legs at random.";
+  buildStages();
+}
+
+// ---------- audio: the tone the creature hears, you hear too ----------
+let audio;
+function playTone(k) {
+  if (!sound || speed !== "watch") return;
+  audio ??= new AudioContext();
+  const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime;
+  o.frequency.value = TONES_HZ[k]; o.type = "sine";
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+  o.connect(g).connect(audio.destination); o.start(t); o.stop(t + 0.55);
+}
+
+// ---------- 3D scene ----------
+const canvas = $("world");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(C.glass);
+const camera = new THREE.PerspectiveCamera(45, 1.5, 0.1, 100);
+camera.position.set(ARENA / 2, 8.5, ARENA + 5.5);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(ARENA / 2, 0, ARENA / 2); controls.maxPolarAngle = Math.PI * 0.47; controls.update();
+new ResizeObserver(() => {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+}).observe(canvas);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd8cce6, 1.6));
+const sun = new THREE.DirectionalLight(0xffffff, 1.4);
+sun.position.set(ARENA * 0.2, 10, ARENA * 0.9); sun.target.position.set(ARENA / 2, 0, ARENA / 2);
+sun.castShadow = true; Object.assign(sun.shadow.camera, { left: -7, right: 7, top: 7, bottom: -7 });
+scene.add(sun, sun.target);
+
+const mat = c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.75 });
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(ARENA, ARENA), mat(C.lilac));
+floor.rotation.x = -Math.PI / 2; floor.position.set(ARENA / 2, 0, ARENA / 2); floor.receiveShadow = true;
+scene.add(floor);
+const grid = new THREE.GridHelper(ARENA, 8, C.muted, C.muted);
+grid.position.set(ARENA / 2, 0.002, ARENA / 2); grid.material.opacity = 0.15; grid.material.transparent = true;
+scene.add(grid);
+for (const [x, z, w, d] of [[ARENA / 2, 0, ARENA, 0.1], [ARENA / 2, ARENA, ARENA, 0.1], [0, ARENA / 2, 0.1, ARENA], [ARENA, ARENA / 2, 0.1, ARENA]]) {
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(w, 0.35, d), mat("#d4c6e2"));
+  wall.position.set(x, 0.175, z); wall.receiveShadow = true; scene.add(wall);
+}
+
+// The creature: body, eye, two legs, an arm. Local +x is forward.
+const creature = new THREE.Group();
+const body = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 16), mat(C.violet));
+body.scale.set(1.25, 0.8, 1); body.position.y = 0.38; body.castShadow = true;
+const eye = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 8), mat(C.pink));
+eye.position.set(0.34, 0.48, 0);
+creature.add(body, eye);
+const legs = [0.17, -0.17].map(z => {   // left leg at +z? heading flips sides below; only the swing matters
+  const pivot = new THREE.Group(); pivot.position.set(0, 0.3, z);
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.3), mat(C.ink));
+  leg.position.y = -0.15; leg.castShadow = true; pivot.add(leg); creature.add(pivot); return pivot;
+});
+const arm = new THREE.Group(); arm.position.set(0.3, 0.4, 0);
+const armMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1), mat(C.ink));
+armMesh.rotation.z = Math.PI / 2; armMesh.position.x = 0.5; arm.add(armMesh); arm.scale.x = 0.15;
+creature.add(arm);
+const sector = (r, a, color, op) => {
+  const m = new THREE.Mesh(new THREE.CircleGeometry(r, 32, -a / 2, a),
+    new THREE.MeshBasicMaterial({ color, transparent: true, opacity: op, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2; m.position.y = 0.01; return m;
+};
+creature.add(sector(3.2, FOV, C.pink, 0.12), sector(3.2, FOVEA * 2, C.pink, 0.22));
+scene.add(creature);
+
+// Objects, rebuilt whenever the world starts a new episode
+const letterTex = k => {
+  const c = document.createElement("canvas"); c.width = c.height = 64;
+  const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, 64, 64);
+  const bits = glyph(LETTERS[k][1]); g.fillStyle = C.ink;
+  for (let i = 0; i < 25; i++) if (bits[i]) g.fillRect(7 + (i % 5) * 10, 7 + Math.floor(i / 5) * 10, 10, 10);
+  return new THREE.CanvasTexture(c);
+};
+const LETTER_MATS = LETTERS.map((_, k) => new THREE.MeshStandardMaterial({ map: letterTex(k), roughness: 0.8 }));
+let objGroup = new THREE.Group(), shownObjects = null;
+scene.add(objGroup);
+function buildObjects(objects) {
+  scene.remove(objGroup); objGroup = new THREE.Group(); scene.add(objGroup); shownObjects = objects;
+  for (const o of objects) {
+    const m = o.letter >= 0
+      ? new THREE.Mesh(new THREE.BoxGeometry(OBJ_R * 1.6, OBJ_R * 1.6, OBJ_R * 1.6), LETTER_MATS[o.letter])
+      : new THREE.Mesh(new THREE.SphereGeometry(OBJ_R, 32, 16), mat(new THREE.Color(...o.color)));
+    m.position.set(o.pos[0], OBJ_R * 0.85, o.pos[1]); m.castShadow = true; objGroup.add(m);
+  }
+}
+
+// The writing board: a 5x5 pad that shows the pen strokes
+const boardCanvas = document.createElement("canvas"); boardCanvas.width = boardCanvas.height = 128;
+const boardTex = new THREE.CanvasTexture(boardCanvas);
+const board = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.6), new THREE.MeshStandardMaterial({ map: boardTex, roughness: 0.9 }));
+board.position.set(ARENA / 2, 1.0, ARENA / 2 - 0.6); scene.add(board);
+function drawBoard(pad, ok) {
+  const g = boardCanvas.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, 128, 128);
+  g.strokeStyle = C.lilac; g.lineWidth = 1;
+  for (let i = 0; i <= 5; i++) { g.beginPath(); g.moveTo(14 + i * 20, 14); g.lineTo(14 + i * 20, 114); g.moveTo(14, 14 + i * 20); g.lineTo(114, 14 + i * 20); g.stroke(); }
+  const bits = glyph(pad); g.fillStyle = ok === undefined ? C.violet : ok ? C.violet : C.pink;
+  for (let i = 0; i < 25; i++) if (bits[i]) g.fillRect(15 + (i % 5) * 20, 15 + Math.floor(i / 5) * 20, 18, 18);
+  boardTex.needsUpdate = true;
+}
+
+// ---------- side panel ----------
+const retinaEls = Array.from({ length: 15 }, () => $("retina").appendChild(document.createElement("span")));
+const foveaEls = Array.from({ length: 25 }, () => $("fovea").appendChild(document.createElement("span")));
+const cochEls = ["low", "middle", "high"].map(t => { const s = document.createElement("span"); s.textContent = t; return $("cochlea").appendChild(s); });
+function buildStages() {
+  $("stages").innerHTML = STAGES.map(s => `<li><div class="name">${s.name}</div><div class="about">${s.about}</div>
+    <div class="meta"></div><div class="bar"><i></i><b style="left:${s.pass * 100}%"></b></div></li>`).join("");
+}
+function updatePanel() {
+  [...$("stages").children].forEach((li, i) => {
+    const done = i < world.stage || world.graduated, pct = Math.round(world.successRate(i) * 100);
+    li.className = done ? "done" : i === world.stage ? "now" : "";
+    const rate = done && !world.windows[i].length ? 1 : i <= world.stage ? world.successRate(i) : 0;
+    li.querySelector(".bar i").style.width = `${rate * 100}%`;
+    li.querySelector(".meta").textContent = done
+      ? `Learned in ${stageDone[i]} episodes` + (world.windows[i].length && i > 0 ? ` · lately ${pct}%` : "")
+      : i === world.stage ? `Episode ${world.episode - stageStarts[i] + 1} · success ${pct}% (pass ${STAGES[i].pass * 100}%)` : "";
+  });
+  const p = world.playing;
+  $("task").textContent = STAGES[p].name + (world.graduated ? " (practice)" : p !== world.stage ? " (review, so it doesn't forget)" : "");
+  const r = world.retina;
+  retinaEls.forEach((el, i) => {
+    const c = [0, 1, 2].map(k => Math.min(255, Math.round(r[i * 3 + k] * 330)));
+    el.style.background = `rgb(${c})`;
+  });
+  foveaEls.forEach((el, i) => { el.style.opacity = 0.06 + 0.94 * Math.min(1, world.fovea[i] * 1.6); });
+  const tone = performance.now() < freezeUntil && frozen ? frozen.tone : world.tone;
+  cochEls.forEach((el, k) => el.classList.toggle("on", tone === k));
+  const a = world.lastAction;
+  $("doing").textContent = a === undefined ? "–" : a < BODY.length ? BODY[a] : `pen: ${PEN[a - BODY.length]}`;
+}
+function plot(id, values, { lo, hi, zero, marks = [] }) {
+  const cv = $(id), w = cv.clientWidth, h = cv.clientHeight, g = cv.getContext("2d");
+  if (cv.width !== w * devicePixelRatio) { cv.width = w * devicePixelRatio; cv.height = h * devicePixelRatio; }
+  g.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0); g.clearRect(0, 0, w, h);
+  const y = v => h - 4 - (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * (h - 8);
+  g.strokeStyle = C.lilac; g.lineWidth = 1;
+  if (zero !== undefined) { g.beginPath(); g.moveTo(0, y(zero)); g.lineTo(w, y(zero)); g.stroke(); }
+  const n = Math.max(values.length, 2), x = i => i / (n - 1) * w;
+  for (const m of marks) { g.beginPath(); g.moveTo(x(m), 0); g.lineTo(x(m), h); g.stroke(); }
+  g.strokeStyle = C.violet; g.lineWidth = 1.5; g.beginPath();
+  values.forEach((v, i) => i ? g.lineTo(x(i), y(v)) : g.moveTo(x(i), y(v)));
+  g.stroke();
+}
+
+// ---------- the loop ----------
+function doStep() {
+  const snap = { pos: [...world.pos], heading: world.heading, legs: [...world.legs], objects: world.objects, mode: world.mode, pad: [...world.pad], tone: world.tone };
+  const stage = world.stage, r = world.step();
+  daTrace.push(world.brain.dopamine); if (daTrace.length > 240) daTrace.shift();
+  if (r.done) {
+    bucket.push(r.success ? 1 : 0);
+    if (bucket.length === 25) { curve.push(bucket.reduce((a, b) => a + b) / 25); bucket = []; }
+    if (speed === "watch") {   // hold the moment of the grasp or the finished letter before the next episode
+      frozen = { ...snap, success: r.success, action: r.action, pad: snap.mode === "write" ? [...snap.pad, r.action - BODY.length] : snap.pad };
+      freezeUntil = performance.now() + (snap.mode === "walk" ? 300 : 900);
+    }
+  }
+  if (world.stage !== stage) { stageDone[stage] = world.episode - stageStarts[stage]; stageStarts[world.stage] = world.episode; marks.push(curve.length); }
+}
+let marks = [];
+
+function drainEvents() {
+  for (const e of world.events) {
+    if (e.type === "tone") playTone(e.tone);
+    if (e.type === "stage") {
+      const next = STAGES[e.from + 1];
+      $("banner").textContent = `It learned "${STAGES[e.from].name.toLowerCase()}" in ${stageDone[e.from]} episodes. Next: ${next.name.toLowerCase()}. ${next.about}`;
+    }
+    if (e.type === "graduated") {
+      const last = STAGES.length - 1;
+      stageDone[last] = e.episodes - stageStarts[last];   // the event's count: fast-forward may have run on since
+      $("banner").textContent = `All five skills learned in ${e.episodes} episodes. Now it practises grasp, listen, read and write in turn, still learning, so you can watch each one.`;
+    }
+  }
+  world.events.length = 0;
+}
+
+const legAngle = [0.5, 0.5];
+let armT = -1;
+function sync3D(now) {
+  const v = now < freezeUntil && frozen ? frozen : { pos: world.pos, heading: world.heading, legs: world.legs, objects: world.objects, mode: world.mode, pad: world.pad };
+  if (v.objects !== shownObjects) buildObjects(v.objects);
+  const writing = v.mode === "write";
+  board.visible = writing;
+  if (writing) {
+    creature.position.set(ARENA / 2, 0, ARENA / 2 + 0.6); creature.rotation.y = Math.PI / 2;
+    drawBoard(v.pad, v === frozen ? frozen.success : undefined);
+  } else {
+    creature.position.set(v.pos[0], 0, v.pos[1]); creature.rotation.y = -v.heading;
+  }
+  v.legs.forEach((f, i) => { legAngle[i] += ((f ? 0.5 : -0.5) - legAngle[i]) * 0.35; legs[i].rotation.z = legAngle[i]; });
+  if (v === frozen && frozen.action === 4) armT = armT < 0 ? now : armT; else if (now >= freezeUntil) armT = -1;
+  if (v === frozen && frozen.action === 4) {
+    const t = Math.min(1, (now - armT) / 250);
+    arm.scale.x = 0.15 + 0.85 * t;
+    objGroup.children.forEach((m, i) => {
+      const o = frozen.objects[i], near = Math.hypot(o.pos[0] - frozen.pos[0], o.pos[1] - frozen.pos[1]) < 1.5;
+      if (near) m.position.y = OBJ_R * 0.85 + 0.4 * t;
+    });
+  } else arm.scale.x += (0.15 - arm.scale.x) * 0.3;
+}
+
+function frame(now) {
+  if (!paused) {
+    if (speed === "watch") {
+      if (now >= freezeUntil && now - lastStep > 90) { doStep(); lastStep = now; }
+    } else {
+      const t0 = performance.now();
+      while (performance.now() - t0 < 14) doStep();
+    }
+  }
+  drainEvents();
+  updatePanel();
+  plot("da", daTrace, { lo: -1, hi: 1, zero: 0 });
+  plot("curve", curve, { lo: 0, hi: 1, marks });
+  sync3D(now);
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+
+// ---------- controls ----------
+function setSpeed(s) {
+  speed = s; frozen = null; freezeUntil = 0;
+  $("watch").setAttribute("aria-pressed", s === "watch"); $("fast").setAttribute("aria-pressed", s === "fast");
+}
+$("watch").onclick = () => setSpeed("watch");
+$("fast").onclick = () => setSpeed("fast");
+$("pause").onclick = () => { paused = !paused; $("pause").setAttribute("aria-pressed", paused); $("pause").textContent = paused ? "Resume" : "Pause"; };
+$("sound").onclick = () => { sound = !sound; $("sound").setAttribute("aria-pressed", sound); $("sound").textContent = sound ? "Sound on" : "Sound off"; };
+$("restart").onclick = () => { marks = []; newBrain(1 + Math.floor(Math.random() * 1e6)); };
+addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body) { e.preventDefault(); $("pause").click(); } });
+
+newBrain(1);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
