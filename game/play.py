@@ -22,7 +22,9 @@ def load_stars():
 
 def save_stars(stars):
     SAVE.parent.mkdir(parents=True, exist_ok=True)
-    SAVE.write_text(json.dumps({"stars": stars}, indent=1), encoding="utf-8")
+    tmp = SAVE.with_suffix(".tmp")  # write then rename, so a crash never leaves half a save
+    tmp.write_text(json.dumps({"stars": stars}, indent=1), encoding="utf-8")
+    tmp.replace(SAVE)
 
 
 def star_text(n):
