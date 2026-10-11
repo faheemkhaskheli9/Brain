@@ -16,10 +16,10 @@ python game/test_levels.py # a scripted play wins every level (needs a display; 
 Progress (stars per level) is saved in `~/.brain_lab/save.json`. Delete it to start over.
 Each level opens once the one before it is won.
 
-**In a browser (levels 1 to 7 so far).** `game/web/index.html` runs Spark (`#spark`),
-Wire together (`#wire`), Lesion lab (`#lesion`), Be the dopamine (`#dopamine`), Remember me
-(`#remember`), Sleep on it (`#sleep`) and Guess what's next (`#predict`) with the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing.
-The level 5 and 7 debriefs have no sweep chart in the browser yet. The page
+**In a browser (all 11 levels).** `game/web/index.html` runs every level, from Spark
+(`#spark`) to Find your way home (`#home`), with the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing.
+The level 5, 7 and 11 debriefs have no sweep chart in the browser yet, and levels unlock
+in any order (there is no save file). The page
 fetches `sim.py`, so serve the repo over HTTP: `python -m http.server` from the repo root,
 then open `http://localhost:8000/game/web/`. The first load downloads Pyodide and numpy
 from the jsDelivr CDN, so it takes a few seconds.
@@ -116,5 +116,5 @@ See [world/README.md](world/README.md) for the curriculum, the brain and its lim
 ## Not done yet
 
 - Playtest with two people new to neuroscience and tune difficulty (issue #6).
-- Out of scope for now: sound, a web version (`sim.py` has no UI imports, so one could
-  reuse it), larger spiking networks.
+- Debrief sweep charts for levels 5, 7 and 11 in the browser version (issue #12).
+- Out of scope for now: sound, larger spiking networks.
