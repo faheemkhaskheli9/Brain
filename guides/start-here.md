@@ -54,6 +54,10 @@ Theories of consciousness are all hypotheses and live in one file of their own:
 2. [[brain-inspired-learning-algorithms]] - runnable learning rules.
 3. [[build-a-brain-like-learner]] - the staged project roadmap.
 
+**Path E: add something new.** [[open-questions-register]] ranks every open question
+in this KB by whether a computer can answer it; [[research-with-ai]] is the workflow for
+testing one with an AI assistant.
+
 **Path D: learn by playing.** `python game/play.py` runs Brain Lab, eleven levels
 in which you operate the models from these files: a spiking neuron, STDP, a lesion
 lab, dopamine, Hopfield memory, sleep replay, predictive tracking, a three-factor
@@ -94,6 +98,8 @@ learns to walk, grasp, listen, read and write from dopamine alone: run
 | Code a learning rule without backprop | [[brain-inspired-learning-algorithms]] |
 | Plan a brain-like AI project | [[build-a-brain-like-learner]] |
 | What does a term mean? | [[glossary]] |
+| Which open questions can I test myself? | [[open-questions-register]] |
+| How do I use Claude to do research without fooling myself? | [[research-with-ai]] |
 
 ## Best general resources
 - Kandel et al., *Principles of Neural Science*: the standard neuroscience textbook.
