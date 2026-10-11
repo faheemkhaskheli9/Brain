@@ -122,6 +122,7 @@ Benchmarks that test brain-like *learning*, not just accuracy:
 - [[memory-systems]] - the CLS design behind stage 3.
 - [[spatial-navigation]] - cognitive maps and the successor representation, a structured memory for an agent.
 - [[whole-brain-emulation-projects]] - the other route: copying a real brain.
+- [Brain World](../game/world/) - stages 3 and 5 in one embodied creature: actor-critic, traces and replay.
 
 ## References
 - Hassabis, Kumaran, Summerfield & Botvinick (2017) "Neuroscience-Inspired Artificial Intelligence", *Neuron* 95:245. doi:10.1016/j.neuron.2017.06.011

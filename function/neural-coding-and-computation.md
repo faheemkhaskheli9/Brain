@@ -76,6 +76,7 @@ active at any moment. That sparsity is a large part of why it runs on ~20 W.
 - [[neurons-and-synapses]] - where spikes come from.
 - [[predictive-processing]] - a theory of what cortical computation is *for*.
 - [[spiking-neural-networks]] - simulate these codes.
+- [Brain World](../game/world/) - a 3D creature whose tone-hearing neurons use gain modulation: sound scales their visual drive.
 
 ## References
 - Olshausen & Field (1996) "Emergence of simple-cell receptive field properties by learning a sparse code for natural images", *Nature* 381:607. doi:10.1038/381607a0

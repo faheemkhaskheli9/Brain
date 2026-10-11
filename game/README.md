@@ -100,6 +100,19 @@ game/
   Level 8 is scored against striatal dopamine ramps near a goal (Howe et al. 2013): value
   ramps, but plain TD error is flat once learned (gap).
 
+## Brain World
+
+`game/world/` is a separate browser simulation. Brain Lab has you operate one mechanism
+at a time; Brain World puts them together in one 3D creature that learns to walk, grasp,
+listen, read and write from reward alone. Save and Load keep a trained brain as a JSON file.
+
+```
+python -m http.server 8000        # from the repo root, then open http://localhost:8000/game/world/
+node game/world/test_brain.mjs    # headless check, about 20 s
+```
+
+See [world/README.md](world/README.md) for the curriculum, the brain and its limits.
+
 ## Not done yet
 
 - Playtest with two people new to neuroscience and tune difficulty (issue #6).
