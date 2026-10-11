@@ -10,6 +10,7 @@ making the simulated brain do something, not by answering a quiz.
 pip install numpy
 python game/play.py        # the game (tkinter ships with Python)
 python game/test_sim.py    # headless checks for every model
+python game/test_levels.py # a scripted play wins every level (needs a display; xvfb-run on CI)
 ```
 
 Progress (stars per level) is saved in `~/.brain_lab/save.json`. Delete it to start over.
@@ -44,6 +45,7 @@ game/
   levels.py      one class per level: text, canvas drawing, win check
   play.py        tkinter shell: menu, intro, level, debrief, save file
   test_sim.py    plain asserts on sim.py
+  test_levels.py drives each level headlessly: a good play wins, a bad one does not
 ```
 
 - **Biological constants** (LIF time constant and thresholds, the ~20 ms STDP window,

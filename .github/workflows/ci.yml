@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get install -y python3-tk xvfb
+      - run: pip install numpy
+      - name: Index is current and links resolve
+        run: |
+          python build_index.py
+          git diff --exit-code INDEX.md
+      - name: Topic code blocks run
+        run: python run_code_blocks.py
+      - name: Game models
+        run: python game/test_sim.py
+      - name: Every game level can be won
+        run: xvfb-run python game/test_levels.py
