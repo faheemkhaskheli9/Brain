@@ -14,17 +14,18 @@ T_REF = 2.0  # ms, absolute refractory period (textbook ~1-2 ms; anatomy/neurons
 
 
 class LIF:
-    def __init__(self):
+    def __init__(self, tau_m=TAU_M, r=R, v_th=V_TH, v_reset=V_RESET, t_ref=T_REF):
         self.v, self.ref = V_REST, 0.0
+        self.tau_m, self.r, self.v_th, self.v_reset, self.t_ref = tau_m, r, v_th, v_reset, t_ref
 
     def step(self, current, dt):
         """Advance dt ms with input current (nA). Returns True if the neuron spiked."""
         if self.ref > 0:
             self.ref -= dt
             return False
-        self.v += dt / TAU_M * (-(self.v - V_REST) + R * current)
-        if self.v >= V_TH:
-            self.v, self.ref = V_RESET, T_REF
+        self.v += dt / self.tau_m * (-(self.v - V_REST) + self.r * current)
+        if self.v >= self.v_th:
+            self.v, self.ref = self.v_reset, self.t_ref
             return True
         return False
 

@@ -76,6 +76,10 @@ game/
 - `eval.py` checks models against real brain data instead, one row per reference, and
   exits non-zero if a row fails. A `gap` row is a known mismatch, printed but not scored.
   It is a per-level table, not one "brain-likeness" score.
+  Level 1 is scored against a recorded mouse L2/3 neuron from the Allen Cell Types
+  Database: an LIF built from the cell's measured R, tau and threshold fits its f-I curve
+  better than Allen's own GLIF1 fit, but every linear LIF overestimates its rheobase, and
+  the game's 10 MOhm neuron needs about 20x the current (gap).
   Level 2 has rows against Bi & Poo 1998: sign of the timing window and its width pass,
   but the rule is symmetric while their potentiation is about 2.7x their depression (gap).
   Level 4 has rows for the dopamine signatures (burst moves to the cue, dip on omission,
@@ -86,8 +90,7 @@ game/
   stops it. Level 7 is scored against human pursuit of a hidden target: the belief keeps
   moving while the dot is hidden, but it does not slow down the way eye velocity does (gap).
   Level 8 is scored against striatal dopamine ramps near a goal (Howe et al. 2013): value
-  ramps, but plain TD error is flat once learned (gap). Level 1 waits on Allen Cell Types
-  data (issue #24).
+  ramps, but plain TD error is flat once learned (gap).
 
 ## Not done yet
 

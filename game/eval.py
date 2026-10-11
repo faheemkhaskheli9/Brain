@@ -13,6 +13,51 @@ import numpy as np
 
 import sim
 
+ALLEN = "Allen Cell Types Database, mouse L2/3 cell 490170480 (Cux2), GLIF1 model 491611694"
+# api.brain-map.org, fetched 2026-10-11. EphysSweep: 1 s long-square sweeps 30-37, spike count
+# = rate in Hz (repeat sweeps 38-44 left out). EphysFeature 490171104: rheobase, input resistance,
+# tau, Vrest, threshold. GLIF1 neuron_config (well_known_file 501129012): R_input, C,
+# th_inf x coeffs.th_inf, reset to rest, spike_cut_length 94 x dt 0.05 ms.
+FI_PA = [70, 90, 110, 130, 150, 170, 190, 210]
+FI_HZ = [1, 9, 14, 18, 23, 26, 31, 34]
+RHEOBASE_PA = 70
+CELL = dict(tau_m=20.05, r=199.3, v_th=sim.V_REST + (-49.78 + 77.29), v_reset=sim.V_REST)
+GLIF1 = dict(tau_m=181.73 * 0.07294, r=181.73, v_th=sim.V_REST + 30.115 * 1.06096,
+             v_reset=sim.V_REST, t_ref=94 * 0.05)
+
+
+def fi_rate(params, pa, ms=1000.0, dt=0.05):
+    """Spikes per second for a 1 s current step of pa picoamps."""
+    n = sim.LIF(**params)
+    return sum(n.step(pa / 1000, dt) for _ in range(int(ms / dt))) * 1000 / ms
+
+
+def rheobase(params):
+    """Smallest step that ever fires a linear LIF: (threshold - rest) / R, in pA."""
+    p = dict(r=sim.R, v_th=sim.V_TH) | params
+    return round((p["v_th"] - sim.V_REST) / p["r"] * 1000)
+
+
+def level1_lif():
+    """Level 1 LIF neuron vs a recorded mouse cortical neuron (issue #24)."""
+    def rmse(params):
+        return np.sqrt(np.mean([(fi_rate(params, pa) - hz) ** 2 for pa, hz in zip(FI_PA, FI_HZ)]))
+    ours, base = rmse(CELL), rmse(GLIF1)
+    rheo = {name: rheobase(p) for name, p in (("game", {}), ("cell-params", CELL), ("GLIF1", GLIF1))}
+    return [
+        # Neither model is fitted to these steps: ours takes the cell's own passive features, GLIF1
+        # was fitted by Allen to noise stimuli. Spike-time match on a held-out sweep is left out:
+        # spike times are only in the NWB file, and the game keeps no Allen SDK dependency.
+        (1, ALLEN, "f-I curve: LIF with the cell's measured R, tau and threshold vs Allen's GLIF1 fit",
+         f"RMSE {ours:.1f} Hz vs GLIF1 {base:.1f} Hz over {FI_PA[0]}-{FI_PA[-1]} pA", ours <= base),
+        # A linear membrane predicts a rheobase of (threshold - rest) / R; the real cell fires
+        # sooner because its membrane is not linear near threshold. The game's R of 10 MOhm is
+        # about 20x below this cell's input resistance, so its neuron needs nA, not pA.
+        (1, ALLEN, "rheobase: smallest 1 s step that fires",
+         f"cell {RHEOBASE_PA} pA; " + ", ".join(f"{k} {v} pA" for k, v in rheo.items()), None),
+    ]
+
+
 BI_POO = "Bi & Poo 1998 (J Neurosci 18:10464), Fig. 7 text and Figs. 2C, 3C"
 # Stated in the paper's text, not digitized from the Fig. 7 scatter: LTP when post fires within
 # 20 ms after pre, LTD within 20 ms before, "essentially absent" outside the 40 ms window.
@@ -210,7 +255,7 @@ def level8_ramp(learn=3000, probe=2000):
     ]
 
 
-ROWS = [level2_stdp, level4_td, level5_hopfield, level6_forgetting, level7_occlusion, level8_ramp]
+ROWS = [level1_lif, level2_stdp, level4_td, level5_hopfield, level6_forgetting, level7_occlusion, level8_ramp]
 
 
 def main():
