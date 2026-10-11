@@ -106,6 +106,7 @@ limited regions; how much this happens in the adult human hippocampus is debated
 - [[brain-inspired-learning-algorithms]] - Hebbian, Oja and predictive coding in code.
 - [[memory-systems]] - consolidation and replay.
 - [[neuromodulators]] - ACh, NE and serotonin beyond dopamine.
+- [Brain World](../game/world/) - TD dopamine and eligibility traces teaching a 3D creature five skills in a row.
 
 ## References
 - Bi & Poo (1998) "Synaptic modifications in cultured hippocampal neurons", *J Neurosci* 18:10464. doi:10.1523/JNEUROSCI.18-24-10464.1998
