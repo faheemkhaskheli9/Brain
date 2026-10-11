@@ -16,7 +16,9 @@ node game/world/test_brain.mjs    # headless check, about 20 s
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
 `index.html` (3D view, panels, sound). Press **Fast forward** to reach graduation in under a minute.
-Then **Watch** shows it practising each skill, with the tones played aloud.
+Then **Watch** shows it practising each skill, with the tones played aloud. **Save brain**
+downloads its weights and progress as JSON, and **Load brain** picks up from such a file, so a
+graduated creature does not need training again. A loaded brain restarts the episode it was saved in.
 
 ## The curriculum
 
@@ -54,6 +56,8 @@ Chance is about 0.33 for listen and read, and 1/18 for write. Seed 1 (the page's
 grasp 0.87, listen 0.68, read 0.53, write 0.60. Across seeds 1–7, three pass everything. The others
 stall on listen or read within the episode budget, or keep listen just below 0.5. Interleaving one
 small network across four tasks keeps some interference, and reading is the weakest skill.
+Last, it saves and reloads the brain and checks that the copy takes the same 2,000 actions as the
+original.
 
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that

@@ -28,4 +28,14 @@ while (w.episode - start < 4000) {
 }
 console.log("Kept after graduation:", Object.keys(KEEP).map(k => `${k} ${(ok[k] / n[k]).toFixed(2)}`).join(", "));
 for (const k in KEEP) assert.ok(ok[k] / n[k] >= KEEP[k], `${k} forgotten: ${(ok[k] / n[k]).toFixed(2)} < ${KEEP[k]}`);
+
+// Save and load: at an episode boundary, a reloaded brain acts exactly as the original does.
+while (!w.step().done);
+const copy = World.fromJSON(JSON.parse(JSON.stringify(w)));
+for (let i = 0; i < 2000; i++) {
+  const a = w.step(), b = copy.step();
+  assert.deepEqual(b, a, `loaded brain diverged at step ${i}`);
+}
+assert.throws(() => World.fromJSON({ version: 1 }), /not a Brain World save/);
+console.log("Save and load: same actions for 2000 steps");
 console.log("ok");
