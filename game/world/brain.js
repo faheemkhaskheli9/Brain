@@ -50,11 +50,12 @@ export const STAGES = [
     about: "At the board, a tone plays. Draw its letter with two pen strokes: the same shapes it learned to read." },
 ];
 
-const N_IN = RAYS * 3 + 2 + 3 + 25 + 6 + 1, FAN_IN = 8;
+// Inputs: retina, legs, cochlea, fovea, pen pad, at-board flag, then the fovea memory.
+const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 25, FAN_IN = 8;
 // Game gains: tuning knobs so each stage learns in minutes, not measurements. A wrong grasp must
 // cost more than a whole episode of step costs, or grabbing anything beats searching.
 export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost: 0.005, wrongCost: 0.6,
-  hidden: 1000, maxSteps: 150, replay: 0.3, gate: 0.5 };
+  hidden: 1000, maxSteps: 150, replay: 0.3, gate: 0.5, memory: 0.9 };
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
 
@@ -70,6 +71,7 @@ export class Brain {
     // letter is left for learning to find. (An additive mix learned the tone task far too slowly.)
     const RET = RAYS * 3, LEGS = [RET, RET + 1], COCH = [RET + 2, RET + 3, RET + 4];
     const FOV0 = RET + 5, BODY_IN = [...LEGS, ...[0, 1, 2, 3, 4, 5, 6].map(k => FOV0 + 25 + k)];
+    const FOVEA_IN = Array.from({ length: 25 }, (_, k) => FOV0 + k), MEM_IN = FOVEA_IN.map(i => i - FOV0 + MEM0);
     this.idx = new Int32Array(HIDDEN * FAN_IN);
     this.wIn = new Float32Array(HIDDEN * FAN_IN);
     this.bias = new Float32Array(HIDDEN);
@@ -77,7 +79,7 @@ export class Brain {
     for (let j = 0; j < HIDDEN; j++) {
       const u = rand(), s = Math.floor(rand() * (RAYS - 1)) * 3;
       const patch = u < 0.5 ? [0, 1, 2, 3, 4, 5].map(k => s + k)
-        : u < 0.85 ? Array.from({ length: 25 }, (_, k) => FOV0 + k) : BODY_IN;
+        : u < 0.72 ? FOVEA_IN : u < 0.85 ? MEM_IN : BODY_IN;
       for (let k = 0; k < FAN_IN; k++) {
         this.idx[j * FAN_IN + k] = k < 3 ? COCH[k] : pick(patch);
         this.wIn[j * FAN_IN + k] = (k < 3 ? 1.5 : 1) * gauss(rand);
@@ -175,7 +177,7 @@ export class World {
     this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
     this.heading = R() * 2 * Math.PI;
     this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
-    this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0;
+    this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
     this.objects = [];
     // The grasp stage has one object of a random colour, so it teaches "approach and grasp", not
     // "red is food": a colour habit there made the listen stage perseverate on red.
@@ -221,13 +223,19 @@ export class World {
         for (let k = 0; k < 25; k++) this.fovea[k] = g[k] * near;
       }
     }
+    // Fovea memory: a decaying trace of the last letter seen, so it can still hold the letter a
+    // few steps after the gaze has moved on (persistent activity, as in prefrontal working memory).
+    // Each leg push turns 0.3 rad, wider than the fovea, so a letter is in view only for a step or
+    // two. (A "look" saccade action was tried too: it made reading less reliable across seeds.)
+    for (let k = 0; k < 25; k++) this.memory[k] = Math.max(GAINS.memory * this.memory[k], this.fovea[k]);
     x.set(this.retina, 0);
     x[RAYS * 3] = this.legs[0]; x[RAYS * 3 + 1] = this.legs[1];
     if (this.tone >= 0) x[RAYS * 3 + 2 + this.tone] = 1;                 // cochlea: one band per tone
     for (let k = 0; k < 3; k++) x[RAYS * 3 + 2 + k] += 0.05 * (R() - 0.5);
     x.set(this.fovea, RAYS * 3 + 5);
     for (const s of this.pad) x[RAYS * 3 + 30 + s] = 1;                  // what the pen has drawn
-    x[N_IN - 1] = this.mode === "write" ? 1 : 0;                          // at the board or not
+    x[BOARD_IN] = this.mode === "write" ? 1 : 0;                          // at the board or not
+    x.set(this.memory, MEM0);
     return x;
   }
 
@@ -336,7 +344,7 @@ export class World {
   // have from that point. JSON.stringify(world) calls toJSON.
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
-    return { version: 2, rand: this.episodeRand, stage: this.stage, playing: this.playing, episode: this.episode,
+    return { version: 3, rand: this.episodeRand, stage: this.stage, playing: this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh } };
   }
@@ -344,7 +352,7 @@ export class World {
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
     const w = new World(1), b = w.brain, ob = o && o.brain;
     const KEYS = ["idx", "wIn", "bias", "gate", "v", "P"];
-    const ok = o && o.version === 2 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    const ok = o && o.version === 3 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
