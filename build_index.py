@@ -34,7 +34,7 @@ def main():
     topics, errors = {}, []
     for path in sorted(ROOT.rglob("*.md")):
         rel = path.relative_to(ROOT).as_posix()
-        if path.name in SKIP or rel.startswith("."):
+        if path.name in SKIP or rel.startswith((".", "research/")):
             continue
         text = path.read_text(encoding="utf-8")
         meta = frontmatter(text)

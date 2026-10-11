@@ -1,1 +1,3 @@
 __pycache__/
+# downloaded papers: copyright stays with publishers; research/fetch_papers.py refetches
+research/pdfs/

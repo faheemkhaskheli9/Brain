@@ -100,6 +100,7 @@ or continual learning demands it. See [[build-a-brain-like-learner]].
 - [[brain-inspired-learning-algorithms]] - runnable versions.
 - [[predictive-processing]] - the predictive coding account.
 - [[memory-systems]] - CLS and catastrophic forgetting.
+- [[key-papers]] - one-line findings of every paper cited here.
 
 ## References
 - Lillicrap, Cownden, Tweed & Akerman (2016) "Random synaptic feedback weights support error backpropagation for deep learning", *Nat Commun* 7:13276. doi:10.1038/ncomms13276
