@@ -137,6 +137,7 @@ assert fast < slow
 - [[spiking-neural-networks]] - neuromodulated STDP in code.
 - [[brain-structure-overview]] - where the source nuclei sit.
 - [[brain-inspired-learning-algorithms]] - learning rules a modulator would gate.
+- [[emotion-amygdala-and-interoception]] - fear learning and amygdala value beside dopamine.
 
 ## References
 - Doya (2002) "Metalearning and neuromodulation", *Neural Networks* 15:495. doi:10.1016/S0893-6080(02)00044-8

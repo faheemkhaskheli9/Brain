@@ -69,6 +69,7 @@ low latency and power for robotics and edge vision.
 - [[neural-coding-and-computation]] - why sparse events save energy.
 - [[spiking-neural-networks]] - the models these chips run.
 - [[whole-brain-emulation-projects]] - large-scale simulations that use them.
+- [[glia-and-energy-budget]] - the brain's own energy budget and why it favours sparse spikes.
 
 ## References
 - Intel (2024) "Intel Builds World's Largest Neuromorphic System to Enable More Sustainable AI", Intel Newsroom.

@@ -81,6 +81,7 @@ specific process models can be tested.
 - [[sensory-systems-and-vision]] - the visual hierarchy in detail, and CNNs as models of it.
 - [[neural-coding-and-computation]] - normalisation, gain and attention primitives.
 - [[brain-inspired-learning-algorithms]] - a runnable predictive coding network.
+- [[emotion-amygdala-and-interoception]] - interoceptive inference: the same scheme applied to the body.
 - [[brain-vs-deep-learning]] - predictive coding as a backprop alternative.
 
 ## References

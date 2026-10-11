@@ -106,6 +106,7 @@ limited regions; how much this happens in the adult human hippocampus is debated
 - [[brain-inspired-learning-algorithms]] - Hebbian, Oja and predictive coding in code.
 - [[memory-systems]] - consolidation and replay.
 - [[neuromodulators]] - ACh, NE and serotonin beyond dopamine.
+- [[brain-development-and-critical-periods]] - when plasticity is high, and what closes it.
 - [Brain World](../game/world/) - TD dopamine and eligibility traces teaching a 3D creature five skills in a row.
 
 ## References
