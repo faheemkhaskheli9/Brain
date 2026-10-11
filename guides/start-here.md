@@ -24,14 +24,16 @@ use the question table to jump to one file.
 **Path A: understand the brain (no code)**
 1. [[brain-structure-overview]] - regions, numbers, wiring.
 2. [[neurons-and-synapses]] - the components.
-3. [[neural-coding-and-computation]] - how spikes carry information.
-4. [[learning-and-plasticity]] - how synapses learn.
-5. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
-6. [[memory-systems]] - how memories form and consolidate.
-7. [[sleep-and-memory-consolidation]] - what sleep does to memory: replay and downscaling.
-8. [[spatial-navigation]] - place cells, grid cells and the brain's map.
-9. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
-10. [[predictive-processing]] - how perception works (leading theory).
+3. [[dendritic-computation]] - why one neuron is more like a small network.
+4. [[neural-coding-and-computation]] - how spikes carry information.
+5. [[brain-rhythms-and-oscillations]] - brain waves: where they come from and what they may do.
+6. [[learning-and-plasticity]] - how synapses learn.
+7. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
+8. [[memory-systems]] - how memories form and consolidate.
+9. [[sleep-and-memory-consolidation]] - what sleep does to memory: replay and downscaling.
+10. [[spatial-navigation]] - place cells, grid cells and the brain's map.
+11. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
+12. [[predictive-processing]] - how perception works (leading theory).
 
 **Path B: simulate the brain**
 1. [[levels-of-brain-modeling]] - choose the level of detail.
@@ -61,6 +63,8 @@ learns to walk, grasp, listen, read and write from dopamine alone: run
 |---|---|
 | How many neurons, what does the hippocampus do? | [[brain-structure-overview]] |
 | What is an action potential? | [[neurons-and-synapses]] |
+| Do dendrites compute? What is an NMDA spike? | [[dendritic-computation]] |
+| What are theta and gamma waves? What is phase precession? | [[brain-rhythms-and-oscillations]] |
 | Why is the brain so energy-efficient? | [[neural-coding-and-computation]] |
 | What are Hebbian learning, STDP and dopamine RPE? | [[learning-and-plasticity]] |
 | What do acetylcholine, noradrenaline and serotonin do? | [[neuromodulators]] |
