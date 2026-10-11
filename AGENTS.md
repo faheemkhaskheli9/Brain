@@ -18,7 +18,9 @@ build digital simulations and brain-inspired learning systems.
    `simulation`, `guides`). One topic per file, kebab-case filename.
 2. Cite a paper or official page for every number (neuron counts, connectome
    sizes, hardware specs). Do not invent figures; leave them out instead.
-3. Code is minimal, runnable, numpy-only where possible. Run it before committing.
+3. Code is minimal, runnable, numpy-only where possible. `python run_code_blocks.py`
+   runs every ```` ```python ```` block (CI does too). A sketch that needs a heavy
+   library says `not run here` on its first line and is skipped.
 4. Link the new topic from at least one existing topic's `## Related`.
 5. Run `python build_index.py` (stdlib only). It regenerates `INDEX.md` and fails
    on missing frontmatter or a broken `[[link]]`.
