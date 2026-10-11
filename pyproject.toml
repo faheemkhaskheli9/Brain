@@ -1,0 +1,22 @@
+[project]
+name = "brain-kb"
+version = "0.1.0"
+description = "Knowledge base on the human brain, with runnable models and the Brain Lab game"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0 AND CC-BY-4.0"
+license-files = ["LICENSE", "LICENSE-CONTENT.md"]
+dependencies = ["numpy"]
+
+# Not a library: `pip install .` only pulls the dependencies.
+[tool.setuptools]
+packages = []
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ["research/pdfs"]
+
+[tool.ruff.lint]
+# Bug-finding rules only; the compact one-line style (E702, E731, E741) is deliberate.
+select = ["F", "E9", "B"]
+ignore = ["B905"]

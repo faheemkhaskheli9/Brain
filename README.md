@@ -23,6 +23,14 @@ Every topic file has YAML frontmatter (title, tags, use_cases, status, sources).
 `python build_index.py` regenerates `INDEX.md` and checks `[[links]]`. The rules
 for adding topics are in [AGENTS.md](AGENTS.md).
 
+`pip install .` installs the one dependency (numpy, Python 3.10+). `ruff check .`
+lints; CI runs it with the index, code-block and game checks.
+
+## License
+
+Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is
+[CC BY 4.0](LICENSE-CONTENT.md). Cited papers keep their own licenses.
+
 ## An honest framing
 
 Nobody can simulate a human brain today in a way that reproduces human learning.
