@@ -40,7 +40,8 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 ## The brain
 
 - **Senses:** a 15-ray retina (RGB times nearness), a 5×5 fovea that resolves the letter on the
-  object in a ±0.2 rad central cone, three cochlea bands, leg position and the pen pad.
+  object in a ±0.2 rad central cone, three cochlea bands, leg position and the pen pad. On the page,
+  that cone turns dark violet while a letter is in it.
 - **Fovea memory:** a decaying trace of the fovea (×0.9 per step), so the last letter seen stays
   in its senses for a few steps after the gaze moves on. Each leg push turns 0.3 rad, wider than
   the fovea, so a letter is in view for only a step or two. This is a crude stand-in for working
