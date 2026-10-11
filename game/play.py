@@ -90,7 +90,7 @@ class App(tk.Tk):
         return b
 
     def unlocked(self, i):
-        return i == 0 or self.stars.get(i, 0) > 0   # level i+1 opens once level i is won
+        return True
 
     def menu(self):
         self.clear()
