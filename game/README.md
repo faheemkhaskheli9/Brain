@@ -32,7 +32,10 @@ Each level opens once the one before it is won.
 | 10 | Neuron zoo (bonus) | Set current and the Izhikevich parameters a, c, d; an LIF neuron gets the same current | The Izhikevich neuron has fired regular, intrinsically bursting, chattering and fast spiking | Izhikevich 2003 vs LIF, patterns named from interspike intervals | [levels-of-brain-modeling](../simulation/levels-of-brain-modeling.md) |
 
 Every level has an intro card, the play screen and a debrief that explains what happened
-and links its topic file. Each intro is tagged **Established** or **Hypothesis**, as the
+and links its topic file. Levels that run on their own clock (1, 2, 7, 8, 9) have Pause (P)
+and Step (N). A one-line hint appears after a failed attempt or 45 s without a win. The
+debriefs for levels 5 and 7 plot the model's what-if sweep: recall against memories stored,
+and tracking error against gain. Each intro is tagged **Established** or **Hypothesis**, as the
 topic files are. Levels 6–9 are tagged Hypothesis, with a line saying which part is
 settled and which is theory. Levels 9 and 10 come after the boss so existing save files
 keep their level numbers.

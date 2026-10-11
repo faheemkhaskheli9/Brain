@@ -23,8 +23,14 @@ def mix(c1, c2, t):
 
 
 class Level:
-    title = goal = intro = debrief = kb = ""
+    title = goal = intro = debrief = kb = hint = ""
     tag, tag_note = "ESTABLISHED", ""
+    timed = False   # runs on its own clock, so the shell offers pause and step
+
+    @staticmethod
+    def sweep():
+        """Optional debrief chart: (title, x label, y label, xs, ys) from the level's model."""
+        return None
 
     def __init__(self, parent, done):
         self.done, self.over = done, False
@@ -39,6 +45,13 @@ class Level:
                                justify="left", anchor="nw")
         self.build()
         self.status.pack(fill="both", expand=True, pady=(12, 0))
+        self.hint_label = tk.Label(self.side, font=SMALL, fg=VIOLET, bg=GLASS, wraplength=260,
+                                   justify="left", anchor="w")
+
+    def show_hint(self):
+        if self.hint and not self.hint_label["text"]:
+            self.hint_label.config(text="Hint: " + self.hint)
+            self.hint_label.pack(fill="x", side="bottom", pady=(8, 0))
 
     def build(self):
         pass
@@ -75,6 +88,7 @@ class Level:
     def fail(self, text):
         self.over = True
         self.say(text + "\n\nPress Retry to try again.")
+        self.show_hint()
 
 
 class Spark(Level):
@@ -90,6 +104,8 @@ class Spark(Level):
                "leaky integrate-and-fire model, the workhorse of spiking simulations. Real neurons "
                "add ion-channel detail (Hodgkin-Huxley), but threshold, leak and reset are the core.")
     kb = "simulation/spiking-neural-networks.md"
+    hint = "One click stays below threshold. Two quick clicks fire one spike, so send 5 pairs spread out."
+    timed = True
     WINDOW = 500  # ms of model time
 
     def build(self):
@@ -161,6 +177,8 @@ class Wire(Level):
                "spike changes both synapses at once. STDP lets neurons learn causal order and pick "
                "up repeating patterns without a teacher (Markram et al. 1997; Bi and Poo 1998).")
     kb = "function/learning-and-plasticity.md"
+    hint = "Repeat A, then Space, then B, all quickly, and wait a second between rounds so the traces fade."
+    timed = True
     DT, SPAN = 2.0, 400.0  # model ms per tick, ms shown on the raster
     ROWS = {0: ("Input A", 90), 1: ("Input B", 170), 2: ("Output", 250)}
 
@@ -279,6 +297,7 @@ class Lesion(Level):
                "stops habits forming while the memory of practising survives: two memory systems, broken "
                "separately. A brain-like AI would need several kinds of learner, not one big network.")
     kb = "anatomy/brain-structure-overview.md"
+    hint = "Match the broken job to a role: memory of places is the hippocampus, fear is the amygdala, timing is the cerebellum."
 
     def build(self):
         self.cut, self.named, self.mistakes = None, set(), 0
@@ -355,6 +374,7 @@ class Dopamine(Level):
                "due. Juice with no bell is still a surprise. Real dopamine neurons do all three "
                "(Schultz, Dayan and Montague 1997), one of the strongest links between neuroscience and AI.")
     kb = "function/learning-and-plasticity.md"
+    hint = "Run bell-and-juice trials until the bell bar is tall and the juice bar is gone, then ring with no juice."
     ZERO, SCALE, X0, STEP = 160, 100, 70, 52
 
     def build(self):
@@ -423,7 +443,18 @@ class Remember(Level):
                "neurons, and similar patterns, like hand drawings, interfere sooner. Modern Hopfield "
                "networks raise capacity sharply and are mathematically close to attention.")
     kb = "function/memory-systems.md"
+    hint = "Similar drawings blur together. Store random patterns, press Test after each one, and keep going."
     CELL, X0, Y0 = 40, 30, 40
+
+    @staticmethod
+    def sweep():
+        rng, xs, ys = np.random.default_rng(0), list(range(1, 21)), []
+        for n in xs:
+            net = sim.Hopfield(64)
+            for _ in range(n):
+                net.store(rng.choice([-1.0, 1.0], 64))
+            ys.append(float(np.mean(net.test())))
+        return "Recall vs memories stored (random patterns)", "memories stored", "mean recall overlap", xs, ys
 
     def build(self):
         self.net, self.state = sim.Hopfield(64), -np.ones(64)
@@ -544,6 +575,7 @@ class Sleep(Level):
                "idea: the hippocampus stores episodes fast and replays them, so the cortex can learn "
                "slowly without overwriting what it knows. In AI the same trick is experience replay.")
     kb = "function/memory-systems.md"
+    hint = "Tick sleep replay before you learn task B."
     DAYS = 8
 
     def build(self):
@@ -609,8 +641,16 @@ class Predict(Level):
                "its own prediction. Predictive coding calls this weighting precision, and attention "
                "may be the brain turning precision up where it matters.")
     kb = "function/predictive-processing.md"
+    hint = "Neither end of the slider works. Try about a fifth of the way along and leave it there."
+    timed = True
     WINDOW = 600  # ticks = 12 s
     TRACK_Y = 140
+
+    @staticmethod
+    def sweep():
+        xs = [0.02, 0.05, 0.1, 0.15, 0.2, 0.3, 0.45, 0.6, 0.8, 1.0]
+        return ("Tracking error vs trust in the senses", "gain (trust in the senses)", "mean error over 12 s",
+                xs, [sim.tracking_error(g) for g in xs])
 
     def build(self):
         self.world = sim.DotWorld(seed=None)
@@ -690,6 +730,8 @@ class TinyBrain(Level):
                "at a time. With both, one meal teaches the whole path. This three-factor rule "
                "(tag × dopamine) is how real synapses are thought to solve credit assignment over time.")
     kb = "guides/build-a-brain-like-learner.md"
+    hint = "It needs both parts: dopamine to learn at all, and the trace to credit the whole path."
+    timed = True
     BUDGET, CELL, X0, Y0, SPEED = 400, 64, 40, 30, 2
 
     def build(self):
@@ -766,6 +808,8 @@ class Pattern(Level):
                "PCA from local information only (Oja 1982). Stack many such neurons with a little "
                "competition and you get sparse coding, the leading model of how V1 cells learn edge detectors.")
     kb = "learning/brain-inspired-learning-algorithms.md"
+    hint = "Pure Hebb always runs away. Switch on Oja's term and keep the learning rate low."
+    timed = True
     CX, CY, DOT, ARROW, HOLD, LIMIT = 230, 220, 40, 120, 100, 4.0   # px per input unit, px per weight unit
 
     def build(self):
@@ -862,6 +906,7 @@ class Zoo(Level):
                "no recovery variable, so it can only fire faster or slower, never in bursts. This is why "
                "large simulations that care about firing patterns use Izhikevich neurons (Izhikevich 2003).")
     kb = "simulation/levels-of-brain-modeling.md"
+    hint = "Keep a at 0.02: c -55 with d 4 bursts once, c -50 with d 2 chatters. Fast spiking needs a near 0.1."
     TOP, BOTTOM, LEFT = 130, 330, 40   # y of the two traces' resting lines, x of their start
     TARGETS = ("regular spiking", "intrinsically bursting", "chattering", "fast spiking")
 

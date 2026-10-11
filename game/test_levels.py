@@ -162,6 +162,23 @@ def test_zoo():
     assert won == [3] and lvl.runs == 4, (won, lvl.runs)
 
 
+def test_debrief_sweeps_show_the_lesson():
+    *_, xs, ys = levels.Predict.sweep()
+    best = ys.index(min(ys))
+    assert 0 < best < len(xs) - 1, "tracking error should have a sweet spot inside the gain range"
+    *_, xs, ys = levels.Remember.sweep()
+    assert ys[2] > 0.95 and ys[-1] < 0.8, "3 memories recall, 20 do not"
+
+
+def test_hint_on_failure():
+    assert all(cls.hint for cls in levels.LEVELS), "every level needs a hint"
+    lvl, won = start(levels.Lesion)
+    lvl.lesion("Hippocampus")
+    for _ in range(4):
+        lvl.name("Amygdala")
+    assert lvl.hint_label["text"] == "Hint: " + levels.Lesion.hint
+
+
 def test_every_level_covered():
     played = {"Spark", "Wire", "Lesion", "Dopamine", "Remember", "Sleep", "Predict", "TinyBrain", "Pattern", "Zoo"}
     assert {cls.__name__ for cls in levels.LEVELS} == played
