@@ -67,6 +67,9 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // 1 = the same but sense the cut-off state first (RNG control), 2 = bootstrap from that state.
   // 2 passed 10/10 seeds vs the control's 9 but kept read lower, so it stays off (README "Timeouts").
   timeoutBootstrap: 0,
+  // Innate orienting reflex (issue #83): a fixed, never-learned bias on the leg-push logits that
+  // turns toward the brighter side of the retina, gain orient (0 = off). See README "Innate prior".
+  orient: 0,
   // Perform mode only: skills that take the most likely action instead of sampling. Walk and write
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
@@ -144,9 +147,10 @@ export class Brain {
 
   policy(h, allowed, pi) {   // softmax over the allowed actions, written into pi (others 0)
     pi.fill(0);
+    const turn = GAINS.orient ? GAINS.orient * orient(h) : 0;   // push left leg = turn left
     let mx = -Infinity;
     for (const a of allowed) {
-      let s = 0; const row = a * this.nH;
+      let s = a === 0 ? turn : a === 1 ? -turn : 0; const row = a * this.nH;
       for (let i = 0; i < this.nH; i++) s += this.P[row + i] * h[i];
       pi[a] = s; if (s > mx) mx = s;
     }
@@ -293,6 +297,17 @@ function fromB64(s, Type) {
   for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
   if (u.length % Type.BYTES_PER_ELEMENT) throw new Error("bad length");
   return new Type(u.buffer);
+}
+
+// Left minus right object salience on the retina (h starts with the senses). A wall reads at most
+// 0.2 in every channel, so max(r, g, b) - 0.2 > 0 only for an object; rays past the middle look left.
+export function orient(x) {
+  let t = 0;
+  for (let i = 0; i < RAYS; i++) {
+    const s = Math.max(x[i * 3], x[i * 3 + 1], x[i * 3 + 2]) - 0.2;
+    if (s > 0) t += Math.sign(i - (RAYS - 1) / 2) * s;
+  }
+  return t;
 }
 
 function gauss(rand) { return Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand()); }

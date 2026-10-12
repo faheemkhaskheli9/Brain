@@ -78,6 +78,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "World: sweep.mjs (innate prior x learning rule, seeds 1-10)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/sweep.mjs",
+      "args": ["--arms", "rehearse30,orient,sleepActor30,orient+sleepActor30", "--jobs", "4"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "KB: build_index",
       "type": "debugpy",
       "request": "launch",

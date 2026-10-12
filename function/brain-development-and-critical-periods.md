@@ -121,6 +121,11 @@ assert early > 10 * late                         # the same closure in an adult 
 - Which critical periods can be safely reopened in adults, and at what cost to
   stability.
 - How compact wiring rules in the genome actually unfold into circuits.
+- How much an innate bias saves compared with a better learning rule. In one toy
+  agent (Brain World, issue #83), a fixed orienting reflex made grasping almost free
+  but blocked a later task that needed a different response to the same scene. A
+  prior that can be turned down may avoid this (hypothesis); see
+  [[efficient-brain-like-learning]].
 - Whether the language-learning decline is a critical period or a change in how
   and how much people learn.
 

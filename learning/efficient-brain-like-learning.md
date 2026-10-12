@@ -108,6 +108,43 @@ skills. Run: `node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50`,
 
 This is a result about this learner, not about cortex.
 
+### Measured: innate prior vs better learning rule in Brain World (issue #83)
+Pre-registered on #83 before any run. It is a 2x2 design:
+- **Prior:** an orienting reflex. It adds a fixed, never-learned bias to the leg-push
+  logits that turns toward the brighter side of the retina (`GAINS.orient = 1`, untuned).
+- **Rule:** the three-factor rule alone, or the same rule plus sleep replay of actor and
+  critic (`sleepEvery 20`, `sleepActor`). Rehearsal stays at 30% in every cell.
+
+Run: `node game/world/sweep.mjs --arms rehearse30,orient,sleepActor30,orient+sleepActor30`,
+seeds 1-10, 20,000-episode cap per stage. Cells show seeds that passed / mean episodes over
+those seeds.
+
+| Arm | Grasp | Listen | Read | Write | All five |
+|---|---|---|---|---|---|
+| Neither | 10/10, 840 | 10/10, 3,042 | 10/10, 5,424 | 10/10, 8,773 | 10/10, 18,202 |
+| Prior (reflex) | 10/10, 53 | 3/10, 13,492 | 3/10, 9,722 | 3/10, 10,655 | 3/10, 34,047 |
+| Rule (actor sleep) | 10/10, 808 | 10/10, 2,369 | 9/10, 4,182 | 9/10, 9,022 | 9/10, 16,322 |
+| Both | 10/10, 77 | 6/10, 13,806 | 3/10, 5,628 | 3/10, 12,091 | 3/10, 29,160 |
+
+- **The prior wins the stage it matches.** On grasp, where every run passed, the prior
+  saves 759 episodes (95% CI 474-1,043, exact sign-flip p = 0.002), about 90%. The rule
+  saves 4 (p = 0.91), and the interaction is +56 (p = 0.54).
+- **It then blocks the next stage.** Listen asks for the object that matches a tone, not
+  the brightest one in view. With the reflex on, 7 of 10 seeds never learned listen in
+  20,000 episodes, and the 3 that did needed about 4x the baseline. The reflex adds a fixed
+  amount to the logits that the learned weights must outweigh on every step.
+- **The rule did little.** Actor sleep replay saved 1,670 episodes in total over the 9
+  seeds that passed both arms (p = 0.56), and lost seed 7 on read.
+- **The pre-registered prediction was wrong on listen and read.** The paired 2x2 over
+  totals could not be computed, because no seed passed in all four cells. Grasp is the
+  only stage with a full 2x2.
+
+So a prior saves episodes only on the task it was built for, and it costs more on any
+task that needs a different response to the same input. Next is a prior the learner can
+turn down: a gain that decays with practice, or one gated by the task context. That gated
+or decaying reflexes would fix this is a **hypothesis**, not tested here. This is
+computational evidence about one toy agent with one hand-set prior, not about brains.
+
 ## Relevance to building brain-like AI
 - Count work per event, not per parameter. A learner with 7% activity that updates every
   synapse each step gets none of the brain's energy advantage.
@@ -167,7 +204,10 @@ saved.
 
 ## Open questions
 - How much of the brain's sample efficiency comes from innate wiring and how much from
-  better learning rules is debated (Zador 2019).
+  better learning rules is debated (Zador 2019). Brain World data point (issue #83,
+  2026-10-12): a fixed orienting reflex cut grasp by about 90% but blocked listen on 7 of
+  10 seeds, and actor sleep replay changed little. Still open: whether a prior the learner
+  can turn down (decaying or context-gated) keeps the saving without the cost.
 - Answered here (issue #82, 2026-10-12): k-WTA does not slow Brain World's curriculum,
   but on its own it does not halve the work per step either. See "Measured: k-WTA" below.
   Still open: whether an adaptive per-unit threshold (homeostasis) does as well, and
