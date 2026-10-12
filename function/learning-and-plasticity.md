@@ -107,6 +107,7 @@ limited regions; how much this happens in the adult human hippocampus is debated
 - [[memory-systems]] - consolidation and replay.
 - [[neuromodulators]] - ACh, NE and serotonin beyond dopamine.
 - [[brain-development-and-critical-periods]] - when plasticity is high, and what closes it.
+- [Learning hypotheses, explained simply](../research/hypotheses-explained/README.md) - 170 open hypotheses on how the brain learns, each with a step-by-step workflow.
 - [Brain World](../game/world/) - TD dopamine and eligibility traces teaching a 3D creature five skills in a row.
 - [Brain Lab](../game/README.md) - level 2, *Wire together* (STDP), and level 4, *Be the dopamine* (TD error moving to the cue).
 
