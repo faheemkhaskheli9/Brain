@@ -1,0 +1,187 @@
+ids	author	year	title	url
+H001	Whittington	2017	An approximation of the error backpropagation algorithm in a predictive coding network with local Hebbian synaptic plasticity
+H002	Lillicrap	2016	Random synaptic feedback weights support error backpropagation for deep learning
+H003	Nøkland	2016	Direct feedback alignment provides learning in deep neural networks
+H004	Payeur	2021	Burst-dependent synaptic plasticity can coordinate learning in hierarchical circuits
+H005	Sacramento	2018	Dendritic cortical microcircuits approximate the backpropagation algorithm
+H005,H019	Urbanczik	2014	Learning by the dendritic prediction of somatic spiking
+H006	Scellier	2017	Equilibrium propagation: bridging the gap between energy-based models and backpropagation
+H007	O'Reilly	1996	Biologically plausible error-driven learning using local activation differences: the generalized recirculation algorithm
+H008	Lee	2015	Difference target propagation
+H009	Akrout	2019	Deep learning without weight transport
+H010	Williams	1992	Simple statistical gradient-following algorithms for connectionist reinforcement learning
+H010	Fiete	2006	Gradient learning in spiking neural networks by dynamic perturbation of conductances
+H011	Hinton	2022	The forward-forward algorithm: some preliminary investigations
+H012	Hinton	1995	The wake-sleep algorithm for unsupervised neural networks
+H013	O'Reilly	2021	Deep predictive learning in neocortex and pulvinar
+H014	Bellec	2020	A solution to the learning dilemma for recurrent networks of spiking neurons
+H015	Jaderberg	2017	Decoupled neural interfaces using synthetic gradients
+H015	Boven	2023	Cerebro-cerebellar networks facilitate learning through feedback decoupling
+H016	Nøkland	2019	Training neural networks with local error signals
+H017	Roelfsema	2005	Attention-gated reinforcement learning of internal representations for classification
+H017	Roelfsema	2018	Control of synaptic plasticity in deep cortical networks
+H018	Lindsey	2020	Learning to learn with feedback and local plasticity
+H021	Gerstner	2018	Eligibility traces and plasticity on behavioral time scales: experimental support of neoHebbian three-factor learning rules
+H022	Schultz	1997	A neural substrate of prediction and reward
+H023	Dabney	2020	A distributional code for value in dopamine-based reinforcement learning
+H024	Engelhard	2019	Specialized coding of sensory, motor and cognitive variables in VTA dopamine neurons
+H025	Yu	2005	Uncertainty, neuromodulation, and attention
+H026	Doya	2002	Metalearning and neuromodulation
+H027	Wang	2018	Prefrontal cortex as a meta-reinforcement learning system
+H028	Bittner	2017	Behavioral time scale synaptic plasticity underlies CA1 place fields
+H029	Dayan	1993	Improving generalization for temporal difference learning: the successor representation
+H029	Stachenfeld	2017	The hippocampus as a predictive map
+H030	Oudeyer	2007	Intrinsic motivation systems for autonomous mental development
+H030	Schmidhuber	1991	A possibility for implementing curiosity and boredom in model-building neural controllers
+H031	Mattar	2018	Prioritized memory access explains planning and hippocampal replay
+H032	Izhikevich	2007	Solving the distal reward problem through linkage of STDP and dopamine signaling
+H033	Miller	2019	Habits without values
+H034	O'Reilly	2006	Making working memory work: a computational model of learning in the prefrontal cortex and basal ganglia
+H035	Behrens	2007	Learning the value of information in an uncertain world
+H036	Aitchison	2021	Synaptic plasticity as Bayesian inference
+H037	Hasselmo	2006	The role of acetylcholine in learning and memory
+H039	Rao	1999	Predictive coding in the visual cortex: a functional interpretation of some extra-classical receptive-field effects
+H040,H054	Friston	2010	The free-energy principle: a unified brain theory?
+H041	Singer	2018	Sensory cortex is optimized for prediction of future input
+H041	Lotter	2017	Deep predictive coding networks for video prediction and unsupervised learning
+H042	Wiskott	2002	Slow feature analysis: unsupervised learning of invariances
+H043	Illing	2021	Local plasticity rules can learn deep representations using self-supervised contrastive predictions
+H044	LeCun	2022	A path towards autonomous machine intelligence	https://openreview.net/forum?id=BZ5a1r-kVsf
+H045	Olshausen	1996	Emergence of simple-cell receptive field properties by learning a sparse code for natural images
+H046	Barlow	1961	Possible principles underlying the transformation of sensory messages
+H046	Bell	1995	An information-maximization approach to blind separation and blind deconvolution
+H047	Pehlevan	2015	A Hebbian/anti-Hebbian neural network for linear subspace learning: a derivation from multidimensional scaling of streaming data
+H048	Hawkins	2019	A framework for intelligence and cortical function based on grid cells in the neocortex
+H048	Hawkins	2017	A theory of how columns in the neocortex enable learning the structure of the world
+H049	Hawkins	2016	Why neurons have thousands of synapses, a theory of sequence memory in neocortex
+H050	O'Regan	2001	A sensorimotor account of vision and visual consciousness
+H051	de Sa	1994	Learning classification with unlabeled data
+H052	Krotov	2019	Unsupervised learning by competing hidden units
+H052	Journé	2023	Hebbian deep learning without feedback
+H053	Diehl	2015	Unsupervised learning of digit recognition using spike-timing-dependent plasticity
+H054	Feldman	2010	Attention, uncertainty, and free-energy
+H055	Whittington	2020	The Tolman-Eichenbaum Machine: unifying space and relational memory through generalization in the hippocampal formation
+H056	Behrens	2018	What is a cognitive map? Organizing knowledge for flexible behavior
+H057	Constantinescu	2016	Organizing conceptual knowledge in humans with a gridlike code
+H058	Bernardi	2020	The geometry of abstraction in the hippocampus and prefrontal cortex
+H059	Rigotti	2013	The importance of mixed selectivity in complex cognitive tasks
+H060	Plate	1995	Holographic reduced representations
+H060	Kanerva	2009	Hyperdimensional computing: an introduction to computing in distributed representation with high-dimensional random vectors
+H061	Singer	1999	Neuronal synchrony: a versatile code for the definition of relations?
+H062	Whittington	2023	Disentanglement with biological constraints: a theory of functional cell types
+H063	Tse	2007	Schemas and memory consolidation
+H064	McClelland	1995	Why there are complementary learning systems in the hippocampus and neocortex: insights from the successes and failures of connectionist models of learning and memory
+H064	Kumaran	2016	What learning systems do intelligent agents need? Complementary learning systems theory updated
+H065	Kurth-Nelson	2023	Replay and compositional computation
+H066	Barreto	2017	Successor features for transfer in reinforcement learning
+H067	Graybiel	1998	The basal ganglia and chunking of action repertoires
+H068	Badre	2009	Is the rostro-caudal axis of the frontal lobe hierarchical?
+H069	Mastrogiuseppe	2018	Linking connectivity, dynamics, and computations in low-rank recurrent neural networks
+H070	Yang	2019	Task representations in neural networks trained to perform many cognitive tasks
+H070	Driscoll	2024	Flexible multitask computation in recurrent networks utilizes shared dynamical motifs
+H071	Chater	2003	Simplicity: a unifying principle in cognitive science?
+H072	Gentner	1983	Structure-mapping: a theoretical framework for analogy
+H073	Quian Quiroga	2005	Invariant visual representation by single neurons in the human brain
+H074	Eichenbaum	2014	Time cells in the hippocampus: a new dimension for mapping memories
+H074	Howard	2002	A distributed representation of temporal context
+H075	Collins	2013	Cognitive control over learning: creating, clustering, and generalizing task-set structure
+H075	Gershman	2010	Learning latent structure: carving nature at its joints
+H076	Kemp	2008	The discovery of structural form
+H077	Flesch	2022	Orthogonal representations for robust context-dependent task performance in brains and neural networks
+H077	Zeng	2019	Continual learning of context-dependent processing in neural networks
+H078	Papadimitriou	2020	Brain computation by assemblies of neurons
+H078	Buzsáki	2010	Neural syntax: cell assemblies, synapsembles, and readers
+H081,H103	Zador	2019	A critique of pure learning and what artificial neural networks can learn from animal brains
+H082	Katz	1996	Synaptic activity and the construction of cortical circuits
+H083	Newport	1990	Maturational constraints on language learning
+H083	Elman	1993	Learning and development in neural networks: the importance of starting small
+H084	Spelke	2007	Core knowledge
+H085	Hensch	2005	Critical period plasticity in local cortical circuits
+H086	Vogelsang	2018	Potential downside of high initial visual acuity
+H087	Ulyanov	2018	Deep image prior	https://openaccess.thecvf.com/content_cvpr_2018/html/Ulyanov_Deep_Image_Prior_CVPR_2018_paper.html
+H087	Gaier	2019	Weight agnostic neural networks	https://arxiv.org/abs/1906.04358
+H088	Navlakha	2015	Decreasing-rate pruning optimizes the construction of efficient and robust distributed networks
+H089	Smith	2005	The development of embodied cognition: six lessons from babies
+H089	Orhan	2020	Self-supervised learning through the eyes of a child
+H090	Hasson	2020	Direct fit to nature: an evolutionary perspective on biological and artificial neural networks
+H091	Confavreux	2020	A meta-learning approach to (re)discover plasticity rules that carve a desired function into a neural network
+H091	Najarro	2020	Meta-learning through Hebbian plasticity in random networks
+H092	Miconi	2018	Differentiable plasticity: training plastic neural networks with backpropagation	https://proceedings.mlr.press/v80/miconi18a.html
+H092	Miconi	2019	Backpropamine: training self-modifying neural networks with differentiable neuromodulated plasticity	https://arxiv.org/abs/2002.10585
+H093	van de Ven	2020	Brain-inspired replay for continual learning with artificial neural networks
+H093	Shin	2017	Continual learning with deep generative replay	https://arxiv.org/abs/1705.08690
+H094	Tononi	2014	Sleep and the price of plasticity: from synaptic and cellular homeostasis to memory consolidation and integration
+H095	Frey	1997	Synaptic tagging and long-term potentiation
+H096	Fusi	2005	Cascade models of synaptically stored memories
+H096	Benna	2016	Computational principles of synaptic memory consolidation
+H097	Kirkpatrick	2017	Overcoming catastrophic forgetting in neural networks
+H097	Zenke	2017	Continual learning through synaptic intelligence	https://proceedings.mlr.press/v70/zenke17a.html
+H098	Nader	2000	Fear memories require protein synthesis in the amygdala for reconsolidation after retrieval
+H099	Ramsauer	2021	Hopfield networks is all you need	https://arxiv.org/abs/2008.02217
+H099	Whittington	2022	Relating transformers to models and neural representations of the hippocampal formation	https://arxiv.org/abs/2112.04035
+H100	Ba	2016	Using fast weights to attend to the recent past
+H102	Mongillo	2008	Synaptic theory of working memory
+H104	Lewis	2011	Overlapping memory replay during sleep builds cognitive schemata
+H105	Wagner	2004	Sleep inspires insight
+H106	Sahay	2011	Increasing adult hippocampal neurogenesis is sufficient to improve pattern separation
+H107	Dasgupta	2017	A neural algorithm for a fundamental computing problem
+H108	Masse	2018	Alleviating catastrophic forgetting using context-dependent gating and synaptic stabilization
+H108	Iyer	2022	Avoiding catastrophe: active dendrites enable multi-task learning in dynamic environments
+H109	Saffran	1996	Statistical learning by 8-month-old infants
+H110	Schrimpf	2021	The neural architecture of language: integrative modeling converges on predictive processing
+H110	Goldstein	2022	Shared computational principles for language processing in humans and deep language models
+H111	Caucheteux	2023	Evidence of a predictive coding hierarchy in the human brain listening to speech
+H112	Fedorenko	2024	Language is primarily a tool for communication rather than thought
+H113	Kuhl	2003	Foreign-language experience in infancy: effects of short-term exposure and social interaction on phonetic learning
+H114	Berwick	2016	Why only us: language and evolution
+H115	Dehaene	2015	The neural representation of sequences: from transition probabilities to algebraic patterns and linguistic trees
+H115	Dehaene	2022	Symbols and mental programs: a hypothesis about human singularity
+H116	Lake	2015	Human-level concept learning through probabilistic program induction
+H117	Tenenbaum	2011	How to grow a mind: statistics, structure, and abstraction
+H118	Battaglia	2013	Simulation as an engine of physical scene understanding	https://doi.org/10.1073/pnas.1306572110
+H119	Alderson-Day	2015	Inner speech: development, cognitive functions, phenomenology, and neurobiology
+H120	Lupyan	2012	Linguistically modulated perception and cognition: the label-feedback hypothesis
+H121	Hummel	1997	Distributed representations of structure: a theory of analogical access and mapping
+H121	Doumas	2008	A theory of the discovery and predication of relational concepts
+H122	Penn	2008	Darwin's mistake: explaining the discontinuity between human and nonhuman minds
+H123	Bunge	2005	Analogical reasoning and prefrontal cortex: evidence for separable retrieval and integration mechanisms
+H124	Dehaene	1998	A neuronal model of a global workspace in effortful cognitive tasks
+H125	Ito	2008	Control of mental activities by internal models in the cerebellum
+H126	Tomasello	1999	The cultural origins of human cognition
+H127	Shafto	2014	A rational account of pedagogical reasoning: teaching by, and learning from, examples
+H128	Lazaridou	2020	Emergent multi-agent communication in the deep learning era	https://arxiv.org/abs/2006.02419
+H129	Lake	2023	Human-like systematic generalization through a meta-learning neural network
+H130	Chan	2022	Data distributional properties drive emergent in-context learning in transformers	https://doi.org/10.52202/068431-1371
+H131	Herculano-Houzel	2009	The human brain in numbers: a linearly scaled-up primate brain
+H132	Beaulieu-Laroche	2018	Enhanced dendritic compartmentalization in human cortical neurons
+H133	Gidon	2020	Dendritic action potentials and computation in human layer 2/3 cortical neurons
+H134	Beniaguev	2021	Single cortical neurons as deep artificial neural networks
+H135	Poirazi	2003	Pyramidal neuron as two-layer neural network
+H136	Sadtler	2014	Neural constraints on learning
+H138	Jaeger	2001	The echo state approach to analysing and training recurrent neural networks
+H138	Maass	2002	Real-time computing without stable states: a new framework for neural computation based on perturbations
+H139	Sussillo	2009	Generating coherent patterns of activity from chaotic neural networks
+H140	Hopfield	1982	Neural networks and physical systems with emergent collective computational abilities
+H141	Hasselmo	2002	A proposed function for hippocampal theta rhythm: separate phases of encoding and retrieval enhance reversal of prior learning
+H142	Skaggs	1996	Theta phase precession in hippocampal neuronal populations and the compression of temporal sequences
+H143	Beggs	2003	Neuronal avalanches in neocortical circuits
+H144	Fiser	2010	Statistically optimal perception and learning: from behavior to neural representations
+H144	Kappel	2015	Network plasticity as Bayesian inference
+H145	Vogels	2011	Inhibitory plasticity balances excitation and inhibition in sensory pathways and memory networks
+H146	Turrigiano	1998	Activity-dependent scaling of quantal amplitude in neocortical neurons
+H147	Bienenstock	1982	Theory for the development of neuron selectivity: orientation specificity and binocular interaction in visual cortex
+H148	Kozachkov	2023	Building transformers from neurons and astrocytes
+H149	Holtmaat	2009	Experience-dependent structural synaptic plasticity in the mammalian brain
+H150	Fields	2015	A new mechanism of nervous system plasticity: activity-dependent myelination
+H152	Miller	2001	An integrative theory of prefrontal cortex function
+H153	Schmitt	2017	Thalamic amplification of cortical connectivity sustains attentional control
+H154	Larkum	2013	A cellular mechanism for cortical associations: an organizing principle for the cerebral cortex
+H155	Botvinick	2009	Hierarchically organized behavior and its neural foundations: a reinforcement learning perspective
+H156	Friston	2015	Active inference and epistemic value
+H157	Knill	2004	The Bayesian brain: the role of uncertainty in neural coding and computation
+H158	Carandini	2012	Normalization as a canonical neural computation
+H159	Bastos	2012	Canonical microcircuits for predictive coding
+H160	Marr	1969	A theory of cerebellar cortex
+H160	Albus	1971	A theory of cerebellar function
+H160	Raymond	2018	Computational principles of supervised learning in the cerebellum
+H161	Momennejad	2017	The successor representation in human reinforcement learning
