@@ -118,6 +118,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: dendritic_neurons (point vs dendritic at equal params, #85)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/dendritic_neurons.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",
