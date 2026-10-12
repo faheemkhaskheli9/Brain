@@ -58,7 +58,7 @@ special algorithm (section A) or special priors (section E). H137 asks which kin
 scale counts.
 
 ## H132 - Compartmentalised human dendrites
-**Status:** open · **Tier:** T1 · **Source:** Beaulieu-Laroche et al. 2018, *Cell*
+**Status:** weakened (#85: with random branch inputs, dendritic neurons were no better than point neurons at equal parameters, and worse under feedback alignment) · **Tier:** T1 · **Source:** Beaulieu-Laroche et al. 2018, *Cell*
 
 **In simple words.** A dendrite is a neuron's input tree. If its branches are electrically
 well connected, inputs all blend into one total. If the branches are more separated
