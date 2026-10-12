@@ -22,7 +22,12 @@ export const ARMS = {
   // Issue #54: at grasp/listen/read timeouts, sense and discard (RNG control) vs bootstrap from there.
   timeoutSense: { replay: 0.3, sleepEvery: 0, timeoutBootstrap: 1 },
   timeoutBootstrap: { replay: 0.3, sleepEvery: 0, timeoutBootstrap: 2 },
+  // Issue #83, a 2x2 with rehearse30: innate orienting reflex x actor sleep replay (rehearsal kept at 30%).
+  orient: { replay: 0.3, sleepEvery: 0, orient: 1 },
+  sleepActor30: { replay: 0.3, sleepEvery: 20, sleepActor: true },
+  "orient+sleepActor30": { replay: 0.3, sleepEvery: 20, sleepActor: true, orient: 1 },
 };
+const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
 function trial(arm, seed) {
@@ -72,6 +77,31 @@ function summarise(results, arms) {
       line += `   all ${mean(dt) > 0 ? "+" : ""}${mean(dt).toFixed(0)} (p ${signFlip(dt).toFixed(3)}), write ${mean(dw) > 0 ? "+" : ""}${mean(dw).toFixed(0)} (p ${signFlip(dw).toFixed(3)}), n ${pairs.length}`;
     }
     console.log(line);
+  }
+  if (FACTORIAL.every(a => arms.includes(a))) factorial(results);
+}
+
+// Issue #83: main effects and interaction on episodes per stage, over seeds that passed in all four
+// cells. Negative = fewer episodes. 95% t interval (needs n >= 2) and the exact sign-flip p.
+function factorial(results) {
+  const T95 = [NaN, 12.71, 4.30, 3.18, 2.78, 2.57, 2.45, 2.36, 2.31, 2.26, 2.23, 2.20, 2.18, 2.16, 2.14, 2.13];   // by df
+  const cell = a => Object.fromEntries(results.filter(r => r.arm === a && r.passed).map(r => [r.seed, r]));
+  const [n0, p, r, pr] = FACTORIAL.map(cell), seeds = Object.keys(n0).filter(s => p[s] && r[s] && pr[s]);
+  console.log(`\n2x2 (prior = orient, rule = sleepActor30), seeds passed in all four: ${seeds.length}`);
+  if (seeds.length < 2) return;
+  const cols = [...STAGES.map((st, i) => [st.key, x => x.episodes[i]]), ["all", x => x.total]];
+  const effects = {
+    prior: (s, f) => (f(p[s]) - f(n0[s]) + f(pr[s]) - f(r[s])) / 2,
+    rule: (s, f) => (f(r[s]) - f(n0[s]) + f(pr[s]) - f(p[s])) / 2,
+    interaction: (s, f) => f(pr[s]) - f(r[s]) - (f(p[s]) - f(n0[s])),
+  };
+  for (const [name, eff] of Object.entries(effects)) {
+    console.log(name.padEnd(12) + cols.map(([k, f]) => {
+      const d = seeds.map(s => eff(s, f)), n = d.length, m = d.reduce((a, b) => a + b) / n;
+      // ponytail: normal 1.96 past df 15 (t is 2.04-2.12 up to df 30, so intervals run a little narrow there)
+      const ci = (T95[n - 1] ?? 1.96) * Math.sqrt(d.reduce((a, x) => a + (x - m) ** 2, 0) / (n - 1) / n);
+      return `${k} ${m.toFixed(0)} [${(m - ci).toFixed(0)}, ${(m + ci).toFixed(0)}] p ${signFlip(d).toFixed(3)}`;
+    }).join(" | "));
   }
 }
 

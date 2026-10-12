@@ -190,6 +190,27 @@ skill's kept score. It passes more seeds but keeps read lower (0.52 vs 0.61) and
 lower, so the default stays 0. With ten seeds, no difference here is distinguishable from seed
 noise; the theory says bootstrapping is right, and this agent is too noisy to show it.
 
+## Innate prior: an orienting reflex (#83)
+
+`GAINS.orient = g` adds a fixed bias that is never learned to the two leg-push logits:
+`g × (left − right object salience)`, where salience per ray is `max(r, g, b) − 0.2`,
+clipped at 0, so walls do not count. It turns the agent toward the brighter side. 0 (the
+default) is off. Issue #83 crossed it (gain 1, untuned) with a better learning rule, actor
+sleep replay, at 30% rehearsal. Seeds 1-10, 2026-10-12, passed / mean episodes:
+
+| Arm | Grasp | Listen | All five |
+|---|---|---|---|
+| Default | 10/10, 840 | 10/10, 3,042 | 10/10, 18,202 |
+| Reflex | 10/10, 53 | 3/10, 13,492 | 3/10, 34,047 |
+| Actor sleep | 10/10, 808 | 10/10, 2,369 | 9/10, 16,322 |
+| Reflex + actor sleep | 10/10, 77 | 6/10, 13,806 | 3/10, 29,160 |
+
+The reflex makes grasp almost free (759 episodes saved, p = 0.002), then blocks listen: the
+right object is the one that matches the tone, and the weights have to outweigh a bias that
+always points at the brightest one. It stays off. The full table and the per-stage effects are
+in `learning/efficient-brain-like-learning.md`. Running 16 jobs at once crashed one child out
+of memory; it was re-run alone with `--jobs 1`.
+
 ## Perform mode: using a trained brain
 
 `world.perform(key)` locks every episode to one skill and turns learning off: the brain acts and

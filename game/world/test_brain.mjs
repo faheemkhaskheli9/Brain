@@ -2,7 +2,7 @@
 // episodes, and with replay it still does all of them afterwards (no catastrophic forgetting).
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
-import { World, STAGES, GAINS, ACT_SETS, rng } from "./brain.js";
+import { World, STAGES, GAINS, ACT_SETS, rng, orient } from "./brain.js";
 
 const LIMIT = 20000;   // episodes per stage before we call it a failure
 // After graduation, well above chance (grasping the nearest object scores about 0.33 on listen and
@@ -134,4 +134,14 @@ old.hippo = { ...JSON.parse(JSON.stringify(m)).hippo, n: 9999 };
 assert.throws(() => World.fromJSON(old), /not a Brain World save/);
 Object.assign(GAINS, KEEP_GAINS);
 console.log("  Episodic store: replay draws valid after wrap, perform, setStage and save/load");
+
+// Orienting reflex (#83): an object on the left pushes the left leg (turn left), walls alone do nothing.
+const o = new World(3);
+o.setStage(1);
+o.objects[0].pos = [o.pos[0] + 3 * Math.cos(o.heading + 0.4), o.pos[1] + 3 * Math.sin(o.heading + 0.4)];
+const ox = o.sense();
+assert.ok(orient(ox) > 0, "orient: object on the left must turn left");
+o.objects = [];
+assert.equal(orient(o.sense()), 0, "orient: walls must not drive the reflex");
+console.log("  Orienting reflex: turns toward an object, ignores walls");
 console.log("ok");
