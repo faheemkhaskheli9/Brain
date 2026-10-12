@@ -1,8 +1,8 @@
 // Headless check: from reward alone the creature learns every stage within a bounded number of
 // episodes, and with replay it still does all of them afterwards (no catastrophic forgetting).
-// Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 20 s per seed)
+// Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
-import { World, STAGES } from "./brain.js";
+import { World, STAGES, GAINS, ACT_SETS, rng } from "./brain.js";
 
 const LIMIT = 20000;   // episodes per stage before we call it a failure
 // After graduation, well above chance (grasping the nearest object scores about 0.33 on listen and
@@ -68,4 +68,70 @@ assert.equal(t.toJSON().playing, t.stage);
 assert.equal(JSON.stringify({ e: t.episode, w: t.windows, l: t.log.length, s: t.stage, P: Array.from(t.brain.P) }), snap);
 assert.throws(() => t.perform("fly"), /valid: walk, grasp/);
 assert.throws(() => World.fromJSON({ version: 1 }), /not a Brain World save/);
+
+// Episodic store and sleep. A spy records, for every buffer slot, which episode (reset) and which
+// store call wrote it: ground truth that does not rely on the store's own episode ids. Every
+// replayable non-terminal draw must have its true successor next to it, and an action from its set.
+const KEEP_GAINS = { ...GAINS };
+Object.assign(GAINS, { memCap: 256, sleepEvery: 5, sleepActor: true });   // small, so it wraps fast
+function spy(w) {
+  const truth = [], s = { resets: 0, calls: 0 };
+  const reset = w.reset.bind(w), store = w.hippo.store.bind(w.hippo);
+  w.reset = () => { s.resets++; reset(); };
+  w.hippo.store = (...args) => { truth[w.hippo.head] = [s.resets, s.calls++]; store(...args); };
+  return { truth, s };
+}
+function checkReplay(w, truth, why) {
+  const H = w.hippo, rand = rng(7);
+  for (let k = 0; k < 10000; k++) {
+    const e = H.sample(rand);
+    assert.ok(e >= 0, `${why}: nothing replayable`);
+    assert.ok(ACT_SETS[H.set[e]].includes(H.a[e]), `${why}: action outside its set`);
+    assert.notEqual(H.end[e], 2, `${why}: replayed a time-limit cut`);
+    if (H.end[e] === 1) continue;
+    const j = H.next(e);
+    assert.ok(j >= 0 && truth[j][0] === truth[e][0] && truth[j][1] === truth[e][1] + 1, `${why}: wrong successor`);
+  }
+}
+const run = (w, n) => { for (let i = 0; i < n; i++) w.step(); };
+const m = new World(2), { truth, s } = spy(m);
+m.setStage(3);
+run(m, 1500);
+assert.equal(m.hippo.n, 256);
+checkReplay(m, truth, "wrapped");
+run(m, 7); m.perform("grasp");
+const calls = s.calls; run(m, 300);
+assert.equal(s.calls, calls, "perform mode stored transitions");
+m.perform(null); run(m, 30);   // check before the junction between episodes is overwritten
+checkReplay(m, truth, "perform on/off mid-episode");
+run(m, 7); m.setStage(4); run(m, 5); m.setStage(2); run(m, 30);
+checkReplay(m, truth, "setStage mid-episode");
+const v0 = Array.from(m.brain.v);
+m.brain.sleep(m.hippo, 50, rng(3));
+assert.notDeepEqual(Array.from(m.brain.v), v0, "sleep changed no weight");
+
+// Save 40 steps into an episode and load: the copy plays that episode again from its start, so the
+// 40 steps already stored must not count twice. (Its weights include those 40 steps of learning,
+// so it need not act exactly as before; boundary saves are checked step by step above.)
+m.setStage(3);
+let start;
+do { start = { head: m.hippo.head, n: m.hippo.n }; while (m.t < 40 && !m.step().done); } while (m.t < 40);
+const c = World.fromJSON(JSON.parse(JSON.stringify(m)));
+assert.deepEqual({ head: c.hippo.head, n: c.hippo.n }, start, "store: the saved episode's steps were kept");
+// A few steps in, the stale pre-save copies of these steps sit right at head, in the same episode:
+// the newest step must not link to them (the j !== head guard).
+for (let i = 0; i < 5; i++) c.step();
+assert.equal(c.hippo.next((c.hippo.head + GAINS.memCap - 1) % GAINS.memCap), -1, "store: newest step linked to a stale one");
+let len = 5;
+while (!c.step().done) len++;
+assert.equal(c.hippo.head, (start.head + len + 1) % GAINS.memCap, "store: duplicated steps after load");
+// The step before the replayed episode belongs to the one setStage cut short: never its successor.
+assert.equal(c.hippo.next((start.head + GAINS.memCap - 1) % GAINS.memCap), -1, "store: linked across episodes after load");
+const old = JSON.parse(JSON.stringify(m));
+delete old.hippo;
+assert.equal(World.fromJSON(old).hippo.n, 0);   // a save from before the store loads with an empty one
+old.hippo = { ...JSON.parse(JSON.stringify(m)).hippo, n: 9999 };
+assert.throws(() => World.fromJSON(old), /not a Brain World save/);
+Object.assign(GAINS, KEEP_GAINS);
+console.log("  Episodic store: replay draws valid after wrap, perform, setStage and save/load");
 console.log("ok");

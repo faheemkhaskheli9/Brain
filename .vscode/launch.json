@@ -54,6 +54,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "World: sweep.mjs (sleep vs rehearsal, seeds 1-10)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/sweep.mjs",
+      "args": ["--jobs", "4"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "KB: build_index",
       "type": "debugpy",
       "request": "launch",

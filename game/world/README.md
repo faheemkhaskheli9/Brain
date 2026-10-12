@@ -14,6 +14,7 @@ python -m http.server 8000        # from the repo root
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
+node game/world/sweep.mjs --jobs 2     # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -64,6 +65,12 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
   fell to chance once it learned to write (catastrophic forgetting). Walking is not replayed, because
   its distance reward fought against stopping to grasp. After graduation it cycles grasp, listen,
   read and write.
+- **Episodic store and sleep (off by default):** a hippocampus-like ring buffer keeps the last 2,048
+  training steps, each written once as it happens. Every `GAINS.sleepEvery` episodes, a sleep phase
+  replays 200 of them offline to the critic, with TD(0) and the live traces untouched. It replays a
+  step only if the step ended its episode or its true next step is still stored, and it never
+  replays a time-limit cut. `GAINS.sleepActor` replays the actor too, with a truncated importance
+  weight. The store is saved with the brain. See "Sleep" below.
 
 ## What the test shows, and its limits
 
@@ -93,7 +100,48 @@ seed 8 never learns to read within 20,000 episodes, and seed 1 keeps read at 0.5
 So replay stays at 0.3.
 
 Last, it saves and reloads the brain and checks that the copy takes the same 2,000 actions as the
-original.
+original. A second part tests the episodic store with sleep on. A spy records which episode and
+step wrote each slot. Then 10,000 replay draws must each have their true next step after:
+- the buffer wraps;
+- perform mode is switched on and off mid-episode;
+- the stage changes mid-episode;
+- a save is loaded 40 steps into an episode, which must also store no step twice.
+
+## Sleep: can offline replay replace live rehearsal? (#64)
+
+`node game/world/sweep.mjs [seeds] [--arms ...] [--jobs N]` trains every arm × seed in its own
+process and scores the kept skills over 4,000 graduated episodes. Each job needs about 100 MB, so
+pass `--jobs 2` on a busy machine. Seeds 1-10, 2026-10-12. The decision rule, fixed in the issue
+before the run, was: sleep may take over only if 10% rehearsal plus sleep learns every stage on
+at least as many seeds as 30% rehearsal.
+
+| Arm | All stages learned | Kept every skill above the test's bars | Episodes to graduate (mean) | Write stage | Kept grasp / listen / read / write |
+|---|---|---|---|---|---|
+| 30% rehearsal, no sleep (default) | 10/10 | 9/10 | 18,202 | 8,773 | 0.82 / 0.69 / 0.55 / 0.66 |
+| 10% rehearsal + sleep (critic) | 10/10 | 10/10 | 15,058 | 8,665 | 0.76 / 0.66 / 0.54 / 0.67 |
+| 0% rehearsal + sleep (critic) | 9/10 | 5/10 | 11,224 | 6,281 | 0.71 / 0.61 / 0.48 / 0.66 |
+| 10% rehearsal + sleep (actor too) | 10/10 | 6/10 | 12,347 | 4,639 | 0.72 / 0.62 / 0.47 / 0.67 |
+| 0% rehearsal + sleep (actor too) | 9/10 | 6/10 | 8,992 | 2,557 | 0.73 / 0.63 / 0.47 / 0.73 |
+
+Episode means cover the seeds that passed. The comparisons with 30% rehearsal use an exact paired
+sign-flip test on per-seed differences, over the seeds that passed in both arms. `sweep.mjs`
+prints this table and the p values, and `--from <log>` reprints them from a saved run.
+- **10% + critic sleep** passes the decision rule. It saves 3,144 episodes, which is not
+  significant (p = 0.21).
+- **Replaying the actor** saves 5,854 episodes (p = 0.029) and 4,134 on write (p = 0.002), but
+  forgets more.
+- **With no rehearsal**, the store holds only recent steps, so old skills fade. Seed 8 (critic
+  only) and seed 7 (actor) never learned to read.
+
+Sleep is still off by default, for one reason the rule did not measure. With 10% rehearsal plus
+critic sleep, greedy write in perform mode scores 0.67, 0.63 and 0.66 on seeds 1-3 (900 episodes
+each), where it was 1.00. Sampling is unchanged at 0.61, 0.58 and 0.62. About 2/3 suggests one of
+the three letters now has the wrong most-likely stroke pair; why is not yet known. To try sleep,
+set `GAINS.replay = 0.1` and `GAINS.sleepEvery = 20`.
+
+That a brain replays during sleep is established (Wilson and McNaughton 1994). That this ring
+buffer works the way the hippocampus selects what to replay is not claimed. Which steps to replay
+is open, issue #84.
 
 ## Perform mode: using a trained brain
 
@@ -149,6 +197,12 @@ is enough for a real brain's version of these skills is a hypothesis.
 
 ## References
 
+- McClelland, McNaughton and O'Reilly (1995) "Why there are complementary learning systems in the
+  hippocampus and neocortex", *Psychol Rev* 102:419. doi:10.1037/0033-295X.102.3.419
+- Munos, Stepleton, Harutyunyan and Bellemare (2016) "Safe and efficient off-policy reinforcement
+  learning" (Retrace), NeurIPS. arXiv:1606.02647
+- Wilson and McNaughton (1994) "Reactivation of hippocampal ensemble memories during sleep",
+  *Science* 265:676. doi:10.1126/science.8036517
 - Masse, Grant and Freedman (2018) "Alleviating catastrophic forgetting using context-dependent
   gating and synaptic stabilization", *PNAS* 115:E10467. doi:10.1073/pnas.1803839115
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
