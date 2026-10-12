@@ -56,23 +56,25 @@ To resume in Claude from anywhere, say: "continue the learning-algorithm researc
 research/learning-algorithm-hypotheses.md".
 
 ## Next up (cheapest T1 rows with the biggest payoff)
-1. **H001**: predictive coding updates match backprop gradients on a tiny MLP. A day's
-   work in numpy, and a good Brain Lab level.
-2. **H002 + H003**: feedback alignment and direct feedback alignment on the same tiny MLP.
-3. **H101**: the main transfer experiment in Brain World (local rule vs backprop on
-   layouts with shared structure).
-4. **H103**: does a built-in prior close more of the transfer gap than a better rule
+1. **H101**: the main transfer experiment in Brain World (local rule vs backprop on
+   layouts with shared structure). FA and DFA (H002, H003) are now measured and ready
+   to use as the local rules.
+2. **H103**: does a built-in prior close more of the transfer gap than a better rule
    does? (Feeds issue #83.)
-5. **H104**: does replay turn episodes into a reusable schema?
+3. **H104**: does replay turn episodes into a reusable schema?
+4. **H001 as a Brain Lab level**: the gradient-match result (done, #92) as a playable
+   level: slide the output variance and watch the cosine reach 1.
+
+Done: H001-H003 (#92, `research/credit_assignment.py`).
 
 ---
 
 ## A. Credit assignment: local approximations of backprop
 | ID | Hypothesis | Source | Test → counts against it if | Tier | Status |
 |---|---|---|---|---|---|
-| H001 | Predictive coding networks compute weight updates that converge to backprop's gradients, using only local errors. | [Whittington & Bogacz 2017](https://doi.org/10.1162/neco_a_00949), *Neural Comput* | Compare PC updates with backprop gradients on a tiny MLP → cosine similarity stays low at equilibrium | T1 | open |
-| H002 | Fixed random feedback weights are enough: the forward weights learn to align with them (feedback alignment). | [Lillicrap et al. 2016](https://doi.org/10.1038/ncomms13276), *Nat Commun* | FA vs backprop on MNIST/XOR → FA fails to learn hidden layers (the paper passes this: FA 2.1% vs backprop 2.4% test error on MNIST; run as a replication) | T1 | open |
-| H003 | The output error can be broadcast straight to every layer through random weights (direct feedback alignment). | [Nøkland 2016](https://doi.org/10.48550/arxiv.1609.01596), NeurIPS | DFA on a 3-layer MLP → no better than training only the readout (the paper passes this: DFA 1.74% vs backprop 1.60% on MNIST; run as a replication) | T1 | open |
+| H001 | Predictive coding networks compute weight updates that converge to backprop's gradients, using only local errors. | [Whittington & Bogacz 2017](https://doi.org/10.1162/neco_a_00949), *Neural Comput* | Compare PC updates with backprop gradients on a tiny MLP → cosine similarity stays low at equilibrium | T1 | supported (#92: cosine 1.000 with output variance 100x; 0.83-0.96 with equal variances) |
+| H002 | Fixed random feedback weights are enough: the forward weights learn to align with them (feedback alignment). | [Lillicrap et al. 2016](https://doi.org/10.1038/ncomms13276), *Nat Commun* | FA vs backprop on MNIST/XOR → FA fails to learn hidden layers (the paper passes this: FA 2.1% vs backprop 2.4% test error on MNIST; run as a replication) | T1 | supported (#92: replicated on 8x8 digits, FA 4.5% vs BP 3.7% vs readout only 12.9%) |
+| H003 | The output error can be broadcast straight to every layer through random weights (direct feedback alignment). | [Nøkland 2016](https://doi.org/10.48550/arxiv.1609.01596), NeurIPS | DFA on a 3-layer MLP → no better than training only the readout (the paper passes this: DFA 1.74% vs backprop 1.60% on MNIST; run as a replication) | T1 | supported (#92: replicated on 8x8 digits, DFA 4.2% vs BP 3.7% vs readout only 12.9%) |
 | H004 | Pyramidal neurons multiplex: event rate carries the feedforward signal and burst probability carries the error. | [Payeur et al. 2021](https://doi.org/10.1038/s41593-021-00857-x), *Nat Neurosci* | Burst-dependent rule in a spiking net → cannot solve XOR | T1/T3 | open |
 | H005 | Apical dendrites carry an error: in Sacramento it is top-down input minus a learned lateral-interneuron prediction; in Urbanczik & Senn the basal rule compares somatic spiking with the dendritic prediction. | [Sacramento et al. 2018](https://doi.org/10.48550/arxiv.1810.11393), NeurIPS; [Urbanczik & Senn 2014](https://doi.org/10.1016/j.neuron.2013.11.030), *Neuron* | Dendritic microcircuit model → updates do not track backprop | T1 | open |
 | H006 | The brain runs two phases (free, then gently nudged toward the target) and learns from the difference (equilibrium propagation). | [Scellier & Bengio 2017](https://doi.org/10.3389/fncom.2017.00024), *Front Comput Neurosci* | EqProp on a small energy net → fails where backprop succeeds | T1 | open |
@@ -291,3 +293,5 @@ One line per result. Newest at the bottom.
 | 2026-10-12 | - | File created with 170 hypotheses. All `open`. Sources from memory, not yet verified. | this file |
 | 2026-10-12 | H001-H170 | Plain-language explanations with brain and test workflows added. H138 test corrected: it counts against the hypothesis if the reservoir falls short, not if it matches. | hypotheses-explained/ |
 | 2026-10-12 | all | Sources checked: all 185 citations exist as cited (title, first author, year) and now link to their DOI, proceedings or arXiv page. One author order fixed (Miconi, Stanley & Clune 2018). Hawkins et al. 2017 added to H048. Paper notes written for every source. About 70 rows reworded where the paper says less than the row did (for example H099, H108, H138, H153). Five falsifiers (H002, H003, H008, H009, H016) are already passed by the cited paper's own results, so they are now replication checks. Flags that rest only on an abstract are left in the notes. | [sources](learning-algorithm-sources.md), [notes](learning-algorithm-notes/README.md) |
+| 2026-10-12 | H001 | Supported, 10 seeds, 64-32-32-10 tanh net on digits. With equal layer variances PC updates at equilibrium have median cosine 0.95-0.96 per layer with backprop's gradient for the 1%-nudged target (min 0.87), so the falsifier (median < 0.9) did not fire; with the full target error it is 0.83-0.93. The pre-registered prediction (> 0.99 with a 1%-nudged target) failed: shrinking the target scales every layer's error equally, so it is not the paper's limit. Exploratory: raising the output variance (the paper's Σ(0)) to 10/100/1000 gives cosine 0.991/1.000/1.000. Also: after 10 inference steps the match is better than at equilibrium (0.97-0.98). | [credit_assignment.py](credit_assignment.py), [topic](../learning/brain-inspired-learning-algorithms.md), #92 |
+| 2026-10-12 | H002, H003 | Supported (replication), 10 seeds, 64-64-64-10 on 8x8 digits, 30 epochs. Test error: backprop 3.7% ± 0.8, FA 4.5% ± 0.9, DFA 4.2% ± 0.8, readout only (hidden frozen) 12.9% ± 1.0. FA and DFA beat readout only in all 10 seeds (sign-flip p = 0.002). Their last-hidden error signal has cosine 0.72 with backprop's (about 44°): aligned, not equal, as Lillicrap reports. | [credit_assignment.py](credit_assignment.py), [topic](../learning/brain-inspired-learning-algorithms.md), #92 |
