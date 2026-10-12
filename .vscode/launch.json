@@ -110,6 +110,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: credit_assignment (PC vs backprop, FA, DFA; H001-H003, #92)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/credit_assignment.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",

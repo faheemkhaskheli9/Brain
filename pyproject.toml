@@ -8,6 +8,10 @@ license = "Apache-2.0 AND CC-BY-4.0"
 license-files = ["LICENSE", "LICENSE-CONTENT.md"]
 dependencies = ["numpy"]
 
+[project.optional-dependencies]
+# research/credit_assignment.py loads sklearn's bundled 8x8 digits: pip install ".[research]"
+research = ["scikit-learn"]
+
 # Not a library: `pip install .` only pulls the dependencies.
 [tool.setuptools]
 packages = []

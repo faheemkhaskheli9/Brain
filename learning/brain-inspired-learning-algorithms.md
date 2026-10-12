@@ -93,6 +93,17 @@ print(np.round([forward(x)[1][0] for x in X], 2))   # [0. 1. 1. 0.]
 Remove the output clamp and the same network becomes a generative model that
 learns to predict its input: the unsupervised mode the cortex is thought to use.
 
+**Measured in this repo** ([`research/credit_assignment.py`](../research/credit_assignment.py),
+issue #92, 10 seeds, 64-32-32-10 tanh net on 8x8 digits). How close is the PC update
+to backprop's gradient (cosine, 1 = same direction)? With every layer at equal
+variance it is close but not equal: median 0.95-0.96 per layer at equilibrium, and
+shrinking the output error does not help, because that scales every layer's error
+alike. What matters is the precision: give the output layer a larger variance than the
+hidden layers (Σ(0) in Whittington & Bogacz 2017) and the cosine reaches 0.991 at 10x
+and 1.000 at 100x. A computational replication, not evidence that cortex does this.
+Feedback alignment and its direct variant were measured in the same script: see
+*Choosing / trade-offs*.
+
 ## 3. Three-factor learning: dopamine as reward prediction error
 A Hebbian eligibility term (which action fired versus what was expected) is
 gated by a global prediction error `δ = r − V(s)`, the signal dopamine neurons
@@ -155,7 +166,10 @@ experiences it can *learn from*, not just ones that are rewarded.
 - **Accuracy today**: backprop leads on hard benchmarks. Feedback alignment and
   target propagation fell well behind it on ImageNet (Bartunov et al. 2018), and
   pure Hebbian/STDP rules trail further. The order among the other local rules is
-  not settled.
+  not settled. At small scale they work: on 8x8 digits (64-64-64-10, 10 seeds, this
+  repo's `research/credit_assignment.py`) test error was backprop 3.7%, direct
+  feedback alignment 4.2%, feedback alignment 4.5%, and 12.9% when only the readout
+  learns. Both random-feedback rules beat the frozen-hidden baseline in every seed.
 - **Hardware fit**: local rules (1, 2, 3, STDP) suit neuromorphic chips and
   on-device learning. Backprop needs stored activations and a global backward pass.
 - **Continual learning**: replay is the strongest simple method. EWC helps when you
