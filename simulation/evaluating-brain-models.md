@@ -140,7 +140,10 @@ assert r_a > 0.5 and abs(r_b) < 0.3
 
 ## Open questions
 - How much of the alignment between deep networks and the brain comes from
-  brain-like mechanisms, and how much from scale, data and task? (open)
+  brain-like mechanisms, and how much from scale, data and task? (open; on the
+  2026-10-12 Brain-Score leaderboard, parameter count does not predict neural
+  match, and accuracy is confounded with pretraining data: see the #88 re-check in
+  [[sensory-systems-and-vision]])
 - Which metric should win when RSA, predictivity and behaviour disagree? There is no
   agreed answer; Ahlert et al. (2024) argue for reporting several.
 - Benchmarks for learning dynamics (how a model's errors change over training,

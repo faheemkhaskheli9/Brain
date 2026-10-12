@@ -8,9 +8,12 @@ use_cases:
   - why are CNNs called models of the visual cortex and where do they differ from it
   - how do hearing and touch compare to vision
 status: stable
-last_verified: 2026-10-11
+last_verified: 2026-10-12
 sources:
   - https://doi.org/10.1113/jphysiol.1962.sp006837
+  - https://doi.org/10.1101/407007
+  - https://arxiv.org/abs/2306.03779
+  - https://www.brain-score.org/vision/leaderboard
   - https://doi.org/10.1093/cercor/1.1.1-a
   - https://doi.org/10.1073/pnas.1403112111
   - https://doi.org/10.1016/j.neuron.2020.07.040
@@ -76,12 +79,70 @@ imperceptible noise and rely on texture where people rely on shape.
   neural data; training on the task was enough (Yamins & DiCarlo 2016).
 - **Brain-Score** (Schrimpf et al. 2018, 2020) turned this into a public
   benchmark: many models scored on predicting V1, V2, V4 and IT responses and
-  primate behaviour. A finding from the leaderboard is that ImageNet accuracy and
-  brain score correlate, but beyond a point higher accuracy stops buying a better
-  brain match. How to score a model: [[evaluating-brain-models]].
+  primate behaviour. On the 2018 leaderboard ImageNet accuracy and brain score
+  correlated, but the correlation weakened at 70% top-1 and above (Schrimpf et al.
+  2018). Linsley et al. (2023) went further: among the newest ImageNet models, higher
+  accuracy came with a *worse* match to IT. On the leaderboard as it stands in
+  October 2026 the link has not saturated (re-check below). How to score a model:
+  [[evaluating-brain-models]].
 - The same recipe works for hearing: a CNN trained to recognise words and music
   genres predicted human auditory cortex responses, with early layers matching
   primary and later layers non-primary auditory cortex (Kell et al. 2018).
+
+### Has the accuracy-to-Brain-Score link saturated? (#88, leaderboard snapshot 2026-10-12)
+A re-check on public leaderboard data, not a new neural measurement.
+[`research/brainscore_saturation.py`](../research/brainscore_saturation.py) (method
+pre-registered on #88) reads a snapshot of the Brain-Score vision leaderboard
+([`research/data/brainscore_vision_2026-10-12.csv`](../research/data/brainscore_vision_2026-10-12.csv),
+546 models). It fits each score against ImageNet top-1 with a straight line and
+with a hinge (two lines joined at a grid-searched breakpoint k), compares them by
+BIC and bootstraps k and the slope above it (1,000 resamples). 315 models have a
+top-1. The 20 at 0.00 are self-supervised backbones and seed variants with no
+ImageNet readout, so they were dropped as missing; this rule was added after seeing
+the data. That leaves 292-295 models per score.
+
+| Score | r | dBIC (hinge - line) | k | Slope below k | Slope above k [95% CI] | rho with top-1, top-1 >= 0.70 (p) | rho with log params, top-1 >= 0.70 (p) |
+|---|---|---|---|---|---|---|---|
+| average | 0.37 | -13.5 | 0.71 | 0.14 | 1.13 [0.71, 3.08] | +0.48 (<0.001) | +0.45 (<0.001) |
+| neural | 0.20 | +3.7 | 0.71 | 0.06 | 0.58 [0.34, 1.69] | +0.25 (0.002) | -0.16 (0.14) |
+| behaviour | 0.43 | -20.8 | 0.70 | 0.21 | 1.54 [0.94, 4.65] | +0.54 (<0.001) | +0.54 (<0.001) |
+| V1 | 0.15 | +1.8 | 0.71 | 0.01 | 0.79 [0.39, 2.03] | +0.28 (0.001) | -0.15 (0.19) |
+| V2 | 0.19 | -3.7 | 0.70 | 0.01 | 0.77 [0.51, 1.89] | +0.34 (<0.001) | -0.06 (0.58) |
+| V4 | 0.21 | +8.3 | 0.71 | 0.08 | 0.34 [0.01, 1.23] | +0.30 (<0.001) | -0.27 (0.018) |
+| IT | 0.26 | +8.0 | 0.77 | 0.13 | 0.64 [-0.01, 1.50] | +0.21 (0.006) | +0.06 (0.63) |
+
+Slopes are score per unit of top-1. The rho columns use 154-156 models at or above
+70% top-1 (77 of them report a parameter count), with permutation p-values.
+
+- **No saturation; the slope gets steeper.** Where a breakpoint fits better than a
+  line (average and behaviour, dBIC below -10), it sits at about 70% top-1, the
+  point Schrimpf et al. (2018) named, but the slope *above* it is steeper, not
+  flatter. For the neural scores a single line fits about as well. Among models at
+  70% top-1 or higher, accuracy still ranks every score.
+- **A dip, then a rise.** Binned means show the 2018 pattern in the middle of the
+  range: mean neural score falls from 0.191 (60-70% top-1) to 0.175 (70-75%). It
+  then climbs to 0.277 for the 14 models at 85% or above. Behaviour rises the whole
+  way, from 0.242 to 0.521.
+- **Bigger is not better for neural match.** Parameter count ranks the average and
+  behaviour scores, but not neural, V1, V2 or IT, and goes slightly the wrong way for
+  V4 (rho -0.27, p = 0.018).
+- **Accuracy and training data cannot be separated here (exploratory).** Most models
+  above 80% top-1 were pretrained beyond ImageNet-1k (CLIP, LAION, IN-22k,
+  Instagram WSL). At top-1 >= 0.75 they score higher on every metric, but they also
+  have higher top-1 (0.834 vs 0.773). At equal top-1 (residuals of a line fit) the
+  gap shrinks to +0.02 to +0.07 and is not significant (p 0.06-0.45). So the
+  leaderboard says "the most accurate models are the most brain-like", but it does
+  not say whether accuracy or data scale is the cause.
+- **Why this differs from Linsley et al. (2023).** They looked at IT and at models up
+  to 2023. The leaderboard has since added models and benchmarks (Allen2022 and
+  Hebart2023 fMRI, Li2026, and many behavioural tests), and behaviour drives most of
+  the trend. In this snapshot IT's slope above the knee has a CI that touches zero.
+  The two results do not contradict each other.
+- **Caveats.** Scores are rounded to 2 decimals. Submissions are self-selected, and
+  one family can enter many near-copies (seed and fine-tune variants), so models are
+  not independent samples. The leaderboard records submission dates, not release
+  years, so "newer" was not tested. The numbers change as benchmarks and models are
+  added: re-run with `--fetch` to get a dated new snapshot.
 
 ### Where CNNs diverge from vision (established findings, debated causes)
 - **Adversarial examples.** A change to an image too small for a person to see
@@ -176,7 +237,10 @@ Output: the complex cell falls to 0 for the orthogonal orientation and stays at
 - Why are CNNs adversarially fragile while brains are not: architecture,
   training data, training objective, or the noise in real neurons?
 - Do better brain scores keep coming from bigger models, or has the
-  accuracy-to-brain-match link saturated?
+  accuracy-to-brain-match link saturated? *Re-checked (#88, snapshot 2026-10-12):
+  not saturated, but parameter count does not predict neural match, and accuracy
+  cannot be separated from pretraining data scale. Open: a controlled test that
+  varies data and accuracy separately.*
 - How much of the ventral stream's organisation is learned versus genetically
   set up before visual experience?
 
@@ -201,6 +265,8 @@ Output: the complex cell falls to 0 for the orthogonal orientation and stays at
 - Yamins et al. (2014) "Performance-optimized hierarchical models predict neural responses in higher visual cortex", *PNAS* 111:8619. doi:10.1073/pnas.1403112111
 - Yamins & DiCarlo (2016) "Using goal-driven deep learning models to understand sensory cortex", *Nat Neurosci* 19:356. doi:10.1038/nn.4244
 - Schrimpf et al. (2018) "Brain-Score: Which Artificial Neural Network for Object Recognition is most Brain-Like?", bioRxiv 407007.
+- Linsley et al. (2023) "Performance-optimized deep neural networks are evolving into worse models of inferotemporal visual cortex", NeurIPS. arXiv:2306.03779
+- Brain-Score vision leaderboard, https://www.brain-score.org/vision/leaderboard (snapshot 2026-10-12 in `research/data/`).
 - Schrimpf et al. (2020) "Integrative benchmarking to advance neurally mechanistic models of human intelligence", *Neuron* 108:413. doi:10.1016/j.neuron.2020.07.040
 - Kell et al. (2018) "A task-optimized neural network replicates human auditory behavior, predicts brain responses, and reveals a cortical processing hierarchy", *Neuron* 98:630. doi:10.1016/j.neuron.2018.03.044
 - Szegedy et al. (2014) "Intriguing properties of neural networks", ICLR. arXiv:1312.6199
