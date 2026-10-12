@@ -78,6 +78,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: verify_sources (learning-algorithm hypotheses)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/verify_sources.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",
