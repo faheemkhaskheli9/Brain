@@ -7,7 +7,7 @@ use_cases:
   - why does the brain replay experiences during sleep
   - add an offline replay or sleep phase to a continual-learning system
 status: draft
-last_verified: 2026-10-11
+last_verified: 2026-10-12
 sources:
   - https://doi.org/10.1152/physrev.00032.2012
   - https://doi.org/10.1126/science.8036517
@@ -113,7 +113,47 @@ Over seeds 1-10 (#64, decision rule fixed before the run):
   on seeds 1-3. Sleep therefore stays off by default.
 
 Offline replay can stand in for most live rehearsal in this agent. Which steps to
-replay, and how to keep old experience in a small store, are still open (#84).
+replay is measured below; how to keep old experience in a small store is still open.
+
+**Which replay rule, and does downscaling help? (#84, computational result, not
+evidence about brains).** Earlier work already shows that choosing replay samples
+beats choosing at random (Aljundi et al. 2019), and that with replay an intermediate
+amount of synaptic downscaling is best (Robinson et al. 2022). What was left was
+whether the ranking of simple rules depends on the replay budget, and whether
+downscaling changes it. [`research/replay_selection.py`](../research/replay_selection.py)
+(method pre-registered on #84) trains a numpy MLP on 5 tasks in a row, with 50 stored
+samples per finished task. Each step it replays b of them, picked by one of four rules:
+uniformly at random, favouring recent tasks, favouring high current error, or favouring
+the least replayed. Optionally every weight and bias is scaled by 0.8 after each task. Backward
+transfer (BWT) is the mean change in accuracy on a task between just after learning it
+and the end. Without replay BWT was -0.36. Seeds 1-10, downscaling off:
+
+| Replayed per step | Random | Recent | High error | Least replayed |
+|---|---|---|---|---|
+| 1 | -0.304 | -0.306 | **-0.246** | -0.309 |
+| 4 | -0.235 | -0.247 | **-0.192** | -0.238 |
+| 16 | -0.163 | -0.171 | **-0.148** | -0.166 |
+
+- **High-error replay won in every cell**, with and without downscaling (paired
+  sign-flip p = 0.002, the smallest p ten seeds allow, in five cells and 0.004 at 16 a
+  step without downscaling; the five survive a Bonferroni correction over the 18
+  comparisons, the sixth does not). Its edge per replayed sample was largest when
+  the budget was smallest: at one sample a step it cut forgetting twice as much per
+  sample as random replay (0.092 against 0.044 BWT per 1,000 samples). At 16 a step
+  the edge shrank to 0.015 BWT.
+- **Recency was slightly worse than random** (by 0.002 to 0.011, p = 0.012 to 0.03 in
+  three of the six cells, which does not survive the correction). **Least-replayed was
+  no better than random.**
+- **Downscaling by 0.8 after each task made forgetting slightly worse in all 12
+  rule-and-budget cells** (for random replay at 4 a step, BWT -0.265 against -0.235)
+  and did not change the ranking. In a ReLU network, scaling every weight and bias mostly rescales
+  the outputs, so this tests one level of one form of downscaling only. Robinson et al.
+  found that the level matters.
+
+So in this toy, error-prioritised replay is the rule worth its cost when replay is
+scarce. Whether the hippocampus selects by error is a separate question that a toy
+cannot answer; the table above lists the reward-and-surprise bias as the brain-side
+parallel.
 
 ## Code: replay stops catastrophic forgetting
 
@@ -152,8 +192,12 @@ assert err(W_sleep, XB, YB) < 0.05                             # and B is still 
 ```
 
 ## Open questions
-- What selects which memories get replayed, and how much replay is enough.
+- What selects which memories get replayed, and how much replay is enough. (In a toy
+  network, high-error replay beats random most when replay is scarce: see above, #84.
+  What the brain selects is still open.)
 - Whether SHY-style downscaling and replay-driven strengthening coexist, and how.
+  (Robinson et al. 2022 find an intermediate downscaling level best in a network; one
+  level of proportional downscaling did not help in this repo's toy.)
 - What REM sleep contributes to memory, if anything specific.
 - Whether the cortex stores a full copy of an episode or only its gist.
 
@@ -177,3 +221,5 @@ assert err(W_sleep, XB, YB) < 0.05                             # and B is still 
 - de Vivo et al. (2017) "Ultrastructural evidence for synaptic scaling across the wake/sleep cycle", *Science* 355:507. doi:10.1126/science.aah5982
 - Buzsáki (2015) "Hippocampal sharp wave-ripple: a cognitive biomarker for episodic memory and planning", *Hippocampus* 25:1073. doi:10.1002/hipo.22488
 - Hinton, Dayan, Frey & Neal (1995) "The wake-sleep algorithm for unsupervised neural networks", *Science* 268:1158. doi:10.1126/science.7761831
+- Aljundi, Caccia, Belilovsky, Caccia, Lin, Charlin & Tuytelaars (2019) "Online continual learning with maximal interfered retrieval", NeurIPS. arXiv:1908.04742
+- Robinson, Lau, New, Nichols, Johnson, Wolmetz & Coon (2022) "Continual learning benefits from multiple sleep mechanisms: NREM, REM, and synaptic downscaling". arXiv:2209.05245
