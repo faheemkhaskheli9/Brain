@@ -56,6 +56,11 @@ const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 2
 // cost more than a whole episode of step costs, or grabbing anything beats searching.
 export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost: 0.005, wrongCost: 0.6,
   hidden: 1000, maxSteps: 150, replay: 0.3, gate: 0.5, memory: 0.9,
+  // Hippocampus (see class Hippocampus): every sleepEvery training episodes, replay sleepSize stored
+  // transitions offline (0 = no sleep). Off by default: replay 0.1 with sleepEvery 20 passes as many
+  // seeds, but greedy write in perform mode drops from 1.00 to about 0.65 (README "Sleep").
+  // sleepActor also replays the actor: much faster, but it forgets more.
+  memCap: 2048, sleepEvery: 0, sleepSize: 200, sleepActor: false,
   // Perform mode only: skills that take the most likely action instead of sampling. Walk and write
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
@@ -63,6 +68,7 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   performGreedy: ["walk", "write"] };
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
+export const ACT_SETS = [BODY_ACTS, HABIT_ACTS, PEN_ACTS];
 
 export class Brain {
   constructor(rand) {
@@ -123,8 +129,8 @@ export class Brain {
 
   value(h) { let s = 0; for (let i = 0; i < this.nH; i++) s += this.v[i] * h[i]; return s; }
 
-  act(h, allowed) {   // softmax over the allowed actions; also lays down eligibility traces
-    const pi = this.pi.fill(0);
+  policy(h, allowed, pi) {   // softmax over the allowed actions, written into pi (others 0)
+    pi.fill(0);
     let mx = -Infinity;
     for (const a of allowed) {
       let s = 0; const row = a * this.nH;
@@ -134,6 +140,11 @@ export class Brain {
     let z = 0;
     for (const a of allowed) { pi[a] = Math.exp(pi[a] - mx); z += pi[a]; }
     for (const a of allowed) pi[a] /= z;
+    return pi;
+  }
+
+  act(h, allowed) {   // sample from the policy; also lays down eligibility traces
+    const pi = this.policy(h, allowed, this.pi);
     let u = this.rand(), choice = allowed[allowed.length - 1];
     for (const a of allowed) { u -= pi[a]; if (u <= 0) { choice = a; break; } }
     if (this.greedy) for (const a of allowed) if (pi[a] > pi[choice]) choice = a;
@@ -162,6 +173,113 @@ export class Brain {
     for (let i = 0; i < this.eP.length; i++) this.P[i] += ap * delta * this.eP[i];
     if (!hNext) { this.ev.fill(0); this.eP.fill(0); }
   }
+
+  // Sleep: replay n stored transitions offline. TD(0) on the critic; with GAINS.sleepActor also a
+  // policy-gradient step on the actor, over the action set stored with the transition and weighted
+  // by rho = min(1, pi_now / pi_then) (truncated importance weight, as in Retrace: Munos et al.
+  // 2016), because the policy has changed since the step was lived. The live traces are untouched.
+  sleep(mem, n, rand) {
+    const norm = 1 + (this.hh || 0), av = GAINS.lrV / norm, ap = GAINS.lrP / norm;
+    const pi = new Float32Array(N_ACT);
+    for (let k = 0; k < n; k++) {
+      const e = mem.sample(rand);
+      if (e < 0) return;
+      const h = this.encode(mem.sense(e), mem.slot[e]), nx = mem.next(e);
+      const delta = mem.r[e] + (nx >= 0 ? GAINS.gamma * this.value(this.encode(mem.sense(nx), mem.slot[nx])) : 0) - this.value(h);
+      for (let i = 0; i < this.nH; i++) this.v[i] += av * delta * h[i];
+      if (!GAINS.sleepActor) continue;
+      const allowed = ACT_SETS[mem.set[e]], a = mem.a[e];
+      this.policy(h, allowed, pi);
+      const g = ap * delta * (pi[a] < mem.mu[e] ? pi[a] / mem.mu[e] : 1);   // mu can underflow to 0
+      for (const b of allowed) {
+        const gb = g * ((b === a) - pi[b]), row = b * this.nH;
+        for (let i = 0; i < this.nH; i++) this.P[row + i] += gb * h[i];
+      }
+    }
+  }
+}
+
+// Hippocampus-like episodic store: every training step is written once, as it happens (one-shot),
+// and sleep replays a sample of it offline to the slow actor-critic (complementary learning
+// systems: McClelland, McNaughton and O'Reilly 1995; sleep replay: Wilson and McNaughton 1994).
+// A ring buffer of the last CAP transitions. Senses are quantised to bytes (step 1/200).
+// end: 0 = the episode went on, 1 = terminal, 2 = cut by the time limit (never replayed: its
+// target is ambiguous, #54). A transition is replayed only if it is terminal or its true successor
+// (same episode, already stored) is still in the buffer.
+export class Hippocampus {
+  constructor(cap = GAINS.memCap) {
+    this.cap = cap; this.n = 0; this.head = 0; this.epId = 0;
+    this.x = new Uint8ClampedArray(cap * N_IN);   // clamps to [-0.05, 1.225]; senses stay in [-0.025, 1.025]
+    this.slot = new Uint8Array(cap); this.a = new Uint8Array(cap); this.set = new Uint8Array(cap);
+    this.end = new Uint8Array(cap); this.r = new Float32Array(cap); this.mu = new Float32Array(cap);
+    this.ep = new Int32Array(cap);
+  }
+
+  store(x, slot, a, set, r, mu, end) {
+    const e = this.head, o = e * N_IN;
+    for (let k = 0; k < N_IN; k++) this.x[o + k] = (x[k] + 0.05) * 200;   // Uint8ClampedArray rounds and clamps
+    this.slot[e] = slot; this.a[e] = a; this.set[e] = set; this.r[e] = r; this.mu[e] = mu; this.end[e] = end;
+    this.ep[e] = this.epId;
+    this.head = (e + 1) % this.cap; this.n = Math.min(this.n + 1, this.cap);
+  }
+
+  sense(e) {
+    const x = new Float32Array(N_IN), o = e * N_IN;
+    for (let k = 0; k < N_IN; k++) x[k] = this.x[o + k] / 200 - 0.05;
+    return x;
+  }
+
+  next(e) {   // index of the stored successor, or -1 (terminal, cut, or not stored)
+    if (this.end[e] !== 0) return -1;
+    const j = (e + 1) % this.cap;
+    return j !== this.head && j < this.n && this.ep[j] === this.ep[e] ? j : -1;
+  }
+
+  sample(rand) {   // a uniformly drawn replayable transition, or -1
+    for (let t = 0; t < 50 && this.n; t++) {
+      const e = Math.floor(rand() * this.n);
+      if (this.end[e] === 1 || this.next(e) >= 0) return e;
+    }
+    return -1;
+  }
+
+  // Saved as it was at `at` = {head, n, epId}, the start of the current episode: a loaded world
+  // plays that episode again and stores its steps again.
+  toJSON(at) {
+    const KEYS = ["x", "slot", "a", "set", "end", "r", "mu", "ep"], o = { cap: this.cap, ...at };
+    for (const k of KEYS) o[k] = toB64(this[k]);
+    return o;
+  }
+
+  static fromJSON(o) {   // null if o is not a valid store of this brain's shape
+    const m = new Hippocampus();
+    if (!o || o.cap !== m.cap || ![o.head, o.n, o.epId].every(Number.isInteger) || o.n < 0 || o.n > m.cap
+      || o.head < 0 || o.head >= m.cap || (o.n < m.cap && o.head !== o.n)) return null;
+    for (const k of ["x", "slot", "a", "set", "end", "r", "mu", "ep"]) {
+      let arr;
+      try { arr = fromB64(o[k], m[k].constructor); } catch { return null; }
+      if (arr.length !== m[k].length) return null;
+      m[k] = arr;
+    }
+    for (let e = 0; e < o.n; e++)
+      if (m.slot[e] >= STAGES.length || m.set[e] >= ACT_SETS.length || !ACT_SETS[m.set[e]].includes(m.a[e]) || m.end[e] > 2
+        || !Number.isFinite(m.r[e]) || !(m.mu[e] >= 0 && m.mu[e] <= 1)) return null;
+    Object.assign(m, { head: o.head, n: o.n, epId: o.epId });
+    return m;
+  }
+}
+
+function toB64(a) {
+  const u = new Uint8Array(a.buffer, a.byteOffset, a.byteLength);
+  let s = "";
+  for (let i = 0; i < u.length; i += 8192) s += String.fromCharCode(...u.subarray(i, i + 8192));
+  return btoa(s);
+}
+function fromB64(s, Type) {
+  const bin = atob(s), u = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  if (u.length % Type.BYTES_PER_ELEMENT) throw new Error("bad length");
+  return new Type(u.buffer);
 }
 
 function gauss(rand) { return Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand()); }
@@ -170,6 +288,7 @@ export class World {
   constructor(seed = 1) {
     this.rand = rng(seed);
     this.brain = new Brain(this.rand);
+    this.hippo = new Hippocampus();
     this.stage = 0; this.playing = 0; this.episode = 0; this.log = []; this.graduated = false;
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
     this.events = [];   // for the UI: {type: "tone"|"grasp"|"stroke"|"stage"|"graduated", ...}
@@ -185,6 +304,8 @@ export class World {
   reset() {
     const R = this.rand, m = this.mode;
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
+    const H = this.hippo;
+    this.memAt = { head: H.head, n: H.n, epId: H.epId++ };   // and its episodic store from here
     this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
     this.heading = R() * 2 * Math.PI;
     this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
@@ -204,7 +325,8 @@ export class World {
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
     if (this.tone >= 0) this.events.push({ type: "tone", tone: this.tone });
-    this.h = this.brain.encode(this.sense(), this.playing);
+    this.x = this.sense();
+    this.h = this.brain.encode(this.x, this.playing);
   }
 
   sense() {
@@ -262,7 +384,8 @@ export class World {
     // pattern generators and the cerebellum take over): a pushed leg swings forward by reflex,
     // and later stages only choose which leg to push, or to grasp.
     if (m !== "walk") this.legs = [1, 1];
-    const a = b.act(this.h, m === "write" ? PEN_ACTS : m === "walk" ? BODY_ACTS : HABIT_ACTS);
+    const set = m === "write" ? 2 : m === "walk" ? 0 : 1;
+    const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
     if (m === "write") {
@@ -304,17 +427,19 @@ export class World {
       }
     }
     this.t++;
-    const limit = m === "walk" ? 60 : GAINS.maxSteps;
+    const limit = m === "walk" ? 60 : GAINS.maxSteps, terminal = done;
     if (!done && this.t >= limit) {
       done = true;
       if (m === "walk") success = this.dist / this.t > 0.08;
     }
     this.ret += r;
+    if (this.task < 0) this.hippo.store(this.x, this.playing, a, set, r, mu, terminal ? 1 : done ? 2 : 0);   // perform mode stores nothing
     if (done) {
       b.learn(r, null);
       this.finish(success);
     } else {
-      this.h = b.encode(this.sense(), this.playing);
+      this.x = this.sense();
+      this.h = b.encode(this.x, this.playing);
       b.learn(r, this.h);
     }
     return { action: a, reward: r, done, success };
@@ -350,6 +475,8 @@ export class World {
     // After graduation it cycles grasp, listen, read and write.
     if (this.graduated) this.playing = this.playing % (STAGES.length - 1) + 1;
     else this.playing = this.stage > 1 && this.rand() < GAINS.replay ? 1 + Math.floor(this.rand() * (this.stage - 1)) : this.stage;
+    // Sleep: offline replay from the episodic store, between episodes.
+    if (GAINS.sleepEvery && this.episode % GAINS.sleepEvery === 0) this.brain.sleep(this.hippo, GAINS.sleepSize, this.rand);
     this.reset();
   }
 
@@ -379,7 +506,8 @@ export class World {
     // A save made while performing resumes training on its own stage.
     return { version: 3, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
-      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh } };
+      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh },
+      hippo: this.hippo.toJSON(this.memAt) };
   }
 
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
@@ -391,7 +519,10 @@ export class World {
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
       && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && ob.gate.every(g => g === 0 || g === 1)
       && (ob.hh === undefined || Number.isFinite(ob.hh));
-    if (!ok) throw new Error("not a Brain World save, or saved by an older version or with a different brain size");
+    // An older save without an episodic store loads with an empty one.
+    const hippo = o && o.hippo === undefined ? new Hippocampus() : Hippocampus.fromJSON(o && o.hippo);
+    if (!ok || !hippo) throw new Error("not a Brain World save, or saved by an older version or with a different brain size");
+    w.hippo = hippo;
     for (const k of KEYS) b[k].set(ob[k]);
     b.hh = ob.hh;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,

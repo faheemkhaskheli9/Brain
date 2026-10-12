@@ -97,6 +97,24 @@ creature learned to write, and halving replay to 15% made one seed in ten fail
 ([game/world/README.md](../game/world/README.md)). That fraction is a game gain,
 not a measurement.
 
+**Measured in this repo (computational result, not evidence about brains).** Brain
+World also has a hippocampus-like store. It keeps the last 2,048 steps, each written
+once as it happens, and a sleep phase replays 200 of them offline every 20 episodes.
+Over seeds 1-10 (#64, decision rule fixed before the run):
+- **10% live rehearsal plus sleep that replays only the critic** learned every stage on
+  10 of 10 seeds, the same as 30% rehearsal alone. It kept every skill above the test's
+  bars on 10 seeds against 9. It needed 3,144 fewer episodes on average, but that is not
+  significant (paired sign-flip p = 0.21), and it kept grasp lower (0.76 against 0.82).
+- **Replaying the actor too** was much faster (5,854 fewer episodes, p = 0.029) but
+  forgot more: only 6 of 10 seeds kept every skill above the bars.
+- **With no live rehearsal**, one seed in ten never learned to read. The store holds
+  only recent steps, so it cannot replace rehearsal of skills from long ago.
+- With critic-only sleep, greedy writing in perform mode fell from 1.00 to about 0.65
+  on seeds 1-3. Sleep therefore stays off by default.
+
+Offline replay can stand in for most live rehearsal in this agent. Which steps to
+replay, and how to keep old experience in a small store, are still open (#84).
+
 ## Code: replay stops catastrophic forgetting
 
 A linear associator learns task A, then task B with a local delta rule. Without
@@ -144,7 +162,7 @@ assert err(W_sleep, XB, YB) < 0.05                             # and B is still 
 - [[brain-inspired-learning-algorithms]] - EWC and generative replay in code.
 - [[learning-and-plasticity]] - the synaptic changes replay drives.
 - [[spatial-navigation]] - the place cells whose replay was first recorded.
-- [Brain World](../game/world/) - replay keeps a creature's old skills while it learns new ones.
+- [Brain World](../game/world/) - replay keeps a creature's old skills while it learns new ones; its episodic store and sleep are measured above.
 - [Brain Lab](../game/README.md) - level 6, *Sleep on it*: learn task B with or without replay of task A.
 
 ## References
