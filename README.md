@@ -15,11 +15,13 @@ ML engineers, neuroscience students or players in
 
 | Folder | Holds |
 |---|---|
-| `guides/` | Entry point, glossary and the build roadmap |
-| `anatomy/` | Structure: regions, cell types, synapses, numbers |
-| `function/` | How the brain computes, remembers, perceives and learns |
-| `learning/` | Brain vs deep learning; brain-inspired learning algorithms with code |
-| `simulation/` | Levels of modeling, spiking networks, simulators, hardware, emulation projects |
+| `guides/` | Entry point, glossary, learning paths, the build roadmap, a research workflow and the open-questions register |
+| `anatomy/` | Structure: regions, cell types, synapses, dendrites, glia and the energy budget, comparative and evolutionary neuroscience |
+| `function/` | How the brain computes, remembers, perceives, decides and learns: coding, population dynamics, memory, sleep, rhythms, attention, prefrontal abstraction, timing, emotion, language, social cognition, development, disorders |
+| `learning/` | Brain vs deep learning; brain-inspired learning algorithms with code; efficient (energy, samples) learning; hyperdimensional computing |
+| `simulation/` | Levels of modeling, spiking and reservoir networks, cognitive architectures, evaluation, datasets, hardware, brain-computer interfaces, emulation projects, saving a trained brain |
+| `research/` | Catalog of every paper the topics cite (`papers.md`), a script that fetches open-access PDFs, and research notes and reports |
+| `game/` | Brain Lab: a playable simulation, on desktop or in the browser, where each level is one idea from the KB. See [game/README.md](game/README.md) |
 
 Every topic file has YAML frontmatter (title, tags, use_cases, status, sources).
 `python build_index.py` regenerates `INDEX.md` and checks `[[links]]`. The rules
