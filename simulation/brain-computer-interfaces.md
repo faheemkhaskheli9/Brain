@@ -199,6 +199,7 @@ noise in short bins is why real BCIs need many neurons, smoothing or a Kalman fi
 - [[language-and-llms]] - speech areas and the language models used in speech decoders.
 - [[sensory-systems-and-vision]] - the visual pathway that retinal implants feed.
 - [[evaluating-brain-models]] - linear decodability as a test of a model.
+- [[neuroethics]] - consent, mental privacy and the laws that cover neural data.
 
 ## References
 - Farwell & Donchin (1988) "Talking off the top of your head: toward a mental prosthesis utilizing event-related brain potentials", *Electroencephalogr Clin Neurophysiol* 70:510. doi:10.1016/0013-4694(88)90149-6

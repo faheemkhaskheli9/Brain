@@ -83,6 +83,7 @@ imaging alone would be on the order of an exabyte-plus of data.
 - [[levels-of-brain-modeling]] - the compute required at each level.
 - [[neuromorphic-hardware]] - hardware for large simulations.
 - [[brain-structure-overview]] - what a human connectome would have to cover.
+- [[neuroethics]] - the moral status of an emulation, and precautionary positions.
 
 ## References
 - Dorkenwald et al. (2024) "Neuronal wiring diagram of an adult brain", *Nature* 634:124. NIH summary: https://www.nih.gov/news-events/nih-research-matters/complete-wiring-map-adult-fruit-fly-brain

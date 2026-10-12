@@ -130,6 +130,7 @@ assert early > 10 * late                         # the same closure in an adult 
 - [[brain-vs-deep-learning]] - innate structure versus learning from scratch (Zador 2019).
 - [[sensory-systems-and-vision]] - the visual system whose critical period is best known.
 - [[memory-systems]] - stability versus plasticity in the adult brain.
+- [[ageing-and-lifelong-plasticity]] - what happens to plasticity later in life, and reopening critical periods.
 
 ## References
 - Rakic (1988) "Specification of cerebral cortical areas", *Science* 241:170. doi:10.1126/science.3291116

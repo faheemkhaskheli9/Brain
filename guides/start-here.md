@@ -33,13 +33,14 @@ Theories of consciousness are all hypotheses and live in one file of their own:
 6. [[brain-rhythms-and-oscillations]] - brain waves: where they come from and what they may do.
 7. [[learning-and-plasticity]] - how synapses learn.
 8. [[brain-development-and-critical-periods]] - wiring, pruning and windows of plasticity.
-9. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
-10. [[emotion-amygdala-and-interoception]] - fear learning, value and the body's state.
-11. [[memory-systems]] - how memories form and consolidate.
-12. [[sleep-and-memory-consolidation]] - what sleep does to memory: replay and downscaling.
-13. [[spatial-navigation]] - place cells, grid cells and the brain's map.
-14. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
-15. [[predictive-processing]] - how perception works (leading theory).
+9. [[ageing-and-lifelong-plasticity]] - what changes with age, and how plasticity can return.
+10. [[neuromodulators]] - ACh, NE and serotonin as learning dials.
+11. [[emotion-amygdala-and-interoception]] - fear learning, value and the body's state.
+12. [[memory-systems]] - how memories form and consolidate.
+13. [[sleep-and-memory-consolidation]] - what sleep does to memory: replay and downscaling.
+14. [[spatial-navigation]] - place cells, grid cells and the brain's map.
+15. [[sensory-systems-and-vision]] - from retina to object recognition, and CNNs.
+16. [[predictive-processing]] - how perception works (leading theory).
 
 **Path B: simulate the brain**
 1. [[levels-of-brain-modeling]] - choose the level of detail.
@@ -48,6 +49,7 @@ Theories of consciousness are all hypotheses and live in one file of their own:
 4. [[whole-brain-emulation-projects]] - connectomes and real-brain simulations.
 5. [[evaluating-brain-models]] - test whether a model is actually brain-like.
 6. [[measuring-the-brain-and-open-datasets]] - recording methods and the open data to test against.
+7. [[neuroethics]] - moral status of simulations, organoids, and neural-data law.
 
 **Path C: make a computer learn like a brain**
 1. [[brain-vs-deep-learning]] - the gap to close.
@@ -78,6 +80,7 @@ learns to walk, grasp, listen, read and write from dopamine alone: run
 | Why is the brain so energy-efficient? | [[neural-coding-and-computation]] |
 | What are Hebbian learning, STDP and dopamine RPE? | [[learning-and-plasticity]] |
 | What is a critical period? Why do children learn languages more easily? | [[brain-development-and-critical-periods]] |
+| How does the brain change with age? Why do networks lose plasticity? | [[ageing-and-lifelong-plasticity]] |
 | What do glial cells do? What does the brain spend its energy on? | [[glia-and-energy-budget]] |
 | How is fear learned? What does the amygdala or insula do? | [[emotion-amygdala-and-interoception]] |
 | What do acetylcholine, noradrenaline and serotonin do? | [[neuromodulators]] |
@@ -94,6 +97,7 @@ learns to walk, grasp, listen, read and write from dopamine alone: run
 | FlyWire, MICrONS, Blue Brain, can we upload a brain? | [[whole-brain-emulation-projects]] |
 | Where is language in the brain? Do LLMs process language like brains? | [[language-and-llms]] |
 | What is global workspace theory or IIT? Could an AI be conscious? | [[theories-of-consciousness]] |
+| Is it ethical to simulate a brain? Which laws protect neural data? | [[neuroethics]] |
 | Can the brain do backprop? | [[brain-vs-deep-learning]] |
 | Code a learning rule without backprop | [[brain-inspired-learning-algorithms]] |
 | Plan a brain-like AI project | [[build-a-brain-like-learner]] |
