@@ -32,6 +32,10 @@ The working question:
 - **Status** is one of: `open`, `in progress`, `supported`, `weakened`, `refuted`,
   `answered elsewhere`. Change it when there is evidence, and add a Log line.
 
+**Plain-language version.** Every row is explained in simple words, with a step-by-step
+workflow of how it would work in the brain and how to test it, in
+[hypotheses-explained/](hypotheses-explained/README.md).
+
 ## How to continue
 1. Pick a row: start with **Next up**, or any T1 row.
 2. Step 0: check whether the literature has already answered it.
