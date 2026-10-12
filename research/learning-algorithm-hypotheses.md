@@ -232,7 +232,7 @@ research/learning-algorithm-hypotheses.md".
 ## I. Dynamics and alternative computing primitives
 | ID | Hypothesis | Source | Test → counts against it if | Tier | Status |
 |---|---|---|---|---|---|
-| H138 | Most circuits are fixed random reservoirs. Only readouts learn. | Jaeger 2001 (GMD report 148); Maass, Natschläger & Markram 2002, *Neural Comput* | Reservoir + local readout vs fully plastic net in Brain World → reservoir matches it | T1 | open |
+| H138 | Most circuits are fixed random reservoirs. Only readouts learn. | Jaeger 2001 (GMD report 148); Maass, Natschläger & Markram 2002, *Neural Comput* | Reservoir + local readout vs fully plastic net in Brain World → reservoir falls clearly short of it | T1 | open |
 | H139 | Feedback from the output, with fast local learning, can tame chaotic recurrent activity into a task (FORCE). | Sussillo & Abbott 2009, *Neuron* | Local FORCE-like rule → cannot learn a motor pattern | T1 | open |
 | H140 | Memories and categories are attractors in a recurrent network. | Hopfield 1982, *PNAS* | Attractor net on Brain World states → no category formation | T1 | open |
 | H141 | The theta cycle splits time into encoding and retrieval phases, so learning and recall do not interfere. | Hasselmo, Bodelón & Wyble 2002, *Neural Comput* | Phase-split model vs unsplit → same interference | T1 | open |
