@@ -61,6 +61,8 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // seeds, but greedy write in perform mode drops from 1.00 to about 0.65 (README "Sleep").
   // sleepActor also replays the actor: much faster, but it forgets more.
   memCap: 2048, sleepEvery: 0, sleepSize: 200, sleepActor: false,
+  // k-winners-take-all on the hidden units (issue #82): keep only the kwta strongest, 0 = off.
+  kwta: 0,
   // Perform mode only: skills that take the most likely action instead of sampling. Walk and write
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
@@ -115,6 +117,7 @@ export class Brain {
   encode(x, task) {
     const h = new Float32Array(this.nH), gate = task * this.hidden;
     h.set(x);
+    let on = 0;
     for (let j = 0; j < this.hidden; j++) {
       if (!this.gate[gate + j]) continue;
       let gain = 1, drive = this.bias[j];   // the first three inputs are the cochlea bands
@@ -122,8 +125,14 @@ export class Brain {
         const v = this.wIn[j * FAN_IN + k] * x[this.idx[j * FAN_IN + k]];
         if (k < 3) gain += v; else drive += v;
       }
-      h[N_IN + j] = drive > 0 && gain > 0 ? drive * gain : 0;
+      if (drive > 0 && gain > 0) { h[N_IN + j] = drive * gain; on++; }
     }
+    if (GAINS.kwta && on > GAINS.kwta) {
+      const hid = h.subarray(N_IN), cut = hid.filter(v => v > 0).sort()[on - GAINS.kwta];   // typed-array sort is numeric
+      for (let j = 0; j < this.hidden; j++) if (hid[j] < cut) hid[j] = 0;
+      on = GAINS.kwta;
+    }
+    this.nActive = (this.nActive || 0) + on; this.nEncode = (this.nEncode || 0) + 1;   // sweep.mjs reports the mean
     return h;
   }
 

@@ -31,7 +31,7 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 ### Tier 1: simulation in this repo (days to weeks)
 | # | Question | Raised in | Issue | Status |
 |---|---|---|---|---|
-| 1 | Does k-WTA sparsity help or hurt Brain World's curriculum, and how much work does it save? | [[efficient-brain-like-learning]] | #82 | open |
+| 1 | Does k-WTA sparsity help or hurt Brain World's curriculum, and how much work does it save? | [[efficient-brain-like-learning]] | #82 | answered: no learning cost (k = 20 trended faster, p = 0.066), but under 2x less work per step without event-driven updates |
 | 2 | How many episodes does a built-in prior save, compared with a better learning rule? | [[efficient-brain-like-learning]], [[brain-development-and-critical-periods]] | #83 | open |
 | 3 | Which replay selection rule protects old tasks best, and does SHY downscaling coexist with replay? | [[sleep-and-memory-consolidation]], [[memory-systems]] | #84 | open |
 | 4 | How much dendritic detail does a useful model need, at equal parameters and operations? | [[dendritic-computation]], [[levels-of-brain-modeling]] | #85 | open |

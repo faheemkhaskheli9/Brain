@@ -58,7 +58,15 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/game/world/sweep.mjs",
-      "args": ["--jobs", "4"],
+      "args": ["--arms", "rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor", "--jobs", "4"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "World: sweep.mjs (k-WTA sparsity, seeds 1-10)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/sweep.mjs",
+      "args": ["--arms", "rehearse30,kwta20,kwta35,kwta50", "--jobs", "4"],
       "console": "integratedTerminal"
     },
     {
