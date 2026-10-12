@@ -131,6 +131,7 @@ assert gaps.max() > 0.5                     # all-or-none jump, not a graded ris
 - [[brain-rhythms-and-oscillations]] - synchrony, which IIT and binding accounts rely on.
 - [[evaluating-brain-models]] - testing models against the brain, the same problem in miniature.
 - [[sleep-and-memory-consolidation]] - sleep stages, where PCI and consciousness change together.
+- [[neuroethics]] - what follows if a simulation or organoid might be conscious.
 
 ## References
 - Seth & Bayne (2022) "Theories of consciousness", *Nat Rev Neurosci* 23:439. doi:10.1038/s41583-022-00587-4
