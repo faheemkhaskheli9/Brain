@@ -6,7 +6,7 @@ use_cases:
   - how does the brain represent information with spikes
   - why is the brain so energy efficient compared to GPUs
   - what computational primitives does the brain use
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/381607a0
@@ -20,8 +20,8 @@ sources:
 Neurons communicate with spikes, so information has to live in **which** neurons
 fire, **how often**, and **when**. The brain combines several codes at once:
 firing rates, precise spike timing, and patterns across large populations. It
-keeps activity **sparse**: only a few percent of cortical neurons are strongly
-active at any moment. That sparsity is a large part of why it runs on ~20 W.
+keeps activity **sparse**: perhaps 1% or fewer of cortical neurons are strongly
+active at any moment (Lennie 2003). That sparsity is a large part of why it runs on ~20 W.
 
 ## How it works
 
@@ -48,8 +48,9 @@ active at any moment. That sparsity is a large part of why it runs on ~20 W.
   Hopfield code in [[memory-systems]].
 - **Gain modulation.** Attention and neuromodulators multiply responses, a
   biological "attention" mechanism.
-- **Oscillations.** Theta (4-8 Hz), gamma (30-100 Hz) and sleep spindles
-  coordinate *when* groups of neurons communicate and when they learn.
+- **Oscillations.** Theta (4-8 Hz), gamma (30-100 Hz) and sleep spindles are
+  established; that they coordinate *when* groups of neurons communicate and
+  learn is a hypothesis (see Open questions).
 
 ### Why it is energy-efficient
 - **Sparse, event-driven activity.** Spikes are energetically expensive, so the

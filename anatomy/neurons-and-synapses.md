@@ -6,7 +6,7 @@ use_cases:
   - how does a single neuron work
   - what is an action potential and how is it modeled
   - how is a biological neuron different from an artificial neuron
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1113/jphysiol.1952.sp004764

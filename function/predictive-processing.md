@@ -6,7 +6,7 @@ use_cases:
   - how does the brain perceive the world
   - what is predictive coding and the free-energy principle
   - how can an AI learn a world model the way the brain might
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/4580
@@ -68,8 +68,8 @@ specific process models can be tested.
   in all areas; some prediction-related results also fit alternative models.
 
 ## Relevance to building brain-like AI
-- **Self-supervised prediction is how the brain gets most of its training
-  signal.** Next-token prediction in LLMs, masked autoencoding and JEPA-style
+- **If the hypothesis holds, self-supervised prediction is how the brain gets
+  most of its training signal.** Next-token prediction in LLMs, masked autoencoding and JEPA-style
   latent prediction (LeCun 2022) are engineering cousins of this idea.
 - Predictive coding networks learn with **local rules**. Under some conditions
   they approximate backprop (Whittington & Bogacz 2017), which makes them a

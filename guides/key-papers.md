@@ -6,7 +6,7 @@ use_cases:
   - which paper should I cite or read for a brain or neuro-AI claim
   - what did a classic neuroscience paper actually find
   - find the original evidence behind a model in this knowledge base
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1523/JNEUROSCI.18-24-10464.1998
@@ -52,7 +52,7 @@ frameworks, not settled findings.
 | Paper | Finding | Used in |
 |---|---|---|
 | Bliss & Collingridge 1993 | Review of hippocampal long-term potentiation (LTP) and its NMDA-receptor dependence as a synaptic memory mechanism. | [[learning-and-plasticity]] |
-| Markram, Lübke, Frotscher & Sakmann 1997 | In neocortical pairs, the order of pre- and postsynaptic spikes within tens of ms decides potentiation vs depression - first spike-timing-dependent plasticity (STDP) result. | [[learning-and-plasticity]] |
+| Markram, Lübke, Frotscher & Sakmann 1997 | In neocortical pairs, the order of pre- and postsynaptic spikes within tens of ms decides potentiation vs depression - a founding spike-timing-dependent plasticity (STDP) result. | [[learning-and-plasticity]] |
 | Bi & Poo 1998 | The canonical STDP curve: pre-before-post within ~20 ms potentiates, post-before-pre depresses. Reference data for Brain Lab's STDP scorecard. | [[learning-and-plasticity]] |
 | Turrigiano 2008 | Synaptic scaling: neurons multiplicatively rescale all excitatory synapses to hold their firing rate - homeostasis that keeps Hebbian learning stable. | [[learning-and-plasticity]] |
 | Schultz, Dayan & Montague 1997 | Dopamine neurons fire to unexpected reward, move to the predicting cue after learning, and dip when expected reward is omitted - the temporal-difference (TD) error. | [[learning-and-plasticity]], [[brain-inspired-learning-algorithms]] |
@@ -66,7 +66,7 @@ frameworks, not settled findings.
 | McClelland, McNaughton & O'Reilly 1995 | Complementary learning systems: a fast hippocampus stores episodes and replays them to a slow, interleaved-learning neocortex, avoiding catastrophic interference. | [[memory-systems]] |
 | Kumaran, Hassabis & McClelland 2016 | CLS updated: replay prioritisation, fast schema-consistent cortical learning, and the link to experience replay in deep RL. | [[memory-systems]], [[build-a-brain-like-learner]] |
 | Buzsáki 2015 | Hippocampal sharp-wave ripples carry replay and are needed for consolidation and planning. | [[memory-systems]] |
-| Hopfield 1982 | An energy-based recurrent network acts as content-addressable memory; capacity ~0.14·N patterns. | [[memory-systems]], [[neural-coding-and-computation]] |
+| Hopfield 1982 | An energy-based recurrent network acts as content-addressable memory; capacity ~0.15·N patterns (later analysis: 0.138·N). | [[memory-systems]], [[neural-coding-and-computation]] |
 | Ramsauer et al. 2020 | Modern continuous Hopfield networks have exponential capacity, and their update rule equals transformer attention. | [[memory-systems]] |
 | Kirkpatrick et al. 2017 | Elastic weight consolidation (EWC): penalise changes to weights important for old tasks (Fisher information), inspired by synaptic consolidation. | [[memory-systems]], [[brain-inspired-learning-algorithms]] |
 | Shin, Lee, Kim & Kim 2017 | Generative replay: a generator rehearses pseudo-samples of old tasks instead of storing data. | [[brain-inspired-learning-algorithms]] |

@@ -6,7 +6,7 @@ use_cases:
   - simulate a spiking neuron or network in Python
   - train a spiking neural network with gradients or STDP
   - choose a brain simulator (Brian2, NEST, NEURON, snnTorch)
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1109/MSP.2019.2931595
@@ -126,7 +126,7 @@ lif = snn.Leaky(beta=0.9, spike_grad=surrogate.fast_sigmoid())  # drop-in PyTorc
 |---|---|---|---|
 | **Brian2** | Point / few-compartment neurons | Research prototyping; you write the equations as strings | Python, generates C++ code; very readable |
 | **NEST** | Point neurons | Very large networks (millions of neurons) on clusters | Used by EBRAINS; PyNEST interface |
-| **NEURON** | Detailed multi-compartment | Biophysically detailed single cells and circuits | Used by Blue Brain; ModelDB has thousands of models |
+| **NEURON** | Detailed multi-compartment | Biophysically detailed single cells and circuits | Used by Blue Brain; ModelDB has nearly 2,000 models |
 | **snnTorch / Norse / SpikingJelly** | LIF layers in PyTorch | Training SNNs with surrogate gradients on GPU | Best for ML tasks |
 | **Lava** (Intel) | LIF, neuromorphic | Deploying to Loihi chips | See [[neuromorphic-hardware]] |
 | **The Virtual Brain** | Neural mass per region | Whole-brain dynamics from MRI connectivity | Clinical and systems research |

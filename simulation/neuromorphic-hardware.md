@@ -6,10 +6,10 @@ use_cases:
   - which chips run spiking neural networks efficiently
   - can hardware match the brain's energy efficiency
   - deploy a brain-like model on neuromorphic hardware
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
-  - https://newsroom.intel.com/artificial-intelligence/intel-builds-worlds-largest-neuromorphic-system-to
+  - https://www.intel.com/content/www/us/en/newsroom/news/intel-builds-worlds-largest-neuromorphic-system.html
   - https://doi.org/10.1126/science.1254642
   - https://doi.org/10.1109/JPROC.2014.2304638
 ---

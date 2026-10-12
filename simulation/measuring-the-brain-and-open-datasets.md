@@ -7,7 +7,7 @@ use_cases:
   - EEG vs fMRI vs Neuropixels - which resolution do I get
   - where can I download real brain recordings to test a model
   - how do I load Allen, DANDI, IBL, OpenNeuro or MICrONS data in Python
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/nn.3839
@@ -49,7 +49,8 @@ Notes:
 - **fMRI is slow because blood is slow.** The BOLD signal is neural activity
   smeared by a haemodynamic response lasting tens of seconds (Glover 1999). It
   reflects synaptic input and local processing more than spiking output, and a
-  voxel averages hundreds of thousands of neurons (Logothetis 2008). The code
+  voxel averages hundreds of thousands to millions of neurons (5.5 million in a
+  typical 55 mm³ voxel; Logothetis 2008). The code
   below shows the consequence.
 - **EEG and MEG are fast but blurred.** Reconstructing where a signal came from
   (source localisation) has no unique solution without extra assumptions.

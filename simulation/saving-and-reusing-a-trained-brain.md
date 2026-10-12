@@ -53,12 +53,15 @@ representations made by the network itself instead of storing raw inputs.
 No brain is ever written to a file and read back. A save exists for the person running the
 simulation. To make a loaded learner act exactly as the saved one would have, the save needs:
 
+**What a save must contain**
+
 | Part | Why | Brain World (`game/world/brain.js`) |
 |---|---|---|
 | Learned weights | the memory itself | `v` (critic), `P` (actor) |
 | Fixed random wiring | random projections are part of the brain; a different draw makes the weights meaningless | `idx`, `wIn`, `bias`, `gate` are stored, not regenerated |
 | Normaliser state | running statistics change every output | `hh`, a running mean of hidden activity |
 | Consolidation state | per-synapse importance or anchors, if the learner protects old skills | none yet (issue #56) |
+| Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | none: Brain World is told its task (issue #57) |
 | RNG state | without it, two copies sample different actions | `rand`, the state at the start of the episode |
 | Progress | where training stands | `stage`, `episode`, success windows |
 | Version | so old files fail loudly or are migrated, never read wrongly | `version: 3` |
@@ -68,11 +71,32 @@ Storing only a seed instead of the fixed wiring makes the file smaller, but a la
 the code that draws the wiring would quietly build a different brain under the old weights.
 Brain World stores the wiring and checks every array's shape before loading.
 
+### Migrating old saves (engineering design)
+Brain World has no migration yet. `World.fromJSON` accepts only `version: 3` with every array the
+size a fresh brain has, and refuses anything else ("not a Brain World save, or saved by an older
+version or with a different brain size"). Refusing is safe, but a new format, more context slots
+or a sixth skill would then orphan every saved brain. The lessons for adding migration:
+- **Migrate before binding references.** Run `migrate(o)` on the parsed file first, before any
+  code takes a reference into it (`const ob = o.brain`) and before the shape checks. A reference
+  taken earlier still points at the old object, so the checks see the unmigrated brain and every
+  old save is rejected.
+- **One entry point, in a fixed order:** upgrade the format (filling new state with values that
+  change nothing, such as zero importance), then grow slots, then grow stages. Each step assumes
+  the shape the one before it produced.
+- **Only append.** New slots, gate rows and stage windows go at the end, so every stored index
+  still means what it did. A graduated brain that gains a stage resumes training at that stage.
+- **Never migrate across a change to the senses.** A new input changes `N_IN`, so every `idx`,
+  `P` and `v` would point at different inputs: that is a new brain, not a migrated one.
+- **Keep the strict checks after migrating**, and keep an old save as a test fixture.
+
 ### Loading safely in Python
 `np.savez` writes plain numeric arrays into one `.npz` file. `np.load(path, allow_pickle=False)`
 reads them back and refuses object arrays, which would need pickle (`allow_pickle=False` has been
 the default since numpy 1.16.3). Never load a `pickle` file someone else made: the Python
-documentation warns that unpickling can run arbitrary code.
+documentation warns that unpickling can run arbitrary code. `np.load(..., allow_pickle=True)` on a
+file you were given is the same risk, and the numpy documentation warns about it too. Pass
+`allow_pickle=False` explicitly, so the safe choice stays visible in the code, and never unpickle a
+file you did not make.
 
 ## Relevance to building brain-like AI
 - **Save the whole state that picks an action.** Weights alone reload a learner that acts

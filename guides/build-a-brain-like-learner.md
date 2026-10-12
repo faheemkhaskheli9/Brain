@@ -6,7 +6,7 @@ use_cases:
   - how can we create a digital simulation of the brain that learns like a human
   - plan a brain-inspired AI project step by step
   - what architecture combines memory, learning rules and world models like the brain
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1016/j.neuron.2017.06.011
@@ -113,7 +113,9 @@ Build: one agent combining stages 3-5. It should learn **online and continually*
 an environment that keeps changing, consolidate during sleep phases, and use
 working memory for the current goal. Optional extras:
 - Neuromodulator-like meta-parameters: learning rate rises with surprise
-  (noradrenaline), exploration rises with uncertainty (acetylcholine).
+  (noradrenaline), exploration follows noradrenaline's gain, and expected
+  uncertainty (acetylcholine) shifts weight from prior predictions to new input
+  ([[neuromodulators]]).
 - Port the spiking parts to neuromorphic hardware ([[neuromorphic-hardware]]).
 - Constrain part of the architecture with real connectome data (fly visual
   system) as an inductive bias.

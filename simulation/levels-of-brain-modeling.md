@@ -6,11 +6,11 @@ use_cases:
   - at what level of detail should I simulate the brain
   - how much compute would a whole-brain simulation need
   - difference between Hodgkin-Huxley, LIF and rate neuron models
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1109/TNN.2003.820440
-  - https://www.fhi.ox.ac.uk/brain-emulation-roadmap-report.pdf
+  - https://ora.ox.ac.uk/objects/uuid:a6880196-34c7-47a0-80f1-74d32ab98788
   - https://doi.org/10.1113/jphysiol.1952.sp004764
 ---
 
@@ -40,7 +40,7 @@ Brain-inspired AI mostly borrows from levels 1-2. Neuroscience simulations focus
 | Molecular | Reaction-diffusion of ions, proteins | Synaptic biochemistry | Enormous | Drug and plasticity mechanisms |
 | Multi-compartment | Hodgkin-Huxley channels on a reconstructed dendrite tree (100s-1000s of compartments) | Dendritic computation, exact spike shape | Very high | Blue Brain cortical microcircuit; NEURON simulator |
 | Point HH neuron | 4 ODEs (V, m, h, n) | Real spike mechanism | High | Single-cell studies |
-| **Izhikevich** | 2 ODEs + reset | 20+ firing patterns (bursting, chattering) at low cost | Low | Large realistic networks |
+| **Izhikevich** | 2 ODEs + reset | All 20 firing features in Izhikevich's 2004 comparison (bursting, chattering) at low cost | Low | Large realistic networks |
 | **LIF / AdEx** | 1-2 ODEs + threshold reset | Integration, spikes, timing | Very low | Most large SNNs, neuromorphic chips |
 | Rate model | Continuous firing rate, e.g. `τ dr/dt = −r + f(Wr + I)` | Average activity | Minimal | Systems-level models |
 | ANN unit | `y = f(Wx)` with no time | Static input-output mapping | Minimal, GPU-friendly | Deep learning |
@@ -63,7 +63,7 @@ Rough orders of magnitude (Sandberg & Bostrom 2008 give the detailed analysis):
   rate needs roughly 10^15-10^16 synaptic updates per second, before learning.
 - Synapse state alone: 10^15 synapses × a few bytes ≈ petabytes of memory.
 - Compartmental or molecular detail adds many orders of magnitude more.
-- **The binding constraint is not compute but data.** We do not have the human
+- **Argued position: the binding constraint is data more than compute.** We do not have the human
   connectome, the per-synapse parameters, or the full set of learning rules.
   The largest complete connectome is the adult fruit fly
   ([[whole-brain-emulation-projects]]).
@@ -94,6 +94,7 @@ Rough orders of magnitude (Sandberg & Bostrom 2008 give the detailed analysis):
 - Marr (1982) *Vision*. W.H. Freeman.
 - Hodgkin & Huxley (1952), *J Physiol* 117:500. doi:10.1113/jphysiol.1952.sp004764
 - Izhikevich (2003) "Simple model of spiking neurons", *IEEE Trans Neural Networks* 14:1569. doi:10.1109/TNN.2003.820440
+- Izhikevich (2004) "Which model to use for cortical spiking neurons?", *IEEE Trans Neural Networks* 15:1063. doi:10.1109/TNN.2004.832719
 - Sandberg & Bostrom (2008) "Whole Brain Emulation: A Roadmap", Future of Humanity Institute, Technical Report #2008-3.
 - Gerstner, Kistler, Naud & Paninski (2014) *Neuronal Dynamics*. Cambridge University Press. Free online: https://neuronaldynamics.epfl.ch/
 - Shiu et al. (2024) "A Drosophila computational brain model reveals sensorimotor processing", *Nature* 634:210.

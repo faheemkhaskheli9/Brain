@@ -7,7 +7,7 @@ use_cases:
   - compare a neural network with brain recordings or fMRI
   - which benchmark should a brain-inspired model report
   - what is representational similarity analysis
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.3389/neuro.06.004.2008
@@ -159,7 +159,7 @@ assert r_a > 0.5 and abs(r_b) < 0.3
 - Schrimpf et al. (2018) "Brain-Score: Which Artificial Neural Network for Object Recognition is most Brain-Like?", bioRxiv 407007.
 - Schrimpf et al. (2020) "Integrative benchmarking to advance neurally mechanistic models of human intelligence", *Neuron* 108:413. doi:10.1016/j.neuron.2020.07.040
 - Teeter et al. (2018) "Generalized leaky integrate-and-fire models classify multiple neuron types", *Nat Commun* 9:709. doi:10.1038/s41467-017-02717-4
-- Cichy, Roig & Oliva (2019) "The Algonauts Project: A platform for communication between the sciences of biological and artificial intelligence", arXiv:1905.05675.
+- Cichy et al. (2019) "The Algonauts Project: A platform for communication between the sciences of biological and artificial intelligence", arXiv:1905.05675.
 - Gifford et al. (2024) "The Algonauts Project 2025 Challenge: How the human brain makes sense of multimodal movies", arXiv:2501.00504.
 - Geirhos, Meding & Wichmann (2020) "Beyond accuracy: quantifying trial-by-trial behaviour of CNNs and humans by measuring error consistency", NeurIPS. arXiv:2006.16736
 - Klein, Meyen, Brendel, Wichmann & Meding (2025) "Quantifying uncertainty in error consistency: towards reliable behavioral comparison of classifiers", arXiv:2507.06645.

@@ -6,7 +6,7 @@ use_cases:
   - implement a learning rule that works like the brain
   - train a network with only local updates and no backpropagation
   - make a model learn continually without catastrophic forgetting
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1007/BF00275687
@@ -119,7 +119,7 @@ print(f"accuracy {(W_pi.argmax(0) == correct).mean():.0%}")   # accuracy 100%
 ```
 
 For delayed rewards, let `elig` decay over time (`elig = λ·elig + new`) instead of
-using it immediately, the way synaptic tags last about a second.
+using it immediately, the way eligibility traces at real synapses last about a second.
 
 ## 4. Synaptic consolidation: Elastic Weight Consolidation (EWC)
 Brain: synapses that matter for old memories become less plastic.
@@ -152,8 +152,10 @@ information gain (active inference, [[predictive-processing]]). The agent seeks
 experiences it can *learn from*, not just ones that are rewarded.
 
 ## Choosing / trade-offs
-- **Accuracy today**: backprop > predictive coding ≈ equilibrium propagation >
-  feedback alignment > pure Hebbian/STDP on hard benchmarks.
+- **Accuracy today**: backprop leads on hard benchmarks. Feedback alignment and
+  target propagation fell well behind it on ImageNet (Bartunov et al. 2018), and
+  pure Hebbian/STDP rules trail further. The order among the other local rules is
+  not settled.
 - **Hardware fit**: local rules (1, 2, 3, STDP) suit neuromorphic chips and
   on-device learning. Backprop needs stored activations and a global backward pass.
 - **Continual learning**: replay is the strongest simple method. EWC helps when you
@@ -169,6 +171,7 @@ experiences it can *learn from*, not just ones that are rewarded.
 - [Brain Lab](../game/README.md) - level 9, *Find the pattern*: Hebb against Oja's rule on 2-D inputs.
 
 ## References
+- Bartunov, Santoro, Richards, Marris, Hinton & Lillicrap (2018) "Assessing the scalability of biologically-motivated deep learning algorithms and architectures", *NeurIPS 2018*. arXiv:1807.04587
 - Oja (1982) "Simplified neuron model as a principal component analyzer", *J Math Biol* 15:267. doi:10.1007/BF00275687
 - Whittington & Bogacz (2017), *Neural Computation* 29:1229. doi:10.1162/NECO_a_00949
 - Schultz, Dayan & Montague (1997), *Science* 275:1593. doi:10.1126/science.275.5306.1593

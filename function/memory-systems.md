@@ -6,7 +6,7 @@ use_cases:
   - how does the brain store and recall memories
   - how does the brain learn continually without catastrophic forgetting
   - design a memory architecture for an AI agent inspired by the hippocampus
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1037/0033-295X.102.3.419
@@ -39,7 +39,7 @@ learns new things without overwriting old ones, the problem known in AI as
 | Priming / perceptual | Faster processing of seen stimuli | Sensory cortex | Implicit |
 | Emotional / conditioning | Fear, value associations | Amygdala | Fast |
 
-Patient H.M. (hippocampus removed in 1953) could not form new episodic memories
+Patient H.M. (much of both hippocampi removed in 1953) could not form new episodic memories
 but could still learn motor skills. This is the classic evidence that the systems
 are separable.
 
@@ -49,8 +49,8 @@ are separable.
 - **CA3: pattern completion.** A recurrent auto-associative network (Hopfield-like)
   that recalls a whole memory from a partial cue.
 - **CA1**: compares recall with the current input and sends the result back to cortex.
-- **Place cells** (O'Keefe) and **grid cells** (Moser & Moser) in the entorhinal
-  cortex form a cognitive map of space. The same machinery may map abstract
+- **Place cells** (O'Keefe) in the hippocampus and **grid cells** (Moser & Moser)
+  in the entorhinal cortex form a cognitive map of space. The same machinery may map abstract
   concept spaces (a hypothesis with growing support).
 
 ### Consolidation and sleep

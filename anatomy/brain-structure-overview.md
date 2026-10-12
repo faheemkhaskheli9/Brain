@@ -6,7 +6,7 @@ use_cases:
   - what are the main parts of the human brain and what does each do
   - which brain regions should a brain-inspired AI architecture copy
   - how many neurons and synapses does the human brain have
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1002/cne.21974
@@ -31,7 +31,7 @@ different learning rules, which matters a lot when you try to copy it.
 | Neurons in the cerebral cortex | ~16 billion | Azevedo 2009; Herculano-Houzel 2012 |
 | Neurons in the cerebellum | ~69 billion (about 80% of all neurons) | Azevedo 2009 |
 | Synapses | about 10^14 to 10^15 (an order-of-magnitude estimate) | textbook estimate |
-| Power | ~20 W, about 20% of the body's resting energy use | Herculano-Houzel 2012 |
+| Power | ~20 W is the usual figure; Herculano-Houzel estimates ~516 kcal/day (~25 W), about 25% of the body's energy use | Herculano-Houzel 2012 |
 | Cortical thickness | 2-4 mm, folded; 6 layers | textbook |
 
 The rows can be checked against each other. The derived numbers below are
@@ -40,7 +40,7 @@ arithmetic on the table, not new measurements.
 ```python
 neurons, cortex, cerebellum = 86e9, 16e9, 69e9   # Azevedo et al. 2009
 synapses = (1e14, 1e15)                          # order-of-magnitude range
-watts = 20                                       # Herculano-Houzel 2012
+watts = 20                                       # usual figure; Herculano-Houzel 2012 gives ~25 W
 
 assert cortex + cerebellum <= neurons            # the rest: brainstem, thalamus, basal ganglia...
 share = cerebellum / neurons

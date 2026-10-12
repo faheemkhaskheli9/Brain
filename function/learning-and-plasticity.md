@@ -6,7 +6,7 @@ use_cases:
   - how does the brain learn at the level of synapses
   - what learning rules could replace backpropagation in a brain-like system
   - how does dopamine relate to reinforcement learning
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1523/JNEUROSCI.18-24-10464.1998
@@ -28,7 +28,7 @@ stabilisation*, wrapped in sleep-driven replay and consolidation.
 ## How it works
 
 ### 1. Hebbian learning, LTP and LTD
-"Cells that fire together wire together" (Hebb 1949). The molecular mechanism is
+"Cells that fire together wire together" (Carla Shatz's 1992 paraphrase of Hebb 1949). The molecular mechanism is
 established:
 - **LTP** (long-term potentiation): strong pre + post activity → NMDA receptors
   open → Ca2+ influx → more AMPA receptors inserted → a stronger synapse. First

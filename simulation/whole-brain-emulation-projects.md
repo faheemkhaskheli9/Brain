@@ -6,7 +6,7 @@ use_cases:
   - what is the state of the art in simulating real brains
   - which connectomes exist and how big are they
   - how close are we to whole human brain emulation
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://www.nih.gov/news-events/nih-research-matters/complete-wiring-map-adult-fruit-fly-brain
@@ -14,7 +14,7 @@ sources:
   - https://doi.org/10.1126/science.adk4858
   - https://bbp.epfl.ch/
   - https://doi.org/10.1016/j.cell.2015.09.029
-  - https://www.fhi.ox.ac.uk/brain-emulation-roadmap-report.pdf
+  - https://ora.ox.ac.uk/objects/uuid:a6880196-34c7-47a0-80f1-74d32ab98788
 ---
 
 # Connectomes and whole-brain emulation projects
