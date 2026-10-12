@@ -282,3 +282,4 @@ One line per result. Newest at the bottom.
 | Date | ID | Result | Where recorded |
 |---|---|---|---|
 | 2026-10-12 | - | File created with 170 hypotheses. All `open`. Sources from memory, not yet verified. | this file |
+| 2026-10-12 | H001-H170 | Plain-language explanations with brain and test workflows added. H138 test corrected: it counts against the hypothesis if the reservoir falls short, not if it matches. | hypotheses-explained/ |

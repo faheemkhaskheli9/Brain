@@ -51,6 +51,29 @@ instruments or theory. Several tests reuse three shared setups:
 | **Brain World** | The 3D creature in [game/world](../../game/world/) that learns five skills in a row. |
 | **H101 transfer setup** | Train on some Brain World layouts, test on new layouts that share structure but not surface features. Transfer = performance on the new layouts. |
 
+## Details to verify first
+
+The writers flagged these details as written from memory. Check them against the paper
+before relying on them:
+
+| Row | What to check |
+|---|---|
+| H004 | Exact form of the burst-dependent rule (Payeur et al. 2021). |
+| H013 | Timing of prediction vs outcome within the alpha cycle (O'Reilly et al. 2021). |
+| H024 | What the dopamine neurons in Engelhard et al. 2019 responded to. |
+| H032 | Which reward delays Izhikevich 2007 bridged. |
+| H037 | ACh effects on CA3 and CA1 in Hasselmo's model. |
+| H043 | How the local contrastive rule of Illing et al. 2021 gets its sign. |
+| H057 | The earlier human fMRI grid-signal study (probably Doeller et al. 2010). |
+| H083 | Later replications of "starting small" (Elman 1993). |
+| H086 | Summary of Vogelsang et al. 2018. |
+| H113 | Live vs recorded exposure result (Kuhl 2003). |
+| H132 | Human vs rat dendritic compartmentalisation (Beaulieu-Laroche et al. 2018). |
+| H148 | What the astrocyte model computes (Kozachkov et al. 2023). |
+| H153 | Thalamic mechanism in Schmitt et al. 2017. |
+| H159 | Rhythm bands for predictions vs errors (Bastos et al. 2012). |
+| H161 | The revaluation fingerprint in Momennejad et al. 2017. |
+
 ## Files
 
 | File | Section | Rows |

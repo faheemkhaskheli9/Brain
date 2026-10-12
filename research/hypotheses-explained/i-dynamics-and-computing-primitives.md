@@ -24,7 +24,6 @@ plasticity, scaling, BCM: H143, H145-H147). The rest add new storage or regulari
 and partly compete: if one of them is enough, the others may be redundant.
 
 ## H138 - Fixed random reservoirs, learned readouts
-
 **Status:** open · **Tier:** T1 · **Source:** Jaeger 2001 (GMD report 148); Maass, Natschläger & Markram 2002, *Neural Comput*
 
 **In simple words.** A *reservoir* is a big recurrent network (neurons that feed back to
@@ -63,7 +62,6 @@ It is the opposite bet to the credit-assignment rows in section A, which assume 
 weights must learn.
 
 ## H139 - FORCE tames chaos into tasks
-
 **Status:** open · **Tier:** T1 · **Source:** Sussillo & Abbott 2009, *Neuron*
 
 **In simple words.** Some recurrent networks are *chaotic*: their activity never repeats
@@ -104,7 +102,6 @@ be made useful, which makes it a stronger version of H138. If only the non-local
 works, it does not help explain the brain.
 
 ## H140 - Memories and categories as attractors
-
 **Status:** open · **Tier:** T1 · **Source:** Hopfield 1982, *PNAS*
 
 **In simple words.** An *attractor* is a state a network falls into and stays in, like a
@@ -142,7 +139,6 @@ categories almost for free. They link to memory rows in section F and to the
 [memory-systems](../../function/memory-systems.md) account of CA3 as an auto-associator.
 
 ## H141 - Theta splits encoding from retrieval
-
 **Status:** open · **Tier:** T1 · **Source:** Hasselmo, Bodelón & Wyble 2002, *Neural Comput*
 
 **In simple words.** The hippocampus has a *theta rhythm*: a slow wave of activity, a few
@@ -179,7 +175,6 @@ unsplit one.
 different job.
 
 ## H142 - Theta sequences compress behaviour for STDP
-
 **Status:** open · **Tier:** T1 · **Source:** Skaggs et al. 1996, *Hippocampus*
 
 **In simple words.** Place cells fire when an animal is in one spot. As the animal walks
@@ -216,7 +211,6 @@ between the speed of behaviour and the speed of a learning rule. See
 [timing-and-sequence-learning](../../function/timing-and-sequence-learning.md).
 
 ## H143 - Learning is best near criticality
-
 **Status:** open · **Tier:** T1 · **Source:** Beggs & Plenz 2003, *J Neurosci*
 
 **In simple words.** Think of a network where each active neuron triggers, on average,
@@ -253,7 +247,6 @@ edge of chaos, which also matters for reservoirs (H138, H139). Whether real brai
 critical is still debated.
 
 ## H144 - Variability is sampling
-
 **Status:** open · **Tier:** T1 · **Source:** Fiser et al. 2010, *Trends Cogn Sci*; Kappel et al. 2015, *PLoS Comput Biol*
 
 **In simple words.** Neurons respond differently each time to the same input
@@ -289,7 +282,6 @@ learning than the deterministic net.
 explore and ask for more evidence. It links to H151, which also treats noise as useful.
 
 ## H145 - Inhibitory plasticity keeps E/I balance
-
 **Status:** open · **Tier:** T1 · **Source:** Vogels et al. 2011, *Science*
 
 **In simple words.** Neurons get two kinds of input: excitatory (push to fire) and
@@ -328,7 +320,6 @@ that never stops learning. H145, H146 and H147 are three stabilisers; this test 
 show which ones are needed.
 
 ## H146 - Synaptic scaling stops runaway Hebbian learning
-
 **Status:** open · **Tier:** T1 · **Source:** Turrigiano et al. 1998, *Nature*
 
 **In simple words.** Pure Hebbian learning has a known problem: stronger links make
@@ -368,7 +359,6 @@ Hebbian learning. It overlaps with H145 and H147; Oja's rule (in
 solves the same problem another way.
 
 ## H147 - BCM sliding threshold
-
 **Status:** open · **Tier:** T1 · **Source:** Bienenstock, Cooper & Munro 1982, *J Neurosci*
 
 **In simple words.** The BCM rule says a synapse gets stronger when the postsynaptic
@@ -406,7 +396,6 @@ feature learning; otherwise the simpler rule wins. Competes with H145 and H146 a
 stabiliser.
 
 ## H148 - Astrocytes as slow, many-synapse memory
-
 **Status:** open · **Tier:** T1 · **Source:** Kozachkov et al. 2023, *PNAS*
 
 **In simple words.** Astrocytes are star-shaped glial cells. A single astrocyte touches
@@ -443,7 +432,6 @@ Inside the standard test loop:
 neurons misses part of the machine. It links to H140 (attractor memory capacity).
 
 ## H149 - Rewiring stores long-term memories
-
 **Status:** open · **Tier:** T1 · **Source:** Holtmaat & Svoboda 2009, *Nat Rev Neurosci*
 
 **In simple words.** Learning is usually modelled as turning the strength of existing
@@ -482,7 +470,6 @@ per synapse and keep old memories safe. It links to memory rows in section F and
 pruning during development (section E).
 
 ## H150 - Myelination learns timing
-
 **Status:** open · **Tier:** T1 · **Source:** Fields 2015, *Nat Rev Neurosci*
 
 **In simple words.** Myelin is a fatty wrapping on axons that makes signals travel faster
@@ -521,7 +508,6 @@ learns. If they matter, spiking learners (see
 too. It links to H142 (timing for STDP).
 
 ## H151 - Transmission failures act like dropout
-
 **Status:** open · **Tier:** T1 · **Source:** **new** (no published source)
 
 **In simple words.** When a spike reaches a synapse, the synapse often fails to release
