@@ -79,6 +79,35 @@ Baxter 1996; [[neural-coding-and-computation]]). The methods, best payoff first:
    imagination (Dyna; Sutton 1990). The cerebellum as a forward model is an established
    theory ([[action-selection-and-motor-control]]). This is the most work.
 
+### Measured: k-WTA in Brain World (issue #82)
+Pre-registered hypothesis: k-WTA with k = 20-50 of 1,000 hidden units cuts per-step
+multiply-adds by at least 2x, with at most a 10% rise in episodes to learn all five
+skills. Run: `node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50`, seeds
+1-10, exact paired sign-flip test on per-seed episode totals.
+
+| Arm | Passed | Hidden units on per step | Episodes, all five skills (mean / median) | vs baseline |
+|---|---|---|---|---|
+| Baseline (no k-WTA) | 10/10 | 79 | 18,202 / 17,826 | - |
+| k = 20 | 10/10 | 20 | 13,642 / 12,698 | -4,560 (p = 0.066) |
+| k = 35 | 10/10 | 35 | 16,809 / 17,307 | -1,392 (p = 0.57) |
+| k = 50 | 10/10 | 49 | 17,189 / 15,475 | -1,013 (p = 0.64) |
+
+- **Learning: no cost.** No arm needed more episodes. k = 20 was faster on 7 of 10 seeds
+  and kept every skill above the test's bars on all 10, but p = 0.066 is not significant.
+- **Work: under 2x, so the work half of the hypothesis fails.** Over the whole curriculum the
+  baseline has 79 units on (7.9%, higher than the 6.8% measured over the first 3,000
+  episodes). k = 20 cuts that 4x. But the hidden units are only part of each step:
+  - encoding drives about 500 ungated units × 8 inputs whatever k is;
+  - every action score also sums the 107 raw inputs;
+  - the dense trace and weight updates (about 12k each) do not shrink at all.
+
+  Even with event-driven action choice (method 2), each action's dot product falls
+  from at most 186 terms to at most 127 (about 1.5x), and the whole step saves far less.
+- **So:** sparsity pays only together with methods 1 and 2. On its own, k-WTA changes how
+  much is active, not how much the code computes. It stays off by default.
+
+This is a result about this learner, not about cortex.
+
 ## Relevance to building brain-like AI
 - Count work per event, not per parameter. A learner with 7% activity that updates every
   synapse each step gets none of the brain's energy advantage.
@@ -139,7 +168,10 @@ saved.
 ## Open questions
 - How much of the brain's sample efficiency comes from innate wiring and how much from
   better learning rules is debated (Zador 2019).
-- Whether k-WTA sparsity speeds up or slows down Brain World's curriculum is untested.
+- Answered here (issue #82, 2026-10-12): k-WTA does not slow Brain World's curriculum,
+  but on its own it does not halve the work per step either. See "Measured: k-WTA" below.
+  Still open: whether an adaptive per-unit threshold (homeostasis) does as well, and
+  whether the faster learning at k = 20 holds over more seeds.
 - The size of the episode-count gap between Brain World and a person on matched tasks is
   unknown. No matched human data exist here.
 

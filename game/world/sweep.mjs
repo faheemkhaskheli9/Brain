@@ -15,6 +15,10 @@ export const ARMS = {
   "rehearse0+sleep": { replay: 0, sleepEvery: 20 },
   "rehearse10+sleepActor": { replay: 0.1, sleepEvery: 20, sleepActor: true },
   "rehearse0+sleepActor": { replay: 0, sleepEvery: 20, sleepActor: true },
+  // Issue #82: k-winners-take-all on the 1,000 hidden units, on top of the baseline.
+  kwta20: { replay: 0.3, sleepEvery: 0, kwta: 20 },
+  kwta35: { replay: 0.3, sleepEvery: 0, kwta: 35 },
+  kwta50: { replay: 0.3, sleepEvery: 0, kwta: 50 },
 };
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
@@ -33,7 +37,8 @@ function trial(arm, seed) {
     if (r.done) { ok[k] = (ok[k] || 0) + r.success; n[k] = (n[k] || 0) + 1; }
   }
   const kept = Object.fromEntries(Object.keys(KEEP).map(k => [k, +(ok[k] / n[k]).toFixed(3)]));
-  return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, seconds: (Date.now() - t0) / 1000 };
+  const active = +(w.brain.nActive / w.brain.nEncode).toFixed(1);   // mean hidden units on per step
+  return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, active, seconds: (Date.now() - t0) / 1000 };
 }
 
 // Exact paired sign-flip test: two-sided p for the mean per-seed difference (2^n flips, n <= ~16).
@@ -56,7 +61,8 @@ function summarise(results, arms) {
     const rs = results.filter(r => r.arm === arm), ok = rs.filter(r => r.passed);
     const bars = ok.filter(r => Object.entries(KEEP).every(([k, v]) => r.kept[k] >= v)).length;
     let line = `${arm.padEnd(24)}${`${ok.length}/${rs.length}`.padStart(6)}  ${`${bars}/${rs.length}`.padStart(9)}  ${f(mean(ok.map(r => r.episodes[4])), 9)}  ${f(mean(ok.map(r => r.total)), 7)}  `
-      + Object.keys(KEEP).map(k => mean(ok.map(r => r.kept[k])).toFixed(2).padStart(6)).join(" ");
+      + Object.keys(KEEP).map(k => mean(ok.map(r => r.kept[k])).toFixed(2).padStart(6)).join(" ")
+      + `  active ${mean(ok.map(r => r.active)).toFixed(0)}`;
     const pairs = ok.filter(r => base[r.seed]);
     if (arm !== arms[0] && pairs.length) {
       const dt = pairs.map(r => r.total - base[r.seed].total), dw = pairs.map(r => r.episodes[4] - base[r.seed].episodes[4]);

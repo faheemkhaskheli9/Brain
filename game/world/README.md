@@ -14,7 +14,8 @@ python -m http.server 8000        # from the repo root
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
-node game/world/sweep.mjs --jobs 2     # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
+node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor --jobs 2   # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
+node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -142,6 +143,23 @@ set `GAINS.replay = 0.1` and `GAINS.sleepEvery = 20`.
 That a brain replays during sleep is established (Wilson and McNaughton 1994). That this ring
 buffer works the way the hippocampus selects what to replay is not claimed. Which steps to replay
 is open, issue #84.
+
+## Sparsity: k-winners-take-all (#82)
+
+`GAINS.kwta = k` keeps only the k strongest hidden units each step (0, the default, keeps
+all). Seeds 1-10, 2026-10-12, 30% rehearsal, no sleep:
+
+| Arm | All stages learned | Kept every skill above the test's bars | Hidden units on per step | Episodes to graduate (mean) | vs default (paired) |
+|---|---|---|---|---|---|
+| Default (no k-WTA) | 10/10 | 9/10 | 79 | 18,202 | - |
+| k = 20 | 10/10 | 10/10 | 20 | 13,642 | -4,560 (p = 0.066) |
+| k = 35 | 10/10 | 9/10 | 35 | 16,809 | -1,392 (p = 0.57) |
+| k = 50 | 10/10 | 9/10 | 49 | 17,189 | -1,013 (p = 0.64) |
+
+None of the k values slowed learning. k = 20 was faster on 7 of 10 seeds, but not
+significantly. The code still updates every trace and weight densely each step, so fewer
+active units does not yet mean less work. That would need event-driven updates. The
+working is in `learning/efficient-brain-like-learning.md`. k-WTA stays off.
 
 ## Perform mode: using a trained brain
 
