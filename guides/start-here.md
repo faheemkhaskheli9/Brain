@@ -6,7 +6,7 @@ use_cases:
   - I want to learn how the human brain works from the beginning
   - I want to build a brain-like AI and do not know which file to read
   - find the right file for a brain or neuro-AI question
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://neuronaldynamics.epfl.ch/

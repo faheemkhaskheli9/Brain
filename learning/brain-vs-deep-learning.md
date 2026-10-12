@@ -6,7 +6,7 @@ use_cases:
   - how is learning in the brain different from deep learning
   - can the brain do backpropagation
   - what should AI borrow from the brain next
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/ncomms13276

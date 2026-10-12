@@ -7,7 +7,7 @@ use_cases:
   - how does the brain select what to attend to
   - is transformer attention like attention in the brain
   - add a gated working-memory buffer to an agent
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1017/S0140525X01003922
@@ -86,7 +86,8 @@ reproduces both "contrast gain" and "response gain" effects of attention.
 Crick (1984) proposed that the thalamic reticular nucleus, a sheet of inhibitory
 neurons wrapped around the thalamus, acts as an attentional "searchlight". In mice,
 prefrontal cortex controls which sensory stream reaches cortex through this nucleus
-(Wimmer et al. 2015), and the pulvinar coordinates synchrony between visual areas.
+(Wimmer et al. 2015), and the pulvinar coordinates synchrony between visual areas
+(Saalmann et al. 2012).
 Halassa & Kastner (2017) review the thalamus as a controller of cortical
 communication rather than a passive relay.
 
@@ -188,6 +189,7 @@ assert gated == cue
 - Reynolds & Heeger (2009) "The normalization model of attention", *Neuron* 61:168. doi:10.1016/j.neuron.2009.01.002
 - Crick (1984) "Function of the thalamic reticular complex: the searchlight hypothesis", *PNAS* 81:4586. doi:10.1073/pnas.81.14.4586
 - Wimmer et al. (2015) "Thalamic control of sensory selection in divided attention", *Nature* 526:705. doi:10.1038/nature15398
+- Saalmann, Pinsk, Wang, Li & Kastner (2012) "The pulvinar regulates information transmission between cortical areas based on attention demands", *Science* 337:753. doi:10.1126/science.1223082
 - Halassa & Kastner (2017) "Thalamic functions in distributed cognitive control", *Nat Neurosci* 20:1669. doi:10.1038/s41593-017-0020-1
 - Vaswani et al. (2017) "Attention is all you need", arXiv:1706.03762.
 - Ramsauer et al. (2020) "Hopfield Networks is All You Need", arXiv:2008.02217.

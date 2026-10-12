@@ -6,7 +6,7 @@ use_cases:
   - what do acetylcholine, noradrenaline and serotonin do in learning
   - how could neuromodulators map onto reinforcement learning hyperparameters
   - add global modulatory signals to a brain-inspired learning system
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1016/S0893-6080(02)00044-8

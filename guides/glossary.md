@@ -4,7 +4,7 @@ category: guides
 tags: [glossary, definitions, terms]
 use_cases:
   - what does this neuroscience or neuro-AI term mean
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://neuronaldynamics.epfl.ch/
@@ -43,7 +43,7 @@ Short definitions of the terms used across this KB, each pointing to the file th
 | Neuromorphic | Hardware that mimics neural organisation: spikes, local memory | [[neuromorphic-hardware]] |
 | Pattern separation / completion | Making similar inputs distinct / recalling a whole from a part | [[memory-systems]] |
 | Predictive coding | Higher areas predict lower ones; only errors propagate up | [[predictive-processing]] |
-| Replay | Reactivating past experience, mostly during sleep | [[memory-systems]] |
+| Replay | Reactivating past experience, during sleep and quiet waking rest | [[memory-systems]] |
 | Sparse coding | Representing input with few active neurons | [[neural-coding-and-computation]] |
 | STDP | Spike-timing-dependent plasticity: pre-before-post strengthens, post-before-pre weakens | [[spiking-neural-networks]] |
 | Surrogate gradient | Smooth stand-in derivative that lets backprop train spiking nets | [[spiking-neural-networks]] |

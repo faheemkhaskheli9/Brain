@@ -7,7 +7,7 @@ use_cases:
   - what are simple and complex cells in V1
   - why are CNNs called models of the visual cortex and where do they differ from it
   - how do hearing and touch compare to vision
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1113/jphysiol.1962.sp006837
@@ -51,8 +51,8 @@ imperceptible noise and rely on texture where people rely on shape.
 
 ### The hierarchy and two streams (established)
 - Felleman and Van Essen (1991) mapped over 30 visual areas in the macaque,
-  arranged in a hierarchy with feedforward and feedback connections between most
-  pairs. Up the ventral stream (V1 → V2 → V4 → IT), receptive fields grow and the
+  arranged in a hierarchy whose connections between areas are mostly reciprocal
+  (feedforward and feedback). Up the ventral stream (V1 → V2 → V4 → IT), receptive fields grow and the
   preferred features become more complex and more invariant to position and size:
   edges, then contours and textures, then shapes, then objects and faces in
   inferior temporal (IT) cortex.

@@ -7,7 +7,7 @@ use_cases:
   - what are place cells and grid cells
   - build an agent that navigates with a cognitive map or path integration
   - represent knowledge as a map, not just space
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1016/0006-8993(71)90358-1

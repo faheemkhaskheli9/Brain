@@ -8,7 +8,7 @@ use_cases:
   - build an actor with separate Go and NoGo learning
   - map model-based vs model-free reinforcement learning onto brain systems
   - learn a forward model for motor control like the cerebellum
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1016/0166-2236(89)90074-X
