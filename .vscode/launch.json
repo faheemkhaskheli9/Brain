@@ -70,6 +70,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "World: sweep.mjs (time-limit bootstrapping, seeds 1-10)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/sweep.mjs",
+      "args": ["--arms", "rehearse30,timeoutSense,timeoutBootstrap", "--jobs", "4"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "KB: build_index",
       "type": "debugpy",
       "request": "launch",

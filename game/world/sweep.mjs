@@ -19,6 +19,9 @@ export const ARMS = {
   kwta20: { replay: 0.3, sleepEvery: 0, kwta: 20 },
   kwta35: { replay: 0.3, sleepEvery: 0, kwta: 35 },
   kwta50: { replay: 0.3, sleepEvery: 0, kwta: 50 },
+  // Issue #54: at grasp/listen/read timeouts, sense and discard (RNG control) vs bootstrap from there.
+  timeoutSense: { replay: 0.3, sleepEvery: 0, timeoutBootstrap: 1 },
+  timeoutBootstrap: { replay: 0.3, sleepEvery: 0, timeoutBootstrap: 2 },
 };
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
