@@ -40,6 +40,7 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 | 7 | Does adding neuron-like noise make a CNN less adversarially fragile, at equal accuracy? | [[sensory-systems-and-vision]] | - | candidate |
 | 8 | Which set points and drives does an agent need for useful emotion-like behaviour? | [[emotion-amygdala-and-interoception]] | - | candidate |
 | 9 | How can an agent infer its task with no task index? | [[saving-and-reusing-a-trained-brain]] | #57, #60, #65 | in Brain World backlog |
+| 22 | Can local learning rules learn reusable abstract structure, or what does the brain add? 170 hypotheses (H001-H170), each with a test, in [research/learning-algorithm-hypotheses.md](../research/learning-algorithm-hypotheses.md) | [[build-a-brain-like-learner]] | - | candidate |
 
 ### Tier 2: open-data analysis (weeks)
 | # | Question | Raised in | Data | Issue | Status |
