@@ -16,6 +16,7 @@ node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
 node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor --jobs 2   # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
+node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -161,6 +162,34 @@ significantly. The code still updates every trace and weight densely each step, 
 active units does not yet mean less work. That would need event-driven updates. The
 working is in `learning/efficient-brain-like-learning.md`. k-WTA stays off.
 
+## Timeouts: end the task or bootstrap? (#54)
+
+Grasp, listen and read stop after `GAINS.maxSteps` = 150 steps. The critic treats that cut-off
+as the end of the task (`learn(r, null)`): nothing comes after. Pardo et al. (2018) show that
+when the time limit is not part of the task, the agent should instead bootstrap from the value of
+the state it was cut off in, which is why Gymnasium splits `terminated` from `truncated`. Walk's
+60-step limit *is* part of its task (it is scored on distance over time), and write never times
+out, so both keep the old rule.
+
+`GAINS.timeoutBootstrap`: 0 (default) ends the task; 1 also senses the cut-off state and throws
+it away, which shifts the random stream exactly as bootstrapping does (the control); 2 bootstraps
+from it and then clears the traces. Seeds 1-10, 2026-10-12, 30% rehearsal, no sleep:
+
+| Arm | All stages learned | Kept every skill above the test's bars | Episodes to graduate (mean) | Kept grasp / listen / read / write (mean) |
+|---|---|---|---|---|
+| Default (end the task) | 10/10 | 9/10 | 18,202 | 0.82 / 0.69 / 0.55 / 0.66 |
+| RNG control (sense, discard) | 9/10 | 9/10 | 17,802 | 0.82 / 0.68 / 0.61 / 0.66 |
+| Bootstrap | 10/10 | 9/10 | 17,130 | 0.81 / 0.70 / 0.52 / 0.66 |
+
+Bootstrap against the control, paired over the 9 seeds both passed: 517 fewer episodes
+(p = 0.77), write 980 fewer (p = 0.56). The control's failure is seed 4, which never learned to
+read in 20,000 episodes: the random stream alone moves a seed across the line, as it did in the
+first, uncontrolled try (7 of 10 seeds, walk bootstrapped too). The rule set before the run was
+to switch only if bootstrap passes at least as many seeds as the control **and** lowers no
+skill's kept score. It passes more seeds but keeps read lower (0.52 vs 0.61) and grasp slightly
+lower, so the default stays 0. With ten seeds, no difference here is distinguishable from seed
+noise; the theory says bootstrapping is right, and this agent is too noisy to show it.
+
 ## Perform mode: using a trained brain
 
 `world.perform(key)` locks every episode to one skill and turns learning off: the brain acts and
@@ -223,5 +252,7 @@ is enough for a real brain's version of these skills is a hypothesis.
   *Science* 265:676. doi:10.1126/science.8036517
 - Masse, Grant and Freedman (2018) "Alleviating catastrophic forgetting using context-dependent
   gating and synaptic stabilization", *PNAS* 115:E10467. doi:10.1073/pnas.1803839115
+- Pardo, Tavakoli, Levdik and Kormushev (2018) "Time limits in reinforcement learning", ICML.
+  arXiv:1712.00378
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.

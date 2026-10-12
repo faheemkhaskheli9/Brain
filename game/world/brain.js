@@ -63,6 +63,10 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   memCap: 2048, sleepEvery: 0, sleepSize: 200, sleepActor: false,
   // k-winners-take-all on the hidden units (issue #82): keep only the kwta strongest, 0 = off.
   kwta: 0,
+  // Timeouts of grasp, listen and read (issue #54, Pardo et al. 2018): 0 = treat as the task's end,
+  // 1 = the same but sense the cut-off state first (RNG control), 2 = bootstrap from that state.
+  // 2 passed 10/10 seeds vs the control's 9 but kept read lower, so it stays off (README "Timeouts").
+  timeoutBootstrap: 0,
   // Perform mode only: skills that take the most likely action instead of sampling. Walk and write
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
@@ -168,7 +172,7 @@ export class Brain {
     return choice;
   }
 
-  learn(r, hNext) {   // hNext null = episode over
+  learn(r, hNext, end = !hNext) {   // hNext null = episode over; end with hNext = cut off by a time limit
     const delta = r + (hNext ? GAINS.gamma * this.value(hNext) : 0) - this.value(this.h);
     this.dopamine = delta;   // still computed in perform mode, so the panel shows surprise
     if (!this.learning) return;
@@ -180,7 +184,7 @@ export class Brain {
     const av = GAINS.lrV / norm, ap = GAINS.lrP / norm;
     for (let i = 0; i < this.nH; i++) this.v[i] += av * delta * this.ev[i];
     for (let i = 0; i < this.eP.length; i++) this.P[i] += ap * delta * this.eP[i];
-    if (!hNext) { this.ev.fill(0); this.eP.fill(0); }
+    if (end) { this.ev.fill(0); this.eP.fill(0); }
   }
 
   // Sleep: replay n stored transitions offline. TD(0) on the critic; with GAINS.sleepActor also a
@@ -443,7 +447,11 @@ export class World {
     }
     this.ret += r;
     if (this.task < 0) this.hippo.store(this.x, this.playing, a, set, r, mu, terminal ? 1 : done ? 2 : 0);   // perform mode stores nothing
-    if (done) {
+    if (done && !terminal && m !== "walk" && GAINS.timeoutBootstrap) {
+      const x = this.sense();
+      b.learn(r, GAINS.timeoutBootstrap === 2 ? b.encode(x, this.playing) : null, true);
+      this.finish(success);
+    } else if (done) {
       b.learn(r, null);
       this.finish(success);
     } else {
