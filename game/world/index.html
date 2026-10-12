@@ -20,7 +20,7 @@
             background: rgba(247, 242, 246, .92); border-left: 4px solid var(--violet); font-size: .95rem; }
   #banner:empty { display: none; }
   .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
-  button { font: inherit; color: var(--ink); background: var(--lilac); border: 0; padding: 8px 14px; cursor: pointer; }
+  button, select { font: inherit; color: var(--ink); background: var(--lilac); border: 0; padding: 8px 14px; cursor: pointer; }
   button[aria-pressed="true"] { background: var(--violet); color: var(--glass); }
   button:hover { outline: 1px solid var(--violet); }
   button:focus-visible, a:focus-visible, #world:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
@@ -87,6 +87,12 @@
         <button id="save">Save brain</button>
         <button id="load">Load brain</button>
         <input id="loadFile" type="file" accept=".json,application/json" hidden>
+        <select id="skill" aria-label="Train the brain, or use it on one skill with learning off">
+          <option value="">Train (learning on)</option>
+          <option value="walk">Use: walk</option><option value="grasp">Use: grasp</option>
+          <option value="listen">Use: listen</option><option value="read">Use: read</option>
+          <option value="write">Use: write</option>
+        </select>
         <button id="about">What is this?</button>
       </div>
     </div>
@@ -153,7 +159,7 @@ let world, speed = "watch", paused = false, sound = true, lastStep = 0, freezeUn
 let daTrace = [], curve = [], bucket = [], stageStarts = [0], stageDone = [];
 function newBrain(seed) {
   world = new World(seed);
-  daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = [];
+  daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = []; $("skill").value = "";
   $("banner").textContent = "A new brain. It starts by flailing its legs at random.";
   buildStages();
 }
@@ -283,7 +289,7 @@ function updatePanel() {
       : i === world.stage ? `Episode ${world.episode - stageStarts[i] + 1} · success ${pct}% (pass ${STAGES[i].pass * 100}%)` : "";
   });
   const p = world.playing;
-  $("task").textContent = STAGES[p].name + (world.graduated ? " (practice)" : p !== world.stage ? " (review, so it doesn't forget)" : "");
+  $("task").textContent = STAGES[p].name + (world.task >= 0 ? " (using it, learning off)" : world.graduated ? " (practice)" : p !== world.stage ? " (review, so it doesn't forget)" : "");
   const r = world.retina;
   retinaEls.forEach((el, i) => {
     const c = [0, 1, 2].map(k => Math.min(255, Math.round(r[i * 3 + k] * 330)));
@@ -336,8 +342,10 @@ function doStep() {
   const stage = world.stage, r = world.step();
   daTrace.push(world.brain.dopamine); if (daTrace.length > 240) daTrace.shift();
   if (r.done) {
-    bucket.push(r.success ? 1 : 0);
-    if (bucket.length === 25) { curve.push(bucket.reduce((a, b) => a + b) / 25); bucket = []; }
+    if (world.brain.learning) {   // perform episodes leave the learning curve alone
+      bucket.push(r.success ? 1 : 0);
+      if (bucket.length === 25) { curve.push(bucket.reduce((a, b) => a + b) / 25); bucket = []; }
+    } else $("banner").textContent = `Using the trained brain: ${STAGES[world.task].name.toLowerCase()}, learning off. Succeeded ${world.perf.ok} of ${world.perf.n}.`;
     if (speed === "watch") {   // hold the moment of the grasp or the finished letter before the next episode
       frozen = { ...snap, success: r.success, action: r.action, pad: snap.mode === "write" ? [...snap.pad, r.action - BODY.length] : snap.pad };
       freezeUntil = performance.now() + (snap.mode === "walk" ? 300 : 900);
@@ -424,13 +432,20 @@ $("save").onclick = () => {
   a.download = `brain-world-episode-${world.episode}.json`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 };
+$("skill").onchange = e => {
+  const key = e.target.value || null;
+  world.perform(key); frozen = null; freezeUntil = 0;
+  $("banner").textContent = key
+    ? `Using the trained brain: ${key}, learning off. Dopamine still shows its surprise, but no synapse changes.`
+    : `Training again on "${STAGES[world.stage].name.toLowerCase()}", learning on.`;
+};
 $("load").onclick = () => $("loadFile").click();
 $("loadFile").onchange = async e => {
   const file = e.target.files[0]; e.target.value = "";
   if (!file) return;
   try {
     const o = JSON.parse(await file.text()), next = World.fromJSON(o), p = o.page || {};
-    world = next; frozen = null; freezeUntil = 0; buildStages();
+    world = next; frozen = null; freezeUntil = 0; buildStages(); $("skill").value = "";
     const list = v => Array.isArray(v) ? v.filter(Number.isFinite) : [];
     daTrace = list(p.daTrace); curve = list(p.curve); bucket = list(p.bucket); marks = list(p.marks);
     stageStarts = list(p.stageStarts); stageDone = Array.isArray(p.stageDone) ? p.stageDone.map(x => x == null ? undefined : Number(x)) : [];
