@@ -217,6 +217,8 @@ of memory; it was re-run alone with `--jobs 1`.
 still computes dopamine, but no weight, success window, log entry or stage changes. `perform(null)`
 goes back to training. A save made while performing resumes training on its own stage.
 `perform.mjs` scores a save this way (`--seed N` trains that seed to graduation in memory instead).
+On the page, the skill picker next to Load does the same: pick a skill to watch the loaded brain use
+it (the banner counts its successes and the learning curve stays still), or "Train" to resume.
 With learning on, every action and random draw is the same as before, so training episode counts
 did not change.
 
