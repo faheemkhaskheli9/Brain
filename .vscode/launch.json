@@ -102,6 +102,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: replay_selection (replay rule x budget x downscaling, #84)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/replay_selection.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",
