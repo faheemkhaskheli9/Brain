@@ -94,6 +94,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "World: sweep.mjs (synaptic intelligence + sixth skill copy, seeds 1-10)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/sweep.mjs",
+      "args": ["--arms", "copy,copy+si,copy15,copy15+si", "--jobs", "4"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "KB: build_index",
       "type": "debugpy",
       "request": "launch",

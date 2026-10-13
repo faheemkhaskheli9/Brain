@@ -8,7 +8,7 @@ import { execSync, fork } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { fileURLToPath } from "node:url";
-import { World, STAGES, GAINS } from "./brain.js";
+import { World, STAGES, GAINS, COPY } from "./brain.js";
 
 export const ARMS = {
   rehearse30: { replay: 0.3, sleepEvery: 0 },                           // the current design; the baseline
@@ -27,12 +27,21 @@ export const ARMS = {
   orient: { replay: 0.3, sleepEvery: 0, orient: 1 },
   sleepActor30: { replay: 0.3, sleepEvery: 20, sleepActor: true },
   "orient+sleepActor30": { replay: 0.3, sleepEvery: 20, sleepActor: true, orient: 1 },
+  // Issue #56: synaptic intelligence (si) on top of rehearsal, then a sixth skill (copy) learned after
+  // a save and load. copy: true runs phase B (see sixth). The number after "si" is GAINS.si.
+  copy: { replay: 0.3, sleepEvery: 0, copy: true },
+  // Pilot, seeds 1-2: si 1e-3 failed listen on one seed, 1e-2 to 10 on both (a * Omega is about 1,
+  // so si is the pull per step). The run uses 1e-4.
+  "copy+si": { replay: 0.3, sleepEvery: 0, si: 1e-4, copy: true },
+  copy15: { replay: 0.15, sleepEvery: 0, copy: true },
+  "copy15+si": { replay: 0.15, sleepEvery: 0, si: 1e-4, copy: true },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
 function trial(arm, seed) {
-  Object.assign(GAINS, ARMS[arm]);
+  const { copy, ...gains } = ARMS[arm];
+  Object.assign(GAINS, gains);
   const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
   // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
   b.commit = z => { const m = b.match(z); if (b.learning && m.best < 0 && m.free < 0) store[m.rare >= 0 ? "reclaims" : "merges"]++; commit(z); };
@@ -60,9 +69,48 @@ function trial(arm, seed) {
   // Each graduated brain goes through a real save and load (#55); its perform-mode scores are the
   // ones the save's model card records.
   try { w.meta.commit = execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
-  const card = World.fromJSON(JSON.parse(w.save())).meta;
+  const json = w.save(), card = World.fromJSON(JSON.parse(json)).meta;
   return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, perform: card.saves[0].scores, commit: card.commit,
-    active, slots, uses: Array.from(w.brain.uses), ...store, seconds: (Date.now() - t0) / 1000 };
+    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), seconds: (Date.now() - t0) / 1000 };
+}
+
+// Issue #56, phase B: load the graduated save into six-stage code (growStages resumes it at copy),
+// score the old skills in perform mode, learn copy for up to LIMIT episodes, and score them again.
+function sixth(json) {
+  STAGES.push(COPY);
+  const w = World.fromJSON(JSON.parse(json)), before = w.scores(300), usesBefore = Array.from(w.brain.uses), start = w.episode;
+  const ends = Array(GAINS.slots).fill(0);   // the slot each copy episode ended in
+  while (!w.graduated && w.episode - start < LIMIT) {
+    const k = STAGES[w.playing].key, slot = w.slot;
+    if (w.step().done && k === "copy") ends[slot]++;
+  }
+  const c = ends.indexOf(Math.max(...ends));
+  return { learned: w.graduated, episodes: w.episode - start, before, after: w.scores(300), slot: c,
+    share: +(ends[c] / ends.reduce((a, b) => a + b)).toFixed(3), founded: usesBefore[c] === 0, slotsUsed: w.brain.uses.filter(u => u > 0).length };
+}
+
+// Phase B per arm: copy learned, its episodes, own slot, and how much the old skills fell (perform
+// mode, before minus after copy). Paired against the first copy arm on the mean drop.
+function copySummary(results, arms) {
+  const mean = xs => xs.length ? xs.reduce((a, b) => a + b) / xs.length : NaN, OLD = Object.keys(KEEP);
+  const drop = r => mean(OLD.map(k => r.copy.before[k] - r.copy.after[k]));
+  const cs = arms.filter(a => results.some(r => r.arm === a && r.copy));
+  if (!cs.length) return;
+  const base = Object.fromEntries(results.filter(r => r.arm === cs[0] && r.copy).map(r => [r.seed, r]));
+  console.log(`\nphase B (copy after load): ${OLD.join("/")} before -> after, perform mode, 300 episodes each`);
+  for (const arm of cs) {
+    const rs = results.filter(r => r.arm === arm && r.copy), ok = rs.filter(r => r.copy.learned);
+    let line = `${arm.padEnd(24)}copy ${ok.length}/${rs.length} in ${mean(ok.map(r => r.copy.episodes)).toFixed(0)} eps, own slot ${rs.filter(r => r.copy.founded).length}/${rs.length}`
+      + ` (share ${mean(rs.map(r => r.copy.share)).toFixed(2)}), slots used ${mean(rs.map(r => r.copy.slotsUsed)).toFixed(1)}  `
+      + OLD.map(k => `${mean(rs.map(r => r.copy.before[k])).toFixed(2)}->${mean(rs.map(r => r.copy.after[k])).toFixed(2)}`).join(" ")
+      + `  drop ${mean(rs.map(drop)).toFixed(3)}`;
+    const pairs = rs.filter(r => base[r.seed]);
+    if (arm !== cs[0] && pairs.length) {
+      const d = pairs.map(r => drop(r) - drop(base[r.seed]));
+      line += `  vs ${cs[0]} ${mean(d) > 0 ? "+" : ""}${mean(d).toFixed(3)} (p ${signFlip(d).toFixed(3)}, n ${pairs.length})`;
+    }
+    console.log(line);
+  }
 }
 
 // Exact paired sign-flip test: two-sided p for the mean per-seed difference (2^n flips, n <= ~16).
@@ -105,6 +153,7 @@ function summarise(results, arms) {
       + (r.reclaims === undefined ? "" : ` | reclaims ${r.reclaims}, merges ${r.merges}`));
   }
   if (FACTORIAL.every(a => arms.includes(a))) factorial(results);
+  copySummary(results, arms);
 }
 
 // Issue #83: main effects and interaction on episodes per stage, over seeds that passed in all four
