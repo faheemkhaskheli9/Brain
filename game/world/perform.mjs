@@ -1,5 +1,6 @@
-// Score a saved brain with learning off: the success rate per skill. Never writes the save.
-// Run: node game/world/perform.mjs <save.json | --seed N> [skill ...] [--episodes N] [--greedy walk,write]
+// Score a saved brain with learning off: the success rate per skill, and the context slot it used
+// most. Skill "any" is free play: a random scene per episode, episodes x 5 in all. Never writes the save.
+// Run: node game/world/perform.mjs <save.json | --seed N> [skill ... | any] [--episodes N] [--greedy walk,write]
 // --seed N trains seed N to graduation in memory instead of loading a file (about 20 s).
 // --greedy lists the skills that take the argmax action (default GAINS.performGreedy; "" = none).
 import { readFileSync } from "node:fs";
@@ -21,9 +22,15 @@ if (seed !== null) {
   if (!args.length) { console.error("usage: node perform.mjs <save.json | --seed N> [skill ...] [--episodes N] [--greedy walk,write]"); process.exit(2); }
   save = JSON.parse(readFileSync(args.shift(), "utf8"));
 }
+GAINS.performGreedy = greedy;   // "any" picks greedy per scene from this list
 for (const key of args.length ? args : STAGES.map(s => s.key)) {
   const w = World.fromJSON(save);
-  w.perform(key, greedy.includes(key));
-  while (w.perf.n < episodes) w.step();
-  console.log(`${key.padEnd(6)} ${(w.perf.ok / w.perf.n).toFixed(2)}${greedy.includes(key) ? "  (greedy)" : ""}`);
+  w.perform(key);
+  while (w.perf.n < (key === "any" ? episodes * STAGES.length : episodes)) w.step();
+  if (key === "any") console.log(`any: a random scene per episode, ${w.perf.n} episodes, ${(w.perf.ok / w.perf.n).toFixed(2)} overall`);
+  for (const k of STAGES.map(st => st.key).filter(k => w.perf.scene[k])) {
+    const s = w.perf.scene[k];
+    const top = s.slots.indexOf(Math.max(...s.slots)), share = s.slots[top] / s.slots.reduce((a, b) => a + b);
+    console.log(`${(key === "any" ? "  " : "") + k.padEnd(6)} ${(s.ok / s.n).toFixed(2)} (slot ${top} on ${(100 * share).toFixed(0)}% of steps)${greedy.includes(k) ? "  (greedy)" : ""}`);
+  }
 }

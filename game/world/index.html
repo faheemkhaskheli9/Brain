@@ -91,7 +91,7 @@
           <option value="">Train (learning on)</option>
           <option value="walk">Use: walk</option><option value="grasp">Use: grasp</option>
           <option value="listen">Use: listen</option><option value="read">Use: read</option>
-          <option value="write">Use: write</option>
+          <option value="write">Use: write</option><option value="any">Use: any scene (it finds the skill)</option>
         </select>
         <button id="about">What is this?</button>
       </div>
@@ -346,7 +346,7 @@ function doStep() {
     if (world.brain.learning) {   // perform episodes leave the learning curve alone
       bucket.push(r.success ? 1 : 0);
       if (bucket.length === 25) { curve.push(bucket.reduce((a, b) => a + b) / 25); bucket = []; }
-    } else $("banner").textContent = `Using the trained brain: ${STAGES[world.task].name.toLowerCase()}, learning off. Succeeded ${world.perf.ok} of ${world.perf.n}.`;
+    } else $("banner").textContent = `Using the trained brain: ${STAGES[world.task] ? STAGES[world.task].name.toLowerCase() : "any scene"}, learning off. Succeeded ${world.perf.ok} of ${world.perf.n}.`;
     if (speed === "watch") {   // hold the moment of the grasp or the finished letter before the next episode
       frozen = { ...snap, success: r.success, action: r.action, pad: snap.mode === "write" ? [...snap.pad, r.action - BODY.length] : snap.pad };
       freezeUntil = performance.now() + (snap.mode === "walk" ? 300 : 900);
@@ -437,7 +437,7 @@ $("skill").onchange = e => {
   const key = e.target.value || null;
   world.perform(key); frozen = null; freezeUntil = 0;
   $("banner").textContent = key
-    ? `Using the trained brain: ${key}, learning off. Dopamine still shows its surprise, but no synapse changes.`
+    ? `Using the trained brain: ${key === "any" ? "a random scene each try, and it is never told which" : key}, learning off. Dopamine still shows its surprise, but no synapse changes.`
     : `Training again on "${STAGES[world.stage].name.toLowerCase()}", learning on.`;
 };
 $("load").onclick = () => $("loadFile").click();

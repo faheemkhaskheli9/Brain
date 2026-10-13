@@ -244,7 +244,18 @@ searches: a fixed policy turns the same way from the same view forever, and in a
 observed task the best memoryless policy can be stochastic (Singh, Jaakkola and Jordan 1994). A
 temperature between 0 and 1 for the search skills is the next knob to try (untested).
 `test_brain.mjs` performs each kept skill for 200 episodes on the trained brain, asserts it stays
-at the kept bar, and asserts the weights and stage are unchanged.
+at the kept bar, and asserts the weights, slot prototypes and stage are unchanged.
+
+**Free play (#62).** `perform("any")` (page: "Use: any scene") draws a random scene each episode
+and never says which. Since the brain infers its context slot (#60), it has to find the skill
+itself; greedy follows the scene's entry in `performGreedy`. `perform.mjs --seed N any` prints the
+success rate per scene and the share of steps on its most used slot. Seed 1, 1,000 episodes: walk
+1.00 (slot 0 on 100% of steps), grasp 0.79 (86%), listen 0.61 (93%), read 0.55 (86%), write 1.00
+(100%). `test_brain.mjs` runs 1,000 free-play episodes per seed and holds each kept scene to the
+kept bar. On seeds 1-3, free play scored grasp 0.85 / 0.85 / 0.80, listen 0.70 / 0.77 / 0.67,
+read 0.59 / 0.83 / 0.53 and write 1.00 on all three, against the one-skill runs' grasp
+0.84 / 0.86 / 0.86, listen 0.69 / 0.78 / 0.56, read 0.61 / 0.85 / 0.51. A task-blind greedy
+rule (greedy wherever `max pi > 0.5`) instead of the per-skill list is an untested hypothesis.
 
 ## Inferred context: one model, no task index (#60)
 
@@ -308,7 +319,6 @@ is enough for a real brain's version of these skills is a hypothesis.
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
 - Speech or spoken words instead of pure tones. Multi-letter words.
 - Physics-based limbs (joint torques) instead of discrete leg states.
-- Free play: drop the brain in any scene and let it find its skill (#62).
 - Loading version 3 saves (#63).
 
 ## References
