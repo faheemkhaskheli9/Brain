@@ -390,6 +390,7 @@ export class World {
       this.brain.greedy = GAINS.performGreedy.includes(this.mode);
     }
     const R = this.rand, m = this.mode;
+    this.board = m === "write";   // the world puts the creature at the board: a fact about the scene
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     const H = this.hippo;
     this.memAt = { head: H.head, n: H.n, epId: H.epId++ };   // and its episodic store from here
@@ -423,7 +424,7 @@ export class World {
   sense() {
     const x = new Float32Array(N_IN), R = this.rand;
     this.retina = new Float32Array(RAYS * 3); this.fovea = new Float32Array(25);
-    if (this.mode !== "write") {
+    if (!this.board) {
       for (let i = 0; i < RAYS; i++) {
         const a = this.heading + FOV * (i / (RAYS - 1) - 0.5), dx = Math.cos(a), dy = Math.sin(a);
         let best = this.wallDist(dx, dy), hit = null;
@@ -458,7 +459,7 @@ export class World {
     for (let k = 0; k < 3; k++) x[RAYS * 3 + 2 + k] += 0.05 * (R() - 0.5);
     x.set(this.fovea, RAYS * 3 + 5);
     for (const s of this.pad) x[RAYS * 3 + 30 + s] = 1;                  // what the pen has drawn
-    x[BOARD_IN] = this.mode === "write" ? 1 : 0;                          // at the board or not
+    x[BOARD_IN] = this.board ? 1 : 0;                                     // at the board or not
     x.set(this.memory, MEM0);
     const s = scene(x);
     for (let k = 0; k < SCENE; k++) if (s[k] > this.z[k]) this.z[k] = s[k];
@@ -475,10 +476,12 @@ export class World {
     const b = this.brain, m = this.mode;
     // Once walking is learned the gait is automatic (a practised skill runs as a habit, as spinal
     // pattern generators and the cerebellum take over): a pushed leg swings forward by reflex,
-    // and later stages only choose which leg to push, or to grasp.
-    if (m !== "walk") this.legs = [1, 1];
+    // and later stages only choose which leg to push, or to grasp. The habit comes from the
+    // brain's development and the action set from the body's situation, not from the task (#61).
+    const habit = this.stage > 0 || this.graduated;
+    if (habit) this.legs = [1, 1];
     if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
-    const set = m === "write" ? 2 : m === "walk" ? 0 : 1;
+    const set = this.board ? 2 : habit ? 1 : 0;
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
