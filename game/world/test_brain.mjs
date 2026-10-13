@@ -2,6 +2,7 @@
 // episodes, and with replay it still does all of them afterwards (no catastrophic forgetting).
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { World, Brain, STAGES, GAINS, ACT_SETS, rng, orient } from "./brain.js";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
@@ -101,6 +102,37 @@ assert.equal(t.toJSON().playing, t.stage);
 assert.equal(JSON.stringify({ e: t.episode, w: t.windows, l: t.log.length, s: t.stage, P: Array.from(t.brain.P) }), snap);
 assert.throws(() => t.perform("fly"), /valid: walk, grasp/);
 assert.throws(() => World.fromJSON({ version: 1 }), /not a Brain World save/);
+
+// Migration (#63). fixtures/v3-seed1.json: seed 1 trained to graduation by the told-gate code
+// before #60 (one gate row per task), saved without its episodic store.
+const v3 = JSON.parse(readFileSync(new URL("fixtures/v3-seed1.json", import.meta.url), "utf8"));
+const g3 = World.fromJSON(v3);
+assert.equal(g3.brain.gate.length, GAINS.slots * GAINS.hidden);
+g3.perform("read");
+while (g3.perf.n < 100) g3.step();
+const rs = g3.perf.scene.read.slots, rShare = rs[3] / rs.reduce((p, q) => p + q);
+console.log(`  v3 save: read ${(g3.perf.ok / g3.perf.n).toFixed(2)}, ${(100 * rShare).toFixed(0)}% of its steps in slot 3`);
+assert.ok(rShare > 0.5, `v3 save: read uses slot 3 on ${rShare.toFixed(2)} of steps`);
+assert.throws(() => World.fromJSON({ ...v3, brain: { ...v3.brain, gate: v3.brain.gate.slice(1) } }), /not a Brain World save/);
+// More slots: a save at 8 loads at 12 and performs exactly as before (the new rows start free).
+const save8 = JSON.parse(JSON.stringify(World.fromJSON(v3)));
+const kept = slots => {
+  const SLOTS = GAINS.slots; GAINS.slots = slots;
+  const w = World.fromJSON(save8), out = {};
+  assert.equal(w.brain.uses.length, slots);
+  for (const k in KEEP) { w.perform(k); while (w.perf.n < 50) w.step(); out[k] = w.perf.ok; }
+  GAINS.slots = SLOTS;
+  return out;
+};
+assert.deepEqual(kept(12), kept(8), "more slots changed what a saved brain does");
+// More stages: a graduated save resumes at the first new one.
+STAGES.push({ key: "copy", name: "Copy", pass: 0.8, about: "test only" });
+for (const o of [v3, save8]) {
+  const w = World.fromJSON(o);
+  assert.deepEqual([w.windows.length, w.stage, w.graduated], [6, 5, false], `v${o.version} save in six-stage code`);
+}
+STAGES.pop();
+console.log("  Migration: v3 loads, 8 slots load at 12 unchanged, a sixth stage resumes there");
 
 // Episodic store and sleep. A spy records, for every buffer slot, which episode (reset) and which
 // store call wrote it: ground truth that does not rely on the store's own episode ids. Every

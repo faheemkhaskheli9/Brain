@@ -81,6 +81,8 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // store reclaims a slot used fewer than `minUses` times before it merges two contexts.
   slots: 8, vigilance: 0.35, minUses: 20 };
 export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
+// The scene code each of the five v3 stages produces (walk, grasp, listen, read, write), for World.migrate.
+const V3_CODES = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 1, 0], [0, 0, 1, 0, 1]];
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
 export const ACT_SETS = [BODY_ACTS, HABIT_ACTS, PEN_ACTS];
@@ -616,10 +618,40 @@ export class World {
       hippo: this.hippo.toJSON(this.memAt) };
   }
 
+  // Old saves keep loading as the brain grows (#63), in a fixed order: v3 to v4, more slots, more
+  // stages. A step that cannot read its input leaves it unchanged, so fromJSON's checks reject it.
+  // Never across an N_IN change: new senses make a new brain, not a migrated one.
+  static migrate(o) {
+    if (!o || !o.brain || !Array.isArray(o.brain.gate) || !Array.isArray(o.windows)) return o;
+    o = { ...o, brain: { ...o.brain } };
+    const b = o.brain, H = GAINS.hidden, spare = rng(0x5107);
+    // upgradeV3: the told gate had one row per stage, in STAGES order. Each becomes a slot whose
+    // prototype is the scene code that stage produces (measured), with enough uses to keep it.
+    if (o.version === 3 && b.gate.length === V3_CODES.length * H) {
+      Object.assign(b, { proto: V3_CODES.flat(), uses: V3_CODES.map(() => 50) });
+      o.version = 4;
+    }
+    // growSlots: fewer slots than GAINS.slots gets fresh free rows appended; slot ids stay valid.
+    const n = Array.isArray(b.uses) ? b.uses.length : 0;
+    if (o.version === 4 && n < GAINS.slots && b.gate.length === n * H && Array.isArray(b.proto) && b.proto.length === n * SCENE) {
+      const add = GAINS.slots - n;
+      b.gate = b.gate.concat(Array.from({ length: add * H }, () => spare() >= GAINS.gate ? 1 : 0));
+      b.proto = b.proto.concat(Array(add * SCENE).fill(0));
+      b.uses = b.uses.concat(Array(add).fill(0));
+    }
+    // growStages: one empty window per new stage; a graduated brain resumes at the first new one.
+    const s = o.windows.length;
+    if (s < STAGES.length) {
+      o.windows = o.windows.concat(Array.from({ length: STAGES.length - s }, () => []));
+      if (o.graduated) Object.assign(o, { graduated: false, stage: s, playing: s });
+    }
+    return o;
+  }
+
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
+    o = World.migrate(o);   // first: ob below must point at the migrated brain
     const w = new World(1), b = w.brain, ob = o && o.brain;
     const KEYS = ["idx", "wIn", "bias", "gate", "v", "P", "proto", "uses"];
-    // ponytail: version 3 (one gate row per task) is rejected; one migrate path is issue #63.
     const ok = o && o.version === 4 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
