@@ -65,7 +65,7 @@ simulation. To make a loaded learner act exactly as the saved one would have, th
 | RNG state | without it, two copies sample different actions | `rand`, the state at the start of the episode |
 | Progress | where training stands | `stage`, `episode`, success windows |
 | Version | so old files fail loudly or are migrated, never read wrongly | `version: 4`; version 3 is migrated (issue #63) |
-| Metadata | what the brain can do and how it was made | none yet (issue #55) |
+| Metadata | what the brain can do and how it was made | `meta`: seed, created, `GAINS`, commit, and one `{saved, episode, scores}` row per save (issue #55) |
 
 Storing only a seed instead of the fixed wiring makes the file smaller, but a later change to
 the code that draws the wiring would quietly build a different brain under the old weights.
@@ -94,6 +94,18 @@ lessons:
 - **Never migrate across a change to the senses.** A new input changes `N_IN`, so every `idx`,
   `P` and `v` would point at different inputs: that is a new brain, not a migrated one.
 - **Keep the strict checks after migrating**, and keep an old save as a test fixture.
+
+### A model card in the file (engineering design)
+A file of weights does not say what it can do. Brain World writes a small model card in the save
+(after Mitchell et al. 2019, https://arxiv.org/abs/1810.03993), as `meta` (issue #55). The birth
+facts (seed, creation time, the `GAINS` it trained with, and the git commit when `sweep.mjs` made
+it) are written once and survive every load and re-save. Each save then appends one row: the time,
+the episode, and the perform-mode success of every learned skill, measured on a copy so that
+scoring does not change the brain. The page also keeps a full save at the moment each skill passes
+("Download checkpoint after <skill>", held in memory, not `localStorage`: a save with its
+episodic store is about 0.64 MB), so you can go back to
+the brain as it was before a later skill was learned. A save made before `meta` existed loads with
+an unknown seed.
 
 ### Loading safely in Python
 `np.savez` writes plain numeric arrays into one `.npz` file. `np.load(path, allow_pickle=False)`

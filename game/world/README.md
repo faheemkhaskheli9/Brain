@@ -24,6 +24,9 @@ Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulati
 Then **Watch** shows it practising each skill, with the tones played aloud. **Save brain**
 downloads its weights and progress as JSON, and **Load brain** picks up from such a file, so a
 graduated creature does not need training again. A loaded brain restarts the episode it was saved in.
+Each save carries a `meta` model card (#55): seed, creation time and `GAINS` from birth, plus one
+row per save with the perform-mode score of every learned skill. When a skill passes, the
+**Checkpoints** list next to Save offers that moment's brain for download.
 
 A first visit opens a three-line intro (reopen it with **What is this?**). A caption under the room
 says in plain words what the creature is doing and why dopamine rose or dipped, and every panel label
@@ -311,6 +314,13 @@ Honest limits:
   read steps in slot 3. A save at 8 slots performs identically at 12. `sweep.mjs` now prints, per
   seed, the slots in use with their counts, each skill's step share, and its reclaims and merges
   (seeds 1-2: none).
+- Saves carry a `meta` model card (#55), and every graduated seed in `sweep.mjs` now goes
+  through a real save and load: each row holds the save's perform-mode scores and git commit.
+  Re-run 2026-10-13 (`--arms rehearse30 --jobs 6`): the same 9/10 passed, 9/10 kept, 16,515
+  episodes, kept 0.87 / 0.70 / 0.59 / 0.65 as above, so saving changes nothing. Perform mode
+  (100 episodes per skill, mean over the 9 seeds): walk 1.00, grasp 0.90, listen 0.72, read 0.60,
+  write 0.86. Write is 1.00 on five seeds and 0.67-0.72 on four. A save with its store is about
+  0.64 MB, and scoring adds about 0.7 s to each save.
 
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that

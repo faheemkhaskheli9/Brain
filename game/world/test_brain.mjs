@@ -134,6 +134,17 @@ for (const o of [v3, save8]) {
 STAGES.pop();
 console.log("  Migration: v3 loads, 8 slots load at 12 unchanged, a sixth stage resumes there");
 
+// The model card (#55): birth facts survive load and re-save, and each save adds one scored row.
+assert.equal(g3.meta.seed, null, "a save from before meta has an unknown seed");
+const once = JSON.parse(World.fromJSON({ ...save8, meta: new World(7).meta }).save());
+const twice = JSON.parse(World.fromJSON(once).save());
+assert.deepEqual([twice.meta.seed, twice.meta.created, twice.meta.gains], [7, once.meta.created, once.meta.gains]);
+assert.deepEqual([once.meta.saves.length, twice.meta.saves.length], [1, 2]);
+const sc = twice.meta.saves[1].scores;
+assert.deepEqual(Object.keys(sc), STAGES.map(s => s.key));
+assert.ok(Object.values(sc).every(r => r >= 0 && r <= 1));
+console.log(`  meta: seed and birth kept over two saves, scores ${JSON.stringify(sc)}`);
+
 // Episodic store and sleep. A spy records, for every buffer slot, which episode (reset) and which
 // store call wrote it: ground truth that does not rely on the store's own episode ids. Every
 // replayable non-terminal draw must have its true successor next to it, and an action from its set.
