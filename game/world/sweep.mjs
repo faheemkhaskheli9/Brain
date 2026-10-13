@@ -39,14 +39,23 @@ function trial(arm, seed) {
     episodes.push(w.episode - start);
     if (!(w.stage > s || w.graduated)) return { arm, seed, passed: false, failed: STAGES[s].key, episodes };
   }
-  const ok = {}, n = {}, start = w.episode;
+  const ok = {}, n = {}, steps = {}, eps = {}, start = w.episode, hist = () => Array(GAINS.slots).fill(0);
   while (w.episode - start < 4000) {
-    const k = STAGES[w.playing].key, r = w.step();
-    if (r.done) { ok[k] = (ok[k] || 0) + r.success; n[k] = (n[k] || 0) + 1; }
+    const k = STAGES[w.playing].key, slot = w.slot, r = w.step();
+    (steps[k] ??= hist())[slot]++;
+    if (r.done) { ok[k] = (ok[k] || 0) + r.success; n[k] = (n[k] || 0) + 1; (eps[k] ??= hist())[slot]++; }
   }
   const kept = Object.fromEntries(Object.keys(KEEP).map(k => [k, +(ok[k] / n[k]).toFixed(3)]));
   const active = +(w.brain.nActive / w.brain.nEncode).toFixed(1);   // mean hidden units on per step
-  return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, active, seconds: (Date.now() - t0) / 1000 };
+  // Context slots (#60): per skill its most used slot, with the share of episodes (label purity)
+  // and of steps on it; and every slot's use count at the end.
+  const share = (h, c) => +(h[c] / h.reduce((a, b) => a + b, 0)).toFixed(3);
+  const slots = Object.fromEntries(Object.keys(KEEP).map(k => {
+    const c = eps[k].indexOf(Math.max(...eps[k]));
+    return [k, { slot: c, episodes: share(eps[k], c), steps: share(steps[k], c) }];
+  }));
+  return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, active, slots, uses: Array.from(w.brain.uses),
+    seconds: (Date.now() - t0) / 1000 };
 }
 
 // Exact paired sign-flip test: two-sided p for the mean per-seed difference (2^n flips, n <= ~16).
@@ -77,6 +86,10 @@ function summarise(results, arms) {
       line += `   all ${mean(dt) > 0 ? "+" : ""}${mean(dt).toFixed(0)} (p ${signFlip(dt).toFixed(3)}), write ${mean(dw) > 0 ? "+" : ""}${mean(dw).toFixed(0)} (p ${signFlip(dw).toFixed(3)}), n ${pairs.length}`;
     }
     console.log(line);
+    const sl = ok.filter(r => r.slots);
+    if (sl.length) console.log(" ".repeat(24) + "slots: " + Object.keys(KEEP).map(k =>
+      `${k} episodes ${mean(sl.map(r => r.slots[k].episodes)).toFixed(3)} steps ${mean(sl.map(r => r.slots[k].steps)).toFixed(2)}`).join(", ")
+      + `, distinct ${sl.filter(r => new Set(Object.values(r.slots).map(s => s.slot)).size === 4).length}/${sl.length}`);
   }
   if (FACTORIAL.every(a => arms.includes(a))) factorial(results);
 }

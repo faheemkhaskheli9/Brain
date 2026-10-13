@@ -61,10 +61,10 @@ simulation. To make a loaded learner act exactly as the saved one would have, th
 | Fixed random wiring | random projections are part of the brain; a different draw makes the weights meaningless | `idx`, `wIn`, `bias`, `gate` are stored, not regenerated |
 | Normaliser state | running statistics change every output | `hh`, a running mean of hidden activity |
 | Consolidation state | per-synapse importance or anchors, if the learner protects old skills | none yet (issue #56) |
-| Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | none: Brain World is told its task (issue #57) |
+| Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | `proto` (8 slots x 5 scene channels) and `uses` (issue #60) |
 | RNG state | without it, two copies sample different actions | `rand`, the state at the start of the episode |
 | Progress | where training stands | `stage`, `episode`, success windows |
-| Version | so old files fail loudly or are migrated, never read wrongly | `version: 3` |
+| Version | so old files fail loudly or are migrated, never read wrongly | `version: 4` |
 | Metadata | what the brain can do and how it was made | none yet (issue #55) |
 
 Storing only a seed instead of the fixed wiring makes the file smaller, but a later change to
@@ -72,8 +72,8 @@ the code that draws the wiring would quietly build a different brain under the o
 Brain World stores the wiring and checks every array's shape before loading.
 
 ### Migrating old saves (engineering design)
-Brain World has no migration yet. `World.fromJSON` accepts only `version: 3` with every array the
-size a fresh brain has, and refuses anything else ("not a Brain World save, or saved by an older
+Brain World has no migration yet (issue #63). `World.fromJSON` accepts only `version: 4` with every
+array the size a fresh brain has, and refuses anything else ("not a Brain World save, or saved by an older
 version or with a different brain size"). Refusing is safe, but a new format, more context slots
 or a sixth skill would then orphan every saved brain. The lessons for adding migration:
 - **Migrate before binding references.** Run `migrate(o)` on the parsed file first, before any
@@ -188,7 +188,8 @@ carry across a save would need them in the file too.
   How the brain marks which synapses matter is not settled.
 - **Hypothesis:** the prefrontal cortex infers which task or context is active and selects the
   matching skill, so the brain need not be told the task (Heald, Lengyel & Wolpert 2021 show
-  contextual inference in motor learning). Brain World is still told its task (issue #57).
+  contextual inference in motor learning). Brain World now infers its context slot from a pooled
+  scene summary (issue #60), so its save (version 4) also holds the slot prototypes and use counts.
 - How much of consolidation happens during sleep replay, and how much awake, is still debated.
 
 ## Related

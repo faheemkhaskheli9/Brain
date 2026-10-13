@@ -34,8 +34,9 @@ cerebellum and hippocampus serve walking, reading and cooking. Two views compete
 works in a model: **one undifferentiated network** that finds its own task structure, or **a few
 organs** that differ by learning rule and are shared by every task. The synthesis this KB uses is
 a design hypothesis: fixed organs defined by learning rule, with **which task am I in** treated as a
-latent the brain infers from its senses, not as an input it is handed. Brain World is not there yet:
-its five skills share one network, but the network is still told the task.
+latent the brain infers from its senses, not as an input it is handed. Brain World now infers which
+of its context slots to use from a pooled scene summary (issue #60). Two task labels remain: the
+at-board input and the action set chosen from the mode.
 
 ## How it works
 
@@ -99,18 +100,21 @@ units and context slots it has, not by how many tasks exist.
   times dopamine) is the same for every skill.
 - **Replay against forgetting:** 30% of later episodes rehearse an earlier skill. Without it,
   grasp, listen and read fell to chance once the creature learned to write (README).
-- **Still told the task, in three places.** `Brain.encode(x, task)` takes the stage index and
-  applies that stage's gate row, a fixed random half of the units (context-dependent gating,
-  Masse, Grant & Freedman 2018). The at-board input is `mode === "write"`, a task label under
-  another name. And `step()` picks the allowed action set (body, habit or pen) from the mode.
-  `perform(key)` works the same way, so a saved brain must be told which skill to use.
+- **Context inferred, not told (issue #60, 2026-10-13).** `Brain.encode(x, slot)` applies the gate
+  row of one of 8 context slots, a fixed random half of the units (context-dependent gating, Masse,
+  Grant & Freedman 2018). The slot comes from `brain.infer(z)`: `z` is the running max over the
+  episode of five thresholded channels (white, colour, tone, fovea letter, board), matched to slot
+  prototypes by adaptive resonance; each training episode commits `z` to its slot or founds one.
+  Over seeds 1-10, 9 graduate (told: 10), mean kept scores 0.87 / 0.70 / 0.59 / 0.65 (told:
+  0.82 / 0.69 / 0.55 / 0.66), and every skill ends at least 99.9% of its episodes in its own slot.
+  The failing seed infers correctly but never learns to read (README "Inferred context").
+- **Still task labels, in two places.** The at-board input is `mode === "write"`, a task label
+  under another name until a second board task exists. And `step()` picks the allowed action set
+  (body, habit or pen) from the mode (issue #61).
 - **What gating bought:** per the README, the jump from 5 to 8 of 10 passing seeds came from
   growing the layer from 600 to 1,000 units; gating added a little on top (9 of 10), mostly to
   listening. It did not let replay be halved.
-- **Not done yet:** inferring the task from the senses (README "Not done yet", issue #57). A
-  design for it replaces the task index with a fixed bank of context slots picked by
-  adaptive-resonance clustering of a pooled scene summary. It is not merged, and the code below
-  is a toy of its selector, not Brain World's code.
+- The code below is a standalone toy of the same selector, not Brain World's code.
 
 ### Engineering, not biology: saving, slots and growth
 - A brain is never saved. A saved learner must hold everything that picks its next action, and an
@@ -188,7 +192,7 @@ task or two.
 - [[build-a-brain-like-learner]] - stage 6 integrates the organs into one continual learner.
 - [[neuromodulators]] - uncertainty signals as a gate on plasticity.
 - [[prefrontal-cortex-and-abstraction]] - task sets, rules and the prefrontal cortex.
-- [Brain World](../game/world/README.md) - five skills in one shared network, still told its task.
+- [Brain World](../game/world/README.md) - five skills in one shared network that infers its own context slot.
 
 ## References
 - Yang, Joglekar, Song, Newsome & Wang (2019) "Task representations in neural networks trained to perform many cognitive tasks", *Nat Neurosci* 22:297. doi:10.1038/s41593-018-0310-2
