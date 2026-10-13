@@ -32,7 +32,9 @@ const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 }; 
 
 function trial(arm, seed) {
   Object.assign(GAINS, ARMS[arm]);
-  const w = new World(seed), episodes = [], t0 = Date.now();
+  const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
+  // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
+  b.commit = z => { const m = b.match(z); if (b.learning && m.best < 0 && m.free < 0) store[m.rare >= 0 ? "reclaims" : "merges"]++; commit(z); };
   for (let s = 0; s < STAGES.length; s++) {
     const start = w.episode;
     while (w.stage === s && !w.graduated && w.episode - start < LIMIT) w.step();
@@ -55,7 +57,7 @@ function trial(arm, seed) {
     return [k, { slot: c, episodes: share(eps[k], c), steps: share(steps[k], c) }];
   }));
   return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, active, slots, uses: Array.from(w.brain.uses),
-    seconds: (Date.now() - t0) / 1000 };
+    ...store, seconds: (Date.now() - t0) / 1000 };
 }
 
 // Exact paired sign-flip test: two-sided p for the mean per-seed difference (2^n flips, n <= ~16).
@@ -90,6 +92,10 @@ function summarise(results, arms) {
     if (sl.length) console.log(" ".repeat(24) + "slots: " + Object.keys(KEEP).map(k =>
       `${k} episodes ${mean(sl.map(r => r.slots[k].episodes)).toFixed(3)} steps ${mean(sl.map(r => r.slots[k].steps)).toFixed(2)}`).join(", ")
       + `, distinct ${sl.filter(r => new Set(Object.values(r.slots).map(s => s.slot)).size === 4).length}/${sl.length}`);
+    // Per seed (#63): the slots in use with their use counts, each skill's step share, reclaims and merges.
+    for (const r of sl) console.log(" ".repeat(26) + `seed ${String(r.seed).padStart(2)}: uses ${r.uses.map((u, c) => u && `${c}:${u}`).filter(Boolean).join(" ")}`
+      + ` | steps ${Object.keys(KEEP).map(k => `${k} ${r.slots[k].steps.toFixed(2)}`).join(" ")}`
+      + (r.reclaims === undefined ? "" : ` | reclaims ${r.reclaims}, merges ${r.merges}`));
   }
   if (FACTORIAL.every(a => arms.includes(a))) factorial(results);
 }

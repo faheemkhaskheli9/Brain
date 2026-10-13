@@ -64,7 +64,7 @@ simulation. To make a loaded learner act exactly as the saved one would have, th
 | Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | `proto` (8 slots x 5 scene channels) and `uses` (issue #60) |
 | RNG state | without it, two copies sample different actions | `rand`, the state at the start of the episode |
 | Progress | where training stands | `stage`, `episode`, success windows |
-| Version | so old files fail loudly or are migrated, never read wrongly | `version: 4` |
+| Version | so old files fail loudly or are migrated, never read wrongly | `version: 4`; version 3 is migrated (issue #63) |
 | Metadata | what the brain can do and how it was made | none yet (issue #55) |
 
 Storing only a seed instead of the fixed wiring makes the file smaller, but a later change to
@@ -72,10 +72,16 @@ the code that draws the wiring would quietly build a different brain under the o
 Brain World stores the wiring and checks every array's shape before loading.
 
 ### Migrating old saves (engineering design)
-Brain World has no migration yet (issue #63). `World.fromJSON` accepts only `version: 4` with every
-array the size a fresh brain has, and refuses anything else ("not a Brain World save, or saved by an older
-version or with a different brain size"). Refusing is safe, but a new format, more context slots
-or a sixth skill would then orphan every saved brain. The lessons for adding migration:
+Brain World runs `World.migrate(o)` first in `World.fromJSON` (issue #63), then checks that every
+array is the size a fresh brain has and refuses anything else ("not a Brain World save, or saved
+by an older version or with a different brain size"). Refusing alone is safe, but a new format,
+more context slots or a sixth skill would then orphan every saved brain. Its three steps:
+`upgradeV3` turns the five told gate rows of a version-3 save into five slots, each with the scene
+code its stage produces as prototype and 50 uses; `growSlots` appends free rows up to
+`GAINS.slots`; `growStages` appends empty windows and moves a graduated brain to the first new
+stage. `game/world/fixtures/v3-seed1.json` is a real version-3 save: migrated, it still reads at
+0.80 with 80% of its read steps in slot 3, and a save at 8 slots performs identically at 12. The
+lessons:
 - **Migrate before binding references.** Run `migrate(o)` on the parsed file first, before any
   code takes a reference into it (`const ob = o.brain`) and before the shape checks. A reference
   taken earlier still points at the old object, so the checks see the unmigrated brain and every

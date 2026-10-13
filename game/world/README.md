@@ -302,8 +302,15 @@ Honest limits:
   prints the same output as before, line for line (2026-10-13). Walk on a graduated brain
   (perform, free play) now runs under the habit: `perform.mjs --seed N walk` scores 1.00 on seeds
   1-3 both sampling and greedy (was 0.99 / 0.99 / 0.79 sampling, 1.00 greedy).
-- Saves are now version 4 (they hold `proto` and `uses`); version 3 saves are rejected until one
-  migrate path lands (#63).
+- Saves are now version 4 (they hold `proto` and `uses`). `World.migrate` (#63) loads older and
+  smaller ones: a version 3 save's five told gate rows become five slots whose prototypes are the
+  scene codes of their stages, with 50 uses each; a save with fewer slots than `GAINS.slots` gets
+  free rows appended; a save with fewer stages gets empty windows, and a graduated one resumes at
+  the first new stage. `fixtures/v3-seed1.json` (seed 1, trained to graduation by the told-gate
+  code, saved without its episodic store) still reads at 0.80 after migrating, with 80% of its
+  read steps in slot 3. A save at 8 slots performs identically at 12. `sweep.mjs` now prints, per
+  seed, the slots in use with their counts, each skill's step share, and its reclaims and merges
+  (seeds 1-2: none).
 
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
@@ -326,7 +333,6 @@ is enough for a real brain's version of these skills is a hypothesis.
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
 - Speech or spoken words instead of pure tones. Multi-letter words.
 - Physics-based limbs (joint torques) instead of discrete leg states.
-- Loading version 3 saves (#63).
 
 ## References
 
