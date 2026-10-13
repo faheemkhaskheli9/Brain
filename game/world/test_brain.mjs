@@ -89,6 +89,40 @@ for (const seed of seeds.length ? seeds : [1]) {
   for (const k of ["P", "v", "hh", "proto", "uses"]) assert.deepEqual(after.brain[k], was.brain[k], `seed ${seed}: perform changed ${k}`);
   assert.equal(after.stage, was.stage);
   console.log("  Perform (learning off):", rates.join(", "));
+
+  // Teach mode (#36): the viewer sets the room and the tone; every episode is that room, and the
+  // target is the object the tone names. Rates are printed, not held to a bar: one fixed room is far
+  // more layout-dependent than the random rooms it trained in (README "Teach mode").
+  const taught = [];
+  for (const lesson of [{ objects: [{ pos: [2, 6], letter: 0 }], tone: 0 },
+    { objects: [{ pos: [1.5, 1.5], letter: 0 }, { pos: [4, 6.5], letter: 1 }, { pos: [6.5, 2], letter: 2 }], tone: 1 }]) {
+    w.teach(lesson, false);
+    while (w.perf.n < 200) {
+      assert.deepEqual(w.objects.map(o => o.pos), lesson.objects.map(o => o.pos));
+      assert.equal(w.objects[w.target].letter, lesson.tone);
+      assert.ok(w.t > 0 || w.objects.every(o => Math.hypot(o.pos[0] - w.pos[0], o.pos[1] - w.pos[1]) >= 1), "teach: dropped onto an object");
+      w.step();
+    }
+    taught.push((w.perf.ok / w.perf.n).toFixed(2));
+  }
+  // The viewer's reward reaches the brain only as dopamine: the same step with +1 has a TD error
+  // exactly 1 higher. With learning on it changes weights, never the curriculum.
+  const blue = { objects: [{ pos: [2, 6], color: 2 }], tone: 2 }, saved = JSON.stringify(w), da = [];
+  for (const bonus of [0, 1]) {
+    const tw = World.fromJSON(JSON.parse(saved));
+    tw.teach(blue);
+    tw.reward(bonus);
+    tw.step(); da.push(tw.brain.dopamine);
+    while (tw.perf.n < 20) tw.step();
+    assert.notDeepEqual(Array.from(tw.brain.P), JSON.parse(saved).brain.P, "teach with learning on changed no weight");
+    assert.deepEqual([tw.stage, tw.episode, tw.windows], [w.stage, w.episode, w.windows], "teach changed the curriculum");
+  }
+  assert.ok(Math.abs(da[1] - da[0] - 1) < 1e-5, `reward: dopamine ${da[1]} vs ${da[0]}`);
+  assert.throws(() => w.teach({ objects: [{ pos: [9, 1], letter: 0 }] }), /teach/);
+  assert.throws(() => w.teach({ objects: [{ pos: [1, 1], letter: 0, color: 1 }] }), /teach/);
+  w.perform(null);
+  assert.equal(w.lesson, null);
+  console.log(`  Teach (learning off, 200 tries): lone T cube ${taught[0]}, three cubes with tone L ${taught[1]}; reward = +1 dopamine`);
 }
 
 // Perform mid-training leaves the curriculum alone, and a save made while performing resumes training.

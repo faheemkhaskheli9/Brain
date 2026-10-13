@@ -105,6 +105,7 @@ game/
 `game/world/` is a separate browser simulation. Brain Lab has you operate one mechanism
 at a time; Brain World puts them together in one 3D creature that learns to walk, grasp,
 listen, read and write from reward alone. Save and Load keep a trained brain as a JSON file.
+In teach mode you set up the room yourself, play the tone, and give reward by hand.
 
 ```
 python -m http.server 8000        # from the repo root, then open http://localhost:8000/game/world/

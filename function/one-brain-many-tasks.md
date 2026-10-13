@@ -110,6 +110,12 @@ units and context slots it has, not by how many tasks exist.
   The failing seed infers correctly but never learns to read (README "Inferred context").
   In free play (`perform("any")`, issue #62) a frozen brain gets a random scene each episode and
   finds the skill itself, scoring about as well as when one skill is laid out per run.
+  A room the viewer sets once (teach mode, issue #36) is a harder test of the same frozen brain.
+  One fixed layout scored anywhere from 0.13 to 0.98 across rooms and seeds 1-3, even for one cube
+  alone, against 0.49-0.75 for read in random rooms. A stochastic memoryless policy averages over
+  random layouts but not over one fixed layout. On seed 3, 400 tries taught in the room raised one
+  failing room from 0.31 to 0.90 (game README "Teach mode"; one seed, measured here, not a
+  general result).
 - **Action set from body and development (issue #61).** `step()` allows pen strokes at the board,
   the gait habit (legs reset by reflex, push or grasp) once the brain is past the walk stage, and
   the full body set before that. Nothing there reads the task; the reward rule still does, as it
