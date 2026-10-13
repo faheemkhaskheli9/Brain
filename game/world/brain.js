@@ -49,6 +49,11 @@ export const STAGES = [
   { key: "write", name: "Write", pass: 0.8,
     about: "At the board, a tone plays. Draw its letter with two pen strokes: the same shapes it learned to read." },
 ];
+// A sixth skill (issue #56), not in the default curriculum: at the board with no tone, the letter is
+// shown on the fovea and the creature draws it. STAGES.push(COPY) adds it; sweep.mjs does, for arms
+// marked copy, after loading a graduated five-stage save.
+export const COPY = { key: "copy", name: "Copy", pass: 0.8,
+  about: "At the board, no tone: a letter is shown on the fovea. Draw it with two pen strokes." };
 
 // Inputs: retina, legs, cochlea, fovea, pen pad, at-board flag, then the fovea memory.
 const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 25, FAN_IN = 8;
@@ -74,7 +79,12 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
   // Jordan 1994). See README "Perform mode".
-  performGreedy: ["walk", "write"],
+  performGreedy: ["walk", "write", "copy"],
+  // Synaptic intelligence (issue #56; Zenke, Poole and Ganguli 2017): pull each actor and critic
+  // synapse back toward its value at the last stage pass, in proportion to how much it did for the
+  // stages so far. 0 = off: nothing is tracked, stage passes only re-anchor. Strengths of 1e-3 and
+  // up stopped later stages learning; 1e-4 learned but forgot no less (README "Synaptic intelligence").
+  si: 0,
   // Context slots (issue #60): the brain is never told the task. It keeps `slots` prototypes of
   // pooled scene summaries and picks the gate row whose prototype matches the scene so far on every
   // channel within `vigilance`, adaptive-resonance style (Carpenter and Grossberg 1987). A full
@@ -127,6 +137,9 @@ export class Brain {
     this.P = new Float32Array(N_ACT * this.nH);   // actor
     this.ev = new Float32Array(this.nH);
     this.eP = new Float32Array(N_ACT * this.nH);
+    // Per synapse of P and v: omega, this stage's path integral of learning (sum of dw^2 / lr);
+    // Omega, its importance summed over passed stages; anchor, its value at the last pass.
+    this.syn = { P: syn(this.P), v: syn(this.v) };
     this.dopamine = 0; this.pi = new Float32Array(N_ACT);
     this.learning = true;   // false = perform mode: act and compute dopamine, change no weight
     this.greedy = false;    // argmax instead of sampling; only set with learning off
@@ -228,9 +241,35 @@ export class Brain {
     this.hh = this.hh ? 0.99 * this.hh + 0.01 * hh : hh;
     const norm = 1 + this.hh;
     const av = GAINS.lrV / norm, ap = GAINS.lrP / norm;
-    for (let i = 0; i < this.nH; i++) this.v[i] += av * delta * this.ev[i];
-    for (let i = 0; i < this.eP.length; i++) this.P[i] += ap * delta * this.eP[i];
+    this.update(this.v, this.ev, av, delta, this.syn.v);
+    this.update(this.P, this.eP, ap, delta, this.syn.P);
     if (end) { this.ev.fill(0); this.eP.fill(0); }
+  }
+
+  // w += a * delta * e (trace x dopamine). With GAINS.si on, also add dw^2 / a to omega and pull w
+  // toward its anchor by si * a * Omega, capped at the whole way so a large Omega cannot overshoot.
+  update(w, e, a, delta, s) {
+    if (!GAINS.si) { for (let i = 0; i < w.length; i++) w[i] += a * delta * e[i]; return; }
+    const { omega, Omega, anchor } = s;
+    for (let i = 0; i < w.length; i++) {
+      const dw = a * delta * e[i];
+      omega[i] += dw * dw / a;
+      w[i] += dw - Math.min(1, GAINS.si * a * Omega[i]) * (w[i] - anchor[i]);
+    }
+  }
+
+  // A stage has just passed: what each synapse did for it becomes importance, and its current value
+  // the new anchor. The consolidation step of SI; synaptic tagging and capture (Frey and Morris
+  // 1997) is the established biology it echoes, SI-like importance in real synapses a hypothesis.
+  // With SI off it only re-anchors, so SI switched on later (or after loading) measures from there.
+  consolidate() {
+    if (!this.learning) return;
+    for (const k of ["P", "v"]) {
+      const w = this[k], { omega, Omega, anchor } = this.syn[k];
+      if (!GAINS.si) { anchor.set(w); continue; }
+      for (let i = 0; i < w.length; i++) { const d = w[i] - anchor[i]; Omega[i] += omega[i] / (d * d + 1e-3); anchor[i] = w[i]; }
+      omega.fill(0);
+    }
   }
 
   // Sleep: replay n stored transitions offline. TD(0) on the critic; with GAINS.sleepActor also a
@@ -366,6 +405,10 @@ export function scene(x) {
     x.subarray(F, F + 25).some(v => v > 0.1), x[BOARD_IN] > 0.5].map(Number);
 }
 
+const SYN = ["omega", "Omega", "anchor"];
+function syn(w) { return { omega: new Float32Array(w.length), Omega: new Float32Array(w.length), anchor: Float32Array.from(w) }; }
+const mapSyn = (s, f) => ({ P: Object.fromEntries(SYN.map(k => [k, f(s.P[k])])), v: Object.fromEntries(SYN.map(k => [k, f(s.v[k])])) });
+
 function gauss(rand) { return Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand()); }
 
 export class World {
@@ -395,7 +438,7 @@ export class World {
       this.brain.greedy = GAINS.performGreedy.includes(this.mode);
     }
     const R = this.rand, m = this.mode;
-    this.board = m === "write";   // the world puts the creature at the board: a fact about the scene
+    this.board = m === "write" || m === "copy";   // the world puts the creature at the board: a fact about the scene
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     const H = this.hippo;
     this.memAt = { head: H.head, n: H.n, epId: H.epId++ };   // and its episodic store from here
@@ -407,7 +450,7 @@ export class World {
     this.objects = [];
     // The grasp stage has one object of a random colour, so it teaches "approach and grasp", not
     // "red is food": a colour habit there made the listen stage perseverate on red.
-    const count = m === "walk" || m === "write" ? 0 : m === "grasp" ? 1 : 3;
+    const count = m === "walk" || this.board ? 0 : m === "grasp" ? 1 : 3;
     const pick = Math.floor(R() * 3);
     while (this.objects.length < count) {
       const p = [0.8 + R() * (ARENA - 1.6), 0.8 + R() * (ARENA - 1.6)];
@@ -418,6 +461,7 @@ export class World {
     }
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
+    this.shown = m === "copy" ? this.target : -1;   // the letter held up at the board
     if (this.tone >= 0) this.events.push({ type: "tone", tone: this.tone });
     this.x = this.sense();
     this.h = this.brain.encode(this.x, this.slot = this.context());
@@ -452,7 +496,7 @@ export class World {
         const g = glyph(LETTERS[o.letter][1]), near = 1 / (1 + 0.35 * fd);
         for (let k = 0; k < 25; k++) this.fovea[k] = g[k] * near;
       }
-    }
+    } else if (this.shown >= 0) this.fovea.set(glyph(LETTERS[this.shown][1]));
     // Fovea memory: a decaying trace of the last letter seen, so it can still hold the letter a
     // few steps after the gaze has moved on (persistent activity, as in prefrontal working memory).
     // Each leg push turns 0.3 rad, wider than the fovea, so a letter is in view only for a step or
@@ -490,7 +534,7 @@ export class World {
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
-    if (m === "write") {
+    if (this.board) {   // write and copy: the pen
       this.pad.push(a - BODY.length);
       this.events.push({ type: "stroke", stroke: a - BODY.length });
       if (this.pad.length === 2) {
@@ -567,6 +611,7 @@ export class World {
     const rate = this.successRate();
     if (!this.graduated && this.playing === this.stage && win.length === 50 && rate >= STAGES[this.stage].pass) {
       this.passedRate = rate;
+      this.brain.consolidate();
       if (this.stage < STAGES.length - 1) {
         this.events.push({ type: "stage", from: this.stage, episodes: this.episode, rate });
         this.stage++; this.windows[this.stage] = [];
@@ -614,10 +659,11 @@ export class World {
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
     // A save made while performing resumes training on its own stage.
-    return { version: 4, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
+    return { version: 5, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
-        proto: arr(b.proto), uses: arr(b.uses) },
+        proto: arr(b.proto), uses: arr(b.uses),
+        syn: mapSyn(b.syn, toB64) },   // without it a loaded SI brain forgets faster than the one saved
       hippo: this.hippo.toJSON(this.memAt), meta: this.meta };
   }
 
@@ -637,8 +683,8 @@ export class World {
     return JSON.stringify({ ...this.toJSON(), ...extra });
   }
 
-  // Old saves keep loading as the brain grows (#63), in a fixed order: v3 to v4, more slots, more
-  // stages. A step that cannot read its input leaves it unchanged, so fromJSON's checks reject it.
+  // Old saves keep loading as the brain grows (#63), in a fixed order: v3 to v4, v4 to v5, more
+  // slots, more stages. A step that cannot read its input leaves it unchanged, so fromJSON's checks reject it.
   // Never across an N_IN change: new senses make a new brain, not a migrated one.
   static migrate(o) {
     if (!o || !o.brain || !Array.isArray(o.brain.gate) || !Array.isArray(o.windows)) return o;
@@ -650,9 +696,15 @@ export class World {
       Object.assign(b, { proto: V3_CODES.flat(), uses: V3_CODES.map(() => 50) });
       o.version = 4;
     }
+    // upgradeV4: no synaptic intelligence record (#56). SI cannot protect what was learned before it
+    // tracked anything (omega is a path integral), so Omega starts at 0 and the anchor at the weights.
+    if (o.version === 4 && Array.isArray(b.P) && Array.isArray(b.v)) {
+      b.syn = mapSyn({ P: syn(b.P), v: syn(b.v) }, toB64);
+      o.version = 5;
+    }
     // growSlots: fewer slots than GAINS.slots gets fresh free rows appended; slot ids stay valid.
     const n = Array.isArray(b.uses) ? b.uses.length : 0;
-    if (o.version === 4 && n < GAINS.slots && b.gate.length === n * H && Array.isArray(b.proto) && b.proto.length === n * SCENE) {
+    if (o.version === 5 && n < GAINS.slots && b.gate.length === n * H && Array.isArray(b.proto) && b.proto.length === n * SCENE) {
       const add = GAINS.slots - n;
       b.gate = b.gate.concat(Array.from({ length: add * H }, () => spare() >= GAINS.gate ? 1 : 0));
       b.proto = b.proto.concat(Array(add * SCENE).fill(0));
@@ -671,7 +723,11 @@ export class World {
     o = World.migrate(o);   // first: ob below must point at the migrated brain
     const w = new World(1), b = w.brain, ob = o && o.brain;
     const KEYS = ["idx", "wIn", "bias", "gate", "v", "P", "proto", "uses"];
-    const ok = o && o.version === 4 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    let sy = null;   // the SI record: three Float32Arrays per weight array, each its shape, Omega and omega >= 0
+    try { sy = mapSyn(ob.syn, s => fromB64(s, Float32Array)); } catch {}
+    const synOk = sy && ["P", "v"].every(k => SYN.every(f => sy[k][f].length === b[k].length && sy[k][f].every(Number.isFinite))
+      && sy[k].omega.every(x => x >= 0) && sy[k].Omega.every(x => x >= 0));
+    const ok = o && o.version === 5 && ob && synOk && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
@@ -683,7 +739,7 @@ export class World {
     if (!ok || !hippo) throw new Error("not a Brain World save, or saved by an older version or with a different brain size");
     w.hippo = hippo;
     for (const k of KEYS) b[k].set(ob[k]);
-    b.hh = ob.hh;
+    b.hh = ob.hh; b.syn = sy;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
     // meta is a plain record, never read back into the brain; a save from before it has unknown birth facts.

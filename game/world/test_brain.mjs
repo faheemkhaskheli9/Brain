@@ -3,7 +3,7 @@
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { World, Brain, STAGES, GAINS, ACT_SETS, rng, orient } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, LETTERS, rng, orient, glyph } from "./brain.js";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
 // hands encode an inferred slot, never the task it is playing.
@@ -210,6 +210,41 @@ old.hippo = { ...JSON.parse(JSON.stringify(m)).hippo, n: 9999 };
 assert.throws(() => World.fromJSON(old), /not a Brain World save/);
 Object.assign(GAINS, KEEP_GAINS);
 console.log("  Episodic store: replay draws valid after wrap, perform, setStage and save/load");
+
+// Synaptic intelligence (#56): off tracks nothing; on, a stage pass turns the path integral into
+// importance and re-anchors; the record survives save and load; a v4 save migrates with Omega = 0.
+const si = new World(4);
+run(si, 300);
+assert.ok(si.brain.syn.P.omega.every(x => x === 0), "si = 0 tracked omega");
+si.brain.consolidate();
+assert.deepEqual(si.brain.syn.P.anchor, si.brain.P, "si = 0: a stage pass must still re-anchor");
+GAINS.si = 1;
+run(si, 300);
+const { omega, Omega, anchor } = si.brain.syn.P, used = omega.findIndex(x => x > 0);
+assert.ok(used >= 0, "si on: no path integral");
+const wAt = si.brain.P[used];
+si.brain.consolidate();
+assert.ok(Omega[used] > 0 && anchor[used] === wAt && omega.every(x => x === 0), "consolidate");
+const siBack = World.fromJSON(JSON.parse(JSON.stringify(si))).brain.syn;
+for (const k of ["P", "v"]) for (const f of ["omega", "Omega", "anchor"]) assert.deepEqual(siBack[k][f], si.brain.syn[k][f], `save lost syn.${k}.${f}`);
+const v4 = JSON.parse(JSON.stringify(si));
+delete v4.brain.syn; v4.version = 4;
+const m4 = World.fromJSON(v4).brain;
+assert.ok(m4.syn.P.Omega.every(x => x === 0) && m4.syn.P.anchor.every((x, i) => x === m4.P[i]), "v4 migrates with Omega 0, anchor = weights");
+assert.throws(() => World.fromJSON({ ...JSON.parse(JSON.stringify(si)), brain: { ...JSON.parse(JSON.stringify(si)).brain, syn: { P: {}, v: {} } } }), /not a Brain World save/);
+GAINS.si = 0;
+console.log("  Synaptic intelligence: tracks only when on, consolidates, saves, migrates v4");
+
+// Copy, the sixth skill (#56): at the board, no tone, the letter on the fovea; its scene code is new.
+STAGES.push(COPY);
+const cw = new World(5);
+cw.setStage(5);
+assert.deepEqual([cw.board, cw.tone, cw.objects.length], [true, -1, 0]);
+assert.deepEqual(Array.from(cw.fovea), Array.from(glyph(LETTERS[cw.target][1])), "copy: the letter is not on the fovea");
+assert.deepEqual(Array.from(cw.z), [0, 0, 0, 1, 1]);
+assert.ok(cw.step().action >= 5, "copy: not using the pen");
+STAGES.pop();
+console.log("  Copy: board, no tone, letter on the fovea, scene [0,0,0,1,1]");
 
 // Orienting reflex (#83): an object on the left pushes the left leg (turn left), walls alone do nothing.
 const o = new World(3);

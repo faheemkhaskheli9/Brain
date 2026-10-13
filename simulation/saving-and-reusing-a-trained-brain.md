@@ -60,11 +60,11 @@ simulation. To make a loaded learner act exactly as the saved one would have, th
 | Learned weights | the memory itself | `v` (critic), `P` (actor) |
 | Fixed random wiring | random projections are part of the brain; a different draw makes the weights meaningless | `idx`, `wIn`, `bias`, `gate` are stored, not regenerated |
 | Normaliser state | running statistics change every output | `hh`, a running mean of hidden activity |
-| Consolidation state | per-synapse importance or anchors, if the learner protects old skills | none yet (issue #56) |
+| Consolidation state | per-synapse importance or anchors, if the learner protects old skills | `syn`: for `P` and `v`, synaptic intelligence's `omega` (this stage's path integral), `Omega` (importance) and `anchor`, base64 Float32 (issue #56). A loaded brain without them would forget faster than the one saved |
 | Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | `proto` (8 slots x 5 scene channels) and `uses` (issue #60) |
 | RNG state | without it, two copies sample different actions | `rand`, the state at the start of the episode |
 | Progress | where training stands | `stage`, `episode`, success windows |
-| Version | so old files fail loudly or are migrated, never read wrongly | `version: 4`; version 3 is migrated (issue #63) |
+| Version | so old files fail loudly or are migrated, never read wrongly | `version: 5`; versions 3 and 4 are migrated (issues #63, #56) |
 | Metadata | what the brain can do and how it was made | `meta`: seed, created, `GAINS`, commit, and one `{saved, episode, scores}` row per save (issue #55) |
 
 Storing only a seed instead of the fixed wiring makes the file smaller, but a later change to
@@ -75,9 +75,11 @@ Brain World stores the wiring and checks every array's shape before loading.
 Brain World runs `World.migrate(o)` first in `World.fromJSON` (issue #63), then checks that every
 array is the size a fresh brain has and refuses anything else ("not a Brain World save, or saved
 by an older version or with a different brain size"). Refusing alone is safe, but a new format,
-more context slots or a sixth skill would then orphan every saved brain. Its three steps:
+more context slots or a sixth skill would then orphan every saved brain. Its four steps:
 `upgradeV3` turns the five told gate rows of a version-3 save into five slots, each with the scene
-code its stage produces as prototype and 50 uses; `growSlots` appends free rows up to
+code its stage produces as prototype and 50 uses; `upgradeV4` adds the synaptic-intelligence
+record with `Omega = 0` and the anchor at the loaded weights (importance is a path integral, so
+nothing learned before it was tracked can be protected); `growSlots` appends free rows up to
 `GAINS.slots`; `growStages` appends empty windows and moves a graduated brain to the first new
 stage. `game/world/fixtures/v3-seed1.json` is a real version-3 save: migrated, it still reads at
 0.80 with 80% of its read steps in slot 3, and a save at 8 slots performs identically at 12. The
@@ -207,7 +209,8 @@ carry across a save would need them in the file too.
 - **Hypothesis:** the prefrontal cortex infers which task or context is active and selects the
   matching skill, so the brain need not be told the task (Heald, Lengyel & Wolpert 2021 show
   contextual inference in motor learning). Brain World now infers its context slot from a pooled
-  scene summary (issue #60), so its save (version 4) also holds the slot prototypes and use counts.
+  scene summary (issue #60), so its save (version 4 on) also holds the slot prototypes and use counts; version 5 adds the
+  synaptic-intelligence record (issue #56).
 - How much of consolidation happens during sleep replay, and how much awake, is still debated.
 
 ## Related

@@ -142,6 +142,23 @@ importance with the diagonal Fisher information `F_i`, then train task B with
 Important weights are anchored near their task-A values; unimportant ones stay
 free to learn. Relatives: Synaptic Intelligence (online importance), MAS.
 
+**Synaptic Intelligence** (Zenke, Poole and Ganguli 2017) gets the importance
+online, with no extra pass: `ω_i` sums each weight's contribution to the loss drop
+along its path (`Δθ_i²/lr` for plain gradient steps). At the end of a task,
+`Ω_i += ω_i / (Δ_i² + ξ)`, the anchor moves to the current weights and `ω` resets.
+Measured in this repo's Brain World (`game/world/`, issue #56, seeds 1-10), on top
+of context gating and 30% rehearsal in a reward-trained actor-critic, SI did not
+help:
+- **No forgetting to prevent.** A loaded brain that learned a sixth skill (copy)
+  lost nothing, with or without SI. The new skill took its own context slot on
+  every run.
+- **It cost a lot.** With SI, 6-7 of 10 seeds learned the first five skills, against
+  9 without it.
+- **Why:** reinforcement-learning updates are mostly noise. Then `a·Ω` is about 1 for
+  most weights, the strength is a per-step pull toward the anchor, and only about
+  `1e-4` left the later stages able to learn. The tuning that works for
+  supervised tasks does not carry over.
+
 ## 5. Hippocampal replay
 Brain: the hippocampus replays recent experience during sleep and interleaves it
 with old knowledge ([[memory-systems]]).

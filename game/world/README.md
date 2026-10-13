@@ -17,6 +17,7 @@ node game/world/perform.mjs brain.json # score a saved brain per skill, learning
 node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor --jobs 2   # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
+node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -218,6 +219,67 @@ always points at the brightest one. It stays off. The full table and the per-sta
 in `learning/efficient-brain-like-learning.md`. Running 16 jobs at once crashed one child out
 of memory; it was re-run alone with `--jobs 1`.
 
+## Synaptic intelligence and a sixth skill (#56)
+
+Rehearsal protects the five skills only because they keep being practised. Issue #56 asked
+whether a loaded brain forgets them when it learns a sixth, and whether synaptic intelligence
+(SI; Zenke, Poole and Ganguli 2017) would let rehearsal drop from 0.3 to 0.15. SI is on top of the
+gating, the pairing used by Masse, Grant and Freedman (2018).
+
+**How SI works here.** Each actor and critic synapse keeps three numbers:
+- `omega`, this stage's path integral of its learning (`dw² / lr`);
+- `Omega`, its importance, summed over the passed stages;
+- `anchor`, its value at the last stage pass.
+
+Every update adds a pull back to the anchor of `min(1, si · lr · Omega)` of the way. At each
+stage pass, `Omega += omega / ((w − anchor)² + 1e-3)`, the anchor moves to the current weights and
+`omega` resets. `GAINS.si = 0` (the default) tracks nothing and only re-anchors at each pass, so
+the CI output did not change line for line. Saves are now version 5 and hold `syn`, all three
+numbers per synapse; a version-4 save migrates with `Omega = 0`.
+
+**The sixth skill is copy** (`COPY`, added to `STAGES` only by the sweep). The creature is at the
+board, there is no tone, and the target letter is shown on the fovea, so it must draw what it
+sees. Its scene code `[0,0,0,1,1]` is new, and nothing in `Brain` changed for it.
+
+**The run.** Each seed trains the five stages and saves. The save is loaded into six-stage code
+(`growStages` resumes it at copy), and the old skills are scored in perform mode (300 episodes
+each). The brain then learns copy for up to 20,000 episodes, and the old skills are scored again.
+
+**Choosing the SI strength.** A pilot on seeds 1-2 settled it. With `si` = 0.1, 1 or 10, neither
+seed learned listen. With 1e-2, neither seed learned it. With 1e-3, one of the two did not. Only
+1e-4 let both learn every stage. Reward-driven updates are mostly noise, so for most synapses
+`omega ≈ Δ²/lr` and `lr · Omega ≈ 1`: `si` is close to the share of the way pulled back on every
+step. So the run uses `si` = 1e-4.
+
+Seeds 1-10, 2026-10-13, `--jobs 6`:
+
+| Arm | Five stages learned | Kept every skill above the bars | Copy learned | Copy episodes (mean) | Own slot for copy | Old grasp / listen / read / write, before → after copy | Mean drop |
+|---|---|---|---|---|---|---|---|
+| Rehearsal 0.3 (default) | 9/10 | 9/10 | 7/9 | 7,845 | 9/9 | 0.88→0.89 / 0.73→0.73 / 0.61→0.64 / 0.86→0.85 | −0.009 |
+| Rehearsal 0.3 + SI | 7/10 | 6/10 | 7/7 | 10,999 | 7/7 | 0.83→0.83 / 0.56→0.56 / 0.48→0.47 / 0.95→0.96 | −0.003 |
+| Rehearsal 0.15 | 9/10 | 9/10 | 9/9 | 12,170 | 9/9 | 0.83→0.85 / 0.70→0.69 / 0.60→0.60 / 0.75→0.78 | −0.007 |
+| Rehearsal 0.15 + SI | 6/10 | 5/10 | 5/6 | 9,278 | 6/6 | 0.80→0.78 / 0.58→0.57 / 0.52→0.52 / 0.92→0.89 | +0.014 |
+
+The default arm reproduces the "Inferred context" row exactly (9/10, 16,515 episodes), so saving,
+loading and the new code changed nothing.
+
+**What it shows:**
+- **Learning copy made the brain forget nothing**, in any arm. The mean drop over the four old
+  skills is within ±0.015, inside perform-mode noise at 300 episodes. Copy founded its own
+  context slot on every one of the 31 runs that reached it, with 100% of its episodes there. So it
+  trains its own half of the hidden units, and rehearsal covers the ~25% the masks share.
+- **SI only cost.** It lost 2-3 seeds in the first five stages (listen on seeds 3 and 6, read on
+  seed 5) and lowered kept listen and read. Against rehearsal 0.3, SI with rehearsal 0.15 dropped
+  0.018 more (p = 0.094, n = 6, paired sign-flip).
+- **The hypothesis is not supported**, and its premise did not hold: there was no forgetting
+  for SI to prevent. Rehearsal 0.15 without SI also forgot nothing. SI stays off.
+- **Copy is the slow stage.** At rehearsal 0.3 it missed the 80% mark within 20,000 episodes on
+  seeds 4 and 7; at 0.15, all 9 learned it. More episodes of the new skill helped more than
+  protecting the old ones.
+
+That synapses are tagged and later captured for long-term change is established (synaptic tagging
+and capture, Frey and Morris 1997). That real synapses keep an SI-like importance is a hypothesis.
+
 ## Perform mode: using a trained brain
 
 `world.perform(key)` locks every episode to one skill and turns learning off: the brain acts and
@@ -305,7 +367,7 @@ Honest limits:
   prints the same output as before, line for line (2026-10-13). Walk on a graduated brain
   (perform, free play) now runs under the habit: `perform.mjs --seed N walk` scores 1.00 on seeds
   1-3 both sampling and greedy (was 0.99 / 0.99 / 0.79 sampling, 1.00 greedy).
-- Saves are now version 4 (they hold `proto` and `uses`). `World.migrate` (#63) loads older and
+- Saves were version 4 here (they hold `proto` and `uses`; version 5 adds the SI record, #56). `World.migrate` (#63) loads older and
   smaller ones: a version 3 save's five told gate rows become five slots whose prototypes are the
   scene codes of their stages, with 50 uses each; a save with fewer slots than `GAINS.slots` gets
   free rows appended; a save with fewer stages gets empty windows, and a graduated one resumes at
@@ -359,5 +421,9 @@ is enough for a real brain's version of these skills is a hypothesis.
   doi:10.1016/S0734-189X(87)80014-2
 - Pardo, Tavakoli, Levdik and Kormushev (2018) "Time limits in reinforcement learning", ICML.
   arXiv:1712.00378
+- Zenke, Poole and Ganguli (2017) "Continual learning through synaptic intelligence", ICML.
+  arXiv:1703.04200
+- Frey and Morris (1997) "Synaptic tagging and long-term potentiation", *Nature* 385:533.
+  doi:10.1038/385533a0
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.
