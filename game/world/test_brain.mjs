@@ -72,6 +72,12 @@ for (const seed of seeds.length ? seeds : [1]) {
     rates.push(`${k} ${(w.perf.ok / w.perf.n).toFixed(2)}`);
     assert.ok(w.perf.ok / w.perf.n >= KEEP[k], `seed ${seed}: perform ${k} ${w.perf.ok / w.perf.n} < ${KEEP[k]}`);
   }
+  // Free play (#62): a random scene each episode, never told which. It must find each skill itself.
+  w.perform("any");
+  while (w.perf.n < 1000) w.step();
+  const sc = w.perf.scene;
+  console.log("  Free play (any scene):", Object.keys(KEEP).map(k => `${k} ${(sc[k].ok / sc[k].n).toFixed(2)}`).join(", "));
+  for (const k in KEEP) assert.ok(sc[k].ok / sc[k].n >= KEEP[k], `seed ${seed}: free play ${k} ${(sc[k].ok / sc[k].n).toFixed(2)} < ${KEEP[k]}`);
   w.perform(null);
   const after = JSON.parse(JSON.stringify(w)), was = JSON.parse(before);
   for (const k of ["P", "v", "hh", "proto", "uses"]) assert.deepEqual(after.brain[k], was.brain[k], `seed ${seed}: perform changed ${k}`);

@@ -108,6 +108,8 @@ units and context slots it has, not by how many tasks exist.
   Over seeds 1-10, 9 graduate (told: 10), mean kept scores 0.87 / 0.70 / 0.59 / 0.65 (told:
   0.82 / 0.69 / 0.55 / 0.66), and every skill ends at least 99.9% of its episodes in its own slot.
   The failing seed infers correctly but never learns to read (README "Inferred context").
+  In free play (`perform("any")`, issue #62) a frozen brain gets a random scene each episode and
+  finds the skill itself, scoring about as well as when one skill is laid out per run.
 - **Still task labels, in two places.** The at-board input is `mode === "write"`, a task label
   under another name until a second board task exists. And `step()` picks the allowed action set
   (body, habit or pen) from the mode (issue #61).

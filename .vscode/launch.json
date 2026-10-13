@@ -54,6 +54,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "World: perform.mjs free play (--seed 1 any)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/perform.mjs",
+      "args": ["--seed", "1", "any"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "World: sweep.mjs (sleep vs rehearsal, seeds 1-10)",
       "type": "node",
       "request": "launch",

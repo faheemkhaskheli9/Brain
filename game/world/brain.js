@@ -374,7 +374,7 @@ export class World {
     this.stage = 0; this.playing = 0; this.episode = 0; this.log = []; this.graduated = false;
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
     this.events = [];   // for the UI: {type: "tone"|"grasp"|"stroke"|"stage"|"graduated", ...}
-    this.task = -1; this.perf = { n: 0, ok: 0 };   // perform mode: the locked skill, and its score
+    this.task = -1; this.perf = { n: 0, ok: 0, scene: {} };   // perform mode: the locked skill (STAGES.length = any), and its score
     this.reset();
   }
 
@@ -384,6 +384,11 @@ export class World {
   get window() { return this.windows[this.stage]; }
 
   reset() {
+    // Free play (perform "any"): a random scene each episode; the brain must find its skill itself.
+    if (this.task === STAGES.length) {
+      this.playing = Math.floor(this.rand() * STAGES.length);
+      this.brain.greedy = GAINS.performGreedy.includes(this.mode);
+    }
     const R = this.rand, m = this.mode;
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     const H = this.hippo;
@@ -472,6 +477,7 @@ export class World {
     // pattern generators and the cerebellum take over): a pushed leg swings forward by reflex,
     // and later stages only choose which leg to push, or to grasp.
     if (m !== "walk") this.legs = [1, 1];
+    if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
     const set = m === "write" ? 2 : m === "walk" ? 0 : 1;
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
@@ -539,7 +545,8 @@ export class World {
 
   finish(success) {
     if (this.task >= 0) {   // perform mode: score it, leave the curriculum alone
-      this.perf.n++; this.perf.ok += success ? 1 : 0;
+      const s = this.perf.scene[this.mode];
+      this.perf.n++; this.perf.ok += success ? 1 : 0; s.n++; s.ok += success ? 1 : 0;
       this.reset();
       return;
     }
@@ -575,8 +582,9 @@ export class World {
 
   setStage(s) { this.stage = this.playing = s; this.windows[s] = []; this.reset(); }
 
-  // Perform mode: use the brain with learning off, every episode on one skill. No weight, window,
-  // log or stage changes, so a saved brain can be used or checked without training it further.
+  // Perform mode: use the brain with learning off, every episode on one skill, or on a random scene
+  // with "any" (free play). No weight, window, log or stage changes, so a saved brain can be used or
+  // checked without training it further. perf.scene[key] = {n, ok, slots: steps per context slot}.
   // perform(null) goes back to training on `stage`.
   perform(key, greedy = GAINS.performGreedy.includes(key)) {
     const b = this.brain;
@@ -584,9 +592,10 @@ export class World {
     if (key === null) {
       this.task = -1; b.learning = true; b.greedy = false; this.playing = this.stage;
     } else {
-      const s = STAGES.findIndex(st => st.key === key);
-      if (s < 0) throw new Error(`unknown skill "${key}"; valid: ${STAGES.map(st => st.key).join(", ")}`);
-      this.task = this.playing = s; b.learning = false; b.greedy = greedy; this.perf = { n: 0, ok: 0 };
+      const s = key === "any" ? STAGES.length : STAGES.findIndex(st => st.key === key);
+      if (s < 0) throw new Error(`unknown skill "${key}"; valid: ${STAGES.map(st => st.key).join(", ")}, any`);
+      this.task = s; if (s < STAGES.length) this.playing = s;
+      b.learning = false; b.greedy = greedy; this.perf = { n: 0, ok: 0, scene: {} };
     }
     this.reset();
   }
