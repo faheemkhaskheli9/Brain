@@ -74,7 +74,13 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
   // Jordan 1994). See README "Perform mode".
-  performGreedy: ["walk", "write"] };
+  performGreedy: ["walk", "write"],
+  // Context slots (issue #60): the brain is never told the task. It keeps `slots` prototypes of
+  // pooled scene summaries and picks the gate row whose prototype matches the scene so far on every
+  // channel within `vigilance`, adaptive-resonance style (Carpenter and Grossberg 1987). A full
+  // store reclaims a slot used fewer than `minUses` times before it merges two contexts.
+  slots: 8, vigilance: 0.35, minUses: 20 };
+export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
 export const ACT_SETS = [BODY_ACTS, HABIT_ACTS, PEN_ACTS];
@@ -107,11 +113,14 @@ export class Brain {
       this.bias[j] = -0.3 + 0.2 * gauss(rand);
     }
     // Task-context gating (a hypothesis-level model of prefrontal top-down gating; Masse, Grant and
-    // Freedman 2018): each task switches off a fixed random share of the hidden units, so each
-    // skill mostly trains its own units and interferes less with the others. The raw senses stay
-    // shared. gate[c * HIDDEN + j] = 1 if unit j is on in task c.
-    this.gate = new Uint8Array(STAGES.length * HIDDEN);
+    // Freedman 2018): each context slot switches off a fixed random share of the hidden units, so
+    // each context mostly trains its own units and interferes less with the others. The raw senses
+    // stay shared. gate[c * HIDDEN + j] = 1 if unit j is on in slot c. Which slot is in play is
+    // inferred from the scene (infer), never given.
+    this.gate = new Uint8Array(GAINS.slots * HIDDEN);
     for (let i = 0; i < this.gate.length; i++) this.gate[i] = rand() >= GAINS.gate ? 1 : 0;
+    this.proto = new Float32Array(GAINS.slots * SCENE);   // each slot's prototype scene summary
+    this.uses = new Int32Array(GAINS.slots);               // episodes committed to it; 0 = free
     this.v = new Float32Array(this.nH);           // critic
     this.P = new Float32Array(N_ACT * this.nH);   // actor
     this.ev = new Float32Array(this.nH);
@@ -121,8 +130,8 @@ export class Brain {
     this.greedy = false;    // argmax instead of sampling; only set with learning off
   }
 
-  encode(x, task) {
-    const h = new Float32Array(this.nH), gate = task * this.hidden;
+  encode(x, slot) {
+    const h = new Float32Array(this.nH), gate = slot * this.hidden;
     h.set(x);
     let on = 0;
     for (let j = 0; j < this.hidden; j++) {
@@ -141,6 +150,37 @@ export class Brain {
     }
     this.nActive = (this.nActive || 0) + on; this.nEncode = (this.nEncode || 0) + 1;   // sweep.mjs reports the mean
     return h;
+  }
+
+  match(z) {   // best: nearest used slot within vigilance on every channel; free; rare: least used under minUses; near: nearest used
+    const m = { best: -1, free: -1, rare: -1, near: -1 };
+    let bd = Infinity, nd = Infinity;
+    for (let c = 0; c < GAINS.slots; c++) {
+      if (!this.uses[c]) { if (m.free < 0) m.free = c; continue; }
+      let d = 0, far = 0;
+      for (let k = 0; k < SCENE; k++) { const e = Math.abs(z[k] - this.proto[c * SCENE + k]); d += e; if (e > far) far = e; }
+      if (far <= GAINS.vigilance && d < bd) { bd = d; m.best = c; }
+      if (d < nd) { nd = d; m.near = c; }
+      if (this.uses[c] < GAINS.minUses && (m.rare < 0 || this.uses[c] < this.uses[m.rare])) m.rare = c;
+    }
+    return m;
+  }
+
+  infer(z) {   // the slot for scene summary z; changes nothing
+    const m = this.match(z);
+    return m.best >= 0 ? m.best : m.free >= 0 ? m.free : m.near;
+  }
+
+  commit(z) {   // end of a training episode: z joins its slot's prototype or founds a new one
+    if (!this.learning) return;
+    const m = this.match(z);
+    const c = m.best >= 0 ? m.best : m.free >= 0 ? m.free : m.rare >= 0 ? m.rare : m.near;
+    if (c !== m.best && c === m.rare) this.uses[c] = 0;   // reclaim a rarely used slot
+    for (let k = 0; k < SCENE; k++) {
+      const i = c * SCENE + k;
+      this.proto[i] = this.uses[c] ? this.proto[i] + 0.05 * (z[k] - this.proto[i]) : z[k];
+    }
+    this.uses[c]++;
   }
 
   value(h) { let s = 0; for (let i = 0; i < this.nH; i++) s += this.v[i] * h[i]; return s; }
@@ -279,7 +319,7 @@ export class Hippocampus {
       m[k] = arr;
     }
     for (let e = 0; e < o.n; e++)
-      if (m.slot[e] >= STAGES.length || m.set[e] >= ACT_SETS.length || !ACT_SETS[m.set[e]].includes(m.a[e]) || m.end[e] > 2
+      if (m.slot[e] >= GAINS.slots || m.set[e] >= ACT_SETS.length || !ACT_SETS[m.set[e]].includes(m.a[e]) || m.end[e] > 2
         || !Number.isFinite(m.r[e]) || !(m.mu[e] >= 0 && m.mu[e] <= 1)) return null;
     Object.assign(m, { head: o.head, n: o.n, epId: o.epId });
     return m;
@@ -310,6 +350,20 @@ export function orient(x) {
   return t;
 }
 
+// One step's scene, thresholded to 0/1 per channel: something white (luminance), something coloured
+// (chroma), a tone, a letter on the fovea, the board. Walls read 0.2 grey, so they set neither.
+// ponytail: the thresholds were picked knowing the five scenes; a continuous z is the A/B to run.
+export function scene(x) {
+  let lum = 0, chr = 0;
+  for (let i = 0; i < RAYS; i++) {
+    const r = x[i * 3], g = x[i * 3 + 1], b = x[i * 3 + 2], lo = Math.min(r, g, b);
+    lum = Math.max(lum, lo); chr = Math.max(chr, Math.max(r, g, b) - lo);
+  }
+  const C = RAYS * 3 + 2, F = RAYS * 3 + 5;
+  return [lum > 0.3, chr > 0.1, Math.max(x[C], x[C + 1], x[C + 2]) > 0.5,
+    x.subarray(F, F + 25).some(v => v > 0.1), x[BOARD_IN] > 0.5].map(Number);
+}
+
 function gauss(rand) { return Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand()); }
 
 export class World {
@@ -338,6 +392,7 @@ export class World {
     this.heading = R() * 2 * Math.PI;
     this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
     this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
+    this.z = new Float32Array(SCENE);   // the scene summary so far: running max of scene(x), see sense
     this.objects = [];
     // The grasp stage has one object of a random colour, so it teaches "approach and grasp", not
     // "red is food": a colour habit there made the listen stage perseverate on red.
@@ -354,8 +409,11 @@ export class World {
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
     if (this.tone >= 0) this.events.push({ type: "tone", tone: this.tone });
     this.x = this.sense();
-    this.h = this.brain.encode(this.x, this.playing);
+    this.h = this.brain.encode(this.x, this.slot = this.context());
   }
+
+  // The context slot comes from what the senses have shown this episode, not from the task.
+  context() { return this.brain.infer(this.z); }
 
   sense() {
     const x = new Float32Array(N_IN), R = this.rand;
@@ -397,6 +455,8 @@ export class World {
     for (const s of this.pad) x[RAYS * 3 + 30 + s] = 1;                  // what the pen has drawn
     x[BOARD_IN] = this.mode === "write" ? 1 : 0;                          // at the board or not
     x.set(this.memory, MEM0);
+    const s = scene(x);
+    for (let k = 0; k < SCENE; k++) if (s[k] > this.z[k]) this.z[k] = s[k];
     return x;
   }
 
@@ -461,17 +521,17 @@ export class World {
       if (m === "walk") success = this.dist / this.t > 0.08;
     }
     this.ret += r;
-    if (this.task < 0) this.hippo.store(this.x, this.playing, a, set, r, mu, terminal ? 1 : done ? 2 : 0);   // perform mode stores nothing
+    if (this.task < 0) this.hippo.store(this.x, this.slot, a, set, r, mu, terminal ? 1 : done ? 2 : 0);   // perform mode stores nothing
     if (done && !terminal && m !== "walk" && GAINS.timeoutBootstrap) {
       const x = this.sense();
-      b.learn(r, GAINS.timeoutBootstrap === 2 ? b.encode(x, this.playing) : null, true);
+      b.learn(r, GAINS.timeoutBootstrap === 2 ? b.encode(x, this.context()) : null, true);
       this.finish(success);
     } else if (done) {
       b.learn(r, null);
       this.finish(success);
     } else {
       this.x = this.sense();
-      this.h = b.encode(this.x, this.playing);
+      this.h = b.encode(this.x, this.slot = this.context());
       b.learn(r, this.h);
     }
     return { action: a, reward: r, done, success };
@@ -483,6 +543,7 @@ export class World {
       this.reset();
       return;
     }
+    this.brain.commit(this.z);
     this.episode++;
     const win = this.windows[this.playing];
     win.push(success ? 1 : 0);
@@ -536,20 +597,23 @@ export class World {
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
     // A save made while performing resumes training on its own stage.
-    return { version: 3, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
+    return { version: 4, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
-      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh },
+      brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
+        proto: arr(b.proto), uses: arr(b.uses) },
       hippo: this.hippo.toJSON(this.memAt) };
   }
 
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
     const w = new World(1), b = w.brain, ob = o && o.brain;
-    const KEYS = ["idx", "wIn", "bias", "gate", "v", "P"];
-    const ok = o && o.version === 3 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    const KEYS = ["idx", "wIn", "bias", "gate", "v", "P", "proto", "uses"];
+    // ponytail: version 3 (one gate row per task) is rejected; one migrate path is issue #63.
+    const ok = o && o.version === 4 && ob && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
       && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && ob.gate.every(g => g === 0 || g === 1)
+      && ob.proto.every(p => p >= 0 && p <= 1) && ob.uses.every(u => Number.isInteger(u) && u >= 0)
       && (ob.hh === undefined || Number.isFinite(ob.hh));
     // An older save without an episodic store loads with an empty one.
     const hippo = o && o.hippo === undefined ? new Hippocampus() : Hippocampus.fromJSON(o && o.hippo);

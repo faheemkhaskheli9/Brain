@@ -2,7 +2,14 @@
 // episodes, and with replay it still does all of them afterwards (no catastrophic forgetting).
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
-import { World, STAGES, GAINS, ACT_SETS, rng, orient } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, rng, orient } from "./brain.js";
+
+// One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
+// hands encode an inferred slot, never the task it is playing.
+assert.ok(!Brain.toString().includes("STAGES"), "Brain is indexed by task");
+for (const [, arg] of World.toString().matchAll(/\.encode\(([^;]*)/g)) assert.ok(!/playing|mode|task|stage/.test(arg), `encode is told the task: ${arg}`);
+assert.ok(!/playing|mode|task|stage|target|tone/.test(World.prototype.context.toString()), "context() reads the task");
+assert.equal(new World(1).brain.gate.length, GAINS.slots * GAINS.hidden);
 
 const LIMIT = 20000;   // episodes per stage before we call it a failure
 // After graduation, well above chance (grasping the nearest object scores about 0.33 on listen and
@@ -23,14 +30,29 @@ for (const seed of seeds.length ? seeds : [1]) {
   }
 
   // Graduated: it now cycles grasp, listen, read and write (walking is an automatic habit by then).
-  const ok = {}, n = {};
-  const start = w.episode;
+  // Every live encode must get the slot infer just returned (the brain is never handed the task).
+  const ok = {}, n = {}, steps = {}, eps = {};
+  const start = w.episode, b = w.brain, infer = b.infer.bind(b), encode = b.encode.bind(b);
+  let inferred;
+  b.infer = z => (inferred = infer(z));
+  b.encode = (x, slot) => { assert.equal(slot, inferred, `seed ${seed}: encode got a slot infer did not pick`); return encode(x, slot); };
   while (w.episode - start < 4000) {
-    const k = STAGES[w.playing].key, r = w.step();
-    if (r.done) { ok[k] = (ok[k] || 0) + r.success; n[k] = (n[k] || 0) + 1; }
+    const k = STAGES[w.playing].key, slot = w.slot, r = w.step();
+    (steps[k] ??= Array(GAINS.slots).fill(0))[slot]++;
+    if (r.done) { ok[k] = (ok[k] || 0) + r.success; n[k] = (n[k] || 0) + 1; (eps[k] ??= Array(GAINS.slots).fill(0))[slot]++; }
   }
+  delete b.infer; delete b.encode;
   console.log("  Kept after graduation:", Object.keys(KEEP).map(k => `${k} ${(ok[k] / n[k]).toFixed(2)}`).join(", "));
   for (const k in KEEP) assert.ok(ok[k] / n[k] >= KEEP[k], `seed ${seed}: ${k} forgotten: ${(ok[k] / n[k]).toFixed(2)} < ${KEEP[k]}`);
+  // Each kept skill ends its episodes in its own slot (label share) and spends most steps there.
+  const top = Object.fromEntries(Object.keys(KEEP).map(k => [k, eps[k].indexOf(Math.max(...eps[k]))]));
+  const share = (h, c) => h[c] / h.reduce((p, q) => p + q, 0);
+  console.log("  Context slots:", Object.keys(KEEP).map(k => `${k} slot ${top[k]} (episodes ${share(eps[k], top[k]).toFixed(2)}, steps ${share(steps[k], top[k]).toFixed(2)})`).join(", "));
+  for (const k in KEEP) {
+    assert.ok(share(eps[k], top[k]) >= 0.95, `seed ${seed}: ${k} episodes split across slots`);
+    assert.ok(share(steps[k], top[k]) >= 0.7, `seed ${seed}: ${k} steps split across slots`);
+  }
+  assert.equal(new Set(Object.values(top)).size, Object.keys(KEEP).length, `seed ${seed}: two skills share a slot`);
 
   // Save and load: at an episode boundary, a reloaded brain acts exactly as the original does.
   while (!w.step().done);
@@ -52,7 +74,7 @@ for (const seed of seeds.length ? seeds : [1]) {
   }
   w.perform(null);
   const after = JSON.parse(JSON.stringify(w)), was = JSON.parse(before);
-  for (const k of ["P", "v", "hh"]) assert.deepEqual(after.brain[k], was.brain[k], `seed ${seed}: perform changed ${k}`);
+  for (const k of ["P", "v", "hh", "proto", "uses"]) assert.deepEqual(after.brain[k], was.brain[k], `seed ${seed}: perform changed ${k}`);
   assert.equal(after.stage, was.stage);
   console.log("  Perform (learning off):", rates.join(", "));
 }

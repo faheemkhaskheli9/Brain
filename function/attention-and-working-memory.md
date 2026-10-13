@@ -172,7 +172,7 @@ assert gated == cue
 - [[predictive-processing]] - attention as precision-weighting of prediction errors.
 - [[neuromodulators]] - acetylcholine and noradrenaline as uncertainty and attention signals.
 - [[brain-vs-deep-learning]] - where transformers depart from the brain.
-- [Brain World](../game/world/) - task-context gating: each skill switches off half of a shared layer, a hypothesis-level model of prefrontal top-down gating.
+- [Brain World](../game/world/) - context gating: each of 8 context slots switches off half of a shared layer, and the brain infers the slot from what it has sensed (adaptive resonance), a hypothesis-level model of prefrontal top-down gating.
 
 ## References
 - Miller (1956) "The magical number seven, plus or minus two", *Psychol Rev* 63:81. doi:10.1037/h0043158

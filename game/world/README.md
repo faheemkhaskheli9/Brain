@@ -54,11 +54,15 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 - **Expansion:** 1,000 fixed random units, as in cerebellar granule cells or the mushroom body. Each
   one is driven by one local patch of a sense, and sound scales that drive by a random gain (gain
   modulation). An additive mix learned the tone tasks far too slowly.
-- **Task-context gating:** each stage switches off a fixed random half of the expansion units, so
-  each skill mostly trains its own units while the raw senses stay shared (context-dependent gating,
-  Masse, Grant and Freedman 2018). The creature is told which task it is on, like an instruction
-  cue; inferring the task from what it sees is not modelled. That prefrontal cortex gates hidden
-  units this way is a hypothesis, not established.
+- **Context gating, with the context inferred:** each of 8 context slots switches off a fixed random
+  half of the expansion units, so each skill mostly trains its own units while the raw senses stay
+  shared (context-dependent gating, Masse, Grant and Freedman 2018). The creature is never told the
+  task. It pools what it has sensed this episode into 5 bits (something white, something coloured,
+  a tone, a letter on the fovea, the board) and picks the slot whose prototype matches; at the end
+  of an episode that summary joins its slot or founds a new one (adaptive resonance, Carpenter and
+  Grossberg 1987). See "Inferred context" below. That prefrontal cortex gates hidden units this way
+  is a hypothesis, not established; that it picks the context by clustering scene summaries is
+  also a hypothesis.
 - **Actor-critic with traces:** dopamine is `δ = r + γV(s') − V(s)`. Weight change = trace × δ. There
   is no backprop.
 - **Habit:** after stage 1 the gait is automatic, so a pushed leg swings forward by reflex. Later
@@ -242,6 +246,47 @@ temperature between 0 and 1 for the search skills is the next knob to try (untes
 `test_brain.mjs` performs each kept skill for 200 episodes on the trained brain, asserts it stays
 at the kept bar, and asserts the weights and stage are unchanged.
 
+## Inferred context: one model, no task index (#60)
+
+Until 2026-10-13 the brain was handed the stage index, which picked its gate row. Now nothing in
+`Brain` is sized or indexed by task. `World.context()` returns `brain.infer(z)`, where `z` is the
+running max over the episode of `scene(x)`, five thresholded channels. `infer` picks the used slot
+whose prototype is within `GAINS.vigilance` (0.35) of `z` on every channel, the nearest if several
+are, otherwise a free slot. `commit(z)` runs once per training episode: `z` joins that prototype
+(rate 0.05) or founds a new one. With every slot used it first reclaims one used fewer than
+`GAINS.minUses` (20) times, and only then merges into the nearest. Perform mode commits nothing.
+
+`test_brain.mjs` checks the design statically (no `STAGES` in `Brain`, no `encode` call is passed
+the task, `context()` reads no task field) and with a spy: every live `encode` gets the slot `infer`
+just returned. Over the 4,000 graduated episodes, each kept skill must end at least 95% of its
+episodes in one slot and spend at least 70% of its steps there, and the four skills must use four
+different slots. Perform mode must leave the prototypes and use counts unchanged.
+
+`node game/world/sweep.mjs --arms rehearse30 --jobs 6`, seeds 1-10, 2026-10-13:
+
+| | All stages learned | Kept every skill above the test's bars | Episodes to graduate (mean) | Write stage | Kept grasp / listen / read / write |
+|---|---|---|---|---|---|
+| Told the task (before, 2026-10-12) | 10/10 | 9/10 | 18,202 | 8,773 | 0.82 / 0.69 / 0.55 / 0.66 |
+| Infers the task | 9/10 | 9/10 | 16,515 | 10,089 | 0.87 / 0.70 / 0.59 / 0.65 |
+
+Slot use over the 9 that graduated: the share of episodes ending in the skill's own slot is 1.000
+for grasp, listen and write and 0.999 for read. The share of steps there is 0.82 (grasp), 0.95
+(listen), 0.90 (read) and 1.00 (write); the opening steps run under another slot until the cue
+arrives (grasp starts out looking like walk). All 9 use four distinct slots, and 5 to 7 of the 8
+slots end up used: one per skill plus walk, and on 5 seeds one or two strays holding 1 to 124
+episodes whose summary missed a channel (a read episode that never fixated a letter). Seed 8 never learns to read within 20,000 episodes. Its inference is right
+(99.6% of read episodes land in the read slot); read stays at 0.34, so it is the random gate
+mask, as the arena run found for its seed 10. The two rows differ in their random draws (8 gate
+rows instead of 5), so the 9 vs 10 is within seed variance, not a measured cost.
+
+Honest limits:
+- The thresholds (white > 0.3, colour > 0.1, tone > 0.5, fovea > 0.1) were picked knowing the five
+  scenes. A continuous `z`, and thresholds x0.5 and x1.5, are the A/B still to run.
+- The board bit still means "task is write" until a second board task exists.
+- The action set (body, habit or pen) is still chosen from the mode in `step()`.
+- Saves are now version 4 (they hold `proto` and `uses`); version 3 saves are rejected until one
+  migrate path lands (#63).
+
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
@@ -263,7 +308,8 @@ is enough for a real brain's version of these skills is a hypothesis.
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
 - Speech or spoken words instead of pure tones. Multi-letter words.
 - Physics-based limbs (joint torques) instead of discrete leg states.
-- Inferring the task context from the senses instead of being told it.
+- Free play: drop the brain in any scene and let it find its skill (#62).
+- Loading version 3 saves (#63).
 
 ## References
 
@@ -275,6 +321,9 @@ is enough for a real brain's version of these skills is a hypothesis.
   *Science* 265:676. doi:10.1126/science.8036517
 - Masse, Grant and Freedman (2018) "Alleviating catastrophic forgetting using context-dependent
   gating and synaptic stabilization", *PNAS* 115:E10467. doi:10.1073/pnas.1803839115
+- Carpenter and Grossberg (1987) "A massively parallel architecture for a self-organizing neural
+  pattern recognition machine", *Computer Vision, Graphics, and Image Processing* 37:54.
+  doi:10.1016/S0734-189X(87)80014-2
 - Pardo, Tavakoli, Levdik and Kormushev (2018) "Time limits in reinforcement learning", ICML.
   arXiv:1712.00378
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable

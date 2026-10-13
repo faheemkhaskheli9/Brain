@@ -289,7 +289,8 @@ function updatePanel() {
       : i === world.stage ? `Episode ${world.episode - stageStarts[i] + 1} · success ${pct}% (pass ${STAGES[i].pass * 100}%)` : "";
   });
   const p = world.playing;
-  $("task").textContent = STAGES[p].name + (world.task >= 0 ? " (using it, learning off)" : world.graduated ? " (practice)" : p !== world.stage ? " (review, so it doesn't forget)" : "");
+  $("task").textContent = STAGES[p].name + (world.task >= 0 ? " (using it, learning off)" : world.graduated ? " (practice)" : p !== world.stage ? " (review, so it doesn't forget)" : "")
+    + ` · context it inferred: slot ${world.slot}`;
   const r = world.retina;
   retinaEls.forEach((el, i) => {
     const c = [0, 1, 2].map(k => Math.min(255, Math.round(r[i * 3 + k] * 330)));
