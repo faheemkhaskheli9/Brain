@@ -33,6 +33,9 @@ A first visit opens a three-line intro (reopen it with **What is this?**). A cap
 says in plain words what the creature is doing and why dopamine rose or dipped, and every panel label
 has a hover explanation.
 
+**Teach** in the skill picker makes you the teacher (see "Teach mode" below). Drop cubes and balls
+by clicking the floor, play a tone, and watch it fetch. **Give reward** (key R) works in every mode.
+
 ## The curriculum
 
 | # | Stage | What it must discover | Pass |
@@ -321,6 +324,46 @@ kept bar. On seeds 1-3, free play scored grasp 0.85 / 0.85 / 0.80, listen 0.70 /
 read 0.59 / 0.83 / 0.53 and write 1.00 on all three, against the one-skill runs' grasp
 0.84 / 0.86 / 0.86, listen 0.69 / 0.78 / 0.56, read 0.61 / 0.85 / 0.51. A task-blind greedy
 rule (greedy wherever `max pi > 0.5`) instead of the per-skill list is an untested hypothesis.
+
+## Teach mode: the viewer as teacher (#36)
+
+`world.teach({objects: [{pos: [x, y], letter: 0-2} or {pos, color: 0-2}], tone: 0-2 or -1}, learn)`
+replays the viewer's room every episode, with the creature dropped somewhere clear of the
+objects. The target is the first object the tone names. A cube's letter or a ball's colour counts,
+and grading follows the listen and read rules. It runs on the perform-mode machinery: the
+curriculum, success windows and episodic store are untouched, and actions are sampled. With
+`learn = true` (the page's default, "It learns from this") the weights do change. `world.reward(r)`
+adds `r` to the next step's reward, so it reaches the brain only through the TD error, as food
+does. It works in every mode. On the page, picking **Teach** shows a row to choose what a floor
+click drops (a click on an object takes it away, six at most), to play a tone, and to clear the
+room.
+
+`test_brain.mjs` checks the mechanics on each graduated seed: the room and target are the viewer's,
+the creature never starts on an object, `reward(1)` makes that step's dopamine exactly 1 higher,
+and with learning on the weights change but the curriculum does not. It prints the fetch rates
+and holds them to no bar. Here is why. A single fixed room depends on its layout far more than the
+random rooms the brain trained in. Learning off, 300 tries per room, on graduated seeds 1 / 2 / 3
+(2026-10-13):
+
+| Room | Seed 1 | Seed 2 | Seed 3 |
+|---|---|---|---|
+| Lone T cube at (2, 6), low tone | 0.98 | 0.96 | 0.31 |
+| Lone T cube in a corner (1, 1) | 0.93 | 0.83 | 0.14 |
+| T, L, X spread out, tone names L | 0.34 | 0.92 | 0.92 |
+| Same room, tone names T | 0.91 | 0.79 | 0.13 |
+| T, L, X in a row at y = 6, tone names X | 0.45 | 0.72 | 0.46 |
+| Red, green, blue balls, tone names green | 0.66 | 0.82 | 0.51 |
+| Read in random rooms (perform) | 0.56 | 0.75 | 0.49 |
+
+Averaged over these rooms, the rate is close to the random-room read rate. A single room swings
+from 0.13 to 0.98, though, even for one cube with nothing to confuse it with. Each room is one fixed
+set of views, so a policy that turns the same way at the same view either always reaches the cube
+or never does. Random rooms average that out. So the issue's check ("drop a T cube, play its tone,
+watch it fetch") holds on seeds 1 and 2 and fails on seed 3 in these rooms, until it is taught.
+With learning on in that room, the seed 3 lone-T-cube rate (scored with learning off, 300 tries)
+went from 0.31 to 0.70 after 100 taught tries, 0.90 after 400 and 0.93 after 1,400. Read in random
+rooms stayed close to where it was: 0.48, 0.39 and 0.45 after those three, against 0.49 before.
+That is one seed and one room, so the size of the cost to other rooms is not established.
 
 ## Inferred context: one model, no task index (#60)
 

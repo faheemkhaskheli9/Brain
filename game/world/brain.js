@@ -450,7 +450,7 @@ export class World {
     this.objects = [];
     // The grasp stage has one object of a random colour, so it teaches "approach and grasp", not
     // "red is food": a colour habit there made the listen stage perseverate on red.
-    const count = m === "walk" || this.board ? 0 : m === "grasp" ? 1 : 3;
+    const count = m === "walk" || this.board || this.lesson ? 0 : m === "grasp" ? 1 : 3;
     const pick = Math.floor(R() * 3);
     while (this.objects.length < count) {
       const p = [0.8 + R() * (ARENA - 1.6), 0.8 + R() * (ARENA - 1.6)];
@@ -462,6 +462,13 @@ export class World {
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
     this.shown = m === "copy" ? this.target : -1;   // the letter held up at the board
+    if (this.lesson) {   // teach mode: the viewer's room and tone; the tone names the first object that matches it
+      const L = this.lesson, near = () => this.objects.some(o => Math.hypot(o.pos[0] - this.pos[0], o.pos[1] - this.pos[1]) < 1);
+      this.objects = L.objects.map(o => ({ pos: [...o.pos], color: o.letter >= 0 ? [1, 1, 1] : COLORS[o.color], letter: o.letter }));
+      for (let k = 0; k < 50 && near(); k++) this.pos = [0.5 + R() * (ARENA - 1), 0.5 + R() * (ARENA - 1)];
+      this.tone = L.tone;
+      this.target = L.tone < 0 ? -1 : L.objects.findIndex(o => o.letter === L.tone || o.color === L.tone);
+    }
     if (this.tone >= 0) this.events.push({ type: "tone", tone: this.tone });
     this.x = this.sense();
     this.h = this.brain.encode(this.x, this.slot = this.context());
@@ -572,6 +579,7 @@ export class World {
         r = success ? 1 : -GAINS.wrongCost;
       }
     }
+    if (this.bonus) { r += this.bonus; this.bonus = 0; }   // the viewer's reward (teach mode, #36)
     this.t++;
     const limit = m === "walk" ? 60 : GAINS.maxSteps, terminal = done;
     if (!done && this.t >= limit) {
@@ -639,9 +647,10 @@ export class World {
   // with "any" (free play). No weight, window, log or stage changes, so a saved brain can be used or
   // checked without training it further. perf.scene[key] = {n, ok, slots: steps per context slot}.
   // perform(null) goes back to training on `stage`.
-  perform(key, greedy = GAINS.performGreedy.includes(key)) {
+  perform(key, greedy = GAINS.performGreedy.includes(key), lesson = null) {
     const b = this.brain;
     b.ev.fill(0); b.eP.fill(0);   // a half-done training episode's traces must not carry over
+    this.lesson = lesson;
     if (key === null) {
       this.task = -1; b.learning = true; b.greedy = false; this.playing = this.stage;
     } else {
@@ -652,6 +661,28 @@ export class World {
     }
     this.reset();
   }
+
+  // Teach mode (#36): the viewer is the teacher. lesson = {objects: [{pos: [x, y], letter: 0-2} or
+  // {pos, color: 0-2}, up to 6], tone: 0-2 or -1 (silent)}. Every episode replays that room with the
+  // creature dropped somewhere clear, and the tone names the object to fetch, graded by the listen
+  // and read rules. It runs as perform mode (curriculum, windows and store untouched, sampling), but
+  // learn = true leaves learning on, so the viewer's reward() and the task's own reward shape it.
+  teach(lesson, learn = true) {
+    const idx = v => Number.isInteger(v) && v >= 0 && v < 3, inside = v => Number.isFinite(v) && v >= OBJ_R && v <= ARENA - OBJ_R;
+    const objects = (lesson.objects || []).map(o => {
+      const letter = o.letter ?? -1, color = o.color ?? -1;
+      if (!Array.isArray(o.pos) || !o.pos.every(inside) || idx(letter) === idx(color)) throw new Error("teach: each object needs pos in the room and one letter or color 0-2");
+      return { pos: [o.pos[0], o.pos[1]], letter: idx(letter) ? letter : -1, color: idx(color) ? color : -1 };
+    });
+    const tone = lesson.tone ?? -1;
+    if (objects.length > 6 || !(tone === -1 || idx(tone))) throw new Error("teach: at most 6 objects, tone -1 or 0-2");
+    this.perform(objects.some(o => o.letter >= 0) ? "read" : "listen", false, { objects, tone });
+    this.brain.learning = learn;
+  }
+
+  // A reward from outside the world, added to the next step's reward, so it reaches the brain only
+  // through the TD error (dopamine), like any other reward. Works in every mode.
+  reward(r = 1) { this.bonus = (this.bonus || 0) + r; }
 
   // Save and load: weights (including the fixed random wiring) plus curriculum progress. A loaded
   // world replays the current episode from its start, so it acts exactly as the saved one would
