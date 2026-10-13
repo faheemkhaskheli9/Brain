@@ -85,6 +85,7 @@
         <button id="sound" aria-pressed="true">Sound on</button>
         <button id="restart">Start a new brain</button>
         <button id="save">Save brain</button>
+        <select id="ckpt" aria-label="Download the brain as it was when a skill passed" hidden><option value="">Checkpoints</option></select>
         <button id="load">Load brain</button>
         <input id="loadFile" type="file" accept=".json,application/json" hidden>
         <select id="skill" aria-label="Train the brain, or use it on one skill with learning off">
@@ -159,7 +160,7 @@ let world, speed = "watch", paused = false, sound = true, lastStep = 0, freezeUn
 let daTrace = [], curve = [], bucket = [], stageStarts = [0], stageDone = [];
 function newBrain(seed) {
   world = new World(seed);
-  daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = []; $("skill").value = "";
+  daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = []; $("skill").value = ""; clearCheckpoints();
   $("banner").textContent = "A new brain. It starts by flailing its legs at random.";
   buildStages();
 }
@@ -340,7 +341,7 @@ function plot(id, values, { lo, hi, zero, marks = [] }) {
 // ---------- the loop ----------
 function doStep() {
   const snap = { pos: [...world.pos], heading: world.heading, legs: [...world.legs], objects: world.objects, mode: world.mode, pad: [...world.pad], tone: world.tone };
-  const stage = world.stage, r = world.step();
+  const stage = world.stage, grad = world.graduated, r = world.step();
   daTrace.push(world.brain.dopamine); if (daTrace.length > 240) daTrace.shift();
   if (r.done) {
     if (world.brain.learning) {   // perform episodes leave the learning curve alone
@@ -353,8 +354,26 @@ function doStep() {
     }
   }
   if (world.stage !== stage) { stageDone[stage] = world.episode - stageStarts[stage]; stageStarts[world.stage] = world.episode; marks.push(curve.length); }
+  if (world.stage !== stage || world.graduated !== grad) checkpoint(STAGES[stage]);
 }
 let marks = [];
+
+// Skill checkpoints (#55): a full save the moment each skill passes, kept in memory (not
+// localStorage: about 0.64 MB each), offered for download from the #ckpt list.
+let checkpoints = [];
+function clearCheckpoints() { checkpoints = []; $("ckpt").length = 1; $("ckpt").hidden = true; }
+function checkpoint(st) {
+  checkpoints.push({ key: st.key, data: snapshot() });
+  $("ckpt").hidden = false;
+  $("ckpt").add(new Option(`Download checkpoint after ${st.name.toLowerCase()}`, checkpoints.length - 1));
+}
+const snapshot = () => world.save({ page: { daTrace, curve, bucket, stageStarts, stageDone, marks } });
+function download(data, name) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
+  a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
 
 function drainEvents() {
   for (const e of world.events) {
@@ -426,12 +445,10 @@ $("pause").onclick = () => { paused = !paused; $("pause").setAttribute("aria-pre
 $("sound").onclick = () => { sound = !sound; $("sound").setAttribute("aria-pressed", sound); $("sound").textContent = sound ? "Sound on" : "Sound off"; };
 $("restart").onclick = () => { marks = []; newBrain(1 + Math.floor(Math.random() * 1e6)); };
 // Save: the brain plus this page's charts, as a JSON download. Load: the reverse.
-$("save").onclick = () => {
-  const data = JSON.stringify({ ...world.toJSON(), page: { daTrace, curve, bucket, stageStarts, stageDone, marks } });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
-  a.download = `brain-world-episode-${world.episode}.json`; a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+$("save").onclick = () => download(snapshot(), `brain-world-episode-${world.episode}.json`);
+$("ckpt").onchange = e => {
+  const c = checkpoints[e.target.value]; e.target.value = "";
+  if (c) download(c.data, `brain-world-after-${c.key}.json`);
 };
 $("skill").onchange = e => {
   const key = e.target.value || null;
@@ -446,7 +463,7 @@ $("loadFile").onchange = async e => {
   if (!file) return;
   try {
     const o = JSON.parse(await file.text()), next = World.fromJSON(o), p = o.page || {};
-    world = next; frozen = null; freezeUntil = 0; buildStages(); $("skill").value = "";
+    world = next; frozen = null; freezeUntil = 0; buildStages(); $("skill").value = ""; clearCheckpoints();
     const list = v => Array.isArray(v) ? v.filter(Number.isFinite) : [];
     daTrace = list(p.daTrace); curve = list(p.curve); bucket = list(p.bucket); marks = list(p.marks);
     stageStarts = list(p.stageStarts); stageDone = Array.isArray(p.stageDone) ? p.stageDone.map(x => x == null ? undefined : Number(x)) : [];

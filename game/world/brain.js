@@ -377,6 +377,9 @@ export class World {
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
     this.events = [];   // for the UI: {type: "tone"|"grasp"|"stroke"|"stage"|"graduated", ...}
     this.task = -1; this.perf = { n: 0, ok: 0, scene: {} };   // perform mode: the locked skill (STAGES.length = any), and its score
+    // A small model card that travels with the save (#55, Mitchell et al. 2019): birth facts once,
+    // one row per save. A caller may add more birth facts (sweep.mjs adds the git commit).
+    this.meta = { seed: seed >>> 0, created: new Date().toISOString(), gains: JSON.parse(JSON.stringify(GAINS)), saves: [] };
     this.reset();
   }
 
@@ -615,7 +618,23 @@ export class World {
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
         proto: arr(b.proto), uses: arr(b.uses) },
-      hippo: this.hippo.toJSON(this.memAt) };
+      hippo: this.hippo.toJSON(this.memAt), meta: this.meta };
+  }
+
+  // Perform-mode success per learned skill, measured on a copy so this world is left as it was.
+  scores(episodes = 100) {
+    const c = World.fromJSON(JSON.parse(JSON.stringify(this)));
+    return Object.fromEntries(STAGES.slice(0, this.graduated ? STAGES.length : this.stage).map(({ key }) => {
+      c.perform(key);
+      while (c.perf.n < episodes) c.step();
+      return [key, +(c.perf.ok / c.perf.n).toFixed(2)];
+    }));
+  }
+
+  // A save for a file: records {saved, episode, scores} in meta.saves first, then serialises.
+  save(extra = {}) {
+    this.meta.saves.push({ saved: new Date().toISOString(), episode: this.episode, scores: this.scores() });
+    return JSON.stringify({ ...this.toJSON(), ...extra });
   }
 
   // Old saves keep loading as the brain grows (#63), in a fixed order: v3 to v4, more slots, more
@@ -667,6 +686,9 @@ export class World {
     b.hh = ob.hh;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
+    // meta is a plain record, never read back into the brain; a save from before it has unknown birth facts.
+    const m = o.meta && typeof o.meta === "object" && !Array.isArray(o.meta) ? o.meta : { seed: null, created: null, gains: null };
+    w.meta = { ...m, saves: Array.isArray(m.saves) ? [...m.saves] : [] };   // a copy: saving must not change o
     w.rand.state = o.rand >>> 0;
     w.reset();
     return w;

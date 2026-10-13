@@ -1,9 +1,10 @@
 // Compare ways of keeping old skills across seeds: live rehearsal of old tasks vs offline sleep
 // replay from the episodic store (issue #64). Each arm x seed trains the full curriculum in its own
-// process, as test_brain.mjs does, then scores the skills it kept over 4,000 graduated episodes.
+// process, as test_brain.mjs does, then scores the skills it kept over 4,000 graduated episodes,
+// and saves and reloads it: each row carries the save's perform-mode scores and git commit.
 // Run: node game/world/sweep.mjs [seeds, default 1-10] [--arms A,B,...] [--jobs N] > sweep.log
 //      node game/world/sweep.mjs --from sweep.log    (summarise a saved run again, no training)
-import { fork } from "node:child_process";
+import { execSync, fork } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -56,8 +57,12 @@ function trial(arm, seed) {
     const c = eps[k].indexOf(Math.max(...eps[k]));
     return [k, { slot: c, episodes: share(eps[k], c), steps: share(steps[k], c) }];
   }));
-  return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, active, slots, uses: Array.from(w.brain.uses),
-    ...store, seconds: (Date.now() - t0) / 1000 };
+  // Each graduated brain goes through a real save and load (#55); its perform-mode scores are the
+  // ones the save's model card records.
+  try { w.meta.commit = execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
+  const card = World.fromJSON(JSON.parse(w.save())).meta;
+  return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, perform: card.saves[0].scores, commit: card.commit,
+    active, slots, uses: Array.from(w.brain.uses), ...store, seconds: (Date.now() - t0) / 1000 };
 }
 
 // Exact paired sign-flip test: two-sided p for the mean per-seed difference (2^n flips, n <= ~16).
@@ -82,6 +87,8 @@ function summarise(results, arms) {
     let line = `${arm.padEnd(24)}${`${ok.length}/${rs.length}`.padStart(6)}  ${`${bars}/${rs.length}`.padStart(9)}  ${f(mean(ok.map(r => r.episodes[4])), 9)}  ${f(mean(ok.map(r => r.total)), 7)}  `
       + Object.keys(KEEP).map(k => mean(ok.map(r => r.kept[k])).toFixed(2).padStart(6)).join(" ")
       + `  active ${mean(ok.map(r => r.active)).toFixed(0)}`;
+    const pf = ok.filter(r => r.perform);
+    if (pf.length) line += `  perform ${STAGES.map(s => mean(pf.map(r => r.perform[s.key])).toFixed(2)).join("/")}`;
     const pairs = ok.filter(r => base[r.seed]);
     if (arm !== arms[0] && pairs.length) {
       const dt = pairs.map(r => r.total - base[r.seed].total), dw = pairs.map(r => r.episodes[4] - base[r.seed].episodes[4]);
