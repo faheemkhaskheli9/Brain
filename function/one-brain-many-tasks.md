@@ -35,8 +35,8 @@ works in a model: **one undifferentiated network** that finds its own task struc
 organs** that differ by learning rule and are shared by every task. The synthesis this KB uses is
 a design hypothesis: fixed organs defined by learning rule, with **which task am I in** treated as a
 latent the brain infers from its senses, not as an input it is handed. Brain World now infers which
-of its context slots to use from a pooled scene summary (issue #60). Two task labels remain: the
-at-board input and the action set chosen from the mode.
+of its context slots to use from a pooled scene summary (issue #60), and picks its action set
+from the body and its development (issue #61). One task label remains: the at-board input.
 
 ## How it works
 
@@ -110,9 +110,15 @@ units and context slots it has, not by how many tasks exist.
   The failing seed infers correctly but never learns to read (README "Inferred context").
   In free play (`perform("any")`, issue #62) a frozen brain gets a random scene each episode and
   finds the skill itself, scoring about as well as when one skill is laid out per run.
-- **Still task labels, in two places.** The at-board input is `mode === "write"`, a task label
-  under another name until a second board task exists. And `step()` picks the allowed action set
-  (body, habit or pen) from the mode (issue #61).
+- **Action set from body and development (issue #61).** `step()` allows pen strokes at the board,
+  the gait habit (legs reset by reflex, push or grasp) once the brain is past the walk stage, and
+  the full body set before that. Nothing there reads the task; the reward rule still does, as it
+  belongs to the world. Training output on seeds 1-3 is unchanged, and frozen walk under the habit
+  scores 1.00 on all three (README). The habit is an established idea in outline (spinal pattern
+  generators, Ijspeert 2008; practised skills shifting to dorsolateral striatum, Yin & Knowlton
+  2006); a single developmental switch is a simplification.
+- **Still one task label.** The world sets `board` exactly when the scene is write, so the
+  at-board input is a task label under another name until a second board task exists.
 - **What gating bought:** per the README, the jump from 5 to 8 of 10 passing seeds came from
   growing the layer from 600 to 1,000 units; gating added a little on top (9 of 10), mostly to
   listening. It did not let replay be halved.
@@ -214,4 +220,6 @@ task or two.
 - Zenke, Poole & Ganguli (2017) "Continual learning through synaptic intelligence", ICML. https://arxiv.org/abs/1703.04200
 - Yu & Dayan (2005) "Uncertainty, neuromodulation, and attention", *Neuron* 46:681. doi:10.1016/j.neuron.2005.04.026
 - Carpenter & Grossberg (1987) "A massively parallel architecture for a self-organizing neural pattern recognition machine", *Computer Vision, Graphics, and Image Processing* 37:54. doi:10.1016/S0734-189X(87)80014-2
+- Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a review", *Neural Netw* 21:642. https://pubmed.ncbi.nlm.nih.gov/18555958/
+- Yin & Knowlton (2006) "The role of the basal ganglia in habit formation", *Nat Rev Neurosci* 7:464. doi:10.1038/nrn1919
 - Masse, Grant & Freedman (2018) "Alleviating catastrophic forgetting using context-dependent gating and synaptic stabilization", *PNAS* 115:E10467. doi:10.1073/pnas.1803839115

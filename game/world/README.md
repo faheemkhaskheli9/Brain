@@ -294,7 +294,14 @@ Honest limits:
 - The thresholds (white > 0.3, colour > 0.1, tone > 0.5, fovea > 0.1) were picked knowing the five
   scenes. A continuous `z`, and thresholds x0.5 and x1.5, are the A/B still to run.
 - The board bit still means "task is write" until a second board task exists.
-- The action set (body, habit or pen) is still chosen from the mode in `step()`.
+- The action set comes from the body and development, not the mode (#61): pen at the board
+  (`world.board`, set by the world when it puts the creature there), otherwise the gait habit
+  (legs reset by reflex, push or grasp) once the brain is past stage 0, otherwise the full body set.
+  Reward and time limit still branch on the mode: they are the world's rules, not the brain.
+  Training never replays walk, so the habit is off exactly on walk episodes: `test_brain.mjs 1 2 3`
+  prints the same output as before, line for line (2026-10-13). Walk on a graduated brain
+  (perform, free play) now runs under the habit: `perform.mjs --seed N walk` scores 1.00 on seeds
+  1-3 both sampling and greedy (was 0.99 / 0.99 / 0.79 sampling, 1.00 greedy).
 - Saves are now version 4 (they hold `proto` and `uses`); version 3 saves are rejected until one
   migrate path lands (#63).
 

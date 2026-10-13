@@ -10,6 +10,11 @@ assert.ok(!Brain.toString().includes("STAGES"), "Brain is indexed by task");
 for (const [, arg] of World.toString().matchAll(/\.encode\(([^;]*)/g)) assert.ok(!/playing|mode|task|stage/.test(arg), `encode is told the task: ${arg}`);
 assert.ok(!/playing|mode|task|stage|target|tone/.test(World.prototype.context.toString()), "context() reads the task");
 assert.equal(new World(1).brain.gate.length, GAINS.slots * GAINS.hidden);
+// The action set and the leg habit come from the body and development, not the task name (#61).
+const stepSrc = World.prototype.step.toString();
+for (const [, arg] of stepSrc.matchAll(/\.act\(([^;]*)/g)) assert.ok(!/\bm\b|mode|playing/.test(arg), `act is told the task: ${arg}`);
+for (const [, rhs] of stepSrc.matchAll(/(?:const set|const habit|this\.legs) = ([^;]*)/g)) assert.ok(!/\bm\b|mode|playing|task/.test(rhs), `action set or habit reads the task: ${rhs}`);
+assert.ok(!/mode|playing/.test(World.prototype.sense.toString()), "sense() reads the task");
 
 const LIMIT = 20000;   // episodes per stage before we call it a failure
 // After graduation, well above chance (grasping the nearest object scores about 0.33 on listen and
