@@ -35,12 +35,14 @@ export const ARMS = {
   "copy+si": { replay: 0.3, sleepEvery: 0, si: 1e-4, copy: true },
   copy15: { replay: 0.15, sleepEvery: 0, copy: true },
   "copy15+si": { replay: 0.15, sleepEvery: 0, si: 1e-4, copy: true },
+  // Issue #65: after graduation, blocks of listen and reversed listen, surprise off vs on (see reversal).
+  reversal: { replay: 0.3, sleepEvery: 0, reversal: true },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
 function trial(arm, seed) {
-  const { copy, ...gains } = ARMS[arm];
+  const { copy, reversal: rev, ...gains } = ARMS[arm];
   Object.assign(GAINS, gains);
   const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
   // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
@@ -71,7 +73,7 @@ function trial(arm, seed) {
   try { w.meta.commit = execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
   const json = w.save(), card = World.fromJSON(JSON.parse(json)).meta;
   return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, perform: card.saves[0].scores, commit: card.commit,
-    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), seconds: (Date.now() - t0) / 1000 };
+    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), ...(rev && { reversal: reversal(json) }), seconds: (Date.now() - t0) / 1000 };
 }
 
 // Issue #56, phase B: load the graduated save into six-stage code (growStages resumes it at copy),
@@ -87,6 +89,47 @@ function sixth(json) {
   const c = ends.indexOf(Math.max(...ends));
   return { learned: w.graduated, episodes: w.episode - start, before, after: w.scores(300), slot: c,
     share: +(ends[c] / ends.reduce((a, b) => a + b)).toFixed(3), founded: usesBefore[c] === 0, slotsUsed: w.brain.uses.filter(u => u > 0).length };
+}
+
+// Issue #65, phase C: from the graduated save, BLOCKS blocks of BLOCK listen episodes that alternate
+// the normal and the reversed tone rule (same scene, so the scene cannot pick the slot), with no
+// rehearsal and no stage passes. Run twice from the same save, surprise off and on. Per block: success
+// in its first and last 50 episodes, and the slot the last episode ended in.
+const BLOCK = 1000, BLOCKS = 6, SURPRISE = 3;
+function reversal(json) {
+  const out = {}, listen = STAGES.findIndex(s => s.key === "listen");
+  for (const [name, surprise] of [["off", 0], ["on", SURPRISE]]) {
+    Object.assign(GAINS, { replay: 0, surprise });
+    STAGES[listen].pass = Infinity;   // blocks are fixed length: listen never passes
+    const w = World.fromJSON(JSON.parse(json));
+    w.graduated = false; w.setStage(listen);
+    out[name] = [];
+    for (let k = 0; k < BLOCKS; k++) {
+      w.reversed = k % 2 === 1; w.reset();
+      const wins = [];
+      while (wins.length < BLOCK) { const r = w.step(); if (r.done) wins.push(r.success ? 1 : 0); }
+      const rate = xs => +(xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(3);
+      out[name].push({ first: rate(wins.slice(0, 50)), last: rate(wins.slice(-50)), slot: w.slot });
+    }
+    out[name + "Switches"] = w.brain.switches || 0;
+  }
+  return out;
+}
+
+// Phase C per arm: mean first-50 and last-50 success per block, off vs on, and on minus off on the
+// first 50 of the return blocks (2 onwards: a rule it has met before), paired by seed.
+function reversalSummary(results) {
+  const rs = results.filter(r => r.reversal);
+  if (!rs.length) return;
+  const mean = xs => xs.reduce((a, b) => a + b) / xs.length;
+  console.log(`\nphase C (reversal blocks of ${BLOCK}, normal/reversed alternating, surprise ${SURPRISE}): first50/last50 per block, n ${rs.length}`);
+  for (const name of ["off", "on"]) {
+    console.log(`  surprise ${name.padEnd(4)}` + rs[0].reversal[name].map((_, k) =>
+      `${k % 2 ? "R" : "N"} ${mean(rs.map(r => r.reversal[name][k].first)).toFixed(2)}/${mean(rs.map(r => r.reversal[name][k].last)).toFixed(2)}`).join("  ")
+      + `  switches ${mean(rs.map(r => r.reversal[name + "Switches"])).toFixed(1)}`);
+  }
+  const d = rs.map(r => mean(r.reversal.on.slice(2).map((b, k) => b.first - r.reversal.off[k + 2].first)));
+  console.log(`  on - off, first 50 of blocks 3-${BLOCKS}: ${mean(d) > 0 ? "+" : ""}${mean(d).toFixed(3)} (p ${signFlip(d).toFixed(3)}, n ${d.length})`);
 }
 
 // Phase B per arm: copy learned, its episodes, own slot, and how much the old skills fell (perform
@@ -154,6 +197,7 @@ function summarise(results, arms) {
   }
   if (FACTORIAL.every(a => arms.includes(a))) factorial(results);
   copySummary(results, arms);
+  reversalSummary(results);
 }
 
 // Issue #83: main effects and interaction on episodes per stage, over seeds that passed in all four

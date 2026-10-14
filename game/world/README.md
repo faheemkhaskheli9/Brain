@@ -427,6 +427,57 @@ Honest limits:
   write 0.86. Write is 1.00 on five seeds and 0.67-0.72 on four. A save with its store is about
   0.64 MB, and scoring adds about 0.7 s to each save.
 
+## Surprise: telling look-alike contexts apart (#65)
+
+Slots are picked by the scene, so two rules that share a scene share a slot and overwrite each
+other. Issue #65 item 1 asked whether the brain can split them by surprise instead, as multiple
+model RL (Doya, Samejima, Katagiri and Kawato 2002) and COIN (Heald, Lengyel and Wolpert 2021) infer
+context from prediction error.
+
+**How it works.** Each training episode adds up its squared TD errors (`epErr`). At `commit`, the
+slot the episode played in keeps a fast (about 5 episodes) and a slow (about 50) running mean of
+it. When `fast > GAINS.surprise × slow` on a slot past `minUses` episodes, the scene's slot gets an
+`alias`. It points to the calm sibling with the lowest normal error that has not failed since the
+last calm episode. If there is none, a free slot is founded as a new sibling (`parent` = the scene
+slot). Siblings never match scenes themselves, so `infer` reaches them only through the alias.
+`alias`, `parent`, `fast`, `slow` and `seen` are saved as `brain.ctx`. A save without them loads
+with none, and `GAINS.surprise = 0` (the default) never calls the detector. So nothing else changed:
+`test_brain.mjs` passes as before, and its new check drives the detector with made-up errors. It
+must switch to a new sibling, back to the original, back to the sibling, and found a third.
+
+**The task.** `world.reversed = true` remaps listen's tones (low = blue, middle = red, high =
+green). The scene is identical, so only the outcomes say the rule changed. `sweep.mjs --arms
+reversal` trains each seed to graduation and saves. From that same save it runs six blocks of 1,000
+listen episodes, alternating normal (N) and reversed (R), with no rehearsal and no stage passes.
+It does this twice, with surprise 0 and with surprise 3.
+
+Seeds 1-10, 2026-10-13, `--jobs 10` (seed 8 did not learn read, so n = 9). Success in each block's
+first / last 50 episodes:
+
+| Surprise | N | R | N | R | N | R | Switches (mean) |
+|---|---|---|---|---|---|---|---|
+| off | 0.71 / 0.83 | 0.02 / 0.06 | 0.11 / 0.78 | 0.02 / 0.09 | 0.20 / 0.79 | 0.02 / 0.09 | 0 |
+| on (3) | 0.71 / 0.83 | 0.07 / 0.14 | 0.21 / 0.60 | 0.04 / 0.08 | 0.15 / 0.50 | 0.04 / 0.10 | 7.1 |
+
+**What it shows:**
+- **No savings.** On the return blocks (3-6), surprise raised first-50 success by +0.026, which is
+  not significant (p = 0.25, paired sign-flip, n = 9). On one seed (7) the first return to N started
+  at 0.66, against 0.12 without surprise. That is the hoped-for effect, but only once.
+- **It cost the normal rule.** Last-50 success on N fell to 0.60 and 0.50 (off: 0.78, 0.79).
+  Binary outcomes make the 5-episode mean noisy, so the detector also fires inside N blocks (seed 6:
+  29 switches), and each false switch lands on a slot that does not know the rule.
+- **The reversed rule was rarely relearned in either arm.** On 6 of 9 seeds R stayed near 0, below
+  the 0.33 that grasping at random would score. The creature keeps grasping the colour the old rule
+  named, and an unrewarded block gives the actor no positive TD error to learn from. A pilot with
+  blocks of 400 and surprise 2 (seeds 1-2) was worse: 10 switches and lower N.
+- **The hypothesis is not supported at this setting**, so `GAINS.surprise` stays 0. Inference was
+  not the bottleneck; relearning in a fresh slot was. Untested next steps: a detector that needs
+  more evidence (a Bayesian belief over siblings, as COIN keeps), and siblings that do not share
+  the raw senses and the old rule's actor weights (the 25% of units the masks share, plus `x`).
+
+That the brain infers which memory to express from prediction error has behavioural support (COIN
+explains savings and spontaneous recovery in motor adaptation). This detector is a toy version.
+
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
@@ -468,5 +519,9 @@ is enough for a real brain's version of these skills is a hypothesis.
   arXiv:1703.04200
 - Frey and Morris (1997) "Synaptic tagging and long-term potentiation", *Nature* 385:533.
   doi:10.1038/385533a0
+- Doya, Samejima, Katagiri and Kawato (2002) "Multiple model-based reinforcement learning",
+  *Neural Computation* 14:1347. doi:10.1162/089976602753712972
+- Heald, Lengyel and Wolpert (2021) "Contextual inference underlies the learning of sensorimotor
+  repertoires", *Nature* 600:489. doi:10.1038/s41586-021-04129-3
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.

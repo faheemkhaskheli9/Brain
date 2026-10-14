@@ -289,4 +289,32 @@ assert.ok(orient(ox) > 0, "orient: object on the left must turn left");
 o.objects = [];
 assert.equal(orient(o.sense()), 0, "orient: walls must not drive the reflex");
 console.log("  Orienting reflex: turns toward an object, ignores walls");
+
+// Surprise (#65): one scene, two rules. A burst of high TD error switches the scene to a new sibling
+// slot; once that is calm, a second burst switches back to the original; a third rule founds another.
+GAINS.surprise = 2;
+const sb = new Brain(rng(9)), zs = Float32Array.of(0, 1, 1, 0, 0), ep = (s, n) => { for (let i = 0; i < n; i++) { sb.epErr = s; sb.commit(zs); } };
+const burst = () => { const from = sb.infer(zs); for (let n = 0; n < 10 && sb.infer(zs) === from; n++) ep(20, 1); return sb.infer(zs); };
+ep(0.5, 40);
+const home = sb.infer(zs);
+assert.equal(sb.alias[home], -1, "surprise: switched while calm");
+const sib = burst();
+assert.ok(sib !== home && sb.parent[sib] === home, "surprise: no sibling founded");
+assert.equal(sb.match(zs).best, home, "surprise: a sibling must not match scenes itself");
+ep(0.5, 40);
+assert.equal(burst(), home, "surprise: did not switch back to the calm original");
+ep(0.5, 5);
+assert.equal(burst(), sib, "surprise: did not go back to the known sibling");
+const third = burst();   // neither fits: a third
+assert.ok(third !== home && third !== sib && sb.parent[third] === home, "surprise: no third context");
+const sw = new World(1);
+sw.brain.alias.set(sb.alias); sw.brain.parent.set(sb.parent); sw.brain.slow.set(sb.slow);
+const back = World.fromJSON(JSON.parse(JSON.stringify(sw))).brain;
+for (const k of ["alias", "parent", "slow"]) assert.deepEqual(back[k], sw.brain[k], `save lost ${k}`);
+const noCtx = JSON.parse(JSON.stringify(sw)); delete noCtx.brain.ctx;
+assert.ok(World.fromJSON(noCtx).brain.alias.every(a => a === -1), "a save from before #65 loads with no aliases");
+sw.reversed = true; sw.setStage(2);
+assert.equal(sw.tone, (sw.target + 1) % 3, "reversal: tone not remapped");
+GAINS.surprise = 0;
+console.log("  Surprise: switches to a sibling, back, founds a third; saved; reversal remaps the tone");
 console.log("ok");

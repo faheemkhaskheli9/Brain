@@ -116,6 +116,15 @@ units and context slots it has, not by how many tasks exist.
   random layouts but not over one fixed layout. On seed 3, 400 tries taught in the room raised one
   failing room from 0.31 to 0.90 (game README "Teach mode"; one seed, measured here, not a
   general result).
+- **Look-alike contexts by surprise (issue #65, 2026-10-13): not supported yet.** When two rules
+  share one scene (listen, and listen with the tones remapped), the scene cannot pick the slot.
+  `GAINS.surprise` lets a burst of TD error switch the scene to a sibling slot, as in
+  multiple-model RL (Doya et al. 2002) and COIN (Heald, Lengyel & Wolpert 2021). In six alternating
+  blocks of 1,000 episodes on 9 seeds, it gave no savings (+0.026 on return blocks, p 0.25). It
+  cost the normal rule (last-50 success 0.60 / 0.50 against 0.78 / 0.79), because noisy outcomes
+  set off false switches. The reversed rule was not relearned on most seeds with or without it.
+  It stays off (game README "Surprise"). That the brain infers context from prediction error is a
+  hypothesis with behavioural support (COIN); this detector is a toy.
 - **Action set from body and development (issue #61).** `step()` allows pen strokes at the board,
   the gait habit (legs reset by reflex, push or grasp) once the brain is past the walk stage, and
   the full body set before that. Nothing there reads the task; the reward rule still does, as it
@@ -214,6 +223,7 @@ task or two.
 - Wang et al. (2018) "Prefrontal cortex as a meta-reinforcement learning system", *Nat Neurosci* 21:860. doi:10.1038/s41593-018-0147-8
 - Reed et al. (2022) "A Generalist Agent", *Transactions on Machine Learning Research*. https://arxiv.org/abs/2205.06175
 - Doya (1999) "What are the computations of the cerebellum, the basal ganglia and the cerebral cortex?", *Neural Networks* 12:961. doi:10.1016/S0893-6080(99)00046-5
+- Doya, Samejima, Katagiri & Kawato (2002) "Multiple model-based reinforcement learning", *Neural Computation* 14:1347. doi:10.1162/089976602753712972
 - McClelland, McNaughton & O'Reilly (1995) "Why there are complementary learning systems in the hippocampus and neocortex", *Psychol Rev* 102:419. doi:10.1037/0033-295X.102.3.419
 - Kumaran, Hassabis & McClelland (2016) "What learning systems do intelligent agents need?", *Trends Cogn Sci* 20:512. doi:10.1016/j.tics.2016.05.004
 - Eliasmith et al. (2012) "A large-scale model of the functioning brain", *Science* 338:1202. doi:10.1126/science.1225266

@@ -89,7 +89,11 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // pooled scene summaries and picks the gate row whose prototype matches the scene so far on every
   // channel within `vigilance`, adaptive-resonance style (Carpenter and Grossberg 1987). A full
   // store reclaims a slot used fewer than `minUses` times before it merges two contexts.
-  slots: 8, vigilance: 0.35, minUses: 20 };
+  slots: 8, vigilance: 0.35, minUses: 20,
+  // Surprise (issue #65): when two contexts look the same, the scene cannot pick the slot. Each slot
+  // keeps a fast and a slow running mean of an episode's summed squared TD error; fast above
+  // surprise x slow switches that scene to a sibling slot (or founds one). 0 = off. See README "Surprise".
+  surprise: 0 };
 export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
 // The scene code each of the five v3 stages produces (walk, grasp, listen, read, write), for World.migrate.
 const V3_CODES = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 1, 0], [0, 0, 1, 0, 1]];
@@ -133,6 +137,11 @@ export class Brain {
     for (let i = 0; i < this.gate.length; i++) this.gate[i] = rand() >= GAINS.gate ? 1 : 0;
     this.proto = new Float32Array(GAINS.slots * SCENE);   // each slot's prototype scene summary
     this.uses = new Int32Array(GAINS.slots);               // episodes committed to it; 0 = free
+    // Surprise (#65): alias[c] = the sibling slot scene c now plays in (-1 = itself); parent[s] = the
+    // scene slot a sibling belongs to (-1 = not a sibling); fast, slow, seen: its error record.
+    this.alias = new Int8Array(GAINS.slots).fill(-1); this.parent = new Int8Array(GAINS.slots).fill(-1);
+    this.fast = new Float32Array(GAINS.slots); this.slow = new Float32Array(GAINS.slots); this.seen = new Int32Array(GAINS.slots);
+    this.epErr = 0; this.failed = new Set();   // this episode's summed delta^2; slots left since the last calm episode
     this.v = new Float32Array(this.nH);           // critic
     this.P = new Float32Array(N_ACT * this.nH);   // actor
     this.ev = new Float32Array(this.nH);
@@ -171,6 +180,7 @@ export class Brain {
     const m = { best: -1, free: -1, rare: -1, near: -1 };
     let bd = Infinity, nd = Infinity;
     for (let c = 0; c < GAINS.slots; c++) {
+      if (this.parent[c] >= 0) continue;   // a sibling is reached only through its scene slot's alias
       if (!this.uses[c]) { if (m.free < 0) m.free = c; continue; }
       let d = 0, far = 0;
       for (let k = 0; k < SCENE; k++) { const e = Math.abs(z[k] - this.proto[c * SCENE + k]); d += e; if (e > far) far = e; }
@@ -183,8 +193,10 @@ export class Brain {
 
   infer(z) {   // the slot for scene summary z; changes nothing
     const m = this.match(z);
-    return m.best >= 0 ? m.best : m.free >= 0 ? m.free : m.near;
+    return m.best >= 0 ? this.resolve(m.best) : m.free >= 0 ? m.free : m.near;
   }
+
+  resolve(c) { return this.alias[c] >= 0 ? this.alias[c] : c; }
 
   commit(z) {   // end of a training episode: z joins its slot's prototype or founds a new one
     if (!this.learning) return;
@@ -195,7 +207,39 @@ export class Brain {
       const i = c * SCENE + k;
       this.proto[i] = this.uses[c] ? this.proto[i] + 0.05 * (z[k] - this.proto[i]) : z[k];
     }
-    this.uses[c]++;
+    const e = c === m.best ? this.resolve(c) : c;   // the slot the episode actually played in
+    this.uses[e]++;
+    if (GAINS.surprise && c === m.best) this.surprised(c, e, this.epErr);
+    this.epErr = 0;
+  }
+
+  // Surprise (#65), a hypothesis-level model of context inference from prediction error (multiple
+  // model RL: Doya, Samejima, Katagiri and Kawato 2002; COIN: Heald, Lengyel and Wolpert 2021).
+  // Scene slot c played this episode in slot e with summed squared TD error s. While e is young or
+  // calm (fast <= surprise x slow), s updates its normal level. Otherwise scene c switches to the
+  // sibling with the lowest normal error not yet left since the last calm episode, or founds one.
+  // ponytail: one switch per surprise burst; a Bayesian belief over siblings (COIN) is the upgrade.
+  surprised(c, e, s) {
+    const young = ++this.seen[e] < GAINS.minUses;
+    this.fast[e] += (s - this.fast[e]) / Math.min(this.seen[e], 5);
+    if (young || this.fast[e] <= GAINS.surprise * this.slow[e]) {
+      this.slow[e] += (s - this.slow[e]) / Math.min(this.seen[e], 50);
+      if (!young) this.failed.clear();
+      return;
+    }
+    this.failed.add(e); this.fast[e] = this.slow[e];
+    let next = -1;
+    for (let k = 0; k < GAINS.slots; k++) {
+      if ((k === c || this.parent[k] === c) && !this.failed.has(k) && (next < 0 || this.slow[k] < this.slow[next])) next = k;
+    }
+    if (next < 0) {   // every sibling failed too: a new context
+      next = this.uses.indexOf(0);
+      if (next < 0) return;   // no free slot: stay
+      this.parent[next] = c; this.uses[next] = 1; this.seen[next] = 0;
+      this.proto.copyWithin(next * SCENE, c * SCENE, c * SCENE + SCENE);
+    } else this.fast[next] = this.slow[next];
+    this.alias[c] = next === c ? -1 : next;
+    this.switches = (this.switches || 0) + 1;
   }
 
   value(h) { let s = 0; for (let i = 0; i < this.nH; i++) s += this.v[i] * h[i]; return s; }
@@ -235,6 +279,7 @@ export class Brain {
     const delta = r + (hNext ? GAINS.gamma * this.value(hNext) : 0) - this.value(this.h);
     this.dopamine = delta;   // still computed in perform mode, so the panel shows surprise
     if (!this.learning) return;
+    this.epErr += delta * delta;
     // Step size over a running mean of |h|^2, not the current |h|^2: the trace holds past states,
     // and a small current one would blow the step up (it made the critic diverge).
     let hh = 0; for (let i = 0; i < this.nH; i++) hh += this.h[i] * this.h[i];
@@ -405,7 +450,7 @@ export function scene(x) {
     x.subarray(F, F + 25).some(v => v > 0.1), x[BOARD_IN] > 0.5].map(Number);
 }
 
-const SYN = ["omega", "Omega", "anchor"];
+const SYN = ["omega", "Omega", "anchor"], CTX = ["alias", "parent", "fast", "slow", "seen"];
 function syn(w) { return { omega: new Float32Array(w.length), Omega: new Float32Array(w.length), anchor: Float32Array.from(w) }; }
 const mapSyn = (s, f) => ({ P: Object.fromEntries(SYN.map(k => [k, f(s.P[k])])), v: Object.fromEntries(SYN.map(k => [k, f(s.v[k])])) });
 
@@ -461,6 +506,9 @@ export class World {
     }
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
+    // Reversal (#65): the same scene with the tones remapped (low = blue, middle = red, high = green),
+    // so nothing the creature sees or hears says the rule changed; only the outcomes do.
+    if (this.reversed && m === "listen") this.tone = (this.target + 1) % 3;
     this.shown = m === "copy" ? this.target : -1;   // the letter held up at the board
     if (this.lesson) {   // teach mode: the viewer's room and tone; the tone names the first object that matches it
       const L = this.lesson, near = () => this.objects.some(o => Math.hypot(o.pos[0] - this.pos[0], o.pos[1] - this.pos[1]) < 1);
@@ -649,7 +697,7 @@ export class World {
   // perform(null) goes back to training on `stage`.
   perform(key, greedy = GAINS.performGreedy.includes(key), lesson = null) {
     const b = this.brain;
-    b.ev.fill(0); b.eP.fill(0);   // a half-done training episode's traces must not carry over
+    b.ev.fill(0); b.eP.fill(0); b.epErr = 0;   // a half-done training episode's traces must not carry over
     this.lesson = lesson;
     if (key === null) {
       this.task = -1; b.learning = true; b.greedy = false; this.playing = this.stage;
@@ -693,7 +741,7 @@ export class World {
     return { version: 5, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
-        proto: arr(b.proto), uses: arr(b.uses),
+        proto: arr(b.proto), uses: arr(b.uses), ctx: Object.fromEntries(CTX.map(k => [k, arr(b[k])])),
         syn: mapSyn(b.syn, toB64) },   // without it a loaded SI brain forgets faster than the one saved
       hippo: this.hippo.toJSON(this.memAt), meta: this.meta };
   }
@@ -740,6 +788,7 @@ export class World {
       b.gate = b.gate.concat(Array.from({ length: add * H }, () => spare() >= GAINS.gate ? 1 : 0));
       b.proto = b.proto.concat(Array(add * SCENE).fill(0));
       b.uses = b.uses.concat(Array(add).fill(0));
+      if (b.ctx) b.ctx = Object.fromEntries(CTX.map(k => [k, (b.ctx[k] || []).concat(Array(add).fill(k === "alias" || k === "parent" ? -1 : 0))]));
     }
     // growStages: one empty window per new stage; a graduated brain resumes at the first new one.
     const s = o.windows.length;
@@ -764,12 +813,17 @@ export class World {
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
       && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && ob.gate.every(g => g === 0 || g === 1)
       && ob.proto.every(p => p >= 0 && p <= 1) && ob.uses.every(u => Number.isInteger(u) && u >= 0)
-      && (ob.hh === undefined || Number.isFinite(ob.hh));
+      && (ob.hh === undefined || Number.isFinite(ob.hh))
+      // the surprise record (#65); a save from before it loads with none
+      && (ob.ctx === undefined || CTX.every(k => Array.isArray(ob.ctx[k]) && ob.ctx[k].length === GAINS.slots
+        && ob.ctx[k].every(k === "alias" || k === "parent" ? v => Number.isInteger(v) && v >= -1 && v < GAINS.slots
+          : k === "seen" ? v => Number.isInteger(v) && v >= 0 : v => Number.isFinite(v) && v >= 0)));
     // An older save without an episodic store loads with an empty one.
     const hippo = o && o.hippo === undefined ? new Hippocampus() : Hippocampus.fromJSON(o && o.hippo);
     if (!ok || !hippo) throw new Error("not a Brain World save, or saved by an older version or with a different brain size");
     w.hippo = hippo;
     for (const k of KEYS) b[k].set(ob[k]);
+    if (ob.ctx) for (const k of CTX) b[k].set(ob.ctx[k]);
     b.hh = ob.hh; b.syn = sy;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
