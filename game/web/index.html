@@ -33,6 +33,7 @@
   .tag { font-size: .8125rem; letter-spacing: .06em; color: var(--muted); margin: 0 0 8px; max-width: 68ch; }
   .tag b { color: var(--violet); text-transform: uppercase; }
   .debrief { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 68ch; }
+  #sweep { aspect-ratio: auto; max-width: 520px; border: 0; cursor: default; }
   a { color: var(--violet); }
 </style>
 </head>
@@ -53,6 +54,7 @@
     </aside>
   </div>
   <p class="debrief" id="debrief" hidden></p>
+  <canvas id="sweep" width="520" height="186" role="img" hidden></canvas>
 </main>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
@@ -102,7 +104,38 @@ function end(msg, won) {
   over = true; clearTimeout(hintTimer); $("again").hidden = false;
   for (const b of $("controls").children) b.disabled = true;
   say(msg); render();
-  if (won) $("debrief").hidden = false; else $("hint").hidden = false;
+  if (!won) { $("hint").hidden = false; return; }
+  $("debrief").hidden = false;
+  // Seeded, so computed once per level; deferred so the win paints first (level 11 takes about a second).
+  if (level.sweep) setTimeout(() => { if (over) plot(level.chart ||= level.sweep()); }, 50);
+}
+
+// A level's what-if sweep as a small line chart under the debrief, drawn as play.py plot() draws it,
+// except that the data starts below the y label (t = 40) so a curve that starts high does not cross it.
+function plot([title, xlabel, ylabel, xs, ys]) {
+  const cv = $("sweep"), g = cv.getContext("2d"), w = cv.width, h = cv.height, l = 50, b = 30, t = 40;
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(0, ...ys), y1 = Math.max(...ys);
+  const sx = x => l + (x - x0) / (x1 - x0) * (w - l - 10), sy = y => h - b - (y - y0) / (y1 - y0) * (h - b - t);
+  const label = (s, x, y, align, bold = false) => {
+    g.font = bold ? `600 ${font(14)}` : font(12); g.fillStyle = css(bold ? "--ink" : "--muted");
+    g.textAlign = align; g.textBaseline = "middle"; g.fillText(s, x, y);
+  };
+  g.fillStyle = css("--glass"); g.fillRect(0, 0, w, h);
+  label(title, l, 9, "left", true);
+  g.strokeStyle = css("--muted"); g.lineWidth = 1; g.beginPath();
+  g.moveTo(l, 24); g.lineTo(l, h - b); g.lineTo(w - 10, h - b); g.stroke();
+  for (const y of [y0, y1]) label(String(+y.toPrecision(2)), l - 6, sy(y), "right");
+  for (const x of [x0, x1]) label(String(x), sx(x), h - b + 10, "center");
+  label(xlabel, (l + w) / 2, h - 8, "center");
+  label(ylabel, l + 6, 31, "left");
+  g.strokeStyle = css("--violet"); g.lineWidth = 2; g.beginPath();
+  xs.forEach((x, i) => i ? g.lineTo(sx(x), sy(ys[i])) : g.moveTo(sx(x), sy(ys[i])));
+  g.stroke();
+  g.fillStyle = css("--pink");
+  xs.forEach((x, i) => { g.beginPath(); g.arc(sx(x), sy(ys[i]), 4, 0, 2 * Math.PI); g.fill(); });
+  cv.setAttribute("aria-label", `${title}. Line chart of ${ylabel} against ${xlabel}: ` +
+    xs.map((x, i) => `${x}, ${ys[i].toFixed(2)}`).join("; ") + ".");
+  cv.hidden = false;
 }
 
 const LEVELS = {
@@ -382,6 +415,16 @@ const LEVELS = {
       "attention.",
     kb: ["function/memory-systems.md", "memory systems"],
     hint: "Similar drawings blur together. Store random patterns, press Test after each one, and keep going.",
+    // Debrief chart: the same sim.py loop as levels.py Remember.sweep().
+    sweep: () => ["Recall vs memories stored (random patterns)", "memories stored", "mean recall overlap", ...js(py.runPython(`
+import numpy as np, sim
+rng, xs, ys = np.random.default_rng(0), list(range(1, 21)), []
+for n in xs:
+    net = sim.Hopfield(64)
+    for _ in range(n):
+        net.store(rng.choice([-1.0, 1.0], 64))
+    ys.append(float(np.mean(net.test())))
+xs, ys`))],
     label: "An 8 by 8 drawing grid on the left and thumbnails of the stored memories on the right. Click and drag to draw.",
     buttons: [["Store drawing", null, s => s.store()], ["Store a random pattern", null, s => s.storeRandom()],
               ["Recall from drawing", null, s => s.recall()], ["Test all memories", null, s => s.test()],
@@ -535,6 +578,10 @@ const LEVELS = {
       "this weighting precision, and attention may be the brain turning precision up where it matters.",
     kb: ["function/predictive-processing.md", "predictive processing"],
     hint: "Neither end of the slider works. Try about a fifth of the way along and leave it there.",
+    // Debrief chart: the same sim.py call as levels.py Predict.sweep().
+    sweep: () => ["Tracking error vs trust in the senses", "gain (trust in the senses)", "mean error over 12 s",
+      ...js(py.runPython("import sim\nxs = [0.02, 0.05, 0.1, 0.15, 0.2, 0.3, 0.45, 0.6, 0.8, 1.0]\n" +
+                         "xs, [sim.tracking_error(g) for g in xs]"))],
     label: "A dot moving along a track behind a grey screen, the ring of your belief, and a chart of tracking error.",
     buttons: [],
     WINDOW: 600, TRACK_Y: 140, SMOOTH: 30,  // ticks = 12 s; plotted error is smoothed over 0.6 s
@@ -815,13 +862,17 @@ const LEVELS = {
       "integration) an animal knows where it is even in the dark, and can run straight home along a path it never " +
       "took. Arrow keys move the creature (pink). The ring is where it thinks it is. Each step is sensed with a " +
       "little noise. The circles around the three posts are landmark place fields.",
-    debrief: "Adding up noisy steps drifts: the error grows the farther you walk. A landmark you recognise snaps the " +
-      "estimate back, which is why place fields anchor to visible cues. The straight run home was a shortcut you " +
-      "never walked: the home vector came from the map, not from memory of the route. Desert ants do this with no " +
-      "landmarks over tens of metres (Müller and Wehner 1988), and an AI agent trained to path-integrate grew " +
-      "grid-like units on its own (Banino et al. 2018).",
+    debrief: "Adding up noisy steps drifts: the error grows the farther you walk, like the chart below. A landmark " +
+      "you recognise snaps the estimate back, which is why place fields anchor to visible cues. The straight run " +
+      "home was a shortcut you never walked: the home vector came from the map, not from memory of the route. " +
+      "Desert ants do this with no landmarks over tens of metres (Müller and Wehner 1988), and an AI agent trained " +
+      "to path-integrate grew grid-like units on its own (Banino et al. 2018).",
     kb: ["function/spatial-navigation.md", "spatial navigation"],
     hint: "After you find the food, walk through a post's circle so your estimate resets, then press H at once.",
+    // Debrief chart: the same sim.py call as levels.py Home.sweep().
+    sweep: () => ["Miss distance vs steps walked, no landmarks", "steps walked", "median miss (arena widths)",
+      ...js(py.runPython("import numpy as np, sim\nxs = [10, 25, 50, 100, 150, 200]\n" +
+                         "xs, [float(np.median([sim.homing_error(n, seed) for seed in range(40)])) for n in xs]"))],
     label: "An arena seen from above with the nest, three landmark posts and the creature. Arrow keys move it; H heads home.",
     buttons: [["Landmark correction (place cells)", null, s => s.toggle()], ["Head home (H)", "KeyH", s => s.goHome()]],
     STEP: 0.03, FOUND_R: 0.06, HOME_R: 0.08, FAR: 0.4,   // FAR: H only works this far from the nest
@@ -912,7 +963,7 @@ function render() {
 
 function start() {
   over = false; clearTimeout(hintTimer);
-  $("again").hidden = true; $("debrief").hidden = true; $("hint").hidden = true;
+  $("again").hidden = true; $("debrief").hidden = true; $("hint").hidden = true; $("sweep").hidden = true;
   for (const b of $("controls").children) b.disabled = false;
   level.reset();
   hintTimer = setTimeout(() => { $("hint").hidden = false; }, HINT_AFTER_MS);

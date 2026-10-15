@@ -18,8 +18,9 @@ Each level opens once the one before it is won.
 
 **In a browser (all 11 levels).** `game/web/index.html` runs every level, from Spark
 (`#spark`) to Find your way home (`#home`), with the same `sim.py` under [Pyodide](https://pyodide.org), so nothing needs installing.
-The level 5, 7 and 11 debriefs have no sweep chart in the browser yet, and levels unlock
-in any order (there is no save file). The page
+The level 5, 7 and 11 debriefs draw the same what-if sweep chart as the desktop, computed
+by `sim.py` in the browser (the level 11 one takes about a second). Levels unlock in any
+order (there is no save file). The page
 fetches `sim.py`, so serve the repo over HTTP: `python -m http.server` from the repo root,
 then open `http://localhost:8000/game/web/`. The first load downloads Pyodide and numpy
 from the jsDelivr CDN, so it takes a few seconds.
@@ -117,5 +118,4 @@ See [world/README.md](world/README.md) for the curriculum, the brain and its lim
 ## Not done yet
 
 - Playtest with two people new to neuroscience and tune difficulty (issue #6).
-- Debrief sweep charts for levels 5, 7 and 11 in the browser version (issue #12).
 - Out of scope for now: sound, larger spiking networks.
