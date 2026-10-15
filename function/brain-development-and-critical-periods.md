@@ -8,8 +8,8 @@ use_cases:
   - why do children learn languages more easily than adults
   - what can AI learn from overproducing and pruning connections
   - how much of the brain is innate versus learned
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/nrn1787
   - https://doi.org/10.1113/jphysiol.1970.sp009022
@@ -58,9 +58,10 @@ data to show.
 
 ### Critical periods (established)
 - **Ocular dominance.** Closing one eye in a young kitten shifts visual cortex
-  neurons to respond to the open eye (Wiesel & Hubel 1963). The same closure in
-  an adult cat has little effect; sensitivity peaks in the first weeks to months
-  (Hubel & Wiesel 1970).
+  neurons to respond to the open eye (Wiesel & Hubel 1963). In kittens,
+  susceptibility begins near the start of the fourth week, stays high until six to
+  eight weeks and is gone by about three months; a year of closure in an adult cat
+  has no detectable effect (Hubel & Wiesel 1970).
 - **What opens and closes them.** The maturation of fast-spiking parvalbumin
   inhibitory interneurons opens the window; molecular "brakes" such as
   perineuronal nets around those cells close it (Hensch 2005). Dissolving the

@@ -9,8 +9,8 @@ use_cases:
   - how do infants find words in continuous speech
   - how much of human sample efficiency comes from priors versus the learning algorithm
   - which inductive biases should I build into a learner instead of learning them
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1111/j.1467-7687.2007.00569.x
   - https://doi.org/10.1038/s41467-019-11786-6
@@ -43,7 +43,7 @@ event that breaks a rule they hold.
 |---|---|---|
 | Objects | 5-month-olds looked longer when a screen appeared to rotate through the space occupied by a box hidden behind it; objects are expected to persist and be solid | Baillargeon, Spelke & Wasserman 1985 |
 | Number | 6-month-olds told 8 dots from 16 but not 8 from 12, with area and density controlled: an approximate, ratio-limited number sense | Xu & Spelke 2000 |
-| Agents | 6-month-olds encoded the goal object of a reaching hand but not of a moving rod | Woodward 1998 |
+| Agents | 6- and 9-month-olds encoded the goal object of a reaching human hand but not of an inanimate object (arm-sized, or with digits that closed on the toy) making the same contact | Woodward 1998 |
 | Agents | 12-month-olds expected an agent to take the efficient path to its goal | Gergely, Nádasdy, Csibra & Bíró 1995 |
 | Geometry | Young children who were disoriented searched by the room's shape and ignored a coloured wall that would have told them where to look | Hermer & Spelke 1994 |
 

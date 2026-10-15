@@ -8,8 +8,8 @@ use_cases:
   - what is computational psychiatry
   - are schizophrenia and autism explained by altered prediction or precision
   - model depression or addiction as a reinforcement learning problem
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1016/S0896-6273(03)00568-3
   - https://doi.org/10.1007/BF00308809
@@ -57,8 +57,9 @@ models; most of those mappings are still **hypotheses**.
 - **Established:** neurofibrillary tangles appear first in the transentorhinal and
   entorhinal region, then the hippocampus, and only later across neocortex (Braak &
   Braak 1991). This matches the early symptom: trouble forming new episodic memories.
-- **Established lesion evidence:** removing both medial temporal lobes left patient
-  H.M. unable to form new long-term memories (Scoville & Milner 1957). Damage of
+- **Established lesion evidence:** a bilateral medial temporal lobe resection that
+  removed much of both hippocampi left patient H.M. unable to form new long-term
+  memories (Scoville & Milner 1957). Damage of
   this kind spares older memories more than recent ones (temporally graded
   retrograde amnesia), the classic evidence for **systems consolidation** from
   hippocampus to cortex (Squire & Alvarez 1995; [[memory-systems]]).
@@ -96,9 +97,10 @@ In predictive processing, perception weights prediction errors by their
 ### Depression, addiction and compulsivity as reinforcement-learning changes
 **Computational psychiatry** fits learning and decision models to behaviour and
 asks which parameter differs (Montague et al. 2012; Huys, Maia & Frank 2016).
-- **Supported:** in a meta-analysis of reward-learning tasks, anhedonia and stress
-  related more to lower **reward sensitivity** than to a lower learning rate (Huys et
-  al. 2013).
+- **Supported:** in a meta-analysis of reward-learning tasks, anhedonia and major
+  depression related more to lower **reward sensitivity** than to a lower learning
+  rate, a dopamine agonist showed the opposite pattern, and stress affected both
+  (Huys et al. 2013).
 - **Hypothesis:** drugs of abuse produce a dopamine increase that cannot be
   predicted away, so the TD error never reaches zero and drug-associated values keep
   growing (Redish 2004).

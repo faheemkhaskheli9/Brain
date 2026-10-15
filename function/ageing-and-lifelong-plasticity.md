@@ -8,8 +8,8 @@ use_cases:
   - do adults grow new neurons
   - can a critical period be reopened in an adult brain
   - why do neural networks lose the ability to learn in continual training and how to fix it
-status: draft
-last_verified: 2026-10-12
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/nrn1809
   - https://doi.org/10.1177/0956797614567339
@@ -38,9 +38,10 @@ fixes look like the brain's: keep some units young.
   *fluid* (reasoning on new problems) and *crystallised* (accumulated knowledge).
   Fluid scores fall with age; crystallised scores hold or rise.
 - **Different abilities peak at different ages.** Across large online and
-  standardised samples, processing speed peaked around age 18-19, short-term
-  memory for faces in the early 30s, and vocabulary in the late 60s or early 70s
-  (Hartshorne & Germine 2015).
+  standardised samples, processing speed (digit-symbol coding) peaked in the late
+  teens, working memory around age 30, and vocabulary around 50 in the older
+  standardised norms and about 65 in the newer online sample (Hartshorne & Germine
+  2015).
 - **Processing speed** is one strong common factor: slower processing explains a
   large share of age differences on many other tasks (Salthouse 1996). Some
   decline in reasoning and speed is already measurable in healthy adults in their
@@ -52,8 +53,9 @@ fixes look like the brain's: keep some units young.
   spines, synapses and their plasticity (Morrison & Hof 1997; Burke & Barnes
   2006). Neuron death on a large scale is a sign of disease, not of normal ageing
   ([[brain-disorders-and-computational-psychiatry]]).
-- **Region by region.** Volume loss is greatest in prefrontal cortex and the
-  hippocampus and smallest in primary sensory cortex (Raz et al. 2005).
+- **Region by region.** Over five years the caudate, cerebellum, hippocampus and
+  association cortices (prefrontal among them) shrank substantially, while primary
+  visual cortex did not change (Raz et al. 2005).
 - **Weaker long-term potentiation.** In aged rodents LTP is harder to induce and
   decays faster, and place-cell maps are less stable (Burke & Barnes 2006).
 - **Sleep.** Slow-wave sleep and sleep spindles decline with age, and the loss
@@ -91,8 +93,8 @@ partly reopened:
 - MDMA reopened a critical period for social reward learning in adult mice
   (Nardou et al. 2019).
 
-In humans, one small trial reported that valproate improved adult learning of
-absolute pitch (Gervain et al. 2013); this has not been replicated at scale.
+In humans, one small crossover trial in 24 young men reported that valproate
+improved adult learning of absolute pitch (Gervain et al. 2013); this has not been replicated at scale.
 Whether reopening is safe in humans, and what stability it costs, is open.
 
 ## Relevance to building brain-like AI

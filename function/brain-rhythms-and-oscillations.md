@@ -7,13 +7,14 @@ use_cases:
   - what is theta phase precession
   - does gamma synchrony bind features together
   - make a spiking network oscillate in the gamma band
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1126/science.1099745
   - https://doi.org/10.1146/annurev-neuro-062111-150444
   - https://doi.org/10.1002/hipo.450030307
   - https://doi.org/10.1038/nature08002
+  - https://doi.org/10.1016/j.cnp.2017.07.002
 ---
 
 # Brain rhythms and oscillations
@@ -30,17 +31,17 @@ routing communication between areas, are **hypotheses**.
 ## How it works
 
 ### The bands (established)
-Bands are named by frequency. Edges vary between papers; these are the usual ones
-for human EEG (Buzsáki & Draguhn 2004):
+Bands are named by frequency. Edges vary between papers; these are the clinical
+definitions for human EEG (Kane et al. 2017, the IFCN glossary), plus ripples:
 
 | Band | Range (Hz) | Where and when |
 |---|---|---|
 | Delta and slow oscillation | < 1-4 | Deep non-REM sleep, cortex-wide ([[sleep-and-memory-consolidation]]) |
-| Theta | 4-8 (6-10 in rodent hippocampus) | Hippocampus during movement and REM sleep |
-| Alpha | 8-12 | Occipital cortex, eyes closed; the first EEG rhythm recorded (Berger 1929) |
-| Beta | 13-30 | Motor cortex, holding still; drops before a movement |
+| Theta | 4-8 (6-10 in rat hippocampus, Buzsáki 2015) | Hippocampus during movement and REM sleep |
+| Alpha | 8-13 | Occipital cortex, eyes closed; the first EEG rhythm recorded (Berger 1929) |
+| Beta | 14-30 | Motor cortex, holding still; drops before a movement |
 | Gamma | 30-80+ | Many areas, during active processing |
-| Sharp-wave ripples | about 150-250 | Hippocampus, quiet rest and slow-wave sleep (Buzsáki 2015) |
+| Sharp-wave ripples | about 110-200 in rodents, slower (80-160) in humans | Hippocampus, quiet rest and slow-wave sleep (Buzsáki 2015) |
 
 The bands fall roughly on a log scale, and slower rhythms involve larger networks
 (Buzsáki & Draguhn 2004).
@@ -53,24 +54,28 @@ The bands fall roughly on a log scale, and slower rhythms involve larger network
   in mouse cortex was enough to produce gamma (Cardin et al. 2009). The code
   below builds this loop.
 - **Theta from pacemakers and loops.** Hippocampal theta needs the medial septum;
-  lesioning it removes theta. Local interneurons and intrinsic currents shape it.
+  lesions of the medial septal area abolished theta throughout the rat hippocampus
+  (Rawlins, Feldon & Gray 1979). Local interneurons and intrinsic currents shape it.
 - **Alpha and spindles involve the thalamus**, through loops between thalamic
-  relay cells, the thalamic reticular nucleus and cortex.
+  relay cells, the thalamic reticular nucleus and cortex (Steriade, McCormick &
+  Sejnowski 1993).
 - **Ripples** come from a burst of CA3 input onto CA1, with fast interneuron
-  inhibition pacing the 150-250 Hz cycles (Buzsáki 2015).
+  inhibition pacing the ripple cycles (Buzsáki 2015).
 
 ### Theta phase precession (established)
 As a rat runs through a place field, the place cell fires at an earlier phase of
 each successive theta cycle (O'Keefe & Recce 1993). So within one theta cycle,
 cells fire in the order of the places just behind, at and ahead of the animal: a
-compressed sweep along the path, about ten times faster than the run. That
-compression puts the cells' spikes within a few tens of ms of each other, the
-window where STDP can link them ([[learning-and-plasticity]]). See
+compressed sweep along the path, up to about ten times faster than the run
+(Skaggs et al. 1996). That compression puts the cells' spikes within a few tens of
+ms of each other, the window where STDP can link them ([[learning-and-plasticity]]);
+that this is what the compression is for is a **hypothesis** (Skaggs et al. 1996). See
 [[spatial-navigation]] for place cells.
 
 ### Gamma and binding (hypothesis)
-- In cat visual cortex, cells responding to the same moving bar fired in sync at
-  about 40 Hz, and cells responding to two separate bars did not (Gray et al. 1989).
+- In cat visual cortex, cells in separate columns fired in sync at 40-60 Hz, with no
+  average phase lag, and whether they synchronised depended on global properties of
+  the stimulus, not only on each cell's own receptive field (Gray et al. 1989).
 - The **binding-by-synchrony** hypothesis (Singer & Gray 1995) proposes that
   synchrony marks which features belong to one object. It is contested: gamma
   frequency shifts with stimulus contrast, and differs between nearby sites,
@@ -164,6 +169,7 @@ assert sharp_on > 4 * sharp_off                 # and inhibition is what synchro
 - Buzsáki & Wang (2012) "Mechanisms of gamma oscillations", *Annu Rev Neurosci* 35:203. doi:10.1146/annurev-neuro-062111-150444
 - Cardin et al. (2009) "Driving fast-spiking cells induces gamma rhythm and controls sensory responses", *Nature* 459:663. doi:10.1038/nature08002
 - O'Keefe & Recce (1993) "Phase relationship between hippocampal place units and the EEG theta rhythm", *Hippocampus* 3:317. doi:10.1002/hipo.450030307
+- Skaggs, McNaughton, Wilson & Barnes (1996) "Theta phase precession in hippocampal neuronal populations and the compression of temporal sequences", *Hippocampus* 6:149. doi:10.1002/(SICI)1098-1063(1996)6:2<149::AID-HIPO6>3.0.CO;2-K
 - Gray, König, Engel & Singer (1989) "Oscillatory responses in cat visual cortex exhibit inter-columnar synchronization which reflects global stimulus properties", *Nature* 338:334. doi:10.1038/338334a0
 - Singer & Gray (1995) "Visual feature integration and the temporal correlation hypothesis", *Annu Rev Neurosci* 18:555. doi:10.1146/annurev.ne.18.030195.003011
 - Ray & Maunsell (2010) "Differences in gamma frequencies across visual cortex restrict their possible use in computation", *Neuron* 67:885. doi:10.1016/j.neuron.2010.08.004
@@ -172,3 +178,6 @@ assert sharp_on > 4 * sharp_off                 # and inhibition is what synchro
 - Buzsáki (2015) "Hippocampal sharp wave-ripple: a cognitive biomarker for episodic memory and planning", *Hippocampus* 25:1073. doi:10.1002/hipo.22488
 - Girardeau, Benchenane, Wiener, Buzsáki & Zugaro (2009) "Selective suppression of hippocampal ripples impairs spatial memory", *Nat Neurosci* 12:1222. doi:10.1038/nn.2384
 - Berger (1929) "Über das Elektrenkephalogramm des Menschen", *Archiv für Psychiatrie und Nervenkrankheiten* 87:527. doi:10.1007/BF01797193
+- Kane et al. (2017) "A revised glossary of terms most commonly used by clinical electroencephalographers and updated proposal for the report format of the EEG findings. Revision 2017", *Clin Neurophysiol Pract* 2:170. doi:10.1016/j.cnp.2017.07.002
+- Rawlins, Feldon & Gray (1979) "Septo-hippocampal connections and the hippocampal theta rhythm", *Exp Brain Res* 37:49. doi:10.1007/BF01474253
+- Steriade, McCormick & Sejnowski (1993) "Thalamocortical oscillations in the sleeping and aroused brain", *Science* 262:679. doi:10.1126/science.8235588

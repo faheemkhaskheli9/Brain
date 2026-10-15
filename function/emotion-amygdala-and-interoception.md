@@ -8,8 +8,8 @@ use_cases:
   - what is interoception and what does the insula do
   - could emotions be predictions of body state
   - give an AI agent drives or emotions grounded in homeostasis
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1146/annurev.neuro.23.1.155
   - https://doi.org/10.1038/nature04490
@@ -38,9 +38,10 @@ keeping internal variables in range.
   there too. Pairing them potentiates the CS synapses. The central nucleus is the
   output: to the hypothalamus for heart rate and stress hormones, and to the
   periaqueductal grey for freezing (LeDoux 2000).
-- **Humans.** Patients with amygdala damage fail to acquire a conditioned skin
-  conductance response although they can report the pairing (Bechara et al. 1995,
-  see [[brain-structure-overview]]). Patient S.M., with bilateral amygdala
+- **Humans.** A patient with selective bilateral amygdala damage failed to acquire
+  a conditioned skin conductance response although the patient could report the
+  pairing; a patient with hippocampal damage showed the reverse (Bechara et al.
+  1995, see [[brain-structure-overview]]). Patient S.M., with bilateral amygdala
   damage, shows little fear in real threat situations (Feinstein et al. 2011).
 - **Extinction is new learning, not forgetting.** Presenting the tone without
   the shock reduces fear, but the original memory survives: fear returns in a new
@@ -52,8 +53,9 @@ keeping internal variables in range.
   debated; Pessoa & Adolphs (2010) argue for "many roads" through cortex instead.
 
 ### Value beyond dopamine (established)
-Amygdala neurons in monkeys encode both positive and negative value of a cue and
-flip within trials when the cue's meaning is reversed (Paton et al. 2006). Dopamine
+Separate populations of amygdala neurons in monkeys encode the positive and the
+negative value of a cue, and their responses change when the cue's value is
+reversed, fast enough to account for the monkeys' learning (Paton et al. 2006). Dopamine
 signals the error in predicted reward ([[learning-and-plasticity]]); the amygdala
 holds learned value attached to specific stimuli, appetitive as well as aversive,
 and passes it to the striatum and orbitofrontal cortex.
@@ -61,9 +63,10 @@ and passes it to the striatum and orbitofrontal cortex.
 ### Interoception and the insula (established)
 Interoception is sensing the body's internal state: heartbeat, breathing, gut,
 temperature, pain. The pathway runs through the brainstem and thalamus to the
-posterior insula, and is re-mapped in the anterior insula (Craig 2009). People who
-are better at detecting their own heartbeat show more right anterior insula
-activity, and report more intense emotions (Critchley et al. 2004).
+posterior insula, and is re-mapped in the anterior insula (Craig 2009). In people
+judging the timing of their own heartbeat, right anterior insula activity predicted
+how accurate they were, and more accurate people scored higher on measures of
+negative emotional experience (Critchley et al. 2004).
 
 ### Emotion as prediction (hypothesis)
 - **Interoceptive inference** (Seth 2013; Barrett & Simmons 2015): the brain
@@ -160,6 +163,6 @@ assert w[1] < 0                        # extinction stored as a separate inhibit
 - Barrett & Simmons (2015) "Interoceptive predictions in the brain", *Nat Rev Neurosci* 16:419. doi:10.1038/nrn3950
 - Barrett (2017) "The theory of constructed emotion: an active inference account of interoception and categorization", *Soc Cogn Affect Neurosci* 12:1. doi:10.1093/scan/nsw154
 - Bechara, Damasio, Tranel & Damasio (1997) "Deciding advantageously before knowing the advantageous strategy", *Science* 275:1293. doi:10.1126/science.275.5304.1293
-- Maia & McClelland (2004) "A reexamination of the evidence for the somatic marker hypothesis", *PNAS* 101:16075. doi:10.1073/pnas.0406910101
+- Maia & McClelland (2004) "A reexamination of the evidence for the somatic marker hypothesis: what participants really know in the Iowa gambling task", *PNAS* 101:16075. doi:10.1073/pnas.0406666101
 - Keramati & Gutkin (2014) "Homeostatic reinforcement learning for integrating reward collection and physiological stability", *eLife* 3:e04811. doi:10.7554/eLife.04811
 - Rescorla & Wagner (1972) "A theory of Pavlovian conditioning: variations in the effectiveness of reinforcement and nonreinforcement", in *Classical Conditioning II*, Appleton-Century-Crofts, pp. 64-99.

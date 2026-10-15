@@ -8,8 +8,8 @@ use_cases:
   - which brain features does a brain-like AI actually need to copy
   - can intelligence evolve without a neocortex
   - what do insect mushroom bodies and the cerebellum have in common
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1073/pnas.0604911103
   - https://doi.org/10.1073/pnas.0611396104
@@ -50,7 +50,7 @@ suspension of nuclei (the isotropic fractionator) and fitted power laws
 | Order (species) | Exponent b | What it means | Source |
 |---|---|---|---|
 | Rodents (6, mouse to capybara) | 1.587 | neurons get bigger as brains grow; 10x neurons costs ~39x mass | Herculano-Houzel, Mota & Lent 2006 |
-| Primates (6, marmoset to macaque) | 1.054, not different from 1 | neuron size roughly constant; mass grows linearly with neurons | Herculano-Houzel et al. 2007 |
+| Primates (6, marmoset to macaque; the published fit also includes the tree shrew) | 1.054, not different from 1 | neuron size roughly constant; mass grows linearly with neurons | Herculano-Houzel et al. 2007 |
 | Parrots and songbirds (28 bird species in all) | similar power functions in both groups | about twice the neurons of a primate brain of the same mass, 2-4x a rodent's | Olkowicz et al. 2016 |
 
 Consequences, all from these papers:
@@ -61,15 +61,15 @@ Consequences, all from these papers:
   is "not exceptional" in cell composition is **supported**; whether absolute neuron
   count is what drives cognition, as she argues, is debated.
 - A blue-and-yellow macaw has 3.14 billion neurons in a 20.7 g brain; a raven 2.17
-  billion in 14.1 g. A macaque has 6.38 billion in 87 g (Olkowicz 2016 Table 1;
+  billion in 14.1 g. A macaque has 6.38 billion in 87 g (Olkowicz 2016 Table S1;
   Herculano-Houzel 2007 Table 1). Birds reach monkey-scale neuron counts in a brain
   a fraction of the size, because their neurons are packed at higher densities.
 
 ### Intelligence without a neocortex
 - **Corvids and parrots (established that the pallium does the work).** Birds lack a
   six-layered cortex. The avian pallium is a set of nuclei derived from the same
-  embryonic pallium as mammalian cortex, which led to the renaming of bird brain areas
-  in 2005 (Jarvis et al. 2005). Stacho et al. (2020) traced fibre architecture and
+  embryonic pallium as mammalian cortex, which led an international consortium to
+  rename bird brain areas (Jarvis et al. 2005). Stacho et al. (2020) traced fibre architecture and
   found repeated, column-like circuits running across the nuclear boundaries of the
   pallium, similar to the mammalian canonical cortical circuit. Corvids make tools,
   plan for the future and track what others know; Emery & Clayton (2004) argue these
@@ -122,7 +122,7 @@ hash for similarity search.
 Fit `brain mass ~ N^b` on real species means, check the exponents against the papers,
 predict the human brain out of sample, and measure how many more neurons parrots and
 corvids have than a primate brain of the same mass. All numbers are copied from the
-cited tables (Herculano-Houzel 2006 and 2007 Table 1; Olkowicz 2016 Table 1;
+cited tables (Herculano-Houzel 2006 and 2007 Table 1; Olkowicz 2016 Table S1;
 Azevedo 2009). Six species per mammal order is all those papers measured; the bird
 set is the 9 parrots and corvids of the 28 bird species in Olkowicz 2016. The code
 has no randomness; a leave-one-out check stands in for resampling.
@@ -137,7 +137,7 @@ rodents = {  # Herculano-Houzel, Mota & Lent 2006, Table 1
 primates = {  # Herculano-Houzel, Collins, Wong & Kaas 2007, Table 1 (tree shrew left out: not a primate)
     "marmoset": (7.780, 635.80), "galago": (10.150, 936.00), "owl monkey": (15.730, 1468.41),
     "squirrel monkey": (30.216, 3246.43), "capuchin": (52.208, 3690.52), "macaque": (87.346, 6376.16)}
-birds = {  # Olkowicz et al. 2016, Table 1: parrots and corvids
+birds = {  # Olkowicz et al. 2016, Table S1: parrots and corvids
     "budgerigar": (1.317, 321.82), "gray parrot": (8.827, 1565.93), "kea": (13.593, 2148.67),
     "macaw": (20.731, 3135.79), "jay": (4.597, 1085.42), "magpie": (5.425, 897.27),
     "jackdaw": (6.023, 967.99), "rook": (8.357, 1508.72), "raven": (14.135, 2170.68)}
@@ -204,7 +204,7 @@ billion. Parrots and corvids come out at 1.7-2.5 times the primate rule.
 ## References
 - Herculano-Houzel, Mota & Lent (2006) "Cellular scaling rules for rodent brains", *PNAS* 103:12138. doi:10.1073/pnas.0604911103 (Table 1: rodent data)
 - Herculano-Houzel, Collins, Wong & Kaas (2007) "Cellular scaling rules for primate brains", *PNAS* 104:3562. doi:10.1073/pnas.0611396104 (Table 1: primate data)
-- Olkowicz et al. (2016) "Birds have primate-like numbers of neurons in the forebrain", *PNAS* 113:7255. doi:10.1073/pnas.1517131113 (Table 1: 28 bird species)
+- Olkowicz et al. (2016) "Birds have primate-like numbers of neurons in the forebrain", *PNAS* 113:7255. doi:10.1073/pnas.1517131113 (Table S1: 28 bird species)
 - Herculano-Houzel (2009) "The human brain in numbers: a linearly scaled-up primate brain", *Front Hum Neurosci* 3:31. doi:10.3389/neuro.09.031.2009
 - Azevedo et al. (2009) "Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically scaled-up primate brain", *J Comp Neurol* 513:532. doi:10.1002/cne.21974
 - Jarvis et al. (2005) "Avian brains and a new understanding of vertebrate brain evolution", *Nat Rev Neurosci* 6:151. doi:10.1038/nrn1606

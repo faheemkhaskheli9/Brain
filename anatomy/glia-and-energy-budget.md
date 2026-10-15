@@ -7,8 +7,8 @@ use_cases:
   - how much energy does the brain use and what does it spend it on
   - why does the energy budget force sparse, event-driven coding
   - do astrocytes or myelin take part in learning
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1097/00004647-200110000-00001
   - https://doi.org/10.1038/jcbfm.2012.35
