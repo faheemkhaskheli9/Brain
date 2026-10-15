@@ -64,7 +64,9 @@ testing one with an AI assistant.
 in which you operate the models from these files: a spiking neuron, STDP, a lesion
 lab, dopamine, Hopfield memory, sleep replay, predictive tracking, a three-factor
 forager, Oja's rule, a neuron zoo and path integration with grid cells. See
-[game/README.md](../game/README.md).
+[game/README.md](../game/README.md). The same levels run in a browser with nothing
+to install: serve the repo root (`python -m http.server 8000`) and open
+`http://localhost:8000/game/web/`.
 [Brain World](../game/world/) puts those mechanisms together in one 3D creature that
 learns to walk, grasp, listen, read and write from dopamine alone: run
 `python -m http.server 8000` from the repo root, then open
