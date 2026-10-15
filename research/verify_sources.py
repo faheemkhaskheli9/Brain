@@ -177,7 +177,7 @@ def write_catalog(rows, cache):
         "fix the TSV and re-run.",
         "",
         f"{len(rows)} sources: {n_ok} verified (title, first author and year within one",
-        f"matched a Crossref, Semantic Scholar or OpenAlex record, or checked by hand),",
+        "matched a Crossref, Semantic Scholar or OpenAlex record, or checked by hand),",
         f"{len(rows) - n_ok} still to check. {n_pdf} open-access PDFs saved under",
         "`research/pdfs/learning-algorithm/` (git-ignored; re-run to fetch).",
         "Methods, experiments and results per paper are in",
@@ -216,7 +216,7 @@ def link_hypotheses(rows, cache):
                 url = urllib.parse.quote(c["link"], safe=":/?=&%#~-_.")  # DOIs with ();<>
                 parts = LINK_RE.split(src)  # odd parts are existing links: leave alone
                 for j in range(0, len(parts), 2):
-                    new = pat.sub(lambda mm: f"[{mm.group(1)}]({url})", parts[j], count=1)
+                    new = pat.sub(lambda mm, url=url: f"[{mm.group(1)}]({url})", parts[j], count=1)
                     if new != parts[j]:
                         parts[j] = new
                         break
