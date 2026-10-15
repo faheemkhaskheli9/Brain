@@ -6,8 +6,8 @@ use_cases:
   - which open questions about the brain can I test myself with a computer
   - list every open question in this knowledge base in one place
   - pick a research project that could add something new
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://github.com/faheemkhaskheli9/Brain/issues?q=label%3Aresearch-gap
 ---

@@ -8,8 +8,8 @@ use_cases:
   - why does a loaded agent not act like the one I saved
   - is it safe to load someone else's model file
   - how does a brain keep what it learned, and how can a model learn more after loading
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/385533a0
   - https://doi.org/10.1016/j.tics.2016.05.004
@@ -61,7 +61,8 @@ simulation. To make a loaded learner act exactly as the saved one would have, th
 | Fixed random wiring | random projections are part of the brain; a different draw makes the weights meaningless | `idx`, `wIn`, `bias`, `gate` are stored, not regenerated |
 | Normaliser state | running statistics change every output | `hh`, a running mean of hidden activity |
 | Consolidation state | per-synapse importance or anchors, if the learner protects old skills | `syn`: for `P` and `v`, synaptic intelligence's `omega` (this stage's path integral), `Omega` (importance) and `anchor`, base64 Float32 (issue #56). A loaded brain without them would forget faster than the one saved |
-| Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | `proto` (8 slots x 5 scene channels) and `uses` (issue #60) |
+| Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | `proto` (8 slots x 5 scene channels) and `uses` (issue #60); `ctx`, each slot's surprise record (`alias`, `parent`, `fast`, `slow`, `seen`, issue #65), which an older save loads without |
+| Episodic store | if the learner replays stored experience, the store itself; without it a loaded brain has nothing to replay until it refills | `hippo`, a ring buffer of the last 2,048 training steps; a save without one loads with an empty store |
 | RNG state | without it, two copies sample different actions | `rand`, the state at the start of the episode |
 | Progress | where training stands | `stage`, `episode`, success windows |
 | Version | so old files fail loudly or are migrated, never read wrongly | `version: 5`; versions 3 and 4 are migrated (issues #63, #56) |
@@ -230,5 +231,7 @@ carry across a save would need them in the file too.
 - Kirkpatrick et al. (2017) "Overcoming catastrophic forgetting in neural networks", *PNAS* 114:3521. doi:10.1073/pnas.1611835114
 - Benna & Fusi (2016) "Computational principles of synaptic memory consolidation", *Nat Neurosci* 19:1697. doi:10.1038/nn.4401
 - Heald, Lengyel & Wolpert (2021) "Contextual inference underlies the learning of sensorimotor repertoires", *Nature* 600:489. doi:10.1038/s41586-021-04129-3
+- Mitchell et al. (2019) "Model cards for model reporting", FAT* '19. https://arxiv.org/abs/1810.03993
 - numpy `load` documentation (`allow_pickle`). https://numpy.org/doc/stable/reference/generated/numpy.load.html
+- numpy 1.16.3 release notes (`allow_pickle` default changed to False, CVE-2019-6446). https://numpy.org/doc/stable/release/1.16.3-notes.html
 - Python `pickle` documentation (security warning). https://docs.python.org/3/library/pickle.html

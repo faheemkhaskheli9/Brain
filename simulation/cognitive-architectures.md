@@ -8,8 +8,8 @@ use_cases:
   - what is Spaun and what can it do
   - is the Thousand Brains theory established neuroscience
   - how do LLM agent designs compare with brain-inspired architectures
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1037/0033-295X.111.4.1036
   - https://doi.org/10.1016/0004-3702(87)90050-6
@@ -75,7 +75,8 @@ The **Neural Engineering Framework** (Eliasmith & Anderson 2003) has three princ
 This is **established as an engineering method**: it reliably compiles a specified
 computation into spiking networks. Whether real cortex computes this way is a
 **hypothesis**. **Nengo** is the Python implementation (Bekolay et al. 2014); it
-runs the same model on CPUs, GPUs and neuromorphic back ends such as Loihi.
+runs the same model on CPUs, GPUs and neuromorphic back ends such as Loihi
+(NengoLoihi, https://www.nengo.ai/nengo-loihi/).
 
 **Spaun** (Eliasmith et al. 2012) is a **2.5-million-neuron** spiking model built
 with Nengo and the Semantic Pointer Architecture (compressed vectors that are bound

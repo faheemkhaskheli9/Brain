@@ -8,8 +8,8 @@ use_cases:
   - who owns neural data from a headset or brain-computer interface
   - what are neurorights and which laws protect brain data
   - what ethical risks come with building brain-like AI
-status: draft
-last_verified: 2026-10-12
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/551159a
   - https://doi.org/10.1080/0952813X.2014.895113
@@ -44,8 +44,9 @@ from the moral arguments behind them (positions, not facts).
   emulations with the care owed to the animal. Metzinger (2021) argued for a
   moratorium on research that risks creating artificial suffering. Butlin et al.
   (2023) derived "indicator properties" of consciousness from the leading
-  theories and found no current AI system has most of them, while finding no
-  obvious technical barrier to building one that does. Long, Sebo et al. (2024)
+  theories; their analysis suggested that no current AI system is conscious,
+  and that there is no obvious technical barrier to building one that has the
+  indicators. Long, Sebo et al. (2024)
   argued that AI developers should start assessing AI welfare now. These are
   arguments, not findings.
 - **What this KB's projects imply.** The simulations here (spiking networks,
@@ -60,12 +61,18 @@ from the moral arguments behind them (positions, not facts).
   Cultured neurons on electrodes have been trained to play a simple game,
   *Pong*, in a closed loop (Kagan et al. 2022); whether this counts as learning
   or "sentience" in any morally relevant sense is disputed.
-- **Rules.** The ISSCR Guidelines for Stem Cell Research (2021) allow organoid
-  research under ordinary oversight but put transplanting human cells into the
-  brains of non-human primates, and similar chimera work, under specialised
-  review. A US National Academies report (2021) concluded that current organoids
-  are far too simple to be conscious and that new oversight is not yet needed,
-  while recommending the question be revisited as they grow more complex.
+- **Rules.** The ISSCR Guidelines for Stem Cell Research (2021) exempt organoid
+  research from specialised review: they find no biological evidence of
+  consciousness or pain in neural organoids, but ask researchers to watch for
+  issues as organoids grow more complex. Putting human cells into an animal's
+  brain needs animal-committee review with added stem-cell expertise, and
+  putting human pluripotent cells into animal embryos (chimeras), including in
+  non-human primates, needs specialised review. A US National Academies report
+  (2021) found it extremely unlikely that neural organoids will be aware,
+  conscious or feel pain in the foreseeable future, and that current oversight
+  can handle most concerns of current and near-future research. It noted that
+  this must be revisited as organoids grow more complex (it was asked for
+  findings, not recommendations).
 - **Consent.** Donors of the cells usually consent to research in general, not
   to the growth of brain tissue specifically; Farahany et al. (2018) called for
   consent and oversight frameworks to anticipate this.
@@ -140,7 +147,7 @@ applies here. These are **risks to weigh**, not observed harms.
 - Lancaster et al. (2013) "Cerebral organoids model human brain development and microcephaly", *Nature* 501:373. doi:10.1038/nature12517
 - Trujillo et al. (2019) "Complex oscillatory waves emerging from cortical organoids model early human brain network development", *Cell Stem Cell* 25:558. doi:10.1016/j.stem.2019.08.002
 - Kagan et al. (2022) "In vitro neurons learn and exhibit sentience when embodied in a simulated game-world", *Neuron* 110:3952. doi:10.1016/j.neuron.2022.09.001
-- ISSCR (2021) Guidelines for Stem Cell Research and Clinical Translation. https://www.isscr.org/guidelines
+- ISSCR (2021) Guidelines for Stem Cell Research and Clinical Translation. https://www.isscr.org/guidelines; review categories and organoid text in section 2.2: https://www.isscr.org/guidelines-online/laboratory-based-human-embryonic-stem-cell-research-embryo-research-and-related-research-activities
 - National Academies (2021) *The Emerging Field of Human Neural Organoids, Transplants, and Chimeras*. doi:10.17226/26078
 - Farahany et al. (2018) "The ethics of experimenting with human brain tissue", *Nature* 556:429. doi:10.1038/d41586-018-04813-x
 - Tang, LeBel, Jain & Huth (2023) "Semantic reconstruction of continuous language from non-invasive brain recordings", *Nat Neurosci* 26:858. doi:10.1038/s41593-023-01304-9

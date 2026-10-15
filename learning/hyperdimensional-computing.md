@@ -8,8 +8,8 @@ use_cases:
   - how could neurons solve the binding problem of roles and fillers
   - how is Kanerva's sparse distributed memory related to the cerebellum and to transformer attention
   - answer "what is the dollar of Mexico?" with vector arithmetic
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - doi:10.1007/s12559-009-9009-8
   - doi:10.1109/72.377968

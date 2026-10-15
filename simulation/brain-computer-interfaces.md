@@ -8,8 +8,8 @@ use_cases:
   - which BCI recording method should I use, EEG, ECoG or implanted arrays
   - what is the state of brain implant companies like Neuralink and Synchron
   - what do BCIs teach about brain plasticity
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - doi:10.1038/nature04970
   - doi:10.1162/089976606774841585
@@ -41,7 +41,7 @@ experiment: users learn the decoder as the decoder learns them.
 | **ECoG** | Electrode sheet on the cortex surface | Local field potentials, finer than EEG | Speech decoding (Metzger et al. 2023) |
 | **Endovascular** | Stent electrode in a vein over motor cortex | ECoG-like signals | Synchron Stentrode, placed through the jugular vein without opening the skull (Oxley et al. 2021) |
 | **Intracortical arrays** | Needles in cortex, e.g. the Utah array (Maynard et al. 1997) | Spikes of single neurons and small groups | Cursor, robot arm and speech BCIs; BrainGate used a 96-microelectrode array (Hochberg et al. 2006) |
-| **Neuropixels** | Silicon shank, mostly research | Hundreds of neurons per probe | Animal studies; see [[measuring-the-brain-and-open-datasets]] |
+| **Neuropixels** | Silicon shank, mostly research | Hundreds of neurons per probe (Jun et al. 2017) | Animal studies; see [[measuring-the-brain-and-open-datasets]] |
 
 ### Decoding movement (established)
 - **Population vector.** Motor cortex neurons are cosine-tuned to reach direction;
@@ -90,7 +90,7 @@ Each is one or two people, so these are case reports, not trial results.
   a Canadian participant with ALS was the 26th person to receive the implant.
 - **Synchron** (Stentrode): as of 2024-09-30, its U.S. COMMAND early feasibility study
   met its primary safety endpoint in all six patients over 12 months, per Synchron's
-  press release and Clinical Trials Arena (2024-10-01). As of 2026-10-11 Synchron's
+  press release and Clinical Trials Arena (2024-10-01). As of 2026-10-16 Synchron's
   newsroom lists the device as investigational and announces no pivotal-trial start.
 - **Precision Neuroscience**: as of 2025-03-30, FDA 510(k) clearance (K242618) for
   Layer 7-T cortical electrodes for temporary use under 30 days, per the FDA 510(k)
@@ -205,6 +205,7 @@ noise in short bins is why real BCIs need many neurons, smoothing or a Kalman fi
 - Farwell & Donchin (1988) "Talking off the top of your head: toward a mental prosthesis utilizing event-related brain potentials", *Electroencephalogr Clin Neurophysiol* 70:510. doi:10.1016/0013-4694(88)90149-6
 - Wolpaw et al. (2002) "Brain-computer interfaces for communication and control", *Clin Neurophysiol* 113:767. doi:10.1016/S1388-2457(02)00057-3
 - Maynard, Nordhausen & Normann (1997) "The Utah intracortical electrode array: a recording structure for potential brain-computer interfaces", *Electroencephalogr Clin Neurophysiol* 102:228. doi:10.1016/S0013-4694(96)95176-0
+- Jun et al. (2017) "Fully integrated silicon probes for high-density recording of neural activity", *Nature* 551:232. doi:10.1038/nature24636
 - Georgopoulos, Schwartz & Kettner (1986) "Neuronal population coding of movement direction", *Science* 233:1416. doi:10.1126/science.3749885
 - Wu et al. (2006) "Bayesian population decoding of motor cortical activity using a Kalman filter", *Neural Comput* 18:80. doi:10.1162/089976606774841585
 - Gilja et al. (2012) "A high-performance neural prosthesis enabled by control algorithm design", *Nat Neurosci* 15:1752. doi:10.1038/nn.3265
