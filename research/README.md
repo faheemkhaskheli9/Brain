@@ -13,7 +13,8 @@
 | [credit_assignment.py](credit_assignment.py) | Experiment for #92 (H001-H003): do predictive coding updates match backprop's gradients, and do feedback alignment and direct feedback alignment train hidden layers? numpy plus sklearn's bundled digits (`pip install ".[research]"`), about 10 seconds. Result in `learning/brain-inspired-learning-algorithms.md`. |
 | [dendritic_neurons.py](dendritic_neurons.py) | Experiment for #85: point neurons (one or two dense hidden layers) vs two-layer dendritic neurons at equal parameters and multiply-adds, on parity, a feature-conjunction task and 8x8 digits, trained by backprop and by feedback alignment. numpy plus sklearn's digits, a few minutes (learning-rate tuning included). Result in `anatomy/dendritic-computation.md`. |
 | [brainscore_saturation.py](brainscore_saturation.py) | Analysis for #88: has the ImageNet-accuracy to Brain-Score link saturated? Line vs hinge fits per score (average, neural, behaviour, V1-IT), rank tests above 70% top-1, and an exploratory pretraining-data control. numpy, a few seconds. `--fetch` saves a new dated leaderboard snapshot to `data/`. Result in `function/sensory-systems-and-vision.md`. |
-| `data/` | Small dated snapshots of public data the analyses read (Brain-Score vision leaderboard: model, ImageNet top-1, average, neural, behaviour and per-region scores). |
+| [wm_capacity.py](wm_capacity.py) | Analysis for #90: slots, slots + averaging, variable precision and TCC fitted per subject to open colour-wheel delayed-estimation data (van den Berg 2014 benchmark E1, E2, E3, E8; Schurgin et al. 2020 set-size experiment), scored by 10-fold cross-validated likelihood, with a model-recovery control. numpy + scipy; about 25 min for the fits plus 40 for recovery (`--recovery 0` skips it); downloads about 180 MB to `~/.cache/brain-kb/` on the first run. Result in `function/attention-and-working-memory.md`. |
+| `data/` | Small dated snapshots of public data the analyses read (Brain-Score vision leaderboard: model, ImageNet top-1, average, neural, behaviour and per-region scores), and small derived results (`wm_capacity_results.csv`: per-subject CV log likelihoods and fitted K, α, β from #90, no raw trials). |
 | `pdfs/` | Downloaded open-access PDFs. Git-ignored (publisher copyright); run the script to fetch them. |
 
 ```
@@ -24,6 +25,7 @@ python research/replay_selection.py        # replay rule experiment (#84); --qui
 python research/credit_assignment.py       # PC vs backprop, FA, DFA (#92); --quick for a smoke run
 python research/dendritic_neurons.py       # point vs dendritic neurons (#85); --quick for a smoke run
 python research/brainscore_saturation.py   # Brain-Score saturation re-check (#88); --fetch for a new snapshot
+python research/wm_capacity.py             # slots vs resource re-fit on open data (#90); --quick for a smoke run
 ```
 
 Re-run after adding references to a topic. It resolves each reference through

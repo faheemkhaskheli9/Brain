@@ -158,6 +158,15 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: wm_capacity (slots vs resource re-fit on open data, #90)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/wm_capacity.py",
+      "args": ["--quick"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",
