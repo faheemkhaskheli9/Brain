@@ -11,6 +11,7 @@ Here you watch the mechanisms work together in one learner.
 ```
 python -m http.server 8000        # from the repo root
 # open http://localhost:8000/game/world/
+# open http://localhost:8000/game/world/?body=cpg   # jointed legs and a pattern generator (see "Jointed legs")
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
@@ -51,8 +52,18 @@ The letters it reads and the letters it writes are the same 5×5 stroke shapes.
 ## The brain
 
 - **Senses:** a 15-ray retina (RGB times nearness), a 5×5 fovea that resolves the letter on the
-  object in a ±0.2 rad central cone, three cochlea bands, leg position and the pen pad. On the page,
-  that cone turns dark violet while a letter is in it.
+  object in a ±0.2 rad central cone, three cochlea bands, leg position (hip angles on the jointed
+  body) and the pen pad. On the page, that cone turns dark violet while a letter is in it.
+- **Two bodies:** `GAINS.body = "legs"` (the default, and the one CI trains) has two legs, each
+  forward or back. A push of a forward leg moves the creature 0.22 and turns it 0.3 rad.
+  `GAINS.body = "cpg"` (page: `?body=cpg`) has jointed legs. Each hip angle follows a damped spring
+  toward a target set by a central pattern generator: two phase oscillators coupled in antiphase
+  (Ijspeert 2008). The actor never sets a joint. Its five actions set how hard each side swings for
+  one step: step turning left, step turning right, step straight, stand, and grasp (which pauses the
+  rhythm). A foot is down during the back-swing half of its cycle, and the body moves as far as the
+  planted foot goes back, so forward motion comes from the stance phase. Each foot pushes its own
+  side, so unequal swings turn the body. A world is born with `GAINS.body`, the save records it, and
+  a save from before #38 loads as `"legs"`. See "Jointed legs" below.
 - **Fovea memory:** a decaying trace of the fovea (×0.9 per step), so the last letter seen stays
   in its senses for a few steps after the gaze moves on. Each leg push turns 0.3 rad, wider than
   the fovea, so a letter is in view for only a step or two. This is a crude stand-in for working
@@ -478,6 +489,59 @@ first / last 50 episodes:
 That the brain infers which memory to express from prediction error has behavioural support (COIN
 explains savings and spontaneous recovery in motor adaptation). This detector is a toy version.
 
+## Jointed legs: a pattern generator body (#38)
+
+Issue #38 asked for limbs with joints instead of two leg states. Its research notes ruled out
+learning raw joint torques with the linear actor-critic. Instead, the discrete actions modulate a
+central pattern generator (CPG), as spinal circuits do in animals
+(established; Ijspeert 2008 reviews CPGs in animals and robots). The discrete body stays the CI body.
+
+**The body** (`GAINS.body = "cpg"`, page `?body=cpg`, constants in `CPG`). A world step is 0.25 s,
+integrated in ten 25 ms substeps, and the rhythm runs at 1 Hz, so each leg takes one stride every
+four steps. Each hip angle θ follows `θ'' = k(target − θ) − cθ'` (k 160, c 18). The target is
+`amp × drive × cos φ`, where the phases φ of the two legs are oscillators coupled toward antiphase.
+A foot is down while `sin φ > 0`, the back-swing half. Then the body moves forward by as much as the
+foot goes back (`leg × Δ sin θ`), and turns by `yaw` (2.4 rad per unit) times that push, the left
+foot turning it right. The hip lags its target, so early in each stance the foot still swings
+forward and pulls the body back a little. The five actions set the drive on each side for one step:
+step turning left (left −0.5, right 1, so the left leg walks backward), step turning right, step
+straight (1, 1), stand (0, 0), and grasp, which pauses the rhythm. The two hip angles, scaled to
+[0, 1], take the inputs that hold leg position on the discrete body, so the brain's size and wiring
+are unchanged. After walk, the habit drops "stand" and keeps the other four (`ACT_SETS[3]`). The
+discrete habit set has no straight step, and on this body alternating the two turns walks at
+only 0.031 per step. Reward and pass rule are unchanged: 2 × forward progress, and an episode passes
+above 0.08 per step. As on the discrete body, sliding along a wall counts as distance.
+
+**Fixed policies,** 300 walk episodes each (2026-10-16): uniform random over the five actions passes
+0.00 of episodes (0.039 per step). Always stepping straight passes 0.78 (0.089 per step), because it
+stalls at walls. Stepping straight and turning left whenever a wall is within 1.5 ahead passes 1.00
+(0.117). In open floor, a straight step covers 0.137 per step, and a turn covers 0.033 while turning
+0.249 rad. So walking has to be learned: keep the rhythm on, and turn away from walls.
+
+**Learned walk** (0.8 over a 50-episode window): seeds 1-5 pass in 104, 67, 164, 330 and 65
+episodes. Seed 1 on the discrete body takes 99. To reproduce (about 10 s):
+
+```
+node --input-type=module -e 'import { World, GAINS } from "./game/world/brain.js"; GAINS.body = "cpg"; for (const s of [1, 2, 3, 4, 5]) { const w = new World(s); while (w.stage === 0) w.step(); console.log(s, w.episode); }'
+```
+
+`test_brain.mjs` checks seed 1 within 1,000 episodes, that an untrained brain passes 0 of 100 walk
+episodes, that a CPG save reloads with its body and takes the same actions for 300 steps, and that
+`fixtures/v3-seed1.json` loads as `"legs"`. The page learns walk on seed 1 in 104 episodes too, so the
+browser and Node compute the same gait.
+
+**What it does not do yet.** On seed 1 (one seed only), the full curriculum on this body is much
+slower. Grasp takes 9,284 episodes (discrete: 437), listen 14,826 (discrete: 1,561), and read is
+not learned within 20,000. Two other settings were tried on seed 1. Yaw 1.5 with a turn drive of
+−0.6 learned walk in 676 episodes but not grasp within 20,000. Yaw 1.2 turning in place (drive −1)
+learned walk in 1,249 but not grasp. Two causes are likely, though neither is tested. The straight gait swings the
+heading by about ±0.6 rad per stride, so a target leaves the fovea's ±0.2 rad cone. And the brain
+senses hip angles but not hip velocity or phase, so a reactive policy cannot tell which leg is about
+to push. An earlier version measured progress along the heading, so sliding along a wall did not
+count. None of five settings then learned walk within 3,000 episodes on seeds 1-3: success stayed at
+0.3-0.5, the level of walking straight into walls. The body is kinematic: no masses, no slip, no
+torques. That this body says anything about how animals learn to walk is not claimed.
+
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
@@ -498,7 +562,8 @@ is enough for a real brain's version of these skills is a hypothesis.
 
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
 - Speech or spoken words instead of pure tones. Multi-letter words.
-- Physics-based limbs (joint torques) instead of discrete leg states.
+- Physics-based limbs: joint torques in a deterministic physics engine such as Rapier. The jointed
+  CPG body (#38, "Jointed legs" above) is done, but it is kinematic: no masses, no slip, no torques.
 
 ## References
 
@@ -525,3 +590,5 @@ is enough for a real brain's version of these skills is a hypothesis.
   repertoires", *Nature* 600:489. doi:10.1038/s41586-021-04129-3
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.
+- Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a
+  review", *Neural Networks* 21:642. doi:10.1016/j.neunet.2008.03.014

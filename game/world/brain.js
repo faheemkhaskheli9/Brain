@@ -93,13 +93,24 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // Surprise (issue #65): when two contexts look the same, the scene cannot pick the slot. Each slot
   // keeps a fast and a slow running mean of an episode's summed squared TD error; fast above
   // surprise x slow switches that scene to a sibling slot (or founds one). 0 = off. See README "Surprise".
-  surprise: 0 };
+  surprise: 0,
+  // The body a new World is born with (issue #38): "legs", two legs each forward or back (the CI body),
+  // or "cpg", jointed hips swung by a central pattern generator (see CPG and World.gait). A save keeps its own.
+  body: "legs" };
+// Jointed legs (#38): a world step is dt x sub seconds. Hip angles in rad (+ = leg forward), leg length
+// and yaw (rad per unit a foot pushes) in arena units. k and c: the hip's spring and friction. drive:
+// per action, the left and right amplitude (x amp) the CPG swings that step; grasp pauses the rhythm.
+export const CPG = { hz: 1, dt: 0.025, sub: 10, amp: 0.6, leg: 0.3, k: 160, c: 18, couple: 2, yaw: 2.4,
+  drive: [[-0.5, 1], [1, -0.5], [1, 1], [0, 0]],
+  acts: ["step, turning left", "step, turning right", "step straight", "stand", "grasp"],
+  about: "Two jointed legs, swung by a rhythm generator in the spine. It picks how hard each side swings: step, turn or stand. Reward: distance covered." };
 export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
 // The scene code each of the five v3 stages produces (walk, grasp, listen, read, write), for World.migrate.
 const V3_CODES = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 1, 0], [0, 0, 1, 0, 1]];
 const N_ACT = BODY.length + PEN.length;
 const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_, k) => BODY.length + k);
-export const ACT_SETS = [BODY_ACTS, HABIT_ACTS, PEN_ACTS];
+const CPG_HABIT = [0, 1, 2, 4];   // the "cpg" body's habit: steer or grasp, no longer stand
+export const ACT_SETS = [BODY_ACTS, HABIT_ACTS, PEN_ACTS, CPG_HABIT];
 
 export class Brain {
   constructor(rand) {
@@ -468,6 +479,7 @@ export class World {
     // A small model card that travels with the save (#55, Mitchell et al. 2019): birth facts once,
     // one row per save. A caller may add more birth facts (sweep.mjs adds the git commit).
     this.meta = { seed: seed >>> 0, created: new Date().toISOString(), gains: JSON.parse(JSON.stringify(GAINS)), saves: [] };
+    this.body = GAINS.body;
     this.reset();
   }
 
@@ -490,6 +502,7 @@ export class World {
     this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
     this.heading = R() * 2 * Math.PI;
     this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
+    this.hip = [0, 0]; this.hipV = [0, 0]; this.phase = [0, Math.PI];   // the "cpg" body: standing, oscillators in antiphase
     this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
     this.z = new Float32Array(SCENE);   // the scene summary so far: running max of scene(x), see sense
     this.objects = [];
@@ -558,7 +571,9 @@ export class World {
     // two. (A "look" saccade action was tried too: it made reading less reliable across seeds.)
     for (let k = 0; k < 25; k++) this.memory[k] = Math.max(GAINS.memory * this.memory[k], this.fovea[k]);
     x.set(this.retina, 0);
-    x[RAYS * 3] = this.legs[0]; x[RAYS * 3 + 1] = this.legs[1];
+    // Leg position: on the "cpg" body, each hip angle scaled to [0, 1] stands in for forward or back.
+    const legs = this.body === "cpg" ? this.hip.map(q => clamp(0.5 + q / (2 * CPG.amp), 0, 1)) : this.legs;
+    x[RAYS * 3] = legs[0]; x[RAYS * 3 + 1] = legs[1];
     if (this.tone >= 0) x[RAYS * 3 + 2 + this.tone] = 1;                 // cochlea: one band per tone
     for (let k = 0; k < 3; k++) x[RAYS * 3 + 2 + k] += 0.05 * (R() - 0.5);
     x.set(this.fovea, RAYS * 3 + 5);
@@ -585,7 +600,7 @@ export class World {
     const habit = this.stage > 0 || this.graduated;
     if (habit) this.legs = [1, 1];
     if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
-    const set = this.board ? 2 : habit ? 1 : 0;
+    const set = this.board ? 2 : !habit ? 0 : this.body === "cpg" ? 3 : 1;
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
@@ -597,6 +612,10 @@ export class World {
         success = this.pad.every(s => want.includes(s)) && this.pad[0] !== this.pad[1];
         r = success ? 1 : 0; done = true;
       }
+    } else if (a < 4 && this.body === "cpg") {   // jointed legs: the action sets the CPG's drive for one step
+      const moved = this.gait(a);
+      this.dist += moved;
+      if (m === "walk") r += 2 * moved;
     } else if (a < 2) {   // push a leg: moves only if that leg was forward
       if (this.legs[a]) {
         this.legs[a] = 0;
@@ -649,6 +668,34 @@ export class World {
       b.learn(r, this.h);
     }
     return { action: a, reward: r, done, success };
+  }
+
+  // Jointed legs (#38, body "cpg"). Each hip is a damped spring toward a target that a central pattern
+  // generator sets: two phase oscillators coupled in antiphase (Ijspeert 2008). Action a sets only each
+  // side's amplitude. A foot is down in the back-swing half of its oscillator's cycle, and a planted foot
+  // moves the body as far as the hip carries it back (or forward, if the lagging hip still swings ahead).
+  // Each foot pushes its own side, so unequal amplitudes turn the body. Returns the forward progress.
+  // ponytail: kinematic (no mass, no slip, no torques); joint torques need physics such as Rapier.
+  gait(a) {
+    const C = CPG, p = this.phase, q = this.hip, v = this.hipV, om = 2 * Math.PI * C.hz;
+    let fwd = 0;
+    for (let s = 0; s < C.sub; s++) {
+      const dp = [0, 1].map(i => om + C.couple * Math.sin(p[1 - i] - p[i] - Math.PI));   // pulls toward antiphase
+      for (let i = 0; i < 2; i++) {
+        p[i] = (p[i] + C.dt * dp[i]) % (2 * Math.PI);
+        v[i] += C.dt * (C.k * (C.amp * C.drive[a][i] * Math.cos(p[i]) - q[i]) - C.c * v[i]);
+        const foot = C.leg * Math.sin(q[i]);   // foot ahead of the hip
+        q[i] += C.dt * v[i];
+        if (Math.sin(p[i]) <= 0) continue;   // swing: the foot is in the air
+        const d = foot - C.leg * Math.sin(q[i]);   // how far the planted foot went back
+        this.heading += (i ? C.yaw : -C.yaw) * d;   // the left foot pushes the left side forward: turns right
+        const old = [...this.pos], dx = Math.cos(this.heading), dy = Math.sin(this.heading);
+        this.pos = [clamp(old[0] + d * dx, 0.3, ARENA - 0.3), clamp(old[1] + d * dy, 0.3, ARENA - 0.3)];
+        if (this.objects.some(o => Math.hypot(this.pos[0] - o.pos[0], this.pos[1] - o.pos[1]) < OBJ_R + 0.25)) this.pos = old;   // objects are solid
+        fwd += Math.sign(d) * Math.hypot(this.pos[0] - old[0], this.pos[1] - old[1]);   // sliding along a wall counts, as on "legs"
+      }
+    }
+    return fwd;
   }
 
   finish(success) {
@@ -738,7 +785,7 @@ export class World {
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
     // A save made while performing resumes training on its own stage.
-    return { version: 5, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
+    return { version: 5, body: this.body, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
         proto: arr(b.proto), uses: arr(b.uses), ctx: Object.fromEntries(CTX.map(k => [k, arr(b[k])])),
@@ -768,6 +815,7 @@ export class World {
   static migrate(o) {
     if (!o || !o.brain || !Array.isArray(o.brain.gate) || !Array.isArray(o.windows)) return o;
     o = { ...o, brain: { ...o.brain } };
+    o.body ??= "legs";   // saves from before #38 had only the two-state legs
     const b = o.brain, H = GAINS.hidden, spare = rng(0x5107);
     // upgradeV3: the told gate had one row per stage, in STAGES order. Each becomes a slot whose
     // prototype is the scene code that stage produces (measured), with enough uses to keep it.
@@ -807,7 +855,7 @@ export class World {
     try { sy = mapSyn(ob.syn, s => fromB64(s, Float32Array)); } catch {}
     const synOk = sy && ["P", "v"].every(k => SYN.every(f => sy[k][f].length === b[k].length && sy[k][f].every(Number.isFinite))
       && sy[k].omega.every(x => x >= 0) && sy[k].Omega.every(x => x >= 0));
-    const ok = o && o.version === 5 && ob && synOk && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    const ok = o && o.version === 5 && ob && synOk && ["legs", "cpg"].includes(o.body) && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
@@ -825,7 +873,7 @@ export class World {
     for (const k of KEYS) b[k].set(ob[k]);
     if (ob.ctx) for (const k of CTX) b[k].set(ob.ctx[k]);
     b.hh = ob.hh; b.syn = sy;
-    Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
+    Object.assign(w, { body: o.body, stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
     // meta is a plain record, never read back into the brain; a save from before it has unknown birth facts.
     const m = o.meta && typeof o.meta === "object" && !Array.isArray(o.meta) ? o.meta : { seed: null, created: null, gains: null };

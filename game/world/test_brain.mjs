@@ -317,4 +317,31 @@ sw.reversed = true; sw.setStage(2);
 assert.equal(sw.tone, (sw.target + 1) % 3, "reversal: tone not remapped");
 GAINS.surprise = 0;
 console.log("  Surprise: switches to a sibling, back, founds a third; saved; reversal remaps the tone");
+
+// Jointed legs (#38): the "cpg" body learns to walk from reward alone, within WALK_CPG episodes on
+// seed 1, where an untrained brain (a uniform policy) fails. The body travels with the save, and a
+// save from before it loads as "legs".
+const WALK_CPG = 1000;
+GAINS.body = "cpg";
+const jw = new World(1), untrained = new World(1);
+GAINS.body = "legs";
+assert.equal(jw.meta.gains.body, "cpg");
+untrained.perform("walk", false);
+while (untrained.perf.n < 100) untrained.step();
+assert.ok(untrained.perf.ok / untrained.perf.n < STAGES[0].pass, "cpg: an untrained brain already walks");
+while (jw.stage === 0 && jw.episode < WALK_CPG) jw.step();
+assert.equal(jw.stage, 1, `cpg body: walk not learned within ${WALK_CPG} episodes`);
+const walked = jw.episode;
+while (!jw.step().done);
+const jback = World.fromJSON(JSON.parse(JSON.stringify(jw)));
+assert.equal(jback.body, "cpg");
+for (let i = 0; i < 300; i++) assert.deepEqual(jback.step(), jw.step(), `cpg: loaded brain diverged at step ${i}`);
+assert.equal(World.fromJSON(v3).body, "legs", "a save from before #38 must load as legs");
+assert.throws(() => World.fromJSON({ ...JSON.parse(JSON.stringify(jw)), body: "wings" }), /not a Brain World save/);
+// The stance phase moves the body: from standing in open floor, 8 steps of "step straight" go forward,
+// "stand" stays put, and "step, turning left" raises the heading while its mirror lowers it.
+const gaitRun = a => { const t = new World(1); Object.assign(t, { pos: [4, 4], heading: 0, objects: [] }); let f = 0; for (let i = 0; i < 8; i++) f += t.gait(a); return [f, t.heading]; };
+const [ahead] = gaitRun(2), [still, still0] = gaitRun(3), [, left] = gaitRun(0), [, right] = gaitRun(1);
+assert.ok(ahead > 0.5 && still === 0 && still0 === 0 && left > 0.5 && right < -0.5, `cpg gait: straight ${ahead}, stand ${still}, turns ${left} ${right}`);
+console.log(`  Jointed legs (cpg): walk learned after ${walked} episodes (budget ${WALK_CPG}; untrained ${untrained.perf.ok}/100); body saved, old saves load as legs`);
 console.log("ok");

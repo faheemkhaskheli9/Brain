@@ -108,6 +108,16 @@ system that generates the movement than as a map of parameters: during reaching 
 population activity rotates in a low-dimensional state space (Churchland et al.
 2012). Both views are used in brain-computer interfaces.
 
+### Spinal central pattern generators (established)
+The rhythm of walking, swimming and breathing comes from networks in the spinal cord
+and brainstem. In vertebrates they produce the basic motor pattern even without
+sensory feedback; sensory input and commands from the brain adjust its speed and
+shape (Grillner 1985). Robotics uses coupled oscillators as CPGs: the controller sets
+a few parameters such as amplitude and frequency, and the oscillators produce the
+coordinated limb movement (Ijspeert 2008). Brain World's jointed-legs body uses
+this split: its actor picks how hard each side swings, and two oscillators coupled
+in antiphase move the hips (`game/world/`, `?body=cpg`).
+
 ## Relevance to building brain-like AI
 - **Separate Go and NoGo learners.** Splitting an actor into "evidence for" and
   "evidence against" weights, trained by positive and negative prediction errors,
@@ -210,3 +220,5 @@ assert after < before / 20
 - Ivry & Keele (1989) "Timing functions of the cerebellum", *J Cogn Neurosci* 1:136. doi:10.1162/jocn.1989.1.2.136
 - Georgopoulos, Schwartz & Kettner (1986) "Neuronal population coding of movement direction", *Science* 233:1416. doi:10.1126/science.3749885
 - Churchland et al. (2012) "Neural population dynamics during reaching", *Nature* 487:51. doi:10.1038/nature11129
+- Grillner (1985) "Neurobiological bases of rhythmic motor acts in vertebrates", *Science* 228:143. doi:10.1126/science.3975635
+- Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a review", *Neural Networks* 21:642. doi:10.1016/j.neunet.2008.03.014

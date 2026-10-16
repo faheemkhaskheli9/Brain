@@ -59,6 +59,7 @@ simulation. To make a loaded learner act exactly as the saved one would have, th
 |---|---|---|
 | Learned weights | the memory itself | `v` (critic), `P` (actor) |
 | Fixed random wiring | random projections are part of the brain; a different draw makes the weights meaningless | `idx`, `wIn`, `bias`, `gate` are stored, not regenerated |
+| Body | the same weights drive different actions on a different body | `body`: `legs` or `cpg` (issue #38); a save from before it loads as `legs` |
 | Normaliser state | running statistics change every output | `hh`, a running mean of hidden activity |
 | Consolidation state | per-synapse importance or anchors, if the learner protects old skills | `syn`: for `P` and `v`, synaptic intelligence's `omega` (this stage's path integral), `Omega` (importance) and `anchor`, base64 Float32 (issue #56). A loaded brain without them would forget faster than the one saved |
 | Context memory | if the learner infers its task, the prototypes and their use counts; without them a loaded brain no longer recognises its tasks and trains the wrong units | `proto` (8 slots x 5 scene channels) and `uses` (issue #60); `ctx`, each slot's surprise record (`alias`, `parent`, `fast`, `slow`, `seen`, issue #65), which an older save loads without |

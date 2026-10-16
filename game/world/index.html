@@ -174,8 +174,11 @@
 <script type="module">
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { World, STAGES, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph } from "./brain.js";
+import { World, STAGES, GAINS, CPG, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph } from "./brain.js";
 
+// ?body=cpg: new brains get jointed legs swung by a rhythm generator (#38). A loaded save keeps its own body.
+const bodyParam = new URLSearchParams(location.search).get("body");
+if (bodyParam === "cpg" || bodyParam === "legs") GAINS.body = bodyParam;
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const C = { glass: css("--glass"), lilac: css("--lilac"), muted: css("--muted"), violet: css("--violet"), pink: css("--pink"), ink: css("--ink") };
@@ -242,7 +245,7 @@ body.scale.set(1.25, 0.8, 1); body.position.y = 0.38; body.castShadow = true;
 const eye = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 8), mat(C.pink));
 eye.position.set(0.34, 0.48, 0);
 creature.add(body, eye);
-const legs = [0.17, -0.17].map(z => {   // left leg at +z? heading flips sides below; only the swing matters
+const legs = [0.17, -0.17].map(z => {   // the world's y is three.js z, so legs[0] at +z is its left leg
   const pivot = new THREE.Group(); pivot.position.set(0, 0.3, z);
   const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.3), mat(C.ink));
   leg.position.y = -0.15; leg.castShadow = true; pivot.add(leg); creature.add(pivot); return pivot;
@@ -272,7 +275,10 @@ const LETTER_MATS = LETTERS.map((_, k) => new THREE.MeshStandardMaterial({ map: 
 let objGroup = new THREE.Group(), shownObjects = null;
 scene.add(objGroup);
 function buildObjects(objects) {
-  scene.remove(objGroup); objGroup = new THREE.Group(); scene.add(objGroup); shownObjects = objects;
+  scene.remove(objGroup);
+  // GPU buffers outlive the meshes unless disposed: 50 minutes of fast forward ran WebGL out of memory.
+  for (const m of objGroup.children) { m.geometry.dispose(); if (!LETTER_MATS.includes(m.material)) m.material.dispose(); }
+  objGroup = new THREE.Group(); scene.add(objGroup); shownObjects = objects;
   for (const o of objects) {
     const m = o.letter >= 0
       ? new THREE.Mesh(new THREE.BoxGeometry(OBJ_R * 1.6, OBJ_R * 1.6, OBJ_R * 1.6), LETTER_MATS[o.letter])
@@ -301,7 +307,7 @@ const retinaEls = Array.from({ length: 15 }, () => $("retina").appendChild(docum
 const foveaEls = Array.from({ length: 25 }, () => $("fovea").appendChild(document.createElement("span")));
 const cochEls = ["low", "middle", "high"].map(t => { const s = document.createElement("span"); s.textContent = t; return $("cochlea").appendChild(s); });
 function buildStages() {
-  $("stages").innerHTML = STAGES.map(s => `<li><div class="name">${s.name}</div><div class="about">${s.about}</div>
+  $("stages").innerHTML = STAGES.map((s, i) => `<li><div class="name">${s.name}</div><div class="about">${i === 0 && world.body === "cpg" ? CPG.about : s.about}</div>
     <div class="meta"></div><div class="bar"><i></i><b style="left:${s.pass * 100}%"></b></div></li>`).join("");
 }
 function updatePanel() {
@@ -329,7 +335,7 @@ function updatePanel() {
   const tone = performance.now() < freezeUntil && frozen ? frozen.tone : world.tone;
   cochEls.forEach((el, k) => el.classList.toggle("on", tone === k));
   const a = world.lastAction;
-  $("doing").textContent = a === undefined ? "–" : a < BODY.length ? BODY[a] : `pen: ${PEN[a - BODY.length]}`;
+  $("doing").textContent = a === undefined ? "–" : a < BODY.length ? (world.body === "cpg" ? CPG.acts : BODY)[a] : `pen: ${PEN[a - BODY.length]}`;
   const say = narrate();
   if ($("narrate").textContent !== say) $("narrate").textContent = say;
 }
@@ -351,7 +357,8 @@ function narrate() {
       : `${heard}. It is looking for the ${world.objects[world.target].letter >= 0 ? `${L} cube` : `${COLOUR[tone]} ball`}.`;
   }
   return {
-    walk: "It is learning to walk: trying leg pushes and lifts at random, and keeping the ones that carry it forward.",
+    walk: world.body === "cpg" ? "It is learning to walk: its spinal rhythm swings the hips, and it tries stepping, turning and standing at random, keeping what carries it forward."
+      : "It is learning to walk: trying leg pushes and lifts at random, and keeping the ones that carry it forward.",
     grasp: "It is searching the room for the food. To eat it, it must walk up close and grasp.",
     listen: `It heard the ${TONE[t]} tone, which means the ${COLOUR[t]} ball is food. It is looking for that one.`,
     read: `It heard the ${TONE[t]} tone, which names the letter ${L}. Every cube is white, so it must read the letters to find it.`,
@@ -374,7 +381,7 @@ function plot(id, values, { lo, hi, zero, marks = [] }) {
 
 // ---------- the loop ----------
 function doStep() {
-  const snap = { pos: [...world.pos], heading: world.heading, legs: [...world.legs], objects: world.objects, mode: world.mode, pad: [...world.pad], tone: world.tone };
+  const snap = { pos: [...world.pos], heading: world.heading, legs: [...world.legs], hip: [...world.hip], objects: world.objects, mode: world.mode, pad: [...world.pad], tone: world.tone };
   const stage = world.stage, grad = world.graduated, r = world.step();
   daTrace.push(world.brain.dopamine); if (daTrace.length > 240) daTrace.shift();
   if (r.done) {
@@ -429,7 +436,7 @@ function drainEvents() {
 const legAngle = [0.5, 0.5];
 let armT = -1;
 function sync3D(now) {
-  const v = now < freezeUntil && frozen ? frozen : { pos: world.pos, heading: world.heading, legs: world.legs, objects: world.objects, mode: world.mode, pad: world.pad };
+  const v = now < freezeUntil && frozen ? frozen : { pos: world.pos, heading: world.heading, legs: world.legs, hip: world.hip, objects: world.objects, mode: world.mode, pad: world.pad };
   if (v.objects !== shownObjects) buildObjects(v.objects);
   const writing = v.mode === "write";
   board.visible = writing;
@@ -439,7 +446,8 @@ function sync3D(now) {
   } else {
     creature.position.set(v.pos[0], 0, v.pos[1]); creature.rotation.y = -v.heading;
   }
-  v.legs.forEach((f, i) => { legAngle[i] += ((f ? 0.5 : -0.5) - legAngle[i]) * 0.35; legs[i].rotation.z = legAngle[i]; });
+  const swing = world.body === "cpg" ? v.hip : v.legs.map(f => f ? 0.5 : -0.5);   // hip angles in rad, + = forward
+  swing.forEach((q, i) => { legAngle[i] += (q - legAngle[i]) * 0.35; legs[i].rotation.z = legAngle[i]; });
   if (v === frozen && frozen.action === 4) armT = armT < 0 ? now : armT; else if (now >= freezeUntil) armT = -1;
   if (v === frozen && frozen.action === 4) {
     const t = Math.min(1, (now - armT) / 250);
