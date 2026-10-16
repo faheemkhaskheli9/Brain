@@ -166,6 +166,15 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: timing_vs_count (spike timing vs count per mouse visual area, #86)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/timing_vs_count.py",
+      "args": ["--quick"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Research: microns_clustering (co-tuned inputs on one branch? MICrONS, #87)",
       "type": "debugpy",
       "request": "launch",

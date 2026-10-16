@@ -9,8 +9,9 @@ license-files = ["LICENSE", "LICENSE-CONTENT.md"]
 dependencies = ["numpy"]
 
 [project.optional-dependencies]
-# research/credit_assignment.py loads sklearn's bundled 8x8 digits; wm_capacity.py fits with scipy: pip install ".[research]"
-research = ["scikit-learn", "scipy"]
+# research/credit_assignment.py loads sklearn's bundled 8x8 digits; wm_capacity.py fits with scipy;
+# timing_vs_count.py reads NWB files with h5py; microns_clustering.py uses pandas: pip install ".[research]"
+research = ["scikit-learn", "scipy", "h5py", "pandas"]
 
 # Not a library: `pip install .` only pulls the dependencies.
 [tool.setuptools]
