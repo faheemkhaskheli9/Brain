@@ -101,6 +101,11 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // keeps a fast and a slow running mean of an episode's summed squared TD error; fast above
   // surprise x slow switches that scene to a sibling slot (or founds one). 0 = off. See README "Surprise".
   surprise: 0,
+  // Forward model (issue #65 item 3): a cerebellum-like readout that predicts the next step's sense
+  // summary from (h, action) with a normalised delta rule. fm is its learning rate; 0 = none (nothing is
+  // allocated, drawn or saved). curiosity adds curiosity x its squared error to the reward (Pathak et al.
+  // 2017); surpriseFm feeds its error, not the TD error, to the surprise detector. See README "Forward model".
+  fm: 0, curiosity: 0, surpriseFm: false,
   // The body a new World is born with (issue #38): "legs", two legs each forward or back (the CI body),
   // or "cpg", jointed hips swung by a central pattern generator (see CPG and World.gait). A save keeps its own.
   body: "legs" };
@@ -160,6 +165,8 @@ export class Brain {
     this.alias = new Int8Array(GAINS.slots).fill(-1); this.parent = new Int8Array(GAINS.slots).fill(-1);
     this.fast = new Float32Array(GAINS.slots); this.slow = new Float32Array(GAINS.slots); this.seen = new Int32Array(GAINS.slots);
     this.epErr = 0; this.failed = new Set();   // this episode's summed delta^2; slots left since the last calm episode
+    // Forward model (#65 item 3): one weight row per (action, summary channel) over h, zero at birth.
+    this.fm = GAINS.fm ? new Float32Array(N_ACT * FM_K * this.nH) : null; this.fmEp = 0;
     this.v = new Float32Array(this.nH);           // critic
     this.P = new Float32Array(N_ACT * this.nH);   // actor
     this.ev = new Float32Array(this.nH);
@@ -227,8 +234,29 @@ export class Brain {
     }
     const e = c === m.best ? this.resolve(c) : c;   // the slot the episode actually played in
     this.uses[e]++;
-    if (GAINS.surprise && c === m.best) this.surprised(c, e, this.epErr);
-    this.epErr = 0;
+    if (GAINS.surprise && c === m.best) this.surprised(c, e, GAINS.surpriseFm ? this.fmEp : this.epErr);
+    this.epErr = 0; this.fmEp = 0;
+  }
+
+  // Forward model (#65 item 3), a hypothesis-level stand-in for the cerebellum (Wolpert, Miall and
+  // Kawato 1998): the fixed random expansion h plays the granule cells, and a linear readout per action
+  // the Purkinje cells, trained by the normalised delta rule (LMS) with the prediction error as the
+  // climbing-fibre teacher. Predicts y = summary(next senses) after action a from h; returns the squared
+  // error. It learns only in training, and touches only the nonzero entries of h.
+  forward(h, a, y) {
+    const W = this.fm, nH = this.nH, nz = [], err = new Float32Array(FM_K);
+    let hh = 0, sq = 0;
+    for (let i = 0; i < nH; i++) if (h[i]) { nz.push(i); hh += h[i] * h[i]; }
+    for (let k = 0; k < FM_K; k++) {
+      const row = (a * FM_K + k) * nH;
+      let p = 0; for (const i of nz) p += W[row + i] * h[i];
+      err[k] = y[k] - p; sq += err[k] * err[k];
+    }
+    if (!this.learning) return sq;
+    const lr = GAINS.fm / (1 + hh);
+    for (let k = 0; k < FM_K; k++) { const row = (a * FM_K + k) * nH, g = lr * err[k]; for (const i of nz) W[row + i] += g * h[i]; }
+    this.fmEp += sq; this.fmSum = (this.fmSum || 0) + sq; this.fmN = (this.fmN || 0) + 1;   // sweep.mjs reports the mean
+    return sq;
   }
 
   // Surprise (#65), a hypothesis-level model of context inference from prediction error (multiple
@@ -468,6 +496,22 @@ export function scene(x) {
     x.subarray(F, F + 25).some(v => v > 0.1), x[BOARD_IN] > 0.5].map(Number);
 }
 
+// The forward model's target (#65 item 3): one step's senses pooled into FM_K channels. Per third of the
+// retina (right, centre, left), the most luminance (min of r, g, b) and the most chroma (max - min) on
+// any ray, then the mean of the fovea. These are scene()'s channels without tone and board (fixed within
+// an episode), kept continuous and split left to right so a step or turn has a predictable effect. The
+// cochlea's noise is left out on purpose: noise no model can learn would pay curiosity forever.
+export const FM_K = 7;
+export function summary(x) {
+  const y = new Float32Array(FM_K), F = RAYS * 3 + 5;
+  for (let i = 0; i < RAYS; i++) {
+    const r = x[i * 3], g = x[i * 3 + 1], b = x[i * 3 + 2], lo = Math.min(r, g, b), s = 2 * Math.floor(3 * i / RAYS);
+    y[s] = Math.max(y[s], lo); y[s + 1] = Math.max(y[s + 1], Math.max(r, g, b) - lo);
+  }
+  for (let k = 0; k < 25; k++) y[6] += x[F + k] / 25;
+  return y;
+}
+
 const SYN = ["omega", "Omega", "anchor"], CTX = ["alias", "parent", "fast", "slow", "seen"];
 function syn(w) { return { omega: new Float32Array(w.length), Omega: new Float32Array(w.length), anchor: Float32Array.from(w) }; }
 const mapSyn = (s, f) => ({ P: Object.fromEntries(SYN.map(k => [k, f(s.P[k])])), v: Object.fromEntries(SYN.map(k => [k, f(s.v[k])])) });
@@ -671,8 +715,12 @@ export class World {
       b.learn(r, null);
       this.finish(success);
     } else {
+      const h0 = this.h;
       this.x = this.sense();
       this.h = b.encode(this.x, this.slot = this.context());
+      // Forward model (#65 item 3): predict these senses from the last h and action; its error is the
+      // curiosity bonus. Stored transitions and the episode return keep the task's reward only.
+      if (b.fm) r += GAINS.curiosity * b.forward(h0, a, summary(this.x));
       b.learn(r, this.h);
     }
     return { action: a, reward: r, done, success };
@@ -752,7 +800,7 @@ export class World {
   // perform(null) goes back to training on `stage`.
   perform(key, greedy = GAINS.performGreedy.includes(key), lesson = null) {
     const b = this.brain;
-    b.ev.fill(0); b.eP.fill(0); b.epErr = 0;   // a half-done training episode's traces must not carry over
+    b.ev.fill(0); b.eP.fill(0); b.epErr = 0; b.fmEp = 0;   // a half-done training episode's traces must not carry over
     this.lesson = lesson;
     if (key === null) {
       this.task = -1; b.learning = true; b.greedy = false; this.playing = this.stage;
@@ -797,7 +845,8 @@ export class World {
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
         proto: arr(b.proto), uses: arr(b.uses), ctx: Object.fromEntries(CTX.map(k => [k, arr(b[k])])),
-        syn: mapSyn(b.syn, toB64) },   // without it a loaded SI brain forgets faster than the one saved
+        syn: mapSyn(b.syn, toB64),   // without it a loaded SI brain forgets faster than the one saved
+        ...(b.fm && { fm: toB64(b.fm) }) },   // the forward model, only when GAINS.fm is on
       hippo: this.hippo.toJSON(this.memAt), meta: this.meta };
   }
 
@@ -863,7 +912,11 @@ export class World {
     try { sy = mapSyn(ob.syn, s => fromB64(s, Float32Array)); } catch {}
     const synOk = sy && ["P", "v"].every(k => SYN.every(f => sy[k][f].length === b[k].length && sy[k][f].every(Number.isFinite))
       && sy[k].omega.every(x => x >= 0) && sy[k].Omega.every(x => x >= 0));
-    const ok = o && o.version === 5 && ob && synOk && ["legs", "cpg"].includes(o.body) && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    // The forward model (#65 item 3), read only when GAINS.fm is on; a save without one starts it at zero.
+    let fm = null;
+    if (b.fm) try { fm = ob.fm === undefined ? new Float32Array(b.fm.length) : fromB64(ob.fm, Float32Array); } catch {}
+    const fmOk = !b.fm || (fm && fm.length === b.fm.length && fm.every(Number.isFinite));
+    const ok = o && o.version === 5 && ob && synOk && fmOk && ["legs", "cpg"].includes(o.body) && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
@@ -880,6 +933,7 @@ export class World {
     w.hippo = hippo;
     for (const k of KEYS) b[k].set(ob[k]);
     if (ob.ctx) for (const k of CTX) b[k].set(ob.ctx[k]);
+    if (b.fm) b.fm.set(fm);
     b.hh = ob.hh; b.syn = sy;
     Object.assign(w, { body: o.body, stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });

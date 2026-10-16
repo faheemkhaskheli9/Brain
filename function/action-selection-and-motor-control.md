@@ -9,7 +9,7 @@ use_cases:
   - map model-based vs model-free reinforcement learning onto brain systems
   - learn a forward model for motor control like the cerebellum
 status: stable
-last_verified: 2026-10-11
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1016/0166-2236(89)90074-X
   - https://doi.org/10.1016/S0306-4522(98)00319-4
@@ -132,6 +132,14 @@ in antiphase move the hips (`game/world/`, `?body=cpg`).
 - **Forward models** are standard in robotics and model-based RL (world models):
   predict the next state from the action and correct the controller before feedback
   arrives.
+- **Measured in Brain World** (`game/world/`, issue #65, 2026-10-16). A cerebellum-like
+  forward model (one delta-rule readout per action over the creature's fixed random
+  expansion) predicted 7 pooled sense channels about 4x better than guessing that
+  nothing changes. Its error as a curiosity bonus did not speed learning over 10 seeds,
+  and at the larger scale it paid the creature to wander instead of grasp. As a
+  surprise signal it did not detect a rule change that altered only rewards, as
+  predicted beforehand: it predicts senses, not rewards. One toy agent; details in its
+  README under "Forward model".
 
 ## Code
 A Go/NoGo actor (Frank 2005 style) picks among three actions, and a cerebellum-like

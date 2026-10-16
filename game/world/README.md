@@ -20,6 +20,7 @@ node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
 node game/world/sweep.mjs --arms transfer --jobs 4   # new letters: does what it learned transfer? (see "New letters")
+node game/world/sweep.mjs --arms rehearse30,curiosity05,curiosity25,reversalFm --jobs 4   # forward model: curiosity and surprise (see "Forward model")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -664,6 +665,167 @@ That learning sets exist is established (Harlow 1949). This learner's lack of th
 about brains. It shows only that this linear three-factor learner, over a fixed random expansion,
 did not transfer from these three letters to new ones.
 
+## Forward model: curiosity and surprise (#65 item 3)
+
+Issue #65 item 3 asked for a cerebellum-like forward model: predict the next senses from the brain's
+state and the action, with a delta rule. Its error could then (a) feed the surprise detector of item 1
+and (b) pay a curiosity bonus, stage 5 of the roadmap in
+[build-a-brain-like-learner](../../guides/build-a-brain-like-learner.md). That the cerebellum learns
+forward models is a hypothesis with strong support (Wolpert, Miall and Kawato 1998). Here it is a toy.
+
+**How it works.** `GAINS.fm` is its learning rate; 0, the default, allocates, draws and saves nothing.
+- **Input:** the hidden state h the action was chosen from. The fixed 1,000-unit expansion already
+  plays the granule cells, so the model adds no random wiring. Each action has its own readout, so
+  the prediction depends on (h, action).
+- **Target:** `summary(x)` of the next step's senses, 7 numbers. For each third of the retina (right,
+  centre, left), the most luminance and the most chroma on any ray, then the mean of the fovea. These
+  are the channels `scene()` pools, minus tone and board, which never change within an episode. They
+  stay continuous and split left to right, so a step or a turn has a predictable effect. The
+  cochlea's added noise is left out on purpose: noise no model can learn would pay a prediction-error
+  bonus forever. Pathak et al. (2017) predict in a learned feature space for the same reason.
+- **Rule:** normalised delta rule (LMS), `w += fm / (1 + |h|²) × error × h`, run only on the nonzero
+  entries of h. That is about 2,000 multiply-adds per step, against about 40,000 for acting and
+  learning. The weights are 11 actions × 7 × 1,107 = 85,239 numbers. They are saved as `brain.fm`
+  only when `fm` is on, which adds about 0.45 MB to a save. A save without them loads with a zero
+  model; one with a bad shape is rejected.
+- **Curiosity:** `GAINS.curiosity` adds curiosity × the squared error of the step just taken to that
+  step's reward, so it reaches the critic and the actor through the TD error. The stored transitions
+  and the logged return keep the task's reward only.
+- **Surprise:** `GAINS.surpriseFm` makes item 1's detector read each episode's summed forward-model
+  error instead of its summed squared TD error.
+- **Test:** `test_brain.mjs` checks that with `fm` off nothing is allocated or saved, and that the
+  seed-1 output is unchanged line for line. With it on, the error on a fixed stream of 1,500 grasp
+  steps falls from 0.092 to 0.016 after three passes, a save keeps the weights and a loaded brain
+  earns the same curiosity bonus for 300 steps, the v3 fixture loads with a zero model, a bad shape
+  is rejected, and `surpriseFm` switches on a burst of model error but not of TD error.
+
+**Why prediction error and not learning progress.** Learning progress rewards the drop in error
+(Schmidhuber 1991; Oudeyer, Kaplan and Hafner 2007). With a normalised delta rule, the drop on one
+sample is a fixed share of its squared error: after the update the error is `e (1 − fm ρ)`, with
+`ρ = |h|² / (1 + |h|²)`. Here |h|² runs from about 15 to 200, so ρ is close to 1 and the two signals
+differ per step only by a scale. Progress over a window needs regions of experience (Oudeyer's), which
+here would be the context slots. It gives one number per slot, not per step, so it cannot say which
+step was worth it.
+
+**Pilot** (seed 1, `fm` 0.1, curiosity 0, 2026-10-16). Every stage passed at the same episode as with
+the model off (99, 437, 1,561, 1,883 and 10,703), so the model has no side effects. Mean squared error
+per step, over each stage's training steps: walk 0.0005, grasp 0.017, listen 0.042, read 0.043, write
+0.035 (write's comes from its rehearsal episodes; at the board the target is 0). On a fixed stream of
+20,000 transitions recorded after read, guessing that the next summary equals this one scores 0.161.
+The model scores 0.058 over its first pass and 0.043 over its third. Learning rates 0.03, 0.3 and 1
+scored 0.050, 0.041 and 0.065 on the third pass, so 0.1, picked before the pilot, stays. Most of the
+error left is probably objects coming into view from outside it, which h cannot know (untested).
+
+**Pre-registration** (written 2026-10-16, before the sweep; the pilot was the only run).
+- **(b) Curiosity.** Arms `rehearse30` (off), `curiosity05` and `curiosity25`, seeds 1-10, paired over
+  the seeds that pass both. The scales come from the pilot: at an error of 0.04, 0.05 pays 0.002 per
+  step, under the 0.005 step cost, and 0.25 pays 0.01, twice it. Rule: curiosity is supported if an arm
+  graduates as many seeds as off, needs fewer episodes in all (sign-flip p < 0.05), and lowers no
+  kept skill by more than 0.05 on average. Expected: not supported. The bonus is highest when objects
+  come into view, so it may speed grasp a little, like the orienting reflex of #83 but fading as the
+  model learns. In listen and read it pays for looking at any object, not the named one. At 0.25 it
+  also pays for searching longer instead of grasping. So: grasp equal or faster, listen and read
+  equal or slower, totals not significant. Curiosity adds to the reward, not to h, so the step size
+  `lr / (1 + mean |h|²)` changes only if it changes which scenes are seen. It is reported per stage,
+  and a stage whose step scale moves by more than 5% gets that caveat.
+- **(a) Surprise.** Arm `reversalFm` trains with the model on and curiosity 0, so its graduation must
+  match `rehearse30` exactly. It then runs the reversal blocks of item 1 three times: surprise off,
+  from TD error, and from the model's error ("fm", the same threshold 3). Expected: the model's error
+  does not detect a reward-only reversal. The reversed rule changes no sensory result of any action.
+  Only the reward of the final grasp changes, and nothing is predicted after a terminal step. Measure:
+  with surprise off, each episode's summed model error over a block's first 50 episodes minus the
+  block before's last 50. Expected near 0 and no larger at reversals (N to R) than at returns (R to
+  N), while TD error jumps at reversals. "fm" should switch about as often in N blocks as in R blocks
+  and give no savings: first-50 success on the return blocks within ±0.03 of off. One indirect route
+  could make it fire. If the reversal changes behaviour, for example longer searches, an episode's
+  summed error grows with its length.
+
+**The run.** Seeds 1-10, 2026-10-16, `--jobs 4`, 22 minutes. `reversalFm` graduated exactly as
+`rehearse30`: the same episodes per stage and the same kept scores on every seed (9/10, 16,515).
+Its surprise-off and TD-error reversal rows match item 1's table to the digit. So a forward model
+with curiosity 0 changes nothing.
+
+**(b) Curiosity.**
+
+| Arm | All stages learned | Kept every skill above the test's bars | Episodes to graduate (mean) | Kept grasp / listen / read / write |
+|---|---|---|---|---|
+| Off (`rehearse30`) | 9/10 | 9/10 | 16,515 | 0.87 / 0.70 / 0.59 / 0.65 |
+| Curiosity 0.05 | 10/10 | 10/10 | 18,197 | 0.85 / 0.64 / 0.57 / 0.65 |
+| Curiosity 0.25 | 5/10 | 4/10 | 28,616 | 0.88 / 0.64 / 0.57 / 0.62 |
+
+Paired against off over the seeds both passed (positive = curiosity needed more), with the exact
+sign-flip p. The step scale is `1 / (1 + mean |h|²)` over the stage's training steps, curiosity over
+off. With n = 5 the smallest possible p is 0.0625, so 0.063 means all five seeds went the same way.
+
+| Stage | Episodes, 0.05 (n 9) | Episodes, 0.25 (n 5) | Step scale, 0.05 | Step scale, 0.25 |
+|---|---|---|---|---|
+| Walk | +7 (p 0.56) | +2 (p 0.38) | x0.99 | x1.01 |
+| Grasp | +40 (p 0.79) | −141 (p 0.25) | x0.99 | x1.00 |
+| Listen | +363 (p 0.59) | +4,431 (p 0.063) | x0.99 | x0.74 (p 0.063) |
+| Read | +112 (p 0.87) | +6,162 (p 0.063) | x0.74 (p 0.078) | x0.50 (p 0.063) |
+| Write | +1,778 (p 0.35) | +1,785 (p 0.38) | x0.94 | x0.72 (p 0.063) |
+| All five | +2,299 (p 0.23) | +12,239 (p 0.063) | | |
+
+At 0.05, kept listen fell by 0.051 (p 0.20) and no other kept score moved by more than 0.01. At
+0.25, over the five seeds that graduated, the largest fall was read's, 0.062 (p 0.44).
+
+- **Not supported, at either scale.** Curiosity 0.05 graduated one seed more: seed 8, which never
+  learns read without it, learned it in 4,238 episodes. But it took 2,299 more episodes on average
+  (p 0.23), and kept listen 0.051 lower, just past the 0.05 limit. Curiosity 0.25 lost five seeds,
+  all on read (seeds 2, 4, 6, 8, 9).
+- **The predicted direction held.** Grasp was not slower; listen and read were.
+- **At 0.25 the bonus pays it not to grasp.** On seed 2 at read (a one-off diagnostic), 94% of read
+  episodes ran to the 150-step limit, against 27% with curiosity off, and success was 0.02. The
+  bonus of about 0.01 per step outweighs the 0.005 step cost, so wandering earns more than a risky
+  grasp, which ends the bonus. Any bonus that is positive on every step pays for long episodes.
+- **The step size moved too, as #37 warned.** Curiosity changed which scenes the creature saw, and
+  mean |h|² rose. On that seed-2 read stage, |h|² per step was 467 against 240. The step scale fell
+  by 26% on read at 0.05, and on listen, read and write at 0.25. Smaller steps alone slow learning
+  (#37). Here both the bonus and the smaller step push the same way, so this run cannot say how much
+  of the slowdown is the bonus itself. At 0.05 a small benefit hidden by the smaller step is not ruled
+  out; a test at matched step sizes would settle it (untested).
+
+**(a) Surprise.**
+
+| Surprise | N | R | N | R | N | R | Switches (mean) |
+|---|---|---|---|---|---|---|---|
+| off | 0.71 / 0.83 | 0.02 / 0.06 | 0.11 / 0.78 | 0.02 / 0.09 | 0.20 / 0.79 | 0.02 / 0.09 | 0 |
+| TD error (3) | 0.71 / 0.83 | 0.07 / 0.14 | 0.21 / 0.60 | 0.04 / 0.08 | 0.15 / 0.50 | 0.04 / 0.10 | 7.1 |
+| Model error (3) | 0.71 / 0.83 | 0.02 / 0.06 | 0.11 / 0.78 | 0.02 / 0.09 | 0.20 / 0.79 | 0.02 / 0.09 | 0 |
+
+Each episode's summed squared error, surprise off, mean over the first / last 50 episodes of each
+block (n = 9):
+
+| Signal | N | R | N | R | N | R |
+|---|---|---|---|---|---|---|
+| TD error | 0.50 / 0.47 | 1.13 / 0.20 | 0.35 / 0.44 | 1.02 / 0.17 | 0.48 / 0.43 | 0.98 / 0.17 |
+| Model error | 3.02 / 2.41 | 2.58 / 5.15 | 4.96 / 2.50 | 2.37 / 4.47 | 4.56 / 2.33 | 2.31 / 4.26 |
+
+- **The prediction held: the model's error does not see a reward-only reversal.** From a block's
+  last 50 episodes to the next block's first 50, the model error moved by +0.004 at reversals (p 0.97)
+  and −0.049 at returns (p 0.77). TD error rose by 0.60 at reversals (p 0.004) and by 0.23 at returns
+  (p 0.004). The model-error detector never switched in any of the 54 blocks, so its success rates
+  equal surprise off exactly.
+- **The indirect route showed up, but slowly.** Within each reversed block the summed model error
+  about doubled, and it fell back during the next normal block. On seed 1 (a one-off diagnostic), the
+  last 50 episodes of the first R block averaged 136 steps against 63 in the N block before. The
+  error per step stayed flat (0.044 against 0.046). Unrewarded, the creature stops grasping and runs
+  to the time limit, and a longer episode sums more error. The rise took hundreds of episodes, so the
+  fast mean (5 episodes) never reached 3 times the slow one (50).
+- **So a sensory forward model is the wrong detector for this task.** It would see a change in what
+  actions do to the senses, and this reversal changes only rewards. Nothing is predicted after a
+  terminal grasp, by design.
+
+**Does this answer item 3?** Yes, for this model. Both uses were tested and neither helped here.
+`GAINS.fm`, `curiosity` and `surpriseFm` stay 0. Limits:
+- One target (7 pooled channels), one model (a linear readout per action over the fixed expansion),
+  one learning rate, two bonus scales and ten seeds.
+- The bonus is positive on every step, so it rewards long episodes. A bonus with its running mean
+  subtracted, or learning progress over a window, would not. Both are untested.
+- The step-size confound above.
+- Most of the model's remaining error is probably objects coming into view, which h cannot predict.
+  A learned feature space, as Pathak et al. (2017) use, would not remove that either.
+
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
@@ -680,6 +842,7 @@ is enough for a real brain's version of these skills is a hypothesis.
 | Actor-critic plus replay as one learner | [build-a-brain-like-learner](../../guides/build-a-brain-like-learner.md) |
 | Save brain and Load brain: what the file holds and why | [saving-and-reusing-a-trained-brain](../../simulation/saving-and-reusing-a-trained-brain.md) |
 | New letters: learning to learn, and why it does not transfer | [prefrontal-cortex-and-abstraction](../../function/prefrontal-cortex-and-abstraction.md) |
+| Forward model (cerebellum-like), curiosity and surprise from its error | [action-selection-and-motor-control](../../function/action-selection-and-motor-control.md), [efficient-brain-like-learning](../../learning/efficient-brain-like-learning.md) |
 
 ## Not done yet
 
@@ -718,3 +881,11 @@ is enough for a real brain's version of these skills is a hypothesis.
 - Harlow (1949) "The formation of learning sets", *Psychol Rev* 56:51. doi:10.1037/h0062474
 - Lake, Ullman, Tenenbaum and Gershman (2017) "Building machines that learn and think like people",
   *Behav Brain Sci* 40:e253. doi:10.1017/S0140525X16001837
+- Wolpert, Miall and Kawato (1998) "Internal models in the cerebellum", *Trends Cogn Sci* 2:338.
+  doi:10.1016/S1364-6613(98)01221-2
+- Pathak, Agrawal, Efros and Darrell (2017) "Curiosity-driven exploration by self-supervised
+  prediction", ICML. arXiv:1705.05363; workshop version doi:10.1109/CVPRW.2017.70
+- Schmidhuber (1991) "A possibility for implementing curiosity and boredom in model-building neural
+  controllers", *From Animals to Animats* 1:222. doi:10.7551/mitpress/3115.003.0030
+- Oudeyer, Kaplan and Hafner (2007) "Intrinsic motivation systems for autonomous mental development",
+  *IEEE Trans Evol Comput* 11:265. doi:10.1109/TEVC.2006.890271

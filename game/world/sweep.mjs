@@ -39,6 +39,13 @@ export const ARMS = {
   reversal: { replay: 0.3, sleepEvery: 0, reversal: true },
   // Issue #37: after graduation, three new letters made of known strokes, against the same brain untrained (see transfer).
   transfer: { replay: 0.3, sleepEvery: 0, transfer: true },
+  // Issue #65 item 3: a forward model (fm = its learning rate) whose squared error is a curiosity bonus.
+  // The pilot's error was 0.017-0.043 per step on seed 1, so 0.05 pays under the 0.005 step cost on
+  // average and 0.25 about twice it. reversalFm: curiosity 0, then the reversal blocks also run with the
+  // forward model's error as the surprise signal (see reversal).
+  curiosity05: { replay: 0.3, sleepEvery: 0, fm: 0.1, curiosity: 0.05 },
+  curiosity25: { replay: 0.3, sleepEvery: 0, fm: 0.1, curiosity: 0.25 },
+  reversalFm: { replay: 0.3, sleepEvery: 0, fm: 0.1, reversal: true },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
@@ -49,11 +56,16 @@ function trial(arm, seed) {
   const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
   // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
   b.commit = z => { const m = b.match(z); if (b.learning && m.best < 0 && m.free < 0) store[m.rare >= 0 ? "reclaims" : "merges"]++; commit(z); };
+  // Per stage: the mean step-size multiplier 1 / (1 + mean |h|^2) over its training steps (#37 found it
+  // confounds speed comparisons), and the forward model's mean squared error per step (#65 item 3).
+  const scale = [], fmErr = [];
   for (let s = 0; s < STAGES.length; s++) {
-    const start = w.episode;
-    while (w.stage === s && !w.graduated && w.episode - start < LIMIT) w.step();
-    episodes.push(w.episode - start);
-    if (!(w.stage > s || w.graduated)) return { arm, seed, passed: false, failed: STAGES[s].key, episodes };
+    const start = w.episode, f0 = [b.fmSum || 0, b.fmN || 0];
+    let sc = 0, n = 0;
+    while (w.stage === s && !w.graduated && w.episode - start < LIMIT) { w.step(); sc += 1 / (1 + (b.hh || 0)); n++; }
+    episodes.push(w.episode - start); scale.push(+(sc / n).toPrecision(4));
+    if (b.fm) fmErr.push(+((b.fmSum - f0[0]) / (b.fmN - f0[1])).toPrecision(4));
+    if (!(w.stage > s || w.graduated)) return { arm, seed, passed: false, failed: STAGES[s].key, episodes, scale };
   }
   // Its first letters (#37): episodes of the write stage itself, rehearsal not counted (nothing rehearses write before graduation).
   const writeOwn = w.log.filter(e => e.stage === STAGES.length - 1).length;
@@ -77,7 +89,7 @@ function trial(arm, seed) {
   try { w.meta.commit = execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
   const json = w.save(), card = World.fromJSON(JSON.parse(json)).meta;
   return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, perform: card.saves[0].scores, commit: card.commit,
-    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), ...(rev && { reversal: reversal(json) }),
+    active, scale, ...(b.fm && { fmErr }), slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), ...(rev && { reversal: reversal(json) }),
     ...(tr && { transfer: { writeOwn, ...transfer(json, seed) } }), seconds: (Date.now() - t0) / 1000 };
 }
 
@@ -98,23 +110,28 @@ function sixth(json) {
 
 // Issue #65, phase C: from the graduated save, BLOCKS blocks of BLOCK listen episodes that alternate
 // the normal and the reversed tone rule (same scene, so the scene cannot pick the slot), with no
-// rehearsal and no stage passes. Run twice from the same save, surprise off and on. Per block: success
-// in its first and last 50 episodes, and the slot the last episode ended in.
+// rehearsal and no stage passes. Run from the same save with surprise off and on (TD error), and, when
+// the save has a forward model, "fm": surprise from its error (item 3). Per block: success in its first
+// and last 50 episodes, the slot the last episode ended in, switches so far, and each episode's summed
+// squared TD error and forward-model error (what the detector sees), averaged over the first and last 50.
 const BLOCK = 1000, BLOCKS = 6, SURPRISE = 3;
 function reversal(json) {
   const out = {}, listen = STAGES.findIndex(s => s.key === "listen");
-  for (const [name, surprise] of [["off", 0], ["on", SURPRISE]]) {
-    Object.assign(GAINS, { replay: 0, surprise });
+  for (const [name, surprise, surpriseFm] of [["off", 0, false], ["on", SURPRISE, false], ...(GAINS.fm ? [["fm", SURPRISE, true]] : [])]) {
+    Object.assign(GAINS, { replay: 0, surprise, surpriseFm });
     STAGES[listen].pass = Infinity;   // blocks are fixed length: listen never passes
-    const w = World.fromJSON(JSON.parse(json));
+    const w = World.fromJSON(JSON.parse(json)), b = w.brain, commit = b.commit.bind(b), err = [];
+    b.commit = z => { err.push([b.epErr, b.fmEp]); commit(z); };
     w.graduated = false; w.setStage(listen);
     out[name] = [];
     for (let k = 0; k < BLOCKS; k++) {
       w.reversed = k % 2 === 1; w.reset();
-      const wins = [];
+      const wins = [], e0 = err.length;
       while (wins.length < BLOCK) { const r = w.step(); if (r.done) wins.push(r.success ? 1 : 0); }
       const rate = xs => +(xs.reduce((a, b) => a + b, 0) / xs.length).toFixed(3);
-      out[name].push({ first: rate(wins.slice(0, 50)), last: rate(wins.slice(-50)), slot: w.slot });
+      const avg = (xs, j) => +(xs.reduce((a, x) => a + x[j], 0) / xs.length).toPrecision(4), f = err.slice(e0, e0 + 50), l = err.slice(-50);
+      out[name].push({ first: rate(wins.slice(0, 50)), last: rate(wins.slice(-50)), slot: w.slot, switches: b.switches || 0,
+        td: [avg(f, 0), avg(l, 0)], fmErr: [avg(f, 1), avg(l, 1)] });
     }
     out[name + "Switches"] = w.brain.switches || 0;
   }
@@ -124,17 +141,38 @@ function reversal(json) {
 // Phase C per arm: mean first-50 and last-50 success per block, off vs on, and on minus off on the
 // first 50 of the return blocks (2 onwards: a rule it has met before), paired by seed.
 function reversalSummary(results) {
-  const rs = results.filter(r => r.reversal);
-  if (!rs.length) return;
+  // One summary per arm: reversal and reversalFm train different brains and record different modes.
+  for (const arm of new Set(results.filter(r => r.reversal).map(r => r.arm))) reversalArm(results.filter(r => r.reversal && r.arm === arm), arm);
+}
+
+function reversalArm(rs, arm) {
   const mean = xs => xs.reduce((a, b) => a + b) / xs.length;
-  console.log(`\nphase C (reversal blocks of ${BLOCK}, normal/reversed alternating, surprise ${SURPRISE}): first50/last50 per block, n ${rs.length}`);
-  for (const name of ["off", "on"]) {
-    console.log(`  surprise ${name.padEnd(4)}` + rs[0].reversal[name].map((_, k) =>
+  console.log(`\nphase C, ${arm} (reversal blocks of ${BLOCK}, normal/reversed alternating, surprise ${SURPRISE}): first50/last50 per block, n ${rs.length}`);
+  const names = ["off", "on", "fm"].filter(n => rs.every(r => r.reversal[n]));
+  for (const name of names) {
+    const blocks = rs[0].reversal[name], per = rs[0].reversal[name][0].switches !== undefined;   // older logs lack switches per block
+    console.log(`  surprise ${name.padEnd(4)}` + blocks.map((_, k) =>
       `${k % 2 ? "R" : "N"} ${mean(rs.map(r => r.reversal[name][k].first)).toFixed(2)}/${mean(rs.map(r => r.reversal[name][k].last)).toFixed(2)}`).join("  ")
-      + `  switches ${mean(rs.map(r => r.reversal[name + "Switches"])).toFixed(1)}`);
+      + `  switches ${mean(rs.map(r => r.reversal[name + "Switches"])).toFixed(1)}`
+      + (per ? ` (per block ${blocks.map((_, k) => mean(rs.map(r => r.reversal[name][k].switches - (k ? r.reversal[name][k - 1].switches : 0))).toFixed(1)).join(" ")})` : ""));
   }
-  const d = rs.map(r => mean(r.reversal.on.slice(2).map((b, k) => b.first - r.reversal.off[k + 2].first)));
-  console.log(`  on - off, first 50 of blocks 3-${BLOCKS}: ${mean(d) > 0 ? "+" : ""}${mean(d).toFixed(3)} (p ${signFlip(d).toFixed(3)}, n ${d.length})`);
+  for (const name of names.slice(1)) {
+    const d = rs.map(r => mean(r.reversal[name].slice(2).map((b, k) => b.first - r.reversal.off[k + 2].first)));
+    console.log(`  ${name} - off, first 50 of blocks 3-${BLOCKS}: ${mean(d) > 0 ? "+" : ""}${mean(d).toFixed(3)} (p ${signFlip(d).toFixed(3)}, n ${d.length})`);
+  }
+  // Item 3: does a rule change show in the signal? Surprise off, each episode's summed squared error: first
+  // 50 of a block minus last 50 of the block before, at the reversals (N to R) and at the returns (R to N).
+  for (const [j, label] of [["td", "TD error"], ["fmErr", "forward-model error"]]) {
+    if (!rs.every(r => r.reversal.off[0][j] && r.reversal.off[0][j][1] > 0)) continue;
+    const off = r => r.reversal.off, jump = (r, ks) => mean(ks.map(k => off(r)[k][j][0] - off(r)[k - 1][j][1]));
+    const ks = { "N to R": [1, 3, 5].filter(k => k < BLOCKS), "R to N": [2, 4].filter(k => k < BLOCKS) };
+    console.log(`  ${label} per episode, surprise off, first50/last50: ` + off(rs[0]).map((_, k) =>
+      `${k % 2 ? "R" : "N"} ${mean(rs.map(r => off(r)[k][j][0])).toPrecision(3)}/${mean(rs.map(r => off(r)[k][j][1])).toPrecision(3)}`).join("  "));
+    console.log("    jump at block start (first 50 minus the block before's last 50): " + Object.entries(ks).map(([why, k]) => {
+      const d = rs.map(r => jump(r, k));
+      return `${why} ${mean(d) > 0 ? "+" : ""}${mean(d).toPrecision(3)} (p ${signFlip(d).toFixed(3)})`;
+    }).join(", "));
+  }
 }
 
 // Issue #37, phase T. Train w on its current stage until it passes or has played LIMIT episodes of that
@@ -277,6 +315,30 @@ function summarise(results, arms) {
   copySummary(results, arms);
   reversalSummary(results);
   transferSummary(results);
+  stageSummary(results, arms);
+}
+
+// Issue #65 item 3: per stage, paired against the first arm over the seeds both passed: episodes, the kept
+// scores, and the step-size multiplier 1 / (1 + mean |h|^2) (as arm / first arm). Then the forward model's
+// mean squared error per step, per stage. Rows from before #65 item 3 have no scale and are skipped.
+function stageSummary(results, arms) {
+  const mean = xs => xs.reduce((a, b) => a + b, 0) / xs.length, sg = x => (x > 0 ? "+" : "");
+  const base = Object.fromEntries(results.filter(r => r.arm === arms[0] && r.passed && r.scale).map(r => [r.seed, r]));
+  const lines = [];
+  for (const arm of arms.slice(1)) {
+    const rs = results.filter(r => r.arm === arm && r.passed && r.scale && base[r.seed]);
+    if (rs.length < 2) continue;
+    const B = r => base[r.seed], pair = f => { const d = rs.map(r => f(r) - f(B(r))); return `${sg(mean(d))}${mean(d).toFixed(Math.abs(mean(d)) < 1 ? 3 : 0)} (p ${signFlip(d).toFixed(3)})`; };
+    lines.push(`${arm.padEnd(24)}n ${rs.length}  episodes ${STAGES.map((s, i) => `${s.key} ${pair(r => r.episodes[i])}`).join(", ")}, all ${pair(r => r.total)}`);
+    lines.push(" ".repeat(24) + `kept ${Object.keys(KEEP).map(k => `${k} ${pair(r => r.kept[k])}`).join(", ")}`);
+    lines.push(" ".repeat(24) + `step scale x ${STAGES.map((s, i) => `${s.key} ${(mean(rs.map(r => r.scale[i])) / mean(rs.map(r => B(r).scale[i]))).toFixed(3)}`).join(", ")}`
+      + ` (p ${STAGES.map((s, i) => signFlip(rs.map(r => r.scale[i] - B(r).scale[i])).toFixed(3)).join("/")})`);
+  }
+  if (lines.length) console.log(`\nper stage vs ${arms[0]} (paired, seeds both passed; step scale = 1 / (1 + mean |h|^2), arm / ${arms[0]})\n` + lines.join("\n"));
+  for (const arm of arms) {
+    const rs = results.filter(r => r.arm === arm && r.passed && r.fmErr);
+    if (rs.length) console.log(`${arm.padEnd(24)}forward-model error per step: ${STAGES.map((s, i) => `${s.key} ${mean(rs.map(r => r.fmErr[i])).toFixed(4)}`).join(", ")}, n ${rs.length}`);
+  }
 }
 
 // Issue #83: main effects and interaction on episodes per stage, over seeds that passed in all four

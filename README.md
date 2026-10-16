@@ -21,7 +21,7 @@ ML engineers, neuroscience students or players in
 | `learning/` | Brain vs deep learning; brain-inspired learning algorithms with code; efficient (energy, samples) learning; hyperdimensional computing |
 | `simulation/` | Levels of modeling, spiking and reservoir networks, cognitive architectures, evaluation, datasets, hardware, brain-computer interfaces, emulation projects, saving a trained brain |
 | `research/` | Catalog of every paper the topics cite (`papers.md`), a script that fetches open-access PDFs, the learning-algorithm hypotheses, and numpy experiments (replay selection, local credit assignment, point vs dendritic neurons), open-data analyses (Brain-Score saturation, working-memory slots vs resource, MICrONS dendritic clustering, spike timing vs count on Allen Neuropixels, GPT-2 vs word statistics on Narratives fMRI), and research notes and reports |
-| `game/` | Brain Lab: a playable simulation, on desktop or in the browser, where each level is one idea from the KB. See [game/README.md](game/README.md) |
+| `game/` | Brain Lab: a playable simulation, on desktop or in the browser, where each level is one idea from the KB, and Brain World (`game/world/`), a 3D creature that learns five skills from reward alone. See [game/README.md](game/README.md) |
 
 Every topic file has YAML frontmatter (title, tags, use_cases, status, sources).
 `python build_index.py` regenerates `INDEX.md` and checks `[[links]]`. The rules

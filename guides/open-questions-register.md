@@ -39,7 +39,7 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 | 6 | Do grid cells compute path integration or inherit it? (which model fits recorded properties) | [[spatial-navigation]] | - | candidate |
 | 7 | Does adding neuron-like noise make a CNN less adversarially fragile, at equal accuracy? | [[sensory-systems-and-vision]] | - | candidate |
 | 8 | Which set points and drives does an agent need for useful emotion-like behaviour? | [[emotion-amygdala-and-interoception]] | - | candidate |
-| 9 | How can an agent infer its task with no task index? | [[saving-and-reusing-a-trained-brain]] | #57, #60, #65 | in Brain World backlog |
+| 9 | How can an agent infer its task with no task index? | [[saving-and-reusing-a-trained-brain]] | #57, #60, #65 | in Brain World backlog: #65 items 1 and 3 tried, not supported (surprise from TD error did not give savings; a sensory forward model's error cannot see a reward-only change); items 2 and 4 open |
 | 22 | Can local learning rules learn reusable abstract structure, or what does the brain add? 170 hypotheses (H001-H170), each with a test, in [research/learning-algorithm-hypotheses.md](../research/learning-algorithm-hypotheses.md), explained simply in [research/hypotheses-explained](../research/hypotheses-explained/README.md) | [[build-a-brain-like-learner]] | #92 | in progress: H001-H003 replicated (PC matches backprop when the output variance is large; FA and DFA train hidden layers on digits) |
 
 ### Tier 2: open-data analysis (weeks)

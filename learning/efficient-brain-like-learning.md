@@ -147,6 +147,32 @@ turn down: a gain that decays with practice, or one gated by the task context. T
 or decaying reflexes would fix this is a **hypothesis**, not tested here. This is
 computational evidence about one toy agent with one hand-set prior, not about brains.
 
+### Measured: curiosity from a forward model in Brain World (issue #65)
+The first half of method 9, without planning. A cerebellum-like forward model (one
+delta-rule readout per action over the fixed expansion) predicts 7 pooled sense channels
+of the next step. Its squared error, scaled, is added to the reward as a curiosity bonus
+(Pathak et al. 2017). Pre-registered expectation: no speed-up. Seeds 1-10, 2026-10-16,
+paired over the seeds that graduated in both arms:
+
+| Bonus scale | Graduated | Episodes, all five skills (mean) | vs no bonus |
+|---|---|---|---|
+| 0 | 9/10 | 16,515 | - |
+| 0.05 (under the step cost on average) | 10/10 | 18,197 | +2,299 (p = 0.23, n = 9) |
+| 0.25 (about twice the step cost) | 5/10 | 28,616 | +12,239 (p = 0.063, n = 5) |
+
+- **No speed-up at either scale.** At 0.25 every failure was on read: a diagnostic seed
+  ran 94% of its read episodes to the time limit, because a bonus paid on every step
+  makes wandering pay more than a risky grasp that ends the episode.
+- **The step size moved with it.** The bonus changed which scenes the agent saw, which
+  raised the mean |h|² in the step-size normaliser. Steps on read were 26% smaller at 0.05
+  and 50% smaller at 0.25. So the episode counts mix the bonus with a smaller step; a small
+  benefit at 0.05 is not ruled out.
+
+So in this task, where every episode ends in a reward or a penalty, a prediction-error
+bonus mostly competes with the task. Whether a zero-mean bonus or learning progress over a window does better is a
+**hypothesis**, not tested here. Details are in the `game/world/` README under "Forward
+model".
+
 ## Relevance to building brain-like AI
 - Count work per event, not per parameter. A learner with 7% activity that updates every
   synapse each step gets none of the brain's energy advantage.
@@ -235,3 +261,4 @@ saved.
 - Sutton (1990) "Integrated architectures for learning, planning, and reacting based on approximating dynamic programming", *Proceedings of ICML 1990*, 216-224.
 - Zador (2019) "A critique of pure learning and what artificial neural networks can learn from animal brains", *Nat Commun* 10:3770. doi:10.1038/s41467-019-11786-6
 - Doya (2002) "Metalearning and neuromodulation", *Neural Networks* 15:495. doi:10.1016/S0893-6080(02)00044-8
+- Pathak, Agrawal, Efros & Darrell (2017) "Curiosity-driven exploration by self-supervised prediction", ICML. arXiv:1705.05363

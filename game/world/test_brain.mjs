@@ -3,7 +3,7 @@
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW, LETTERS, NEW_LETTERS, rng, orient, glyph } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW, LETTERS, NEW_LETTERS, rng, orient, glyph, summary } from "./brain.js";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
 // hands encode an inferred slot, never the task it is playing.
@@ -346,6 +346,44 @@ sw.reversed = true; sw.setStage(2);
 assert.equal(sw.tone, (sw.target + 1) % 3, "reversal: tone not remapped");
 GAINS.surprise = 0;
 console.log("  Surprise: switches to a sibling, back, founds a third; saved; reversal remaps the tone");
+
+// Forward model (#65 item 3): off, nothing is allocated or saved. On, its error falls on a fixed stream
+// of (h, action, next summary); the weights survive save and load, and with curiosity on a loaded brain
+// earns the same bonus; a save without them (the v3 fixture too) loads with a zero model, a bad one is
+// rejected; and surpriseFm makes the detector read its error, not the TD error.
+assert.equal(new World(1).brain.fm, null);
+assert.equal(JSON.parse(JSON.stringify(new World(1))).brain.fm, undefined, "fm off saved a forward model");
+GAINS.fm = 0.1;
+const fw = new World(1), stream = [];
+fw.setStage(1);
+while (stream.length < 1500) { const h = fw.h, r = fw.step(); if (!r.done) stream.push([h, r.action, summary(fw.x)]); }
+const fb = new Brain(rng(1)), fmScore = () => { fb.learning = false; const e = stream.reduce((s, [h, a, y]) => s + fb.forward(h, a, y), 0) / stream.length; fb.learning = true; return e; };
+const fmBefore = fmScore();
+for (let pass = 0; pass < 3; pass++) for (const [h, a, y] of stream) fb.forward(h, a, y);
+const fmAfter = fmScore();
+assert.ok(fmAfter < fmBefore / 3, `forward model: error ${fmBefore} -> ${fmAfter} on a fixed stream`);
+GAINS.curiosity = 0.25;
+let bonus = false;
+while (!fw.step().done);
+const fwBack = World.fromJSON(JSON.parse(JSON.stringify(fw)));
+assert.deepEqual(fwBack.brain.fm, fw.brain.fm, "save lost the forward model");
+for (let i = 0; i < 300; i++) {
+  const r = fw.step();
+  assert.deepEqual(fwBack.step(), r, `forward model: loaded brain diverged at step ${i}`);
+  if (!r.done && r.reward > -GAINS.stepCost) bonus = true;
+}
+assert.ok(bonus, "curiosity: no step earned a bonus");
+assert.ok(World.fromJSON(v3).brain.fm.every(x => x === 0), "a save without a forward model must load with a zero one");
+const badFm = JSON.parse(JSON.stringify(fw)); badFm.brain.fm = badFm.brain.fm.slice(8);
+assert.throws(() => World.fromJSON(badFm), /not a Brain World save/);
+GAINS.surprise = 2; GAINS.surpriseFm = true;
+const sf = new Brain(rng(9)), fep = (td, fe, n) => { for (let i = 0; i < n; i++) { sf.epErr = td; sf.fmEp = fe; sf.commit(zs); } };
+fep(20, 0.5, 40);
+assert.ok(sf.alias.every(a => a === -1), "surpriseFm: a loud TD error switched");
+fep(0.5, 20, 10);
+assert.ok(sf.alias.some(a => a >= 0), "surpriseFm: a forward-model burst did not switch");
+Object.assign(GAINS, { fm: 0, curiosity: 0, surprise: 0, surpriseFm: false });
+console.log(`  Forward model: error ${fmBefore.toFixed(3)} -> ${fmAfter.toFixed(3)} on a fixed stream; saved; curiosity bonus; old saves load; drives surprise`);
 
 // Jointed legs (#38): the "cpg" body learns to walk from reward alone, within WALK_CPG episodes on
 // seed 1, where an untrained brain (a uniform policy) fails. The body travels with the save, and a

@@ -118,6 +118,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "World: sweep.mjs (forward model: curiosity and surprise, seeds 1-10)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/game/world/sweep.mjs",
+      "args": ["--arms", "rehearse30,curiosity05,curiosity25,reversalFm", "--jobs", "4"],
+      "console": "integratedTerminal"
+    },
+    {
       "name": "KB: build_index",
       "type": "debugpy",
       "request": "launch",
