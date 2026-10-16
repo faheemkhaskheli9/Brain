@@ -8,7 +8,7 @@ use_cases:
   - how could dendrites carry error signals for credit assignment
   - model a neuron with nonlinear dendritic branches
   - do inputs with similar tuning land on the same dendritic branch
-status: draft
+status: stable
 last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1146/annurev.neuro.28.061604.135703
@@ -134,7 +134,7 @@ the dendrite, against null A.
 | same unbranched segment (33,545) | 0.0483 / 0.0472 (0.026, 0.16) | 0.0852 / 0.0879 (≤ 0.001, ≤ 0.001) | 40.9 / 40.8 (0.67) |
 
 - **Receptive-field position: clustered.** Inputs within 10 µm of each other have RF
-  centres 5.6% closer than the shuffled ones (3.5% closer than null B), and the gap
+  centres 5.5% closer than the shuffled ones (3.5% closer than null B), and the gap
   shrinks with distance until it is gone past 100 µm. This held with at least 5 inputs
   per target (12,814 targets, p ≤ 0.001) and on the 1,412 targets with proofread dendrites
   (0.0784 vs 0.0809, p A = 0.004, p B = 0.005). It matches the mouse spine imaging above
@@ -151,7 +151,7 @@ the dendrite, against null A.
   after seeing the result).** The somata of inputs within 10 µm of each other are 174 µm
   apart against 203 µm when shuffled (p ≤ 0.001), and nearby cells have nearby RFs
   (retinotopy). Measured against the mean RF distance at each soma distance, the within-
-  10 µm excess shrinks from 0.0050 to 0.0009 (p A = 0.007, p B = 0.038), was 0.0007 with 5
+  10 µm excess shrinks from 0.0050 to 0.0010 (p A = 0.007, p B = 0.038), was 0.0007 with 5
   or more inputs (p A = 0.029), and was absent on proofread dendrites (p = 0.68). So
   axons of neighbouring cells landing side by side explain about four fifths of the
   effect. Whether that is a wiring rule or the geometry of axons that grow together is
@@ -161,8 +161,12 @@ the dendrite, against null A.
   responses. Most target dendrites are not proofread, and 0.7% of synapses (1,205 of
   168,892) lay more than 5 µm from the skeleton, on the soma or on a detached fragment and
   were dropped. A neuron gives many pairs, but the shuffles stay inside neurons, so the
-  p-values allow for that. The tests across 12 pair classes and several tuning measures
-  are not corrected; only the primary test was pre-registered. Deviations: the planned "at least 2 inputs" run was skipped, because
+  p-values allow for that. The 36 tests (3 tuning measures × 12 pair classes) are not
+  corrected; the within-10 µm RF result (p ≤ 0.001, the shuffle floor) would survive a
+  Bonferroni correction over all 36 (threshold 0.0014). The addendum on #87 pre-registered
+  the primary test, RF distance and orientation as secondary measures, null B, the pair
+  classes and the sensitivity runs; the soma-distance analysis came after the first
+  result. Deviations: the planned "at least 2 inputs" run was skipped, because
   with two single-synapse inputs a shuffle cannot change the pair. Where a cell matched
   several imaging units, the unit with the best model fit was used, not Ding's oracle
   score. Result table: `research/data/microns_clustering_v1300.csv`.
@@ -224,7 +228,8 @@ matched; dend uses 3-20% fewer. Trained by backprop (BP) and by feedback alignme
 
 - **No gain from dendrites at equal parameters.** With backprop, dend was level
   with both point nets on the conjunction task and 0.7 points worse than point-1 on
-  digits. It never beat point-2 significantly (best +0.002, p = 0.56), so there was
+  digits. It never beat point-2 significantly (+0.002 on conjunction and +0.008 on
+  parity, which was at chance; both p = 0.56), so there was
   no "dendrite over depth" effect to separate out either.
 - **Under a local rule, dendrites hurt.** With FA, dend was below point-1 on all three
   tasks. Only the digits gap (p = 0.002) survives a Bonferroni correction over the 12
@@ -321,7 +326,7 @@ assert r["A+B"] > 2 * (r["A"] + r["B"])         # supralinear: more than the sum
 - Guerguiev, Lillicrap & Richards (2017) "Towards deep learning with segregated dendrites", *eLife* 6:e22901. doi:10.7554/eLife.22901
 - Sacramento, Costa, Bengio & Senn (2018) "Dendritic cortical microcircuits approximate the backpropagation algorithm", NeurIPS. doi:10.48550/arxiv.1810.11393
 - Payeur, Guerguiev, Zenke, Richards & Naud (2021) "Burst-dependent synaptic plasticity can coordinate learning in hierarchical circuits", *Nat Neurosci* 24:1010. doi:10.1038/s41593-021-00857-x
-- Chavlis & Poirazi (2025) "Dendrites endow artificial neural networks with accurate, robust and parameter-efficient learning", *Nat Commun*. doi:10.1038/s41467-025-56297-9
+- Chavlis & Poirazi (2025) "Dendrites endow artificial neural networks with accurate, robust and parameter-efficient learning", *Nat Commun* 16:943. doi:10.1038/s41467-025-56297-9
 - Jones & Kording (2020) "Can single neurons solve MNIST? The computational power of biological dendritic trees", arXiv:2009.01269
 - Shalev-Shwartz, Shamir & Shammah (2017) "Failures of gradient-based deep learning", ICML. arXiv:1703.07950
 - Hawkins & Ahmad (2016) "Why neurons have thousands of synapses, a theory of sequence memory in neocortex", *Front Neural Circuits* 10:23. doi:10.3389/fncir.2016.00023

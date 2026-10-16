@@ -9,7 +9,7 @@ use_cases:
   - how are LLM activations compared with fMRI or ECoG recordings
   - is language the same thing as thought
   - is the LLM-brain match real computation or just word rate, position and word statistics
-status: draft
+status: stable
 last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/nrn2113
@@ -36,9 +36,10 @@ controls showed that much of that match, in sentence-reading data, comes from
 word rate, sentence position and static word identity, and that shuffled
 train/test splits inflate it. A check in this repo on open story-listening fMRI
 (Narratives, held-out stories) found that GPT-2 still explains variance in the
-language network that word rate, word frequency, n-gram surprisal, GPT-2's own
-surprisal and static word embeddings do not. What that extra variance is (shared
-computation, or richer context statistics) is still open.
+language network that word rate, word frequency, n-gram surprisal and static word
+embeddings together do not, nor do word rate, frequency and n-gram surprisal
+plus GPT-2's own surprisal. What that extra variance is (shared computation, or
+richer context statistics) is still open.
 
 ## How it works
 
@@ -101,14 +102,14 @@ time. Recent papers test these one by one.
 
 | Confound | What the controls found | Status |
 |---|---|---|
-| **Train/test split** | With shuffled splits, a feature that only encodes temporal autocorrelation matches or beats GPT2-XL, and the best-layer profile flips when splits are made contiguous (Feghhi et al. 2024; Hadidi et al. 2026). Schrimpf et al. (2021), Kauf et al. (2024) and Hosseini et al. (2024) used random 80/20 splits of sentences or passages. | established for the three datasets tested (Pereira, Fedorenko, Blank) |
+| **Train/test split** | With shuffled splits, a feature that only encodes temporal autocorrelation matches or beats GPT2-XL, and the best-layer profile flips (Pereira, Blank) when splits are made contiguous (Feghhi et al. 2024; Hadidi et al. 2026). Schrimpf et al. (2021), Kauf et al. (2024) and Hosseini et al. (2024) used random 80/20 splits of sentences or passages. | established for the three datasets tested (Pereira, Fedorenko, Blank) |
 | **Word rate and position** | Position plus word rate explain essentially all (>98%) of what untrained GPT2-XL predicts. For trained GPT2-XL, position + word rate + static GloVe vectors (Pereira) or position + word rate alone (Fedorenko, Blank) explain over 85%, over 80% and nearly 100% of its explained variance; adding GPT2-XL helps in about 3.4% of voxels, 4.7% of electrodes and no functional ROIs (Hadidi et al. 2026) | established in those datasets, which are mostly single sentences; one is 8 stories, 5 listeners, 60 ROIs |
 | **Static word embeddings** | In ECoG, GPT-2's contextual embeddings predict more electrodes than GloVe, and earlier (Goldstein et al. 2022). In fMRI, removing or swapping content words lowers predictivity more than scrambling word order (Kauf et al. 2024) | contested: context adds something in ECoG; in fMRI word identity carries most of the signal |
 | **Untrained models** | A Hugging Face-initialised untrained GPT-2 predicts above chance, one with all weights drawn from N(0, 0.02) does not (Hosseini et al. 2024). On an audiobook fMRI set, small untrained models all beat chance, and a fixed random vector per word did better than untrained transformers (Pasquiou et al. 2022) | established: untrained scores reflect word identity, rate and position, not shared computation |
 | **Next-word prediction** | Encoding performance tracks next-word performance (r = 0.847) about as closely as it tracks how general a representation is (r = 0.864), and GPT-2's last layer, its best next-word predictor, adds no variance above layer 9 (Antonello & Huth 2024). A GPT-2 trained on about 100M words already predicts as well as the fully trained one (Hosseini et al. 2024) | contested: "better predictor, better brain model" may be "better general features" |
 | **Surprisal** | Sentences an LLM-based encoding model picked to drive or suppress the language network did so in new participants; surprisal and well-formedness were the main determinants (Tuckute et al. 2024) | established: surprisal drives response size, so it must be a control |
 
-**What is still open.** Whether contextual LLM features explain variance in
+**What was open before #89.** Whether contextual LLM features explain variance in
 *long, naturalistic* story listening, tested on held-out stories, that word rate,
 word frequency, n-gram surprisal and static embeddings together do not. The
 controlled studies above used mostly isolated sentences, and none combined an
@@ -178,7 +179,9 @@ What else the main run shows:
   less than its layer-9 state.
 - Aligning the timing raised the word-statistics baseline (language r 0.094 to
   0.155; auditory 0.225 to 0.369) and did not shrink GPT-2's unique variance
-  (0.037 to 0.042), so mis-timing was not what made GPT-2 look better.
+  (0.037 to 0.042), so mis-timing was not what made GPT-2 look better. The
+  auditory scores in aligned runs are not fully held out, because each story's
+  shift was chosen on those parcels; only the language-parcel scores are.
 - With two listeners every effect is smaller and noisier. The GPT-2 over
   GPT-2-surprisal contrast is positive in only 5 of 10 stories (p = 0.062), and
   three parcels pass the false-discovery test even in the shifted control (one
@@ -199,7 +202,8 @@ isolated sentences there, hour-long stories with held-out stories here.
 network, and only the left hemisphere is used. Some listeners heard several
 stories, so the stories are not fully independent and p is slightly
 optimistic. The timing alignment was estimated from the same data, though only
-from auditory cortex and word count, and it can only help the baseline. The
+from auditory cortex and word count, so any bias from that choice favours the
+baseline, and auditory scores in aligned runs are not fully out of sample. The
 event-timing results agree. The n-gram model is Dirichlet-smoothed, not
 Kneser-Ney; the GPT-2-surprisal control is a stronger predictability baseline
 and gives the same answer. There are no acoustic or phoneme regressors. One
@@ -209,8 +213,8 @@ model size, 128 components per band, one parcellation.
 `--quick` is a 3-story smoke test; `--no-align` keeps event timing). The first
 run downloads about 5.2 GB for five listeners (2.1 GB for two) to
 `~/.cache/brain-kb/narratives/` and keeps only the parcel averages (6.5 MB), plus
-WikiText-103 (314 MB) and GPT-2 weights (548 MB). On a busy 20-core CPU it took
-about 1-1.5 h the first time (download speed decides) and about 20 min per
+WikiText-103 (314 MB), cached GPT-2 features (354 MB) and GPT-2 weights
+(548 MB). On a busy 20-core CPU it took about 1-1.5 h the first time (download speed decides) and about 20 min per
 later run.
 
 ### Where brains and LLMs differ (established)
