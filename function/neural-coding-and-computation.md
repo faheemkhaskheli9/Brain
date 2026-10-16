@@ -27,7 +27,8 @@ keeps activity **sparse**: perhaps 1% or fewer of cortical neurons are strongly
 active at any moment (Lennie 2003). That sparsity is a large part of why it runs on ~20 W.
 Measured here on open mouse data: in every visual area spike timing finer than 50 ms carries some
 stimulus information, but with 20 neurons a linear decoder gains most from 50 ms bins;
-millisecond bins beat the plain count only in LGN, and first-spike latency never helps (table below).
+millisecond bins beat the plain count only in LGN (firmly for gratings, weakly for scenes), and
+first-spike latency never helps (table below).
 
 ## How it works
 
@@ -92,53 +93,68 @@ did not compare timing and count codes for stimulus identity.
   moves every spike to a random time inside its own 50 ms bin and then counts 10 ms bins. It has
   the dimension of the 10 ms code and the same 50 ms counts, but no timing finer than 50 ms.
   Fine timing = accuracy(10 ms) - accuracy(`jit50`), at equal dimension.
+- Added after review, **not pre-registered**: a correction for multiple comparisons. The primary
+  family is the 10 ms gain in 7 areas x 2 stimulus sets = 14 contrasts. Each gets a Bonferroni
+  percentile CI at alpha = 0.05/14, from the same 10,000 session resamples as its uncorrected CI.
+  Bonferroni was chosen over a max-statistic bootstrap because it holds under any dependence
+  between the 14 contrasts (they share sessions and mice) and needs no joint-resampling or
+  studentising model; the price is that it is conservative. A primary gain counts as real only if
+  its corrected CI excludes 0. All other gains (50 and 5 ms bins, latency, count plus latency,
+  fine timing) are exploratory and uncorrected.
 
 **Results (measured here, 2026-10-16).** 10 sessions, 20 units per area, 5 draws, run with
 `python research/timing_vs_count.py --jobs 10`. Count = decoding accuracy (%) from spike counts.
-Every other column is a gain over the count in percentage points, with a 95% bootstrap CI over
-sessions. Chance is 0.85% for scenes and 2.5% for gratings. Runtime: the first run streams about
+Every other column is a gain over the count in percentage points, with an **uncorrected** 95%
+bootstrap CI over sessions. The column "10 ms, family-wise CI" is the Bonferroni-corrected CI of
+the primary gain. Chance is 0.85% for scenes and 2.5% for gratings. Runtime: the first run streams about
 1.4 GB in total (10-30 minutes per session on the shared link used here); the analysis took
 6,596 s with 10 parallel jobs on a busy 20-core machine; a rerun from the cache prints the tables
 in seconds. `--quick` (one session, 8 units, 1 draw) took 67 s on cached data.
 
 Natural scenes (118 classes):
 
-| Area | Sessions | Count | 50 ms bins | 10 ms bins (primary) | 5 ms bins | Latency | Count + latency | Fine timing (10 ms - `jit50`) |
-|---|---|---|---|---|---|---|---|---|
-| LGN | 8 | 13.0 | +5.4 [3.3, 7.4] | +2.2 [0.7, 3.7] | -2.0 [-2.7, -1.3] | -10.2 [-15.3, -5.9] | -0.6 [-1.1, -0.1] | +3.3 [2.0, 4.7] |
-| V1 | 10 | 16.8 | +5.1 [3.6, 6.8] | -4.0 [-4.9, -3.2] | -9.0 [-10.3, -7.6] | -12.6 [-15.0, -10.4] | -0.3 [-0.6, -0.1] | +2.8 [2.1, 3.5] |
-| LM | 8 | 17.4 | +4.8 [3.4, 6.3] | -4.6 [-5.7, -3.6] | -9.6 [-12.0, -7.0] | -13.8 [-18.0, -9.5] | -0.7 [-1.0, -0.4] | +3.1 [1.8, 4.6] |
-| RL | 9 | 7.4 | +2.8 [1.9, 3.8] | -1.6 [-2.2, -1.1] | -4.0 [-5.0, -2.9] | -5.2 [-6.5, -3.8] | -0.4 [-0.6, -0.3] | +1.4 [1.0, 1.9] |
-| AL | 8 | 13.7 | +5.0 [3.4, 6.7] | -2.2 [-3.2, -1.3] | -6.6 [-8.4, -5.1] | -10.5 [-13.7, -7.8] | -0.5 [-0.9, -0.2] | +2.9 [2.0, 3.9] |
-| PM | 7 | 11.3 | +3.7 [2.2, 5.2] | -3.7 [-5.8, -2.0] | -7.0 [-10.7, -4.1] | -8.8 [-13.0, -5.2] | -0.7 [-1.1, -0.4] | +1.9 [1.2, 2.6] |
-| AM | 10 | 10.0 | +3.5 [2.6, 4.6] | -2.9 [-3.4, -2.5] | -5.8 [-7.2, -4.6] | -7.7 [-9.9, -5.8] | -0.5 [-0.7, -0.3] | +1.5 [1.1, 1.9] |
+| Area | Sessions | Count | 50 ms bins | 10 ms bins (primary) | 10 ms, family-wise CI | 5 ms bins | Latency | Count + latency | Fine timing (10 ms - `jit50`) |
+|---|---|---|---|---|---|---|---|---|---|
+| LGN | 8 | 13.0 | +5.4 [3.3, 7.4] | +2.2 [0.7, 3.7] | [0.1, 4.4] | -2.0 [-2.7, -1.3] | -10.2 [-15.3, -5.9] | -0.6 [-1.1, -0.1] | +3.3 [2.0, 4.7] |
+| V1 | 10 | 16.8 | +5.1 [3.6, 6.8] | -4.0 [-4.9, -3.2] | [-5.3, -2.7] | -9.0 [-10.3, -7.6] | -12.6 [-15.0, -10.4] | -0.3 [-0.6, -0.1] | +2.8 [2.1, 3.5] |
+| LM | 8 | 17.4 | +4.8 [3.4, 6.3] | -4.6 [-5.7, -3.6] | [-6.1, -3.2] | -9.6 [-12.0, -7.0] | -13.8 [-18.0, -9.5] | -0.7 [-1.0, -0.4] | +3.1 [1.8, 4.6] |
+| RL | 9 | 7.4 | +2.8 [1.9, 3.8] | -1.6 [-2.2, -1.1] | [-2.5, -0.9] | -4.0 [-5.0, -2.9] | -5.2 [-6.5, -3.8] | -0.4 [-0.6, -0.3] | +1.4 [1.0, 1.9] |
+| AL | 8 | 13.7 | +5.0 [3.4, 6.7] | -2.2 [-3.2, -1.3] | [-3.6, -0.8] | -6.6 [-8.4, -5.1] | -10.5 [-13.7, -7.8] | -0.5 [-0.9, -0.2] | +2.9 [2.0, 3.9] |
+| PM | 7 | 11.3 | +3.7 [2.2, 5.2] | -3.7 [-5.8, -2.0] | [-7.0, -1.6] | -7.0 [-10.7, -4.1] | -8.8 [-13.0, -5.2] | -0.7 [-1.1, -0.4] | +1.9 [1.2, 2.6] |
+| AM | 10 | 10.0 | +3.5 [2.6, 4.6] | -2.9 [-3.4, -2.5] | [-3.7, -2.3] | -5.8 [-7.2, -4.6] | -7.7 [-9.9, -5.8] | -0.5 [-0.7, -0.3] | +1.5 [1.1, 1.9] |
 
 Drifting gratings (40 classes):
 
-| Area | Sessions | Count | 50 ms bins | 10 ms bins (primary) | 5 ms bins | Latency | Count + latency | Fine timing (10 ms - `jit50`) |
-|---|---|---|---|---|---|---|---|---|
-| LGN | 8 | 16.0 | +17.6 [11.3, 23.8] | +13.9 [8.4, 19.2] | +7.5 [3.3, 11.6] | -11.2 [-16.4, -7.0] | -1.4 [-2.5, -0.3] | +11.5 [7.8, 14.7] |
-| V1 | 10 | 16.8 | +4.7 [2.9, 6.9] | -0.1 [-1.9, 1.8] | -3.9 [-5.4, -2.5] | -10.3 [-12.1, -8.7] | -0.6 [-0.9, -0.3] | +4.6 [3.4, 6.3] |
-| LM | 8 | 15.7 | +3.3 [2.0, 4.6] | -1.3 [-2.5, -0.1] | -5.0 [-6.5, -3.3] | -9.6 [-12.2, -6.6] | -0.9 [-1.7, -0.3] | +3.5 [1.8, 5.2] |
-| RL | 9 | 12.3 | +3.0 [2.2, 4.0] | -1.4 [-2.4, -0.2] | -3.4 [-4.7, -2.0] | -7.3 [-10.1, -5.4] | -0.8 [-1.1, -0.5] | +2.2 [1.5, 3.0] |
-| AL | 8 | 16.1 | +3.4 [2.5, 4.7] | -1.9 [-2.8, -0.8] | -5.6 [-6.9, -4.3] | -10.0 [-11.5, -8.5] | -1.6 [-2.3, -1.0] | +3.1 [2.7, 3.5] |
-| PM | 7 | 13.7 | +2.4 [1.6, 3.1] | -1.8 [-2.6, -1.0] | -5.0 [-6.4, -3.5] | -8.0 [-10.0, -6.1] | -1.0 [-1.7, -0.3] | +2.4 [1.9, 3.0] |
-| AM | 10 | 12.3 | +2.6 [1.5, 3.6] | -1.8 [-2.8, -0.6] | -3.4 [-4.6, -2.2] | -7.5 [-9.3, -5.8] | -0.7 [-1.1, -0.3] | +1.8 [0.7, 3.1] |
+| Area | Sessions | Count | 50 ms bins | 10 ms bins (primary) | 10 ms, family-wise CI | 5 ms bins | Latency | Count + latency | Fine timing (10 ms - `jit50`) |
+|---|---|---|---|---|---|---|---|---|---|
+| LGN | 8 | 16.0 | +17.6 [11.3, 23.8] | +13.9 [8.4, 19.2] | [5.9, 21.5] | +7.5 [3.3, 11.6] | -11.2 [-16.4, -7.0] | -1.4 [-2.5, -0.3] | +11.5 [7.8, 14.7] |
+| V1 | 10 | 16.8 | +4.7 [2.9, 6.9] | -0.1 [-1.9, 1.8] | [-2.6, 2.9] | -3.9 [-5.4, -2.5] | -10.3 [-12.1, -8.7] | -0.6 [-0.9, -0.3] | +4.6 [3.4, 6.3] |
+| LM | 8 | 15.7 | +3.3 [2.0, 4.6] | -1.3 [-2.5, -0.1] | [-3.0, 0.4] | -5.0 [-6.5, -3.3] | -9.6 [-12.2, -6.6] | -0.9 [-1.7, -0.3] | +3.5 [1.8, 5.2] |
+| RL | 9 | 12.3 | +3.0 [2.2, 4.0] | -1.4 [-2.4, -0.2] | [-2.8, 0.4] | -3.4 [-4.7, -2.0] | -7.3 [-10.1, -5.4] | -0.8 [-1.1, -0.5] | +2.2 [1.5, 3.0] |
+| AL | 8 | 16.1 | +3.4 [2.5, 4.7] | -1.9 [-2.8, -0.8] | [-3.2, -0.3] | -5.6 [-6.9, -4.3] | -10.0 [-11.5, -8.5] | -1.6 [-2.3, -1.0] | +3.1 [2.7, 3.5] |
+| PM | 7 | 13.7 | +2.4 [1.6, 3.1] | -1.8 [-2.6, -1.0] | [-2.8, -0.6] | -5.0 [-6.4, -3.5] | -8.0 [-10.0, -6.1] | -1.0 [-1.7, -0.3] | +2.4 [1.9, 3.0] |
+| AM | 10 | 12.3 | +2.6 [1.5, 3.6] | -1.8 [-2.8, -0.6] | [-3.2, -0.1] | -3.4 [-4.6, -2.2] | -7.5 [-9.3, -5.8] | -0.7 [-1.1, -0.3] | +1.8 [0.7, 3.1] |
 
 What the tables say (measured here; one dataset, one decoder):
-- **Pre-registered answer.** 10 ms bins beat the count only in LGN (+2.2 points for scenes,
-  +13.9 for gratings). In all six cortical areas they were worse than the count for scenes
-  (-1.6 to -4.6) and no better for gratings (V1 -0.1 [-1.9, 1.8], the other five -1.3 to -1.9).
-  5 ms bins were worse than 10 ms bins everywhere, and worse than the count everywhere except LGN
-  gratings (+7.5).
-- **Latency.** First-spike latency alone decoded far worse than the count in every area (-5 to
-  -14 points), and adding it to the count never helped (-0.3 to -1.6). For a linear readout here,
-  latency is a weaker copy of the count, unlike the whisker result of Panzeri et al. (2001).
-- **The slow time course carries information.** 50 ms bins beat the count in every area for both
+- **Pre-registered answer, with the family-wise correction.** 10 ms bins beat the count only in
+  LGN. For gratings that holds firmly (+13.9 points, corrected CI [5.9, 21.5]). For scenes it holds
+  only barely (+2.2, corrected CI [0.1, 4.4]): one of the 8 sessions was negative, and a t-based
+  Bonferroni interval, [-1.2, 5.7], includes 0, so treat the LGN scene gain as weak. In the
+  cortex, 10 ms bins were worse than the count for scenes in all six areas (-1.6 to -4.6; every
+  corrected CI below 0). For gratings they were worse in AL, PM and AM (-1.8 to -1.9; corrected CIs
+  below 0, AM only just), and in V1, LM and RL no difference was detected (corrected CIs include 0;
+  LM and RL excluded 0 before correction).
+- The rest is exploratory and uncorrected (several dozen more contrasts). 5 ms bins were worse
+  than 10 ms bins everywhere, and worse than the count everywhere except LGN gratings (+7.5).
+- **Latency (exploratory).** First-spike latency alone decoded far worse than the count in every
+  area (-5 to -14 points), and adding it to the count never helped (-0.3 to -1.6). For a linear
+  readout here, latency is a weaker copy of the count, unlike the whisker result of Panzeri et al.
+  (2001).
+- **The slow time course carries information (exploratory).** 50 ms bins beat the count in every area for both
   stimulus sets (cortex +2.4 to +5.1, LGN +5.4 and +17.6). The 10 ms gain was below the 50 ms gain
   in all 14 rows, so by the pre-registered reading the usable extra information is the slow time
   course of the response (onset versus sustained), not millisecond timing.
-- **But finer timing is there (added control).** At equal dimension, real 10 ms bins beat the
+- **But finer timing is there (added control, exploratory).** At equal dimension, real 10 ms bins beat the
   jittered ones in every area: +1.4 to +4.6 points in cortex, +3.3 (scenes) and +11.5 (gratings)
   in LGN. So spikes carry stimulus information finer than 50 ms, but a linear decoder trained on
   40 (scenes) or 12 (gratings) trials per class loses more to the extra weights than it gains.
@@ -148,10 +164,14 @@ What the tables say (measured here; one dataset, one decoder):
   hierarchy (Siegle et al. 2021). That the LGN grating gain is mostly phase-locking to the
   grating's temporal frequency is a likely reading, not tested here.
 - **Pipeline check.** Population PSTH half-rise after grating onset (median over sessions): LGN
-  37 ms, V1 47, LM 50, RL 52, AL 53, AM 57, PM 60, so LGN and V1 lead as expected. The first
-  version of this check used natural scenes and put V1 at 93 ms: scenes follow each other with no
-  grey gap, so the start of the window holds the previous image's response and the baseline is
-  not clean. The check was moved to gratings, which follow 1 s of grey.
+  37 ms, V1 47, LM 50, RL 52, AL 53, AM 57, PM 60, so LGN and V1 lead as expected. The baseline is
+  the mean PSTH over the first 20 ms after onset (2 ms bins, 10 ms smoothing), taken as activity
+  before the visual response arrives; it is not the grey period itself, because the cache keeps
+  no spikes before onset. Gratings follow 1 s of grey, so those 20 ms still reflect grey-screen
+  activity; a response that began inside 20 ms would inflate the baseline and delay the half-rise.
+  The first version of this check used natural scenes and put V1 at 93 ms: scenes follow each other
+  with no grey gap, so the first 20 ms hold the previous image's response. The check was moved to
+  gratings.
 
 Limits (open):
 - This measures what a linear decoder can learn from this many trials, not the total information
@@ -160,7 +180,11 @@ Limits (open):
   one session, an LDA with one pooled Ledoit-Wolf covariance moved 10 ms and 5 ms accuracies by
   up to 3.3 points either way relative to the scikit-learn version used here.
 - 20 units per area and 7-10 sessions per area. A percentile bootstrap over so few sessions tends
-  to give CIs that are too narrow.
+  to give CIs that are too narrow, corrected ones included; the LGN scene gain does not survive a
+  t-based Bonferroni interval. The corrected bounds come from 10,000 resamples; 100,000 moved them
+  by at most 0.4 points.
+- The family-wise correction covers only the 14 primary contrasts. The 50 and 5 ms, latency,
+  count-plus-latency and fine-timing gains are exploratory and uncorrected.
 - One 250 ms window. Gratings at 1-2 Hz complete less than one cycle in it, and natural scenes
   carry the previous image's tail into it. One jitter width (50 ms) only; 10-25 ms jitter would
   place the time scale more precisely.
@@ -209,7 +233,8 @@ Limits (open):
 - How much information is carried by spike timing versus rate, in each area. Partly answered for
   mouse visual areas and a linear decoder (above): finer-than-50 ms timing carries information in
   every area, most in LGN, but at 20 units and these trial counts a decoder gains most from 50 ms
-  bins (10 ms bins beat the count only in LGN), and first-spike latency adds nothing to the count. Still open: the total information in
+  bins (10 ms bins beat the count only in LGN, firmly only for gratings), and first-spike latency
+  adds nothing to the count. Still open: the total information in
   timing (beyond what a linear decoder can learn), larger populations, other brain areas, and
   whether downstream neurons read the fine timing at all.
 - Whether oscillations are causal for computation or a side effect of E-I circuits.

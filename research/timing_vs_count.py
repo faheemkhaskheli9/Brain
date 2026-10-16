@@ -14,7 +14,9 @@ decoder (shrinkage LDA, 5-fold stratified CV) from six codes of the same spikes:
   jit50      bins10 after moving each spike to a random time inside its own 50 ms bin (added after the smoke
              run, not pre-registered): same dimension as bins10, same 50 ms counts, no finer timing
 Timing gain = accuracy(code) - accuracy(count) per session, averaged over unit draws; fine timing =
-accuracy(bins10) - accuracy(jit50). 95% CIs bootstrap the sessions. Units pass the Siegle et al. 2021 filters
+accuracy(bins10) - accuracy(jit50). 95% CIs bootstrap the sessions. The primary family (bins10 gain, 7 areas x 2
+stimulus sets = 14 contrasts) also gets Bonferroni percentile CIs at alpha = 0.05/14 from the same resamples;
+every other gain is exploratory and uncorrected. Units pass the Siegle et al. 2021 filters
 (ISI violations < 0.5, amplitude cutoff < 0.1, presence ratio > 0.95) and are labelled "good". Method
 pre-registered in function/neural-coding-and-computation.md.
 
@@ -55,6 +57,7 @@ SESSIONS = (755434585, 756029989, 750749662, 754312389, 715093703, 751348571, 76
 AREAS = ("LGd", "VISp", "VISl", "VISrl", "VISal", "VISpm", "VISam")
 WIN, MAXU = 0.25, 40          # response window (s); at most 40 units per area are fetched per session
 CODES = ("count", "bins50", "bins10", "bins5", "latency", "count+lat", "jit50")
+FAMILY = 14                   # primary contrasts: bins10 gain, 7 areas x 2 stimulus sets (Bonferroni)
 
 
 class HTTPRange(io.RawIOBase):
@@ -193,7 +196,10 @@ def decode(x, y, seed):
 
 
 def onset_latency(spikes, onsets):
-    """Population PSTH half-rise time (ms) after onset: a pipeline check (LGN and V1 should lead)."""
+    """Population PSTH half-rise time (ms) after onset: a pipeline check (LGN and V1 should lead).
+    Baseline = the mean of the first 20 ms after onset (2 ms bins, 10 ms box smoothing), taken as activity
+    before the visual response arrives. The cache keeps no spikes before onset, so the grey period itself is
+    not used; a response that starts within 20 ms would inflate the baseline and delay the half-rise."""
     s, onsets = np.concatenate(spikes), np.sort(onsets)
     j = np.searchsorted(onsets, s, side="right") - 1
     rel = s - onsets[np.maximum(j, 0)]
@@ -204,8 +210,11 @@ def onset_latency(spikes, onsets):
 
 
 def boot_ci(v, rng, b=10000):
+    """Percentile CIs of the mean from b resamples of sessions: uncorrected 95% (lo, hi), then Bonferroni
+    family-wise 95% at alpha = 0.05 / FAMILY (lo, hi), both from the same resamples."""
     m = rng.choice(v, (b, len(v))).mean(1)
-    return np.percentile(m, [2.5, 97.5])
+    a = 5 / FAMILY
+    return np.percentile(m, [2.5, 97.5, a / 2, 100 - a / 2])
 
 
 def selfcheck():
@@ -222,7 +231,8 @@ def selfcheck():
 
 def run_session(sid, units, draws, data_dir):
     """Accuracy per code for each "stimulus|area" of one session, averaged over unit draws (cached as JSON),
-    and the PSTH latency check per area (gratings: each follows 1 s of grey, so the baseline is clean)."""
+    and the PSTH latency check per area (on gratings: each follows 1 s of grey, so the first 20 ms after onset
+    reflect grey-screen activity; scenes follow each other with no gap)."""
     area, spikes, stims = load(sid, data_dir)
     for stim, (onsets, y) in stims.items():   # blanks must be gone; windows must (almost) never overlap (jit50):
         overlap = (np.diff(np.sort(onsets)) < WIN).mean()   # session 756029989 has one 233 ms scene gap in 5899
@@ -258,6 +268,8 @@ def main():
     ap.add_argument("--jobs", type=int, default=4, help="sessions processed in parallel")
     ap.add_argument("--data-dir", type=Path, default=Path.home() / ".cache/brain-kb/allen-neuropixels")
     a = ap.parse_args()
+    if not 1 <= a.units <= MAXU:
+        ap.error(f"--units must be between 1 and {MAXU}: load() fetches at most {MAXU} units per area")
     selfcheck()
     if a.quick:
         a.sessions, a.units, a.draws = 1, 8, 1
@@ -273,9 +285,11 @@ def main():
                 lat.setdefault(k, []).append(v)
     print("\nPSTH half-rise latency, drifting gratings (ms, median over sessions): "
           + ", ".join(f"{ar} {np.median(lat[ar]):.0f}" for ar in AREAS if ar in lat))
+    fam = {}   # (stim, area) -> bins10 gain, uncorrected CI, Bonferroni CI
     for stim, chance in (("scenes", 1 / 118), ("gratings", 1 / 40)):
         print(f"\n{stim}: {a.units} units per area, {a.draws} draws, chance {chance:.3f}. Accuracy (mean over "
-              "sessions); gain = code - count; fine = bins10 - jit50; mean [95% bootstrap CI over sessions]")
+              "sessions); gain = code - count; fine = bins10 - jit50; mean [uncorrected 95% bootstrap CI over "
+              "sessions]")
         gains = list(CODES[1:6])
         print("| Area | Sessions | " + " | ".join(CODES) + " | " + " | ".join(f"{k} gain" for k in gains)
               + " | fine |")
@@ -285,8 +299,17 @@ def main():
             if len(v) == 0:
                 continue
             g = [v[:, CODES.index(k)] - v[:, 0] for k in gains] + [v[:, 2] - v[:, CODES.index("jit50")]]
+            cis = [boot_ci(d, rng) for d in g]
+            fam[(stim, ar)] = (g[1].mean(), *cis[1])                      # g[1] = bins10 gain
             print(f"| {ar} | {len(v)} | " + " | ".join(f"{m:.3f}" for m in v.mean(0)) + " | "
-                  + " | ".join("{:+.3f} [{:+.3f}, {:+.3f}]".format(d.mean(), *boot_ci(d, rng)) for d in g) + " |")
+                  + " | ".join(f"{d.mean():+.3f} [{c[0]:+.3f}, {c[1]:+.3f}]" for d, c in zip(g, cis, strict=True))
+                  + " |")
+    print(f"\nPrimary family: bins10 gain, {len(fam)} contrasts. Uncorrected 95% CI, then Bonferroni percentile CI at "
+          f"alpha = 0.05/{FAMILY} from the same session resamples (family-wise 95%); * = Bonferroni CI excludes 0. "
+          "All other columns are exploratory and uncorrected.")
+    for (stim, ar), (m, lo, hi, blo, bhi) in fam.items():
+        print(f"  {stim:8s} {ar:5s} {m:+.3f} [{lo:+.3f}, {hi:+.3f}]  Bonferroni [{blo:+.3f}, {bhi:+.3f}]"
+              + (" *" if blo > 0 or bhi < 0 else ""))
     print(f"\nruntime {time.time() - t0:.0f} s")
 
 
