@@ -12,6 +12,8 @@ dependencies = ["numpy"]
 # research/credit_assignment.py loads sklearn's bundled 8x8 digits; wm_capacity.py fits with scipy;
 # timing_vs_count.py reads NWB files with h5py; microns_clustering.py uses pandas: pip install ".[research]"
 research = ["scikit-learn", "scipy", "h5py", "pandas"]
+# research/llm_brain_match.py reads Narratives surface data and runs GPT-2: pip install ".[llm-brain]"
+llm-brain = ["nibabel", "pyarrow", "torch", "transformers"]
 
 # Not a library: `pip install .` only pulls the dependencies.
 [tool.setuptools]

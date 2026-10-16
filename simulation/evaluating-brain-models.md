@@ -61,6 +61,12 @@ map from model features to each recorded neuron on some stimuli and reports the
 cross-validated correlation on the rest, normalised by how well the neurons predict
 themselves across repeats (the noise ceiling).
 
+For time series such as fMRI, the train/test split must be contiguous (or by held-out
+story or run). With shuffled splits, neighbouring time points leak across the split,
+and a feature that only tracks temporal autocorrelation can match an LLM's brain score
+(Hadidi et al. 2026). This repo's language analysis uses held-out stories for that
+reason ([[language-and-llms]], issue #89).
+
 ### Behaviour: error consistency
 Two classifiers with 90 % accuracy can get very different images wrong. Geirhos,
 Meding & Wichmann (2020) measure **error consistency**: Cohen's kappa on whether
@@ -156,6 +162,7 @@ assert r_a > 0.5 and abs(r_b) < 0.3
 - [[neural-coding-and-computation]] - what the population codes being compared are.
 - [[measuring-the-brain-and-open-datasets]] - where the recordings come from and how to load them.
 - [[sensory-systems-and-vision]] - the visual hierarchy that Brain-Score models are scored against.
+- [[language-and-llms]] - LLM-brain scores, their confounds, and a held-out-story test run here (#89).
 
 ## References
 - Kriegeskorte, Mur & Bandettini (2008) "Representational similarity analysis - connecting the branches of systems neuroscience", *Front Syst Neurosci* 2:4. doi:10.3389/neuro.06.004.2008
@@ -169,3 +176,4 @@ assert r_a > 0.5 and abs(r_b) < 0.3
 - Hu, Mueller, Ross et al. (2024) "Findings of the Second BabyLM Challenge: sample-efficient pretraining on developmentally plausible corpora", arXiv:2412.05149.
 - Yik et al. (2025) "The neurobench framework for benchmarking neuromorphic computing algorithms and systems", *Nat Commun* 16:1545. doi:10.1038/s41467-025-56739-4
 - Ahlert, Klein, Wichmann & Geirhos (2024) "How aligned are different alignment metrics?", arXiv:2407.07530.
+- Hadidi, Feghhi, Song, Blank et al. (2026) "Spurious alignment between large language models and brains can emerge from non-robust methods and overlooked confounds", *Nat Commun* 17:5769. doi:10.1038/s41467-026-72253-7

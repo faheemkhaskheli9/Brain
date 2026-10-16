@@ -166,6 +166,15 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: llm_brain_match (GPT-2 vs word statistics, Narratives fMRI, #89)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/llm_brain_match.py",
+      "args": ["--subjects", "5"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Research: timing_vs_count (spike timing vs count per mouse visual area, #86)",
       "type": "debugpy",
       "request": "launch",
