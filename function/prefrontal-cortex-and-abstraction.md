@@ -136,6 +136,12 @@ to a new task, and is one concrete proposal for what an abstraction *is*.
 - **Factor structure from content** (TEM) is a concrete design for transfer.
 - Be honest about the limit: no brain-derived rule here yields compositional reasoning;
   current systems get it from meta-learning or scale ([[language-and-llms]]).
+- **Check transfer against a control that keeps everything but the learned weights.**
+  In this repo's Brain World (issue #37, `game/world/README.md`, 9 seeds), a three-factor
+  learner that writes T, L and X learned three new letters made of the same strokes
+  faster than an untrained brain did. Zeroing its learned weights did not slow it down.
+  The gain came from a larger effective step size, which rehearsal of other skills
+  produced. A likely reason, untested: it learned whole letters, not reusable strokes.
 
 ## Code
 Two task variables (context, stimulus) and an XOR rule: the context flips which stimulus

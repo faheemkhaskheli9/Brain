@@ -54,6 +54,13 @@ export const STAGES = [
 // marked copy, after loading a graduated five-stage save.
 export const COPY = { key: "copy", name: "Copy", pass: 0.8,
   about: "At the board, no tone: a letter is shown on the fovea. Draw it with two pen strokes." };
+// Issue #37, transfer: three letters it has never seen, each two strokes it already writes, taken from
+// two different old letters (Γ: T's top bar, L's left bar; ⊥: T's middle bar, L's bottom bar; 7: T's
+// top bar, X's /). The NEW stage copies them as COPY copies T, L and X. Off by default: STAGES.push(NEW).
+// A graduated brain learned them no faster than one with its learned weights zeroed (README "New letters").
+export const NEW_LETTERS = [["Γ", [0, 2]], ["⊥", [3, 1]], ["7", [0, 4]]];
+export const NEW = { key: "new", name: "New letters", pass: 0.8,
+  about: "At the board, no tone: one of three new letters (Γ, ⊥, 7), each made of two strokes it already knows, is shown on the fovea. Draw it." };
 
 // Inputs: retina, legs, cochlea, fovea, pen pad, at-board flag, then the fovea memory.
 const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 25, FAN_IN = 8;
@@ -79,7 +86,7 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
   // Jordan 1994). See README "Perform mode".
-  performGreedy: ["walk", "write", "copy"],
+  performGreedy: ["walk", "write", "copy", "new"],
   // Synaptic intelligence (issue #56; Zenke, Poole and Ganguli 2017): pull each actor and critic
   // synapse back toward its value at the last stage pass, in proportion to how much it did for the
   // stages so far. 0 = off: nothing is tracked, stage passes only re-anchor. Strengths of 1e-3 and
@@ -495,7 +502,8 @@ export class World {
       this.brain.greedy = GAINS.performGreedy.includes(this.mode);
     }
     const R = this.rand, m = this.mode;
-    this.board = m === "write" || m === "copy";   // the world puts the creature at the board: a fact about the scene
+    this.board = m === "write" || m === "copy" || m === "new";   // the world puts the creature at the board: a fact about the scene
+    this.letters = m === "new" ? NEW_LETTERS : LETTERS;   // the board's alphabet; cubes always carry T, L, X
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     const H = this.hippo;
     this.memAt = { head: H.head, n: H.n, epId: H.epId++ };   // and its episodic store from here
@@ -522,7 +530,7 @@ export class World {
     // Reversal (#65): the same scene with the tones remapped (low = blue, middle = red, high = green),
     // so nothing the creature sees or hears says the rule changed; only the outcomes do.
     if (this.reversed && m === "listen") this.tone = (this.target + 1) % 3;
-    this.shown = m === "copy" ? this.target : -1;   // the letter held up at the board
+    this.shown = m === "copy" || m === "new" ? this.target : -1;   // the letter held up at the board
     if (this.lesson) {   // teach mode: the viewer's room and tone; the tone names the first object that matches it
       const L = this.lesson, near = () => this.objects.some(o => Math.hypot(o.pos[0] - this.pos[0], o.pos[1] - this.pos[1]) < 1);
       this.objects = L.objects.map(o => ({ pos: [...o.pos], color: o.letter >= 0 ? [1, 1, 1] : COLORS[o.color], letter: o.letter }));
@@ -564,7 +572,7 @@ export class World {
         const g = glyph(LETTERS[o.letter][1]), near = 1 / (1 + 0.35 * fd);
         for (let k = 0; k < 25; k++) this.fovea[k] = g[k] * near;
       }
-    } else if (this.shown >= 0) this.fovea.set(glyph(LETTERS[this.shown][1]));
+    } else if (this.shown >= 0) this.fovea.set(glyph(this.letters[this.shown][1]));
     // Fovea memory: a decaying trace of the last letter seen, so it can still hold the letter a
     // few steps after the gaze has moved on (persistent activity, as in prefrontal working memory).
     // Each leg push turns 0.3 rad, wider than the fovea, so a letter is in view only for a step or
@@ -604,11 +612,11 @@ export class World {
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
-    if (this.board) {   // write and copy: the pen
+    if (this.board) {   // write, copy and new: the pen
       this.pad.push(a - BODY.length);
       this.events.push({ type: "stroke", stroke: a - BODY.length });
       if (this.pad.length === 2) {
-        const want = LETTERS[this.target][1];
+        const want = this.letters[this.target][1];
         success = this.pad.every(s => want.includes(s)) && this.pad[0] !== this.pad[1];
         r = success ? 1 : 0; done = true;
       }

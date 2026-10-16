@@ -108,6 +108,9 @@ at a time; Brain World puts them together in one 3D creature that learns to walk
 listen, read and write from reward alone. Save and Load keep a trained brain as a JSON file.
 In teach mode you set up the room yourself, play the tone, and give reward by hand.
 Add `?body=cpg` to the URL for jointed legs swung by a central pattern generator (issue #38).
+An optional sixth stage (headless only) shows three new letters built from known strokes, to test
+transfer (issue #37). The graduated brain learned them no faster than a copy with its learned weights
+zeroed (see world/README.md, "New letters").
 
 ```
 python -m http.server 8000        # from the repo root, then open http://localhost:8000/game/world/

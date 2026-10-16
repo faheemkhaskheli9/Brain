@@ -3,7 +3,7 @@
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, LETTERS, rng, orient, glyph } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW, LETTERS, NEW_LETTERS, rng, orient, glyph } from "./brain.js";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
 // hands encode an inferred slot, never the task it is playing.
@@ -279,6 +279,35 @@ assert.deepEqual(Array.from(cw.z), [0, 0, 0, 1, 1]);
 assert.ok(cw.step().action >= 5, "copy: not using the pen");
 STAGES.pop();
 console.log("  Copy: board, no tone, letter on the fovea, scene [0,0,0,1,1]");
+
+// New letters (#37): Γ, ⊥ and 7, each two strokes it already writes, from two different old letters,
+// copied from the fovea at the board. The graduated v3 fixture resumes at the new stage and must learn it
+// within NEW_BUDGET episodes. A save made 500 episodes in reloads and acts the same, and a drawn letter is
+// graded against the new alphabet, not T, L, X.
+const NEW_BUDGET = 8000;
+assert.ok(NEW_LETTERS.every(([, s]) => !LETTERS.some(([, t]) => s.every(k => t.includes(k)))), "new: a new letter is an old one");
+STAGES.push(NEW);
+const nw = World.fromJSON(v3), nStart = nw.episode;
+assert.deepEqual([nw.stage, nw.graduated, nw.mode, nw.board, nw.tone, Array.from(nw.z)], [5, false, "new", true, -1, [0, 0, 0, 1, 1]]);
+assert.deepEqual(Array.from(nw.fovea), Array.from(glyph(NEW_LETTERS[nw.target][1])), "new: the new letter is not on the fovea");
+while (nw.episode < nStart + 500) nw.step();
+const nBack = World.fromJSON(JSON.parse(JSON.stringify(nw)));
+assert.equal(nBack.stage, 5);
+for (let i = 0; i < 2000; i++) assert.deepEqual(nBack.step(), nw.step(), `new: loaded brain diverged at step ${i}`);
+while (!nw.graduated && nw.episode - nStart < NEW_BUDGET) nw.step();
+assert.ok(nw.graduated, `new letters not learned within ${NEW_BUDGET} episodes`);
+nw.perform("new");
+while (nw.perf.n < 200) {
+  const want = NEW_LETTERS[nw.target][1], r = nw.step();
+  const drawn = r.done && nw.events.slice(-2).map(e => e.stroke);
+  if (r.done) assert.equal(r.success, drawn.every(s => want.includes(s)) && drawn[0] !== drawn[1], "new: graded against the wrong alphabet");
+}
+assert.ok(nw.perf.ok / nw.perf.n >= 0.5, `new: perform ${nw.perf.ok / nw.perf.n} < 0.5`);
+STAGES.splice(5, 0, COPY);   // sweep.mjs's chain: a five-stage save in copy-then-new code resumes at copy
+assert.deepEqual([World.fromJSON(v3).windows.length, World.fromJSON(v3).mode], [7, "copy"]);
+STAGES.splice(5, 1);
+console.log(`  New letters: the v3 save learned Γ ⊥ 7 after ${nw.episode - nStart} episodes (budget ${NEW_BUDGET}); save and load: same actions for 2000 steps; perform ${(nw.perf.ok / nw.perf.n).toFixed(2)}`);
+STAGES.pop();
 
 // Orienting reflex (#83): an object on the left pushes the left leg (turn left), walls alone do nothing.
 const o = new World(3);

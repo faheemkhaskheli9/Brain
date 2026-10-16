@@ -19,6 +19,7 @@ node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,reh
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
+node game/world/sweep.mjs --arms transfer --jobs 4   # new letters: does what it learned transfer? (see "New letters")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -46,8 +47,11 @@ by clicking the floor, play a tone, and watch it fetch. **Give reward** (key R) 
 | 3 | Listen | Three coloured objects. A tone (262, 392 or 587 Hz) names the colour that is food | 70% |
 | 4 | Read | Three white cubes with the letters T, L, X. The tone names the letter, so it must read it with the fovea | 60% |
 | 5 | Write | At a board, the tone names a letter. Draw it with two of six pen strokes | 80% |
+| 6 (optional) | New letters | At the board, no tone. One of three new letters (Γ, ⊥, 7) is shown on the fovea. Each is two strokes it already writes, from two different old letters. Draw it | 80% |
 
-The letters it reads and the letters it writes are the same 5×5 stroke shapes.
+The letters it reads and the letters it writes are the same 5×5 stroke shapes. Stage 6 is off by
+default, like copy (#56): `STAGES.push(NEW)` adds it, and a graduated save loads into it and
+resumes there. See "New letters" below.
 
 ## The brain
 
@@ -124,7 +128,9 @@ seed 8 never learns to read within 20,000 episodes, and seed 1 keeps read at 0.5
 So replay stays at 0.3.
 
 Last, it saves and reloads the brain and checks that the copy takes the same 2,000 actions as the
-original. A second part tests the episodic store with sleep on. A spy records which episode and
+original. The new-letter stage (#37) is checked on `fixtures/v3-seed1.json`, which resumes at it: it
+must learn Γ, ⊥ and 7 within 8,000 episodes (it takes 4,669), a save made 500 episodes in must take
+the same 2,000 actions, and a drawn letter must be graded against the new letters, not T, L and X. A second part tests the episodic store with sleep on. A spy records which episode and
 step wrote each slot. Then 10,000 replay draws must each have their true next step after:
 - the buffer wraps;
 - perform mode is switched on and off mid-episode;
@@ -318,7 +324,7 @@ action (greedy) instead of sampling. That only helps some skills. `node game/wor
 | read | 0.85, 0.61, 0.50 | 0.62, 0.36, 0.14 |
 | write | 0.67, 0.52, 0.64 | 1.00, 1.00, 1.00 |
 
-So `GAINS.performGreedy` is walk and write, the default for `perform`. Grasp, listen and read are
+So `GAINS.performGreedy` is walk and write (and the optional board skills copy and new letters), the default for `perform`. Grasp, listen and read are
 searches: a fixed policy turns the same way from the same view forever, and in a partially
 observed task the best memoryless policy can be stochastic (Singh, Jaakkola and Jordan 1994). A
 temperature between 0 and 1 for the search skills is the next knob to try (untested).
@@ -542,6 +548,122 @@ count. None of five settings then learned walk within 3,000 episodes on seeds 1-
 0.3-0.5, the level of walking straight into walls. The body is kinematic: no masses, no slip, no
 torques. That this body says anything about how animals learn to walk is not claimed.
 
+## New letters: does what it learned transfer? (#37)
+
+Issue #37 asked whether a new letter built from strokes it already knows is learned faster than
+its first letters were, as a measure of learning to learn. Monkeys that solve hundreds of
+discrimination problems solve each new one faster (learning sets, Harlow 1949), and Lake, Ullman,
+Tenenbaum and Gershman (2017) list learning to learn among what a human-like learner needs.
+
+**The stage.** `NEW` (stage 6, optional) shows one of three new letters on the fovea at the board,
+with no tone, and grades the two strokes drawn against it:
+- Γ is T's top bar plus L's left bar;
+- ⊥ is T's middle bar plus L's bottom bar;
+- 7 is T's top bar plus X's /.
+
+So no new letter is an old one, and every stroke is one it has drawn. A tone cannot name them. The
+cochlea has three bands and they already name T, L and X, so a tone for a new letter would overwrite
+an old one in write's slot. The stage works like copy (#56), with the same scene code
+`[0,0,0,1,1]`, and nothing in `Brain` changed. `World.reset` sets the board's alphabet
+(`world.letters`); cubes always carry T, L and X.
+
+**The run.** `sweep.mjs --arms transfer` trains each seed to graduation and saves, as the default
+arm does. Each learner below then trains one stage until it passes (80% of 50) or has played 20,000
+episodes of that stage. Only episodes of that stage count, not rehearsal:
+- the graduated brain, with rehearsal 0.3 (the default) and with none;
+- the control that cannot reuse what it learned: the same save with its learned weights (actor and
+  critic) set to zero, also with and without rehearsal. It keeps the wiring, gate masks, context
+  slots and random stream, so only what it learned differs;
+- the same seed untrained (a new `World`, no rehearsal, since it has nothing to rehearse);
+- copy of T, L and X, then the new letters: one task, first on letters it knows, then on new ones;
+- its own write stage (its first letters), from the graduation run.
+
+Zero-shot is sampled perform-mode success before any training on the stage, over 300 episodes.
+Random strokes score 1/18 = 0.056.
+
+How the design changed: the plan was to compare the graduated brain with the untrained one. A
+probe on the fixture and three untrained seeds ran first. During the first sweep, a check found
+that rehearsal changes the step size (below). So the zeroed control and the arms without rehearsal
+were added, and the sweep was re-run from the start. Three seeds of the first run had been seen by
+then.
+
+Seeds 1-10, 2026-10-16, `--jobs 4`, 16 minutes. Seed 8 does not learn read, as in "Inferred
+context", so n = 9. Graduation matched that row exactly: 9/10, 16,515 episodes, kept
+0.87 / 0.70 / 0.59 / 0.65.
+
+| Learner (new letters unless named) | Rehearsal | Learned | Episodes, mean | Median |
+|---|---|---|---|---|
+| Its first letters: write T, L, X by tone | 0.3 | 9/9 | 7,037 | 7,171 |
+| Graduated | 0.3 | 9/9 | 5,314 | 5,175 |
+| Weights zeroed | 0.3 | 9/9 | 4,498 | 3,075 |
+| Graduated | none | 9/9 | 9,591 | 8,269 |
+| Weights zeroed | none | 9/9 | 7,503 | 7,047 |
+| Untrained | none | 8/9 | 6,054 | 5,986 |
+| Copy T, L, X, graduated | 0.3 | 9/9 | 7,883 | 6,075 |
+| New letters after copy T, L, X | 0.3 | 9/9 | 6,858 | 5,819 |
+
+Paired over the seeds that learned both (positive = the second is faster), with a 95% bootstrap
+interval of the mean and the exact sign-flip p:
+
+| Comparison | Difference | 95% interval | p | n |
+|---|---|---|---|---|
+| Untrained − graduated (the plan) | +1,286 | 594 to 2,083 | 0.023 | 8 |
+| Its first letters − graduated | +1,723 | 298 to 3,205 | 0.063 | 9 |
+| Zeroed − graduated, rehearsal | −816 | −1,995 to 530 | 0.25 | 9 |
+| Zeroed − graduated, no rehearsal | −2,088 | −5,695 to 1,443 | 0.31 | 9 |
+| No rehearsal − rehearsal, graduated | +4,278 | 2,134 to 7,197 | 0.004 | 9 |
+| No rehearsal − rehearsal, zeroed | +3,005 | −223 to 6,170 | 0.11 | 9 |
+| Copy T, L, X − new letters after it | +1,025 | −1,056 to 3,865 | 0.63 | 9 |
+| New letters − new letters after copy | −1,544 | −4,529 to 1,195 | 0.32 | 9 |
+
+Zero-shot: new letters 0.049, copy of T, L and X 0.088, new letters after learning copy 0.049.
+
+**What it shows:**
+- **The planned test looks like transfer.** The graduated brain learns the new letters in 1,286
+  fewer episodes than the untrained one (p = 0.023), and 1,723 fewer than its first letters took
+  (p = 0.063).
+- **What it learned is not the reason.** With its learned weights zeroed it was not slower. On
+  average it was faster, by 816 episodes with rehearsal (p = 0.25) and 2,088 without (p = 0.31).
+  Neither is significant: the data fit no effect or a small cost of the old weights, not a benefit.
+- **Rehearsal is.** Without rehearsal, the graduated brain needed 4,278 more episodes (p = 0.004).
+  The step size is `lr / (1 + mean |h|²)`, a running mean over every step. Rehearsal fills that
+  mean with room steps, whose |h|² is smaller than the board's, so each board update moves the
+  policy further. On the fixture (a one-off probe), `|h|² / (1 + mean |h|²)` on board steps was 1.50
+  for the graduated brain with rehearsal and 2.44 for the zeroed one, whose untrained rehearsal
+  episodes run to the 150-step limit. It was 0.99 for both without rehearsal.
+- **A larger step alone covers the gain.** Untrained brains on seeds 1-10, with no rehearsal and
+  both learning rates scaled up, took 5,872 episodes on average at x1 (seed 10 not within 20,000),
+  4,525 at x1.5 and 3,335 at x2.5. At x1.5 they were 700 episodes faster than the graduated brain
+  with rehearsal (p = 0.10, n = 9).
+- **No learning set.** Learning to copy T, L and X first did not speed up the new letters (1,544
+  episodes slower on average, p = 0.32). Copying the letters it already writes was not faster than
+  copying new ones (7,883 against 5,314 on average). Zero-shot it copies T, L and X at 0.088, and
+  the new letters at chance, before and after learning copy.
+- **The hypothesis is not supported.** A likely reason, untested: each old letter's two strokes
+  always came together, and the actor is linear over its features, so it learned whole letters (a
+  tone or a glyph to a stroke pair). Nothing in training separates one stroke's features from its
+  partner's, and a new pair needs exactly that.
+
+To reproduce the step-size check (about 1 minute):
+
+```
+node --input-type=module -e 'import { World, STAGES, GAINS, NEW } from "./game/world/brain.js"; STAGES.push(NEW); GAINS.replay = 0; for (const k of [1, 1.5, 2.5]) { GAINS.lrP = GAINS.lrV = 0.05 * k; const n = []; for (let s = 1; s <= 10; s++) { const w = new World(s); w.setStage(5); while (!w.graduated && w.episode < 20000) w.step(); n.push(w.graduated ? w.episode : "-"); } console.log(k, n.join(" ")); }'
+```
+
+Limits:
+- One set of three new letters, and nine seeds. Single seeds swing widely: seed 2's graduated brain
+  took 18,065 episodes without rehearsal and 3,754 with it.
+- The runs from one save share the random stream, which pairs them tightly. Two runs can then pass
+  at the same episode though they act differently: on seed 1 the kept and zeroed brains without
+  rehearsal both passed at 7,584, and 1,224 of their episodes differ.
+- The step-size rule is a game choice (it stopped the critic diverging), not a model of the brain.
+  The lesson is about measuring: compare episode counts only at matched step sizes.
+- Reading new letters is not tested. Three tones can name only three letters.
+
+That learning sets exist is established (Harlow 1949). This learner's lack of them says nothing
+about brains. It shows only that this linear three-factor learner, over a fixed random expansion,
+did not transfer from these three letters to new ones.
+
 All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not measurements. The
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
@@ -557,6 +679,7 @@ is enough for a real brain's version of these skills is a hypothesis.
 | Task-context gating, fovea memory as working memory | [attention-and-working-memory](../../function/attention-and-working-memory.md) |
 | Actor-critic plus replay as one learner | [build-a-brain-like-learner](../../guides/build-a-brain-like-learner.md) |
 | Save brain and Load brain: what the file holds and why | [saving-and-reusing-a-trained-brain](../../simulation/saving-and-reusing-a-trained-brain.md) |
+| New letters: learning to learn, and why it does not transfer | [prefrontal-cortex-and-abstraction](../../function/prefrontal-cortex-and-abstraction.md) |
 
 ## Not done yet
 
@@ -592,3 +715,6 @@ is enough for a real brain's version of these skills is a hypothesis.
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.
 - Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a
   review", *Neural Networks* 21:642. doi:10.1016/j.neunet.2008.03.014
+- Harlow (1949) "The formation of learning sets", *Psychol Rev* 56:51. doi:10.1037/h0062474
+- Lake, Ullman, Tenenbaum and Gershman (2017) "Building machines that learn and think like people",
+  *Behav Brain Sci* 40:e253. doi:10.1017/S0140525X16001837

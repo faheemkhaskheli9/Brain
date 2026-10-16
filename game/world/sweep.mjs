@@ -8,7 +8,7 @@ import { execSync, fork } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { fileURLToPath } from "node:url";
-import { World, STAGES, GAINS, COPY } from "./brain.js";
+import { World, STAGES, GAINS, COPY, NEW, rng } from "./brain.js";
 
 export const ARMS = {
   rehearse30: { replay: 0.3, sleepEvery: 0 },                           // the current design; the baseline
@@ -37,12 +37,14 @@ export const ARMS = {
   "copy15+si": { replay: 0.15, sleepEvery: 0, si: 1e-4, copy: true },
   // Issue #65: after graduation, blocks of listen and reversed listen, surprise off vs on (see reversal).
   reversal: { replay: 0.3, sleepEvery: 0, reversal: true },
+  // Issue #37: after graduation, three new letters made of known strokes, against the same brain untrained (see transfer).
+  transfer: { replay: 0.3, sleepEvery: 0, transfer: true },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
 function trial(arm, seed) {
-  const { copy, reversal: rev, ...gains } = ARMS[arm];
+  const { copy, reversal: rev, transfer: tr, ...gains } = ARMS[arm];
   Object.assign(GAINS, gains);
   const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
   // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
@@ -53,6 +55,8 @@ function trial(arm, seed) {
     episodes.push(w.episode - start);
     if (!(w.stage > s || w.graduated)) return { arm, seed, passed: false, failed: STAGES[s].key, episodes };
   }
+  // Its first letters (#37): episodes of the write stage itself, rehearsal not counted (nothing rehearses write before graduation).
+  const writeOwn = w.log.filter(e => e.stage === STAGES.length - 1).length;
   const ok = {}, n = {}, steps = {}, eps = {}, start = w.episode, hist = () => Array(GAINS.slots).fill(0);
   while (w.episode - start < 4000) {
     const k = STAGES[w.playing].key, slot = w.slot, r = w.step();
@@ -73,7 +77,8 @@ function trial(arm, seed) {
   try { w.meta.commit = execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
   const json = w.save(), card = World.fromJSON(JSON.parse(json)).meta;
   return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, perform: card.saves[0].scores, commit: card.commit,
-    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), ...(rev && { reversal: reversal(json) }), seconds: (Date.now() - t0) / 1000 };
+    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), ...(rev && { reversal: reversal(json) }),
+    ...(tr && { transfer: { writeOwn, ...transfer(json, seed) } }), seconds: (Date.now() - t0) / 1000 };
 }
 
 // Issue #56, phase B: load the graduated save into six-stage code (growStages resumes it at copy),
@@ -130,6 +135,79 @@ function reversalSummary(results) {
   }
   const d = rs.map(r => mean(r.reversal.on.slice(2).map((b, k) => b.first - r.reversal.off[k + 2].first)));
   console.log(`  on - off, first 50 of blocks 3-${BLOCKS}: ${mean(d) > 0 ? "+" : ""}${mean(d).toFixed(3)} (p ${signFlip(d).toFixed(3)}, n ${d.length})`);
+}
+
+// Issue #37, phase T. Train w on its current stage until it passes or has played LIMIT episodes of that
+// stage. own counts that stage's own episodes, not rehearsal, so brains with and without old skills compare.
+function learnStage(w) {
+  const s = w.stage;
+  let own = 0;
+  while (w.stage === s && !w.graduated && own < LIMIT) { const k = w.playing; if (w.step().done && k === s) own++; }
+  return { learned: w.stage > s || w.graduated, own };
+}
+
+// From the graduated save, NEW as a sixth stage, 2 x 2: learned weights kept or zeroed (P and v set to 0,
+// the control that cannot reuse what it learned) x rehearsal on (GAINS.replay) or off. All four share the
+// wiring, gate rows, slots and random stream, so only what it learned and the rehearsal differ. Rehearsal
+// matters on its own: the step size lr / (1 + mean |h|^2) then follows the room scenes, whose |h|^2 is
+// smaller than the board's, so board updates take larger steps. Also the same seed untrained (new World,
+// another gate row, rehearsal off), and COPY (T, L, X) then NEW: the same task on the letters it knows,
+// then on new ones. zero = sampled perform-mode success before any training on that stage, 300 episodes.
+function transfer(json, seed) {
+  const replay = GAINS.replay, out = {}, load = () => World.fromJSON(JSON.parse(json));
+  const zero = (w, key) => { const c = World.fromJSON(JSON.parse(JSON.stringify(w))); c.perform(key, false); while (c.perf.n < 300) c.step(); return +(c.perf.ok / c.perf.n).toFixed(3); };
+  const quiet = w => { GAINS.replay = 0; const r = learnStage(w); GAINS.replay = replay; return r; };
+  const zeroed = w => { w.brain.P.fill(0); w.brain.v.fill(0); return w; };
+  STAGES.push(NEW);
+  const g = load(), fresh = new World(seed);
+  fresh.setStage(STAGES.length - 1);
+  Object.assign(out, { zeroNew: zero(g, "new"), gradNew: learnStage(g), zeroedNew: learnStage(zeroed(load())),
+    gradNew0: quiet(load()), zeroedNew0: quiet(zeroed(load())), freshNew: quiet(fresh) });
+  STAGES.pop(); STAGES.push(COPY, NEW);
+  const c = load();
+  Object.assign(out, { zeroCopy: zero(c, "copy"), gradCopy: learnStage(c) });
+  if (out.gradCopy.learned) Object.assign(out, { zeroNewAfterCopy: zero(c, "new"), copyThenNew: learnStage(c) });
+  STAGES.splice(-2);
+  return out;
+}
+
+// Phase T per seed and overall: episodes of each stage itself, mean and median over the seeds that learned
+// it, and paired differences over the seeds that learned both (positive = the second is faster): mean,
+// 95% bootstrap interval of the mean, exact sign-flip p.
+function transferSummary(results) {
+  const rs = results.filter(r => r.transfer).map(r => ({ seed: r.seed, ...r.transfer }));
+  if (!rs.length) return;
+  const mean = xs => xs.reduce((a, b) => a + b, 0) / xs.length;
+  const median = xs => { const s = [...xs].sort((a, b) => a - b), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+  const own = (r, k) => k === "writeOwn" ? r.writeOwn : r[k] && r[k].learned ? r[k].own : null;
+  const ROWS = { writeOwn: "write T, L, X by tone (its first letters)", gradNew: "new letters: graduated", zeroedNew: "new letters: weights zeroed",
+    gradNew0: "new letters: graduated, no rehearsal", zeroedNew0: "new letters: zeroed, no rehearsal", freshNew: "new letters: untrained, no rehearsal",
+    gradCopy: "copy T, L, X: graduated", copyThenNew: "new letters after copy T, L, X" };
+  console.log(`\nphase T (new letters Γ ⊥ 7, #37): episodes of the stage itself, n ${rs.length}; a seed that missed either stage of a pair drops out of it`);
+  for (const r of rs) console.log(`  seed ${String(r.seed).padStart(2)}: ${Object.keys(ROWS).map(k => `${k} ${own(r, k) ?? "-"}`).join(", ")}`
+    + `; zero-shot new ${r.zeroNew}, copy ${r.zeroCopy}, new after copy ${r.zeroNewAfterCopy ?? "-"}`);
+  for (const [k, name] of Object.entries(ROWS)) {
+    const xs = rs.map(r => own(r, k)).filter(x => x !== null);
+    console.log(`  ${name.padEnd(44)}learned ${xs.length}/${rs.length}  mean ${mean(xs).toFixed(0)}  median ${median(xs).toFixed(0)}`);
+  }
+  const z = k => mean(rs.filter(r => r[k] !== undefined).map(r => r[k])).toFixed(3);
+  console.log(`  zero-shot (sampled; uniform strokes score 1/18 = 0.056): new ${z("zeroNew")}, copy ${z("zeroCopy")}, new after copy ${z("zeroNewAfterCopy")}`);
+  for (const [a, b, why] of [["zeroedNew", "gradNew", "what it learned, with rehearsal"], ["zeroedNew0", "gradNew0", "what it learned, no rehearsal"],
+    ["gradNew0", "gradNew", "rehearsal, graduated"], ["zeroedNew0", "zeroedNew", "rehearsal, zeroed"],
+    ["freshNew", "gradNew", "untrained vs graduated (the plan before the run)"], ["writeOwn", "gradNew", "new letters vs its first letters"],
+    ["gradCopy", "copyThenNew", "same task, new letters after old vs old"], ["gradNew", "copyThenNew", "copying old letters first"],
+    ["gradNew", "gradCopy", "letters it knows vs new ones, same brain"]]) {
+    const d = rs.filter(r => own(r, a) !== null && own(r, b) !== null).map(r => own(r, a) - own(r, b));
+    if (d.length < 2) continue;
+    const [lo, hi] = bootCI(d);
+    console.log(`  ${`${a} - ${b}`.padEnd(24)}${mean(d) > 0 ? "+" : ""}${mean(d).toFixed(0)} [${lo.toFixed(0)}, ${hi.toFixed(0)}] p ${signFlip(d).toFixed(3)}, n ${d.length}  (${why})`);
+  }
+}
+
+// Percentile bootstrap 95% interval of the mean, 10,000 resamples, seeded so a rerun prints the same.
+function bootCI(d) {
+  const r = rng(37), m = Array.from({ length: 10000 }, () => d.reduce(s => s + d[Math.floor(r() * d.length)], 0) / d.length).sort((a, b) => a - b);
+  return [m[250], m[9749]];
 }
 
 // Phase B per arm: copy learned, its episodes, own slot, and how much the old skills fell (perform
@@ -198,6 +276,7 @@ function summarise(results, arms) {
   if (FACTORIAL.every(a => arms.includes(a))) factorial(results);
   copySummary(results, arms);
   reversalSummary(results);
+  transferSummary(results);
 }
 
 // Issue #83: main effects and interaction on episodes per stage, over seeds that passed in all four
