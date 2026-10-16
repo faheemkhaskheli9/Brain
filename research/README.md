@@ -14,7 +14,8 @@
 | [dendritic_neurons.py](dendritic_neurons.py) | Experiment for #85: point neurons (one or two dense hidden layers) vs two-layer dendritic neurons at equal parameters and multiply-adds, on parity, a feature-conjunction task and 8x8 digits, trained by backprop and by feedback alignment. numpy plus sklearn's digits, a few minutes (learning-rate tuning included). Result in `anatomy/dendritic-computation.md`. |
 | [brainscore_saturation.py](brainscore_saturation.py) | Analysis for #88: has the ImageNet-accuracy to Brain-Score link saturated? Line vs hinge fits per score (average, neural, behaviour, V1-IT), rank tests above 70% top-1, and an exploratory pretraining-data control. numpy, a few seconds. `--fetch` saves a new dated leaderboard snapshot to `data/`. Result in `function/sensory-systems-and-vision.md`. |
 | [wm_capacity.py](wm_capacity.py) | Analysis for #90: slots, slots + averaging, variable precision and TCC fitted per subject to open colour-wheel delayed-estimation data (van den Berg 2014 benchmark E1, E2, E3, E8; Schurgin et al. 2020 set-size experiment), scored by 10-fold cross-validated likelihood, with a model-recovery control. numpy + scipy; about 25 min for the fits plus 40 for recovery (`--recovery 0` skips it); downloads about 180 MB to `~/.cache/brain-kb/` on the first run. Result in `function/attention-and-working-memory.md`. |
-| `data/` | Small dated snapshots of public data the analyses read (Brain-Score vision leaderboard: model, ImageNet top-1, average, neural, behaviour and per-region scores), and small derived results (`wm_capacity_results.csv`: per-subject CV log likelihoods and fitted K, α, β from #90, no raw trials). |
+| [microns_clustering.py](microns_clustering.py) | Analysis for #87: do co-tuned inputs land on the same dendritic branch? Public MICrONS v1300 tables (no login): 733 proofread-axon, functionally matched inputs onto 22,620 excitatory targets; tuning similarity vs path distance along each dendrite skeleton, against within-neuron label shuffles. numpy, scipy, pandas. Run `--download` once (20 GB, about 2 h at 3 MB/s, cached in `~/.cache/brain-kb/microns`), then about an hour; `--selftest` needs no data. Result in `anatomy/dendritic-computation.md`. |
+| `data/` | Small dated snapshots of public data the analyses read (Brain-Score vision leaderboard: model, ImageNet top-1, average, neural, behaviour and per-region scores), and small derived results (`wm_capacity_results.csv`: per-subject CV log likelihoods and fitted K, α, β from #90, no raw trials; `microns_clustering_v1300.csv`: the #87 result table, derived from CC BY 4.0 MICrONS data). |
 | `pdfs/` | Downloaded open-access PDFs. Git-ignored (publisher copyright); run the script to fetch them. |
 
 ```
@@ -26,6 +27,7 @@ python research/credit_assignment.py       # PC vs backprop, FA, DFA (#92); --qu
 python research/dendritic_neurons.py       # point vs dendritic neurons (#85); --quick for a smoke run
 python research/brainscore_saturation.py   # Brain-Score saturation re-check (#88); --fetch for a new snapshot
 python research/wm_capacity.py             # slots vs resource re-fit on open data (#90); --quick for a smoke run
+python research/microns_clustering.py      # MICrONS dendritic clustering (#87); --download first, --quick, --selftest
 ```
 
 Re-run after adding references to a topic. It resolves each reference through

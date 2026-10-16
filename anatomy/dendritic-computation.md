@@ -1,14 +1,15 @@
 ---
 title: Dendritic computation
 category: anatomy
-tags: [dendrites, nmda-spikes, bac-firing, two-layer-neuron, credit-assignment, plateau-potentials, apical-dendrite]
+tags: [dendrites, nmda-spikes, bac-firing, two-layer-neuron, credit-assignment, plateau-potentials, apical-dendrite, synaptic-clustering, microns]
 use_cases:
   - do single neurons compute more than a weighted sum
   - what is an NMDA spike or a dendritic plateau potential
   - how could dendrites carry error signals for credit assignment
   - model a neuron with nonlinear dendritic branches
+  - do inputs with similar tuning land on the same dendritic branch
 status: draft
-last_verified: 2026-10-12
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1146/annurev.neuro.28.061604.135703
   - https://doi.org/10.1016/S0896-6273(03)00149-1
@@ -16,6 +17,8 @@ sources:
   - https://doi.org/10.1038/18686
   - https://doi.org/10.48550/arxiv.1810.11393
   - https://doi.org/10.1038/s41467-025-56297-9
+  - https://doi.org/10.1038/s41586-025-08840-3
+  - https://doi.org/10.1038/nature23019
 ---
 
 # Dendritic computation
@@ -25,8 +28,11 @@ The point neuron of deep learning sums its inputs and applies one nonlinearity.
 Real dendrites are not passive wires: their branches fire their own local spikes,
 so a single cortical neuron behaves more like a **two-layer network** (Poirazi et
 al. 2003). Where on the tree an input lands, and which inputs arrive together on
-the same branch, changes the output. The separate apical dendrite of pyramidal
-cells may also carry a **teaching signal**, one of the leading **hypotheses** for
+the same branch, changes the output. In mouse visual cortex, inputs from nearby parts
+of visual space sit closer together on the dendrite than chance, while inputs with the
+same orientation preference do not (spine imaging, and the MICrONS test below).
+The separate apical dendrite of pyramidal cells may also carry a **teaching
+signal**, one of the leading **hypotheses** for
 how the cortex solves credit assignment without backprop.
 
 ## How it works
@@ -60,6 +66,106 @@ how the cortex solves credit assignment without backprop.
   convolutional network with 5 to 8 layers to mimic its spike output at
   millisecond resolution (Beniaguev, Segev & London 2021). Without NMDA, one hidden
   layer was enough. See [[neurons-and-synapses]].
+
+### Do inputs with similar tuning land on the same branch?
+Branch nonlinearities only matter for coding if related inputs share a branch. In vivo
+spine imaging gives the established part. It measures the tuning of each spine's input,
+but not which neuron that input comes from.
+- **Mouse V1, orientation: not clustered.** In layer 2/3 cells, inputs with the same
+  preferred orientation were spread over the whole tree, and neighbouring dendritic
+  segments were tuned to different orientations (Jia et al. 2010).
+- **Mouse V1, visual space: clustered at a fine scale.** Inputs that respond to similar
+  features at the same place in the visual field were more likely to sit on neighbouring
+  spines. Inputs from beyond the cell's receptive field sat more often on higher-order
+  branches (Iacaruso, Gasler & Hofer 2017).
+- **Ferret V1: clustered.** Co-tuned spines clustered on layer 2/3 dendrites. Cells with
+  more clustering were more orientation selective, and branches with more co-tuned
+  clusters had more local dendritic calcium events (Wilson et al. 2016). Spines less than
+  10 µm apart shared similar spatial receptive fields, with no map across the whole tree
+  (Scholl, Wilson & Fitzpatrick 2017).
+- **Slices, layer 5.** Inputs from other layer 5 cells formed clusters of 4 to 14 synapses
+  within 30 µm of basal dendrite (Gökçe, Bonhoeffer & Scheuss 2016).
+- **How clusters form (partly established).** In mouse V1 before eye opening, inputs
+  first appear in confined dendritic segments, and a synapse's co-activity with its
+  neighbours goes with its stabilisation and potentiation (Leighton, Cheyne & Lohmann 2024). A
+  plasticity model explains the species difference (orientation clusters in ferret,
+  receptive-field clusters in mouse) by receptive-field size and cortical magnification.
+  That is a model, not a measurement (Kirchner & Gjorgjieva 2021).
+
+**What the MICrONS connectome showed, and what it did not.** The MICrONS cubic
+millimetre of mouse visual cortex has the visual responses and the electron-microscopy
+wiring of the same tissue (MICrONS Consortium 2025). In it, similarly tuned neurons
+connect more often than neighbours whose axons and dendrites pass equally close, and
+feature similarity, not receptive-field position, predicts synapses beyond that
+proximity. Synapse size and synapse count also rise with signal correlation (Ding et al.
+2025, Figs 2 and 3). Pairs joined by 4 or more synapses had a higher response correlation
+(0.259 ± 0.042, n = 11 pairs) than pairs joined by one (0.118 ± 0.002, n = 5,350) (Celii et
+al. 2025, Fig. 5i). A 2026 preprint found over 700,000 axon groups that repeatedly cluster
+their synapses on dendritic branches of several pyramidal cells, more often than
+proximity predicts, but it reports anatomy only, not the tuning of those axons (Sarup &
+Boahen 2026, bioRxiv). None of the 2025 MICrONS papers (Consortium, Ding, Celii,
+Schneider-Mizell, Wang) asks where on the postsynaptic dendrite co-tuned inputs land, and
+a literature search on 2026-10-16 found no later paper that does. For identified
+presynaptic neurons the question was open, so #87 tested it.
+
+**MICrONS test (#87, this repo's analysis of public data, not peer reviewed).**
+[`research/microns_clustering.py`](../research/microns_clustering.py) uses only public
+files (materialization v1300, no login). Inputs are the 733 excitatory neurons that have
+a proofread axon, a manual functional match and a well-fitted digital-twin unit (Ding et
+al. 2025's thresholds). Their synapses were snapped to each target's dendrite skeleton.
+22,620 excitatory targets had at least 3 distinct such inputs: 167,382 synapses, 984,396
+pairs from two different input neurons. Tuning: feature similarity (cosine of the digital
+twin's readout weights, Ding's best predictor of connections), receptive-field (RF) centre
+distance in screen units (the screen spans 2), and orientation difference when both
+inputs are tuned. Null A (from the issue): shuffle which input sits at which synapse
+within each neuron, 1,000 times. Null B: shuffle only within the same primary dendrite,
+which asks for clustering beyond which dendrite an input targets. One-sided p; 0.001 is
+the floor. Primary test (pre-registered): feature similarity of pairs within 10 µm along
+the dendrite, against null A.
+
+| Pairs along the dendrite (n) | Feature similarity, observed / null A (p A, p B) | RF distance (p A, p B) | Orientation difference, deg (p A) |
+|---|---|---|---|
+| within 10 µm (7,625; 2,282 tuned) | 0.0488 / 0.0470 (0.018, 0.059) | 0.0848 / 0.0898 (≤ 0.001, ≤ 0.001) | 41.0 / 41.1 (0.39) |
+| 10-20 µm (7,593) | 0.0472 / 0.0466 (0.31, 0.69) | 0.0853 / 0.0873 (≤ 0.001, 0.012) | 40.5 / 41.1 (0.16) |
+| 20-50 µm (24,668) | 0.0482 / 0.0471 (0.043, 0.11) | 0.0852 / 0.0871 (≤ 0.001, ≤ 0.001) | 40.7 / 40.9 (0.35) |
+| 50-100 µm (92,219) | 0.0481 / 0.0466 (≤ 0.001, 0.003) | 0.0864 / 0.0872 (≤ 0.001, ≤ 0.001) | 40.9 / 40.8 (0.66) |
+| 100-200 µm (514,788) | 0.0461 / 0.0457 (≤ 0.001, ≤ 0.001) | 0.0879 / 0.0878 (0.92, 0.71) | 40.9 / 41.0 (0.16) |
+| over 200 µm (337,503) | 0.0432 / 0.0444 (1.0, 1.0) | 0.0891 / 0.0887 (1.0, 1.0) | 40.4 / 40.3 (0.86) |
+| same unbranched segment (33,545) | 0.0483 / 0.0472 (0.026, 0.16) | 0.0852 / 0.0879 (≤ 0.001, ≤ 0.001) | 40.9 / 40.8 (0.67) |
+
+- **Receptive-field position: clustered.** Inputs within 10 µm of each other have RF
+  centres 5.6% closer than the shuffled ones (3.5% closer than null B), and the gap
+  shrinks with distance until it is gone past 100 µm. This held with at least 5 inputs
+  per target (12,814 targets, p ≤ 0.001) and on the 1,412 targets with proofread dendrites
+  (0.0784 vs 0.0809, p A = 0.004, p B = 0.005). It matches the mouse spine imaging above
+  (Iacaruso, Gasler & Hofer 2017), now with identified presynaptic cells.
+- **Orientation: not clustered,** at any distance or in any subset (within 10 µm,
+  p = 0.39), as Jia et al. 2010 found in mouse.
+- **What the inputs respond to: at most a tiny local excess.** The primary test passed
+  (p = 0.018), but the effect is +0.0018 on a mean similarity of 0.045 (4%). It was not
+  significant against null B (p = 0.059) or on proofread dendrites (p = 0.29); with 5 or
+  more inputs it was p = 0.006 (null B 0.046). Pairs 50-200 µm apart are a little more
+  similar and pairs over 200 µm apart (often on different dendrites) a little less, a
+  coarse gradient rather than branch-level clusters.
+- **Most of the RF clustering goes with where the input cells sit (exploratory, chosen
+  after seeing the result).** The somata of inputs within 10 µm of each other are 174 µm
+  apart against 203 µm when shuffled (p ≤ 0.001), and nearby cells have nearby RFs
+  (retinotopy). Measured against the mean RF distance at each soma distance, the within-
+  10 µm excess shrinks from 0.0050 to 0.0009 (p A = 0.007, p B = 0.038), was 0.0007 with 5
+  or more inputs (p A = 0.029), and was absent on proofread dendrites (p = 0.68). So
+  axons of neighbouring cells landing side by side explain about four fifths of the
+  effect. Whether that is a wiring rule or the geometry of axons that grow together is
+  not answered here (**open**).
+- **Caveats.** The inputs are the cells whose axons proofreading projects chose to
+  proofread, not a random sample. Tuning comes from a digital twin, not from the recorded
+  responses. Most target dendrites are not proofread, and 0.7% of synapses (1,205 of
+  168,892) lay more than 5 µm from the skeleton, on the soma or on a detached fragment and
+  were dropped. A neuron gives many pairs, but the shuffles stay inside neurons, so the
+  p-values allow for that. The tests across 12 pair classes and several tuning measures
+  are not corrected; only the primary test was pre-registered. Deviations: the planned "at least 2 inputs" run was skipped, because
+  with two single-synapse inputs a shuffle cannot change the pair. Where a cell matched
+  several imaging units, the unit with the best model fit was used, not Ding's oracle
+  score. Result table: `research/data/microns_clustering_v1300.csv`.
 
 ### Dendrites and credit assignment (hypothesis)
 Cortex has to learn deep representations without sending exact gradients backward
@@ -183,8 +289,13 @@ assert r["A+B"] > 2 * (r["A"] + r["B"])         # supralinear: more than the sum
 ## Open questions
 - How often cortical neurons use dendritic spikes during natural behaviour, not
   only in slices.
-- Whether synapses carrying related features actually cluster on the same branch,
-  and how plasticity puts them there.
+- Whether synapses carrying related features cluster on the same branch, and how
+  plasticity puts them there. Partly answered for mouse visual cortex (#87, above):
+  inputs with nearby receptive fields land closer together than chance, inputs with the
+  same orientation do not, and feature similarity shows at most a 4% local excess. Still
+  open: whether the RF clustering is a synapse-level rule or just axons of neighbouring
+  cells running side by side (it mostly tracks soma distance); whether these clusters
+  are big enough to fire branch spikes; and other areas, layers and inhibitory targets.
 - Which, if any, of the dendritic credit-assignment hypotheses the cortex uses.
 - How much dendritic detail a useful AI model needs, given that it multiplies cost.
   With random branch inputs, none paid off at equal parameters (#85, above). Still
@@ -214,3 +325,16 @@ assert r["A+B"] > 2 * (r["A"] + r["B"])         # supralinear: more than the sum
 - Jones & Kording (2020) "Can single neurons solve MNIST? The computational power of biological dendritic trees", arXiv:2009.01269
 - Shalev-Shwartz, Shamir & Shammah (2017) "Failures of gradient-based deep learning", ICML. arXiv:1703.07950
 - Hawkins & Ahmad (2016) "Why neurons have thousands of synapses, a theory of sequence memory in neocortex", *Front Neural Circuits* 10:23. doi:10.3389/fncir.2016.00023
+- Jia, Rochefort, Chen & Konnerth (2010) "Dendritic organization of sensory input to cortical neurons in vivo", *Nature* 464:1307. doi:10.1038/nature08947
+- Wilson, Whitney, Scholl & Fitzpatrick (2016) "Orientation selectivity and the functional clustering of synaptic inputs in primary visual cortex", *Nat Neurosci* 19:1003. doi:10.1038/nn.4323
+- Iacaruso, Gasler & Hofer (2017) "Synaptic organization of visual space in primary visual cortex", *Nature* 547:449. doi:10.1038/nature23019
+- Scholl, Wilson & Fitzpatrick (2017) "Local order within global disorder: synaptic architecture of visual space", *Neuron* 96:1127. doi:10.1016/j.neuron.2017.10.017
+- Gökçe, Bonhoeffer & Scheuss (2016) "Clusters of synaptic inputs on dendrites of layer 5 pyramidal cells in mouse visual cortex", *eLife* 5:e09222. doi:10.7554/eLife.09222
+- Leighton, Cheyne & Lohmann (2024) "Clustered synapses develop in distinct dendritic domains in visual cortex before eye opening", *eLife* 12:RP93498. doi:10.7554/eLife.93498
+- Kirchner & Gjorgjieva (2021) "Emergence of local and global synaptic organization on cortical dendrites", *Nat Commun* 12:4005. doi:10.1038/s41467-021-23557-3
+- MICrONS Consortium (2025) "Functional connectomics spanning multiple areas of mouse visual cortex", *Nature* 640:435. doi:10.1038/s41586-025-08790-w
+- Ding et al. (2025) "Functional connectomics reveals general wiring rule in mouse visual cortex", *Nature* 640:459. doi:10.1038/s41586-025-08840-3
+- Celii et al. (2025) "NEURD offers automated proofreading and feature extraction for connectomics", *Nature* 640:487. doi:10.1038/s41586-025-08660-5
+- Schneider-Mizell et al. (2025) "Inhibitory specificity from a connectomic census of mouse visual cortex", *Nature* 640:448. doi:10.1038/s41586-024-07780-8
+- Wang et al. (2025) "Foundation model of neural activity predicts response to new stimulus types", *Nature* 640:470. doi:10.1038/s41586-025-08829-y
+- Sarup & Boahen (2026) "Axonal ensembles repeatedly cluster and order synapses along dendrites in mouse cortex", bioRxiv (preprint, not peer reviewed). doi:10.64898/2026.03.31.715753

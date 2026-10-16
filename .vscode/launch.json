@@ -166,6 +166,15 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: microns_clustering (co-tuned inputs on one branch? MICrONS, #87)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/microns_clustering.py",
+      "args": ["--quick"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Research: wm_capacity (slots vs resource re-fit on open data, #90)",
       "type": "debugpy",
       "request": "launch",
