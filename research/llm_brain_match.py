@@ -551,6 +551,8 @@ def main():
         c = np.median(ceil, 0)
         print("noise ceiling (median over stories, r): " + ", ".join(f"{g} {c[i].mean():.3f}" for g, i in idx.items()))
     print("\nheld-out r, mean over stories [95% CI]")
+    if not a.no_align:   # the shift was picked from word count vs these same auditory parcels (see Timing above)
+        print("  (auditory scores are not fully out of sample: each story's timing was aligned on them)")
     for m in models:
         cis = {g: boot(R[m][:, i].mean(1), rng) for g, i in idx.items()}
         print(f"  {m:6s} " + "  ".join(f"{g} {R[m][:, i].mean():.3f} [{cis[g][0]:.3f}, {cis[g][1]:.3f}]"
@@ -576,7 +578,7 @@ def main():
         print("\nlayer sweep, language parcels, held-out r (trained / untrained)")
         print("  " + "  ".join(f"L{L} {R[f'a{L}'][:, idx['language']].mean():.3f}/{R[f'c{L}'][:, idx['language']].mean():.3f}"
                               for L in layers))
-    tag = "quick" if a.quick else f"{n_sub}x{k}" + ("_events" if a.no_align else "")
+    tag = ("quick" if a.quick else f"{n_sub}x{k}") + ("_events" if a.no_align else "")
     (a.data_dir / f"results_{tag}.json").write_text(json.dumps(out))
     print(f"\ntotal {time.time() - t0:.0f} s")
 
