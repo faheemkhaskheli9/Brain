@@ -9,8 +9,8 @@ use_cases:
   - how does the fly olfactory circuit work and what is FlyHash
   - use a brain-inspired hash for nearest-neighbour similarity search
   - how does the brain modulate pain (gate control, placebo)
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://www.nobelprize.org/prizes/medicine/1961/summary/
   - https://doi.org/10.1152/physrev.00026.2009
@@ -36,8 +36,9 @@ and brain gate and modulate it from the top down.
 ### Hearing (established)
 - **Cochlea as a frequency analyser.** Sound sets up a travelling wave on the basilar
   membrane whose peak sits at a place set by frequency: high frequencies near the
-  base, low near the apex (von Békésy, Nobel Prize 1961). Outer hair cells change
-  length when stimulated (Brownell et al. 1985), actively amplifying the motion.
+  base, low near the apex (von Békésy, Nobel Prize 1961). Outer hair cells shorten
+  or lengthen when electrically stimulated (Brownell et al. 1985), a motor thought to
+  amplify the motion actively.
   The result is a bank of overlapping band-pass filters, and the **tonotopic** map
   is kept from cochlea to primary auditory cortex.
 - **Two cues for direction.** Low-frequency sounds are located mainly by the
@@ -49,8 +50,9 @@ and brain gate and modulate it from the top down.
   cancels the external ITD, so position along the row is a place map of direction.
   The barn owl's nucleus laminaris matches this design (Carr & Konishi 1990).
 - **Mammals differ (supported, debated).** In the gerbil medial superior olive,
-  precisely timed inhibition shifts ITD tuning, and the best delays of most neurons
-  lie outside the natural range (Brand et al. 2002). Grothe et al. (2010) argue that
+  ITD responses did not fit a topographic map, and precisely timed glycinergic
+  inhibition was needed to encode the natural range of ITDs (Brand et al. 2002).
+  Grothe et al. (2010) argue that
   mammals code ITD by the relative firing **rate** of two broadly tuned channels,
   one per hemisphere, rather than a Jeffress place map.
 

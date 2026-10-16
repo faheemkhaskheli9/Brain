@@ -6,8 +6,8 @@ use_cases:
   - what happens to memories during sleep
   - why does the brain replay experiences during sleep
   - add an offline replay or sleep phase to a continual-learning system
-status: draft
-last_verified: 2026-10-12
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1152/physrev.00032.2012
   - https://doi.org/10.1126/science.8036517
@@ -29,13 +29,13 @@ without overwriting old ones. Whether sleep also **downscales** synapses overall
 
 ### Sleep stages (established)
 - Sleep alternates between **non-REM** (stages N1, N2 and N3; N3 is slow-wave
-  sleep) and **REM** sleep, in cycles of roughly 90 minutes. Slow-wave sleep
+  sleep) and **REM** sleep in cycles that repeat through the night. Slow-wave sleep
   dominates the first half of the night and REM the second (Rasch & Born 2013).
 - Three non-REM rhythms matter for memory (Rasch & Born 2013):
   - **Slow oscillations** (< 1 Hz) in neocortex: whole populations swing between
     active "up" states and silent "down" states.
-  - **Spindles** (about 11-16 Hz) from the thalamus, mostly in N2.
-  - **Sharp-wave ripples** (about 150-250 Hz in rodents) in the hippocampus
+  - **Spindles** (about 10-15 Hz) from the thalamus, mostly in N2.
+  - **Sharp-wave ripples** (about 110-200 Hz in rodents) in the hippocampus
     (Buzsáki 2015).
 - The three nest: ripples tend to ride spindle troughs, which ride slow-oscillation
   up states. This timing is thought to open a window for hippocampus-to-cortex
@@ -43,10 +43,11 @@ without overwriting old ones. Whether sleep also **downscales** synapses overall
 
 ### Replay (established)
 - Place cells that fired together on a track fire together again in later sleep
-  (Wilson & McNaughton 1994), in the same order and many times faster than the
-  original run. See [[spatial-navigation]] for place cells.
+  (Wilson & McNaughton 1994). Later work showed that ripples replay fragments of
+  waking sequences in compressed form (reviewed in Buzsáki 2015). See
+  [[spatial-navigation]] for place cells.
 - Replay is causal, not a side effect: suppressing ripples during post-training
-  sleep impaired rats' spatial learning (Girardeau et al. 2009).
+  sleep and rest impaired rats' spatial memory (Girardeau et al. 2009).
 - Replay is not only in sleep. During awake pauses ripples also replay paths,
   sometimes in reverse right after reward (Foster & Wilson 2006), which looks like
   credit being passed back along the path, as in TD learning
@@ -67,8 +68,8 @@ without overwriting old ones. Whether sleep also **downscales** synapses overall
 
 ### Synaptic homeostasis (hypothesis)
 - Tononi & Cirelli (2014) propose that waking learning mostly strengthens synapses,
-  which costs energy and saturates plasticity, and that slow-wave sleep scales all
-  synapses down, keeping the relative pattern while restoring headroom.
+  which costs energy and saturates plasticity, and that slow-wave sleep renormalises
+  net synaptic strength by activity-dependent down-selection, restoring headroom.
 - Supporting evidence: in mouse cortex, the axon-spine interface was about 18%
   smaller after sleep than after wake (de Vivo et al. 2017).
 - Against or unresolved: some synapses grow during sleep, and replay-driven
@@ -93,8 +94,8 @@ open questions.
 without replay of task A ([game/README.md](../game/README.md)). In
 [Brain World](../game/world/), 30% of later episodes rehearse an earlier skill;
 without that replay, grasping, listening and reading fell to chance once the
-creature learned to write, and halving replay to 15% made one seed in ten fail
-([game/world/README.md](../game/world/README.md)). That fraction is a game gain,
+creature learned to write, and halving replay to 15% left one seed in ten unable to
+learn to read ([game/world/README.md](../game/world/README.md)). That fraction is a game gain,
 not a measurement.
 
 **Measured in this repo (computational result, not evidence about brains).** Brain
@@ -118,7 +119,7 @@ replay is measured below; how to keep old experience in a small store is still o
 **Which replay rule, and does downscaling help? (#84, computational result, not
 evidence about brains).** Earlier work already shows that choosing replay samples
 beats choosing at random (Aljundi et al. 2019), and that with replay an intermediate
-amount of synaptic downscaling is best (Robinson et al. 2022). What was left was
+amount of synaptic downscaling gives the highest overall accuracy (Robinson et al. 2022). What was left was
 whether the ranking of simple rules depends on the replay budget, and whether
 downscaling changes it. [`research/replay_selection.py`](../research/replay_selection.py)
 (method pre-registered on #84) trains a numpy MLP on 5 tasks in a row, with 50 stored
@@ -141,8 +142,8 @@ and the end. Without replay BWT was -0.36. Seeds 1-10, downscaling off:
   the budget was smallest: at one sample a step it cut forgetting twice as much per
   sample as random replay (0.092 against 0.044 BWT per 1,000 samples). At 16 a step
   the edge shrank to 0.015 BWT.
-- **Recency was slightly worse than random** (by 0.002 to 0.011, p = 0.012 to 0.03 in
-  three of the six cells, which does not survive the correction). **Least-replayed was
+- **Recency was slightly worse than random** in five of the six cells (by up to 0.011,
+  p = 0.012 to 0.03 in three, which does not survive the correction). **Least-replayed was
   no better than random.**
 - **Downscaling by 0.8 after each task made forgetting slightly worse in all 12
   rule-and-budget cells** (for random replay at 4 a step, BWT -0.265 against -0.235)
@@ -196,7 +197,8 @@ assert err(W_sleep, XB, YB) < 0.05                             # and B is still 
   network, high-error replay beats random most when replay is scarce: see above, #84.
   What the brain selects is still open.)
 - Whether SHY-style downscaling and replay-driven strengthening coexist, and how.
-  (Robinson et al. 2022 find an intermediate downscaling level best in a network; one
+  (Robinson et al. 2022 find an intermediate downscaling level gives the highest overall
+  accuracy in a network; one
   level of proportional downscaling did not help in this repo's toy.)
 - What REM sleep contributes to memory, if anything specific.
 - Whether the cortex stores a full copy of an episode or only its gist.

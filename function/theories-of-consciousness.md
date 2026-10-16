@@ -8,8 +8,8 @@ use_cases:
   - what did the adversarial collaboration between GNWT and IIT find
   - how do doctors measure consciousness in unresponsive patients
   - could an AI system be conscious
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/s41583-022-00587-4
   - https://doi.org/10.1016/j.neuron.2011.03.018
@@ -52,13 +52,13 @@ Reviewed in Seth & Bayne (2022).
 | Theory | Claim | Where | Signature it predicts |
 |---|---|---|---|
 | **Global (neuronal) workspace**, GNWT (Baars 1988; Dehaene & Changeux 2011) | Content becomes conscious when it wins a competition and is broadcast to many specialist systems at once | Prefrontal and parietal cortex with long-range connections | Late, all-or-none **ignition** (~300 ms) when a stimulus is seen |
-| **Integrated information theory**, IIT (Tononi 2004; Tononi et al. 2016) | Consciousness is integrated information (Φ), a property of a system's causal structure, not of what it computes | A posterior "hot zone" of cortex | Sustained activity and synchrony in posterior cortex for as long as the experience lasts |
+| **Integrated information theory**, IIT (Tononi 2004; Tononi et al. 2016) | Consciousness is integrated information (Φ), a property of a system's causal structure, not of what it computes | A posterior "hot zone" of cortex (Koch et al. 2016) | Sustained activity and synchrony in posterior cortex for as long as the experience lasts |
 | **Higher-order theories**, HOT (Lau & Rosenthal 2011; Brown, Lau & LeDoux 2019) | A state is conscious when another state represents it, a kind of internal monitoring | Prefrontal cortex | Prefrontal activity linked to confidence and metacognition |
 | **Recurrent processing theory**, RPT (Lamme 2006) | Local feedback within sensory cortex is enough for experience; the workspace adds only access and report | Sensory cortex | Recurrent activity in visual cortex, even without report |
 
-IIT is the most contested. Its Φ cannot be computed for any real brain, and it
-implies that simple but highly integrated grids of logic gates are more
-conscious than a person. In 2023 over 100 researchers signed a letter calling
+IIT is the most contested. Its Φ cannot be computed for any real brain, and
+critics argue it implies that simple but highly integrated networks of logic
+gates can be far more conscious than a person (Aaronson 2014). In 2023 over 100 researchers signed a letter calling
 it pseudoscience (Fleming et al. 2023); many others objected to that label.
 
 ### The adversarial collaboration (established result, contested reading)
@@ -66,8 +66,10 @@ GNWT and IIT proponents agreed in advance on predictions that would count
 against their own theory, and labs not aligned with either ran the experiments
 with fMRI, MEG and intracranial EEG (Melloni et al. 2023 protocol; Cogitate
 Consortium 2025). Outcome, in brief:
-- Information about what was seen (category, orientation) was found in
-  posterior cortex, with less in prefrontal cortex than GNWT expected.
+- Information about what was seen was found in visual, ventrotemporal and
+  inferior frontal cortex. Face orientation could be decoded from posterior but
+  not prefrontal regions, and adding prefrontal regions did not improve category
+  decoding. That is less prefrontal content than GNWT expected.
 - GNWT's predicted ignition when the stimulus went away was mostly absent.
 - IIT's predicted sustained synchrony within posterior cortex was not found.
 
@@ -81,7 +83,7 @@ tests that theories agree can hurt them.
 | Global workspace | A capacity-limited shared buffer that modules compete to write to and all read from; a known architecture for coordination (see [[attention-and-working-memory]]) |
 | Ignition | Nonlinear recurrent amplification turns graded evidence into an all-or-none commitment |
 | Higher-order monitoring | A model of the system's own confidence: calibrated uncertainty, knowing what it does not know |
-| Indicator properties | Butlin et al. (2023) list properties each theory treats as indicators and check AI systems against them; they found no current system that has most of them. This is an assessment method, not a test that settles the question |
+| Indicator properties | Butlin et al. (2023) derive indicator properties from the theories and check AI systems against them. They conclude that no current AI system is conscious, and that there are no obvious technical barriers to building systems that satisfy the indicators. This is an assessment method, not a test that settles the question |
 
 Building a workspace does not make a system conscious under every theory: under
 IIT, a conventional computer running any software has low Φ.
@@ -141,6 +143,8 @@ assert gaps.max() > 0.5                     # all-or-none jump, not a graded ris
 - Dehaene & Changeux (2011) "Experimental and theoretical approaches to conscious processing", *Neuron* 70:200. doi:10.1016/j.neuron.2011.03.018
 - Tononi (2004) "An information integration theory of consciousness", *BMC Neurosci* 5:42. doi:10.1186/1471-2202-5-42
 - Tononi, Boly, Massimini & Koch (2016) "Integrated information theory: from consciousness to its physical substrate", *Nat Rev Neurosci* 17:450. doi:10.1038/nrn.2016.44
+- Koch, Massimini, Boly & Tononi (2016) "Neural correlates of consciousness: progress and problems", *Nat Rev Neurosci* 17:307. doi:10.1038/nrn.2016.22
+- Aaronson (2014) "Why I am not an integrated information theorist (or, the unconscious expander)", blog post, 21 May 2014. https://scottaaronson.blog/?p=1799
 - Lau & Rosenthal (2011) "Empirical support for higher-order theories of conscious awareness", *Trends Cogn Sci* 15:365. doi:10.1016/j.tics.2011.05.009
 - Brown, Lau & LeDoux (2019) "Understanding the higher-order approach to consciousness", *Trends Cogn Sci* 23:754. doi:10.1016/j.tics.2019.06.009
 - Lamme (2006) "Towards a true neural stance on consciousness", *Trends Cogn Sci* 10:494. doi:10.1016/j.tics.2006.09.001

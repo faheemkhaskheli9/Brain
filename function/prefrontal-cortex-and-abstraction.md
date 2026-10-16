@@ -9,8 +9,8 @@ use_cases:
   - why do new facts that fit what I already know get learned faster
   - how does the brain generalise and abstract, and what is still unknown
   - give my learner a representation that supports both flexible rules and transfer
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1146/annurev.neuro.24.1.167
   - https://doi.org/10.1038/nature12160
@@ -28,8 +28,9 @@ goal, rule or task and uses it to steer the rest of the brain. Its neurons encod
 abstract rules, and many respond to *combinations* of task variables (**mixed
 selectivity**), which lets a simple readout implement many different rules. Abstraction
 shows up as a measurable geometry in PFC and hippocampal activity, and prior knowledge
-organised as **schemas** lets new, fitting facts be stored fast. These are established
-findings. How the brain *learns* abstractions and composes them into new combinations
+organised as **schemas** lets new, fitting facts be stored fast. The rule,
+mixed-selectivity and schema findings are established; the geometry of abstraction and
+the cognitive-map account are supported but not settled. How the brain *learns* abstractions and composes them into new combinations
 is not explained by any known learning rule: that gap is the one
 [[build-a-brain-like-learner]] lists under "Honest limits".
 
@@ -214,7 +215,7 @@ assert d_pure == 2 and d_mix == 3
 - Bernardi, Benna, Rigotti, Munuera, Fusi & Salzman (2020) "The geometry of abstraction in the hippocampus and prefrontal cortex", *Cell* 183:954. doi:10.1016/j.cell.2020.09.031
 - Tse et al. (2007) "Schemas and memory consolidation", *Science* 316:76. doi:10.1126/science.1135935
 - Tse et al. (2011) "Schema-dependent gene activation and memory encoding in neocortex", *Science* 333:891. doi:10.1126/science.1205274
-- Rudy & Sutherland (2008) "Is it systems or cellular consolidation? Time will tell. An alternative interpretation of the Morris group's recent Science paper", *Neurobiol Learn Mem* 89:361.
+- Rudy & Sutherland (2008) "Is it systems or cellular consolidation? Time will tell. An alternative interpretation of the Morris group's recent Science paper", *Neurobiol Learn Mem* 89:366. doi:10.1016/j.nlm.2007.07.017
 - McClelland (2013) "Incorporating rapid neocortical learning of new schema-consistent information into complementary learning systems theory", *J Exp Psychol Gen* 142:1190. doi:10.1037/a0033812
 - van Kesteren, Ruiter, Fernández & Henson (2012) "How schema and novelty augment memory formation", *Trends Neurosci* 35:211. doi:10.1016/j.tins.2012.02.001
 - Behrens et al. (2018) "What is a cognitive map? Organizing knowledge for flexible behavior", *Neuron* 100:490. doi:10.1016/j.neuron.2018.10.002

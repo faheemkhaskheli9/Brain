@@ -7,8 +7,8 @@ use_cases:
   - why does my brain-inspired learner waste compute on inactive units
   - make an actor-critic with eligibility traces update only active synapses
   - my agent needs thousands of episodes where a person needs a few, what can I borrow from the brain
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - doi:10.1016/S0960-9822(03)00135-0
   - doi:10.1097/00004647-200110000-00001
@@ -32,20 +32,21 @@ by payoff for effort. It also gives measurements from this repo's Brain World le
 ### Where a simple learner stands (measured here)
 Brain World is an actor-critic over a fixed 1,000-unit random expansion, with eligibility
 traces and a three-factor rule (trace times dopamine). On seed 1, the first 3,000 episodes
-(241k steps, about 11 s in node, reaching the read stage) gave:
+(194k steps, about 11 s in node, reaching the read stage; re-measured 2026-10-16 on the
+inferred-context code) gave:
 
 | Measure | Brain World | Brain |
 |---|---|---|
-| Hidden units active per step | 6.8% (68 of 1,000) | about 1% of cortical neurons (Lennie 2003) |
-| Actor trace entries above 1e-3 | 3.9% of 12,177 | plasticity needs recent activity ([[learning-and-plasticity]]) |
+| Hidden units active per step | 7.0% (70 of 1,000) | possibly under 1% of cortical neurons substantially active at once, an energy-based estimate (Lennie 2003) |
+| Actor trace entries above 1e-3 | 3.8% of 12,177 | plasticity needs recent activity ([[learning-and-plasticity]]) |
 | Work per step | about 12k multiply-adds each to act, fade traces and update weights, all dense | work only where spikes arrive |
-| Episodes to learn all five skills | about 9,000-20,000 (README of `game/world/`) | not comparable without a matched task |
+| Episodes to learn all five skills | 16,515 on average over the 9 of seeds 1-10 that graduate (README of `game/world/`) | not comparable without a matched task |
 
 So activity is already sparse. The waste is that every step still touches every synapse.
 
 ### Energy side (established principle, game-level implementation)
-The principle is established: spikes and synaptic transmission take most of the brain's
-signalling energy (Attwell & Laughlin 2001), and that cost favours sparse firing (Levy &
+The principle is established: spikes and synaptic transmission take most of the signalling
+energy in rodent grey matter (Attwell & Laughlin 2001), and that cost favours sparse firing (Levy &
 Baxter 1996; [[neural-coding-and-computation]]). The methods, best payoff first:
 
 1. **Event-driven trace and weight updates.** Fade and update only the traces of units
@@ -72,11 +73,12 @@ Baxter 1996; [[neural-coding-and-computation]]). The methods, best payoff first:
    reflexes such as orienting towards salient objects, or pattern generators for gait.
 7. **Learning from a teacher.** A demonstration (imitation) can replace a long search for
    a rewarded action sequence, such as the strokes of a letter.
-8. **Surprise-scaled plasticity.** Neuromodulators such as acetylcholine and noradrenaline
-   are proposed to set the learning rate from uncertainty (Doya 2002; [[neuromodulators]]).
-   This mapping is a **hypothesis**.
+8. **Surprise-scaled plasticity.** Neuromodulators are proposed to set learning parameters:
+   in Doya's (2002) scheme acetylcholine sets the speed of memory update and noradrenaline
+   the randomness of action choice ([[neuromodulators]]). Scaling the update by surprise is a
+   further step. Both are **hypotheses**.
 9. **A forward model plus planning.** Learn to predict the next state and practise in
-   imagination (Dyna; Sutton 1990). The cerebellum as a forward model is an established
+   imagination (Dyna; Sutton 1990). The cerebellum as a forward model is a leading
    theory ([[action-selection-and-motor-control]]). This is the most work.
 
 ### Measured: k-WTA in Brain World (issue #82)
@@ -95,8 +97,8 @@ skills. Run: `node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50`,
 - **Learning: no cost.** No arm needed more episodes. k = 20 was faster on 7 of 10 seeds
   and kept every skill above the test's bars on all 10, but p = 0.066 is not significant.
 - **Work: under 2x, so the work half of the hypothesis fails.** Over the whole curriculum the
-  baseline has 79 units on (7.9%, higher than the 6.8% measured over the first 3,000
-  episodes). k = 20 cuts that 4x. But the hidden units are only part of each step:
+  baseline has 79 units on (7.9%, higher than the 7.0% measured over the first 3,000
+  episodes on today's code). k = 20 cuts that 4x. But the hidden units are only part of each step:
   - encoding drives about 500 ungated units × 8 inputs whatever k is;
   - every action score also sums the 107 raw inputs;
   - the dense trace and weight updates (about 12k each) do not shrink at all.
@@ -209,7 +211,7 @@ saved.
   10 seeds, and actor sleep replay changed little. Still open: whether a prior the learner
   can turn down (decaying or context-gated) keeps the saving without the cost.
 - Answered here (issue #82, 2026-10-12): k-WTA does not slow Brain World's curriculum,
-  but on its own it does not halve the work per step either. See "Measured: k-WTA" below.
+  but on its own it does not halve the work per step either. See "Measured: k-WTA" above.
   Still open: whether an adaptive per-unit threshold (homeostasis) does as well, and
   whether the faster learning at k = 20 holds over more seeds.
 - The size of the episode-count gap between Brain World and a person on matched tasks is

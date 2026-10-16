@@ -9,8 +9,8 @@ use_cases:
   - how do people and animals learn by watching others
   - infer an agent's goal from its behaviour (inverse planning)
   - do large language models have theory of mind
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1016/0010-0277(83)90004-5
   - https://doi.org/10.1016/S1053-8119(03)00230-1
@@ -45,13 +45,13 @@ model of rational planning**, the same maths as inverse reinforcement learning.
   conceptual change, not a task artefact.
 - **Earlier, implicit ToM (supported, debated).** Onishi & Baillargeon (2005) reported
   that 15-month-olds look longer when an actor searches where her false belief
-  should *not* send her. Replication attempts of related looking-time and
-  anticipatory-looking measures have been mixed (Kulke et al. 2018), so whether
-  infants represent beliefs or track simpler cues is open.
+  should *not* send her. Replications of two related anticipatory-looking tasks
+  failed in children and elderly adults and only partly succeeded in adults (Kulke
+  et al. 2018), so whether infants represent beliefs or track simpler cues is open.
 
 ### The mentalizing network (established)
 - Thinking about other people's thoughts reliably activates the **TPJ** (especially
-  right), **mPFC**, precuneus and temporal poles (Frith & Frith 2006).
+  right), **mPFC** and temporal poles (Frith & Frith 2006).
 - The right TPJ responds selectively to stories about beliefs compared with stories
   about physical facts or false photographs (Saxe & Kanwisher 2003).
 - **Causal evidence:** disrupting right TPJ with TMS made people weigh an agent's
@@ -65,8 +65,9 @@ model of rational planning**, the same maths as inverse reinforcement learning.
   cells with mirror properties in supplementary motor area and medial temporal lobe
   (Mukamel et al. 2010).
 - **Strong claim (contested):** mirror neurons are the basis of action understanding,
-  imitation and, by extension, empathy and language (Rizzolatti & Craighero 2004),
-  and their dysfunction causes autism ("broken mirror").
+  imitation and, by extension, empathy and language (Rizzolatti & Craighero 2004).
+  Others proposed that their dysfunction causes autism (Williams et al. 2001; "broken
+  mirrors", Ramachandran & Oberman 2006).
 - **Critique:** people can understand actions they cannot perform, and damage to
   motor areas does not reliably abolish action understanding (Hickok 2009). Heyes
   (2010) argues mirror properties are **learned** by associating seeing and doing,
@@ -204,6 +205,8 @@ goals to beliefs about where things are gives a toy false-belief observer.
 - di Pellegrino, Fadiga, Fogassi, Gallese & Rizzolatti (1992) "Understanding motor events: a neurophysiological study", *Exp Brain Res* 91:176. doi:10.1007/BF00230027
 - Gallese, Fadiga, Fogassi & Rizzolatti (1996) "Action recognition in the premotor cortex", *Brain* 119:593. doi:10.1093/brain/119.2.593
 - Rizzolatti & Craighero (2004) "The mirror-neuron system", *Annu Rev Neurosci* 27:169. doi:10.1146/annurev.neuro.27.070203.144230
+- Williams, Whiten, Suddendorf & Perrett (2001) "Imitation, mirror neurons and autism", *Neurosci Biobehav Rev* 25:287. doi:10.1016/S0149-7634(01)00014-8
+- Ramachandran & Oberman (2006) "Broken mirrors: a theory of autism", *Scientific American* 295(5):62. doi:10.1038/scientificamerican1106-62
 - Mukamel, Ekstrom, Kaplan, Iacoboni & Fried (2010) "Single-neuron responses in humans during execution and observation of actions", *Curr Biol* 20:750. doi:10.1016/j.cub.2010.02.045
 - Hickok (2009) "Eight problems for the mirror neuron theory of action understanding in monkeys and humans", *J Cogn Neurosci* 21:1229. doi:10.1162/jocn.2009.21189
 - Heyes (2010) "Where do mirror neurons come from?", *Neurosci Biobehav Rev* 34:575. doi:10.1016/j.neubiorev.2009.11.007

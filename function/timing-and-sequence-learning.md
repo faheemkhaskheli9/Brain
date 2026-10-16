@@ -9,8 +9,8 @@ use_cases:
   - how are motor sequences learned and chunked
   - compare transformer positional encodings with how brains represent time
   - build a population clock that decodes elapsed time in numpy
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1037/0033-295X.84.3.279
   - https://doi.org/10.1038/nrn1764
@@ -50,10 +50,10 @@ neural recordings point to population dynamics instead (Buhusi & Meck 2005).
   dopamine (Buhusi & Meck 2005; Mauk & Buonomano 2004). The division is not clean.
 - **Cerebellum (established).** Cerebellar damage impairs producing and judging short
   intervals (Ivry & Keele 1989; [[action-selection-and-motor-control]]). In eyeblink
-  conditioning, Purkinje cells learn a pause timed to the interval between cue and
-  air puff, and the timing survived when the cue was replaced by direct stimulation of
-  the input fibres, pointing to a mechanism inside the Purkinje cell (Johansson et al.
-  2014, **supported**).
+  conditioning in ferrets, Purkinje cells learn a pause timed to the interval between
+  the cue and the unconditioned stimulus. The timing was still learned when the cue was
+  direct stimulation of the input fibres with interneurons blocked, pointing to a
+  mechanism inside the Purkinje cell (Johansson et al. 2014, **supported**).
 - **Striatum (supported).** In rats timing a fixed interval, striatal neurons fired in
   a sequence that tiled the interval, and the sequence stretched or compressed when the
   interval changed (Mello, Soares & Paton 2015).
@@ -65,8 +65,9 @@ neural recordings point to population dynamics instead (Buhusi & Meck 2005).
   cells tile a track; when the delay changed, many re-timed (MacDonald et al. 2011).
   Earlier, Pastalkova et al. (2008) found CA1 cell sequences during wheel running in a
   memory delay, generated internally without changing sensory cues, that predicted the
-  rat's next choice. Later time cells tend to have wider time fields (Eichenbaum 2014),
-  the single-cell face of scalar timing (**supported**). Lateral entorhinal cortex
+  rat's next choice. Later time cells tend to have wider time fields (MacDonald et al.
+  2011; Eichenbaum 2014), the single-cell face of scalar timing (**supported**).
+  Lateral entorhinal cortex
   carries a slowly changing signal from which time within and across trials can be
   decoded (Tsao et al. 2018).
 

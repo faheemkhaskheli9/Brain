@@ -9,8 +9,8 @@ use_cases:
   - can a task-trained RNN be used as a model of cortex
   - what is representational drift and how can behaviour stay stable through it
   - build a continuous attractor network in numpy
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1146/annurev-neuro-092619-094115
   - https://doi.org/10.1038/nature11129
@@ -46,20 +46,22 @@ hold any value along it with no input.
   Seung (1996) modelled it as recurrent feedback tuned so that activity neither
   decays nor grows along one direction: a line of fixed points that integrates
   velocity commands into position.
-- **Ring attractor (established model, strong evidence in flies and mice).** For an
+- **Ring attractor (established model, supported by evidence in flies and mice).** For an
   angle such as head direction, cells arranged by preferred angle excite near
   neighbours and inhibit distant ones, so activity forms one **bump** that can sit
-  anywhere on the ring; an angular-velocity input shifts it (Zhang 1996). In
+  anywhere on the ring; a slight asymmetry in the weights, driven by angular
+  velocity, shifts it (Zhang 1996). In
   *Drosophila* the bump of the ellipsoid-body compass neurons persists in darkness,
   and when an optogenetic stimulus creates activity at another position the bump
   jumps there instead of a second one forming (Kim et al. 2017). In mouse
   anterodorsal thalamus, head-direction population activity lies on a 1-D ring
-  manifold, and keeps that ring structure during sleep when there is no heading to
-  track (Chaudhuri et al. 2019). Grid-cell module activity lies on a torus, again
+  manifold, and keeps that ring structure in REM sleep, when there is no heading to
+  track; in non-REM sleep no persistent ring was found (Chaudhuri et al. 2019). Grid-cell module activity lies on a torus, again
   preserved in sleep (Gardner et al. 2022) ([[spatial-navigation]]).
 - **Fine-tuning (established theoretical point).** A perfect continuous attractor
-  needs precisely balanced weights; small mismatches make the stored value drift
-  towards a few discrete points (Seung 1996). How real circuits stay tuned is open.
+  needs precisely balanced weights; small mismatches make the stored value drift,
+  back towards rest when feedback is too weak and away from it when too strong
+  (Seung 1996). How real circuits stay tuned is open.
 
 Discrete attractors (Hopfield networks, [[memory-systems]]) store separate patterns;
 continuous ones store a quantity.
@@ -70,8 +72,10 @@ and introduced **jPCA**, which finds planes where the population state rotates
 (fitting `dx/dt = M x` with `M` skew-symmetric). Different reaches started from
 different preparatory states and then rotated in a consistent direction, which they
 argued shows motor cortex acting as a pattern generator for muscle commands, not a
-map of reach parameters ([[action-selection-and-motor-control]]). Critics argue
-rotations can come from simpler features of the data (below).
+map of reach parameters ([[action-selection-and-motor-control]]). Whether rotations
+are a by-product of simpler features of the data can be tested with null models
+(below); on these motor-cortex data, the dynamical structure exceeded them (Elsayed &
+Cunningham 2017).
 
 ### Dimensionality reduction: what it does and does not prove
 | Method | Does | Watch out |
@@ -92,8 +96,9 @@ subspace, and how the state moves within it. What they **do not** show on their 
   exponent close to 1, i.e. high-dimensional (Stringer et al. 2019).
 - *That the manifold is causal.* Stronger evidence is interventional: in a
   brain-computer interface, monkeys quickly learned decoder changes that stayed
-  inside the existing manifold but not ones that required leaving it (Sadtler et al.
-  2014), so the manifold constrains learning on short timescales (**supported**).
+  inside the existing manifold, and learned ones that required leaving it much less
+  well (Sadtler et al. 2014), so the manifold constrains learning on a timescale of
+  hours (**supported**).
 
 ### Task-trained RNNs as models of cortex (supported, a method not a fact)
 Train a recurrent network on the animal's task, then compare its hidden dynamics with
@@ -110,8 +115,9 @@ can match equally well ([[evaluating-brain-models]]).
 
 ### Representational drift (established phenomenon, causes open)
 Imaging the same neurons over days shows the code changing while behaviour does not.
-In mouse CA1 the set of active place cells changed from day to day, yet position could
-still be decoded from each day's population (Ziv et al. 2013). In posterior parietal
+In mouse CA1 the set of active place cells changed from day to day, yet the 15-25% of
+cells shared by any two days kept their place fields, enough for an accurate spatial
+code across weeks (Ziv et al. 2013). In posterior parietal
 cortex, activity patterns for a well-learned navigation task reorganised over weeks
 (Driscoll et al. 2017). At the level of latent dynamics, motor cortex trajectories for
 the same behaviour stayed stable over long periods once aligned across sessions

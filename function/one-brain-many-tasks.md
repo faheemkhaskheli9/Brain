@@ -8,8 +8,8 @@ use_cases:
   - how can an agent tell which task it is in without being told
   - why does training a network on a new task wipe out the old ones
   - what does Brain World do to keep five skills in one brain
-status: draft
-last_verified: 2026-10-11
+status: stable
+last_verified: 2026-10-16
 sources:
   - https://doi.org/10.1038/s41593-018-0310-2
   - https://doi.org/10.1038/s41593-024-01668-6
@@ -66,7 +66,8 @@ from the body and its development (issue #61). One task label remains: the at-bo
   See [[memory-systems]].
 - **Spaun (Eliasmith et al. 2012):** about 2.5 million spiking neurons, wired as named modules
   (visual, working memory, action selection, motor), perform eight different tasks with one model.
-  Most of it is built by hand, not learned, which is the price of its breadth.
+  It is hard-wired and cannot learn new tasks (IEEE Spectrum 2012), which is the price of its
+  breadth.
 
 ### What is established, supported and hypothesis
 - **Established:** a network that stores every task in the same weights loses old tasks when
@@ -82,8 +83,9 @@ from the body and its development (issue #61). One task label remains: the at-bo
   one when nothing fits (Collins & Frank 2013 give a Bayesian model of this for human behaviour).
   Synapses track their own importance and resist change once a skill depends on them, as in
   synaptic intelligence (Zenke, Poole & Ganguli 2017). Plasticity is gated by uncertainty, so a
-  surprising world speeds learning and a familiar one protects old skills (Yu & Dayan 2005; see
-  [[neuromodulators]]).
+  surprising world speeds learning and a familiar one protects old skills. This extends Yu & Dayan
+  (2005), whose acetylcholine and noradrenaline uncertainty signals are a model of inference and
+  attention, not of plasticity (see [[neuromodulators]]).
 
 ### Synthesis (a design hypothesis, not biology)
 Keep the organs fixed and general, each with its own learning rule: an expansion layer, an
@@ -102,7 +104,7 @@ units and context slots it has, not by how many tasks exist.
   grasp, listen and read fell to chance once the creature learned to write (README).
 - **Context inferred, not told (issue #60, 2026-10-13).** `Brain.encode(x, slot)` applies the gate
   row of one of 8 context slots, a fixed random half of the units (context-dependent gating, Masse,
-  Grant & Freedman 2018). The slot comes from `brain.infer(z)`: `z` is the running max over the
+  Grant & Freedman 2018, who gated 80% of hidden units per task). The slot comes from `brain.infer(z)`: `z` is the running max over the
   episode of five thresholded channels (white, colour, tone, fovea letter, board), matched to slot
   prototypes by adaptive resonance; each training episode commits `z` to its slot or founds one.
   Over seeds 1-10, 9 graduate (told: 10), mean kept scores 0.87 / 0.70 / 0.59 / 0.65 (told:
@@ -227,6 +229,7 @@ task or two.
 - McClelland, McNaughton & O'Reilly (1995) "Why there are complementary learning systems in the hippocampus and neocortex", *Psychol Rev* 102:419. doi:10.1037/0033-295X.102.3.419
 - Kumaran, Hassabis & McClelland (2016) "What learning systems do intelligent agents need?", *Trends Cogn Sci* 20:512. doi:10.1016/j.tics.2016.05.004
 - Eliasmith et al. (2012) "A large-scale model of the functioning brain", *Science* 338:1202. doi:10.1126/science.1225266
+- IEEE Spectrum (2012) "Brain model connects neurons to behavior" (news report on Spaun). https://spectrum.ieee.org/brain-model-connects-neurons-to-behavior
 - McCloskey & Cohen (1989) "Catastrophic interference in connectionist networks: the sequential learning problem", *Psychology of Learning and Motivation* 24:109. doi:10.1016/S0079-7421(08)60536-8
 - Schultz, Dayan & Montague (1997) "A neural substrate of prediction and reward", *Science* 275:1593. doi:10.1126/science.275.5306.1593
 - Wilson & McNaughton (1994) "Reactivation of hippocampal ensemble memories during sleep", *Science* 265:676. doi:10.1126/science.8036517
