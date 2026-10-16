@@ -294,6 +294,8 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--data-dir", default=os.path.expanduser("~/.cache/brain-kb"))
     a = ap.parse_args()
+    if a.folds < 2:
+        ap.error("--folds must be at least 2")   # 0 skips the CV loop (scores of 0), 1 leaves nothing to train on
     for v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
         os.environ.setdefault(v, "1")    # workers inherit this: one BLAS thread each, no oversubscription
 
