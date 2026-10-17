@@ -18,6 +18,7 @@ node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,reh
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
+node game/world/transfer.mjs              # new letters from known strokes, seeds 1-10, about 1 min (see "New letters")
 ```
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
@@ -31,7 +32,8 @@ row per save with the perform-mode score of every learned skill. When a skill pa
 
 A first visit opens a three-line intro (reopen it with **What is this?**). A caption under the room
 says in plain words what the creature is doing and why dopamine rose or dipped, and every panel label
-has a hover explanation.
+has a hover explanation. When a skill passes, a toast over the room names it and says what the
+creature can now do (#34).
 
 **Teach** in the skill picker makes you the teacher (see "Teach mode" below). Drop cubes and balls
 by clicking the floor, play a tone, and watch it fetch. **Give reward** (key R) works in every mode.
@@ -45,8 +47,11 @@ by clicking the floor, play a tone, and watch it fetch. **Give reward** (key R) 
 | 3 | Listen | Three coloured objects. A tone (262, 392 or 587 Hz) names the colour that is food | 70% |
 | 4 | Read | Three white cubes with the letters T, L, X. The tone names the letter, so it must read it with the fovea | 60% |
 | 5 | Write | At a board, the tone names a letter. Draw it with two of six pen strokes | 80% |
+| (6) | Copy (optional, #56) | At the board, no tone: draw the letter shown on the fovea (T, L or X) | 80% |
+| (7) | Copy new letters (optional, #37) | The same, with three new letters made of known strokes: Γ, ⊥, 7 | 80% |
 
-The letters it reads and the letters it writes are the same 5×5 stroke shapes.
+The letters it reads and the letters it writes are the same 5×5 stroke shapes. The two optional
+stages are not in the page's curriculum; `sweep.mjs` (copy) and `transfer.mjs` (new letters) add them.
 
 ## The brain
 
@@ -283,6 +288,31 @@ loading and the new code changed nothing.
 That synapses are tagged and later captured for long-term change is established (synaptic tagging
 and capture, Frey and Morris 1997). That real synapses keep an SI-like importance is a hypothesis.
 
+## New letters: does it learn to learn? (#37)
+
+Γ (top bar + left bar), ⊥ (bottom bar + middle bar) and 7 (top bar + /) use only strokes that T,
+L and X already use. If the brain had learned strokes as parts, a brain that can copy T, L and X
+should copy the new letters sooner than a naive one. `node game/world/transfer.mjs` trains two
+brains per seed, at the board only and with no rehearsal: one learns copy (T, L, X) and then copy
+new letters; the naive one learns copy new letters from scratch. Seeds 1-10, 2026-10-15, episodes
+to 80% of 50:
+
+| | Copy T, L, X (first letters) | New letters after them | New letters, naive | Success in the first 100 episodes, after / naive |
+|---|---|---|---|---|
+| Mean over the 9 seeds where both learned | 6,593 (10 seeds) | 7,183 | 5,872 | 0.08 / 0.07 |
+
+The experienced brain was faster on 5 of 9 seeds, slower on average by 1,311 episodes (paired
+sign-flip p = 0.36), and started no better: chance is 1/18. Seed 10's naive brain did not learn in
+20,000 episodes; its experienced one took 16,515. So **no transfer was measured**. The likely
+reason, a hypothesis: the actor maps whole letter patterns to strokes through random expansion
+units, so nothing in it stands for a stroke, and the new letters share the copy context slot, where
+the old letter-to-stroke habits compete (Γ shares a whole bar with T, whose middle bar is now wrong).
+Stroke-level features (for example the learned Hebbian features of #65) are the next thing to try.
+`test_brain.mjs` runs both brains on each seed it is given, asserts that copy and then new letters
+are learned within 20,000 episodes, prints the counts, and checks that the new letters are on the
+fovea and graded against the letter shown. Two-letter words and spoken (formant) words, the other
+two ideas of #37, are not done.
+
 ## Perform mode: using a trained brain
 
 `world.perform(key)` locks every episode to one skill and turns learning off: the brain acts and
@@ -446,7 +476,8 @@ is enough for a real brain's version of these skills is a hypothesis.
 ## Not done yet
 
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
-- Speech or spoken words instead of pure tones. Multi-letter words.
+- Speech or spoken words instead of pure tones. Multi-letter words. (New letters made of known
+  strokes exist as an optional stage, #37; they showed no transfer.)
 - Physics-based limbs (joint torques) instead of discrete leg states.
 
 ## References

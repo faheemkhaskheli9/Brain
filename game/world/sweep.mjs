@@ -35,6 +35,8 @@ export const ARMS = {
   "copy+si": { replay: 0.3, sleepEvery: 0, si: 1e-4, copy: true },
   copy15: { replay: 0.15, sleepEvery: 0, copy: true },
   "copy15+si": { replay: 0.15, sleepEvery: 0, si: 1e-4, copy: true },
+  // Issue #38: torque-driven jointed legs (World.limbs) instead of discrete leg states.
+  joints: { replay: 0.3, sleepEvery: 0, joints: true },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
@@ -44,7 +46,7 @@ function trial(arm, seed) {
   Object.assign(GAINS, gains);
   const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
   // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
-  b.commit = z => { const m = b.match(z); if (b.learning && m.best < 0 && m.free < 0) store[m.rare >= 0 ? "reclaims" : "merges"]++; commit(z); };
+  b.commit = (z, slot) => { const m = b.match(z); if (b.learning && m.best < 0 && m.free < 0) store[m.rare >= 0 ? "reclaims" : "merges"]++; commit(z, slot); };
   for (let s = 0; s < STAGES.length; s++) {
     const start = w.episode;
     while (w.stage === s && !w.graduated && w.episode - start < LIMIT) w.step();
