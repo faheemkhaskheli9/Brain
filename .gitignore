@@ -4,6 +4,9 @@ research/pdfs/
 # third-party trial data with their own licences: research/wm_capacity_models.py and llm_brain_match.py refetch
 research/data/delayed_estimation/
 research/data/narratives/
+# large model files and MICrONS caches the research scripts download again
+research/data/llm_brain/
+research/data/microns_cotuned_inputs_*.npz
 *.egg-info/
 
 .arena
