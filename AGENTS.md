@@ -27,3 +27,9 @@ build digital simulations and brain-inspired learning systems.
 6. Use LF line endings and UTF-8.
 
 `status`: `draft` until someone other than the author has reviewed it, then `stable`.
+
+## Bugs
+
+When you find a bug (in code, tooling, CI or a wrong fact) that you do not fix in the same change,
+open a GitHub issue for it right away, labelled `bug`. First search open issues for a duplicate. Give the
+symptom, steps to reproduce, the cause with `file:line` when known, and a suggested fix.
