@@ -33,11 +33,12 @@ lints; CI runs it with the index, code-block and game checks.
 
 ## Brain World: the app
 
+A 3D creature that learns walk, grasp, listen, read and write from a dopamine signal alone;
+you watch it, save it, test it with learning off, or teach it yourself.
+
 ![Brain World after a few minutes of fast-forward: walk and grasp learned, listen in progress](docs/screenshots/brain-world.png)
 
-A 3D creature with eyes, ears, legs, an arm and a pen. Nothing is scripted: it gets only a
-dopamine signal (reward prediction error) and learns walk, grasp, listen, read and write from
-it. The panels show what it senses, which skill it is on, and the dopamine trace.
+Full guide with screenshots (Brain World and Brain Lab): [docs/app-guide.md](docs/app-guide.md)
 
 ```bash
 python -m http.server 8000      # from the repo root, then open http://localhost:8000/game/world/
@@ -60,7 +61,7 @@ python -m http.server 8000      # from the repo root, then open http://localhost
 
 Brain Lab (`python game/play.py`, or `game/web/` in a browser) is the companion game: eleven
 levels where you operate one mechanism at a time. Both are described in
-[game/README.md](game/README.md).
+[game/README.md](game/README.md) and, feature by feature, in [docs/app-guide.md](docs/app-guide.md).
 
 ## License
 
