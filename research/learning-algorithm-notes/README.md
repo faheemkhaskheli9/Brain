@@ -30,8 +30,8 @@ Every note says its **Basis**:
   abstract in the databases either; their notes give only the citation and say
   "unverified". Read those papers in a browser before relying on them.
 
-The notes were written by AI agents on 2026-10-12 from the texts above and have not been
-reviewed by a person. Each file ends with **Corrections to the hypotheses file**. The
+The notes were written on 2026-10-12 from the texts above and have not been
+independently reviewed. Each file ends with **Corrections to the hypotheses file**. The
 corrections that the text supported have been applied to the rows (see the Log entry of
 2026-10-12). The ones that rest on an abstract are left as flags in the notes.
 
