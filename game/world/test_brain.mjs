@@ -3,7 +3,8 @@
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, LETTERS, rng, orient, glyph } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW_LETTERS, LETTERS, BODY, rng, orient, glyph } from "./brain.js";
+import { transfer } from "./transfer.mjs";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
 // hands encode an inferred slot, never the task it is playing.
@@ -123,6 +124,21 @@ for (const seed of seeds.length ? seeds : [1]) {
   w.perform(null);
   assert.equal(w.lesson, null);
   console.log(`  Teach (learning off, 200 tries): lone T cube ${taught[0]}, three cubes with tone L ${taught[1]}; reward = +1 dopamine`);
+
+  // New letters (#37): after copying T, L and X, it learns to copy three new letters made of the same
+  // strokes. The episode counts are the learning-to-learn measure; a naive brain from the same seed is
+  // the control. Only learning is asserted: on seeds 1-10 the experienced brain was not faster (README).
+  const tr = transfer(seed);
+  console.log(`  New letters: copy T/L/X in ${tr.copy} episodes, then Γ/⊥/7 in ${tr.after}; a naive brain took ${tr.naive ?? "over 20000"}`);
+  assert.ok(tr.copy !== null && tr.after !== null, `seed ${seed}: copy or new letters not learned`);
+
+  // Jointed legs (#38): with torque-driven hips instead of two leg states, walking is still learned.
+  GAINS.joints = true;
+  const jw = new World(seed);
+  while (jw.stage === 0 && jw.episode < LIMIT) jw.step();
+  GAINS.joints = false;
+  console.log(`  Jointed legs: walk ${jw.stage > 0 ? "learned" : "NOT learned"} after ${jw.episode} episodes`);
+  assert.ok(jw.stage > 0, `seed ${seed}: walk with jointed legs not learned within ${LIMIT} episodes`);
 }
 
 // Perform mid-training leaves the curriculum alone, and a save made while performing resumes training.
@@ -277,8 +293,20 @@ assert.deepEqual([cw.board, cw.tone, cw.objects.length], [true, -1, 0]);
 assert.deepEqual(Array.from(cw.fovea), Array.from(glyph(LETTERS[cw.target][1])), "copy: the letter is not on the fovea");
 assert.deepEqual(Array.from(cw.z), [0, 0, 0, 1, 1]);
 assert.ok(cw.step().action >= 5, "copy: not using the pen");
-STAGES.pop();
-console.log("  Copy: board, no tone, letter on the fovea, scene [0,0,0,1,1]");
+// New letters (#37): the fovea shows letter 3-5, and the pen is graded against that letter.
+STAGES.push(NEW_LETTERS);
+const nl = new World(5);
+nl.setStage(6);
+assert.deepEqual([nl.board, nl.tone, nl.shown], [true, -1, 3 + nl.target]);
+assert.deepEqual(Array.from(nl.fovea), Array.from(glyph(LETTERS[nl.shown][1])), "new letters: the letter is not on the fovea");
+assert.deepEqual(Array.from(nl.z), [0, 0, 0, 1, 1]);
+const want = LETTERS[nl.shown][1], act = nl.brain.act.bind(nl.brain);
+let k = 0;
+nl.brain.act = (h, allowed) => { act(h, allowed); return BODY.length + want[k++]; };
+assert.deepEqual([nl.step().done, nl.step().success], [false, true], "new letters: drawing the shown letter must succeed");
+delete nl.brain.act;
+STAGES.pop(); STAGES.pop();
+console.log("  Copy: board, no tone, letter on the fovea, scene [0,0,0,1,1]; new letters graded against the shown one");
 
 // Orienting reflex (#83): an object on the left pushes the left leg (turn left), walls alone do nothing.
 const o = new World(3);
@@ -289,4 +317,20 @@ assert.ok(orient(ox) > 0, "orient: object on the left must turn left");
 o.objects = [];
 assert.equal(orient(o.sense()), 0, "orient: walls must not drive the reflex");
 console.log("  Orienting reflex: turns toward an object, ignores walls");
+
+// Jointed legs (#38): a push from rest sweeps the hip back and moves the body, the leg coasts into
+// the next step, a lift moves nothing, and two legs pushed together walk straight.
+GAINS.joints = true;
+const jl = new World(1);
+Object.assign(jl, { pos: [4, 4], heading: 0, objects: [] });
+const d0 = jl.limbs(0);
+assert.ok(d0 > 0.1 && jl.hip[0] < 0 && jl.hip[0] > -1 && jl.omega[0] < 0 && jl.heading > 0, "joints: push left");
+assert.ok(jl.limbs(-1) > 0 && jl.hip[0] < -0.9, "joints: the pushed leg coasts");
+assert.equal(jl.limbs(2), 0, "joints: a lift moved the body");
+assert.ok(jl.legs[0] > 0.5 && jl.legs[0] < 1, "joints: the sense is (angle + 1) / 2");
+Object.assign(jl, { hip: [1, 1], omega: [-1.9, -1.9], heading: 0 });
+jl.limbs(-1);
+assert.ok(Math.abs(jl.heading) < 1e-9, "joints: both legs together must walk straight");
+GAINS.joints = false;
+console.log("  Jointed legs: push moves and turns, coasts, lift moves nothing, two legs walk straight");
 console.log("ok");

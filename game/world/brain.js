@@ -27,7 +27,11 @@ const STROKE_CELLS = [
   [0, 1, 2, 3, 4].map(r => [r, 0]), [0, 1, 2, 3, 4].map(r => [r, 2]),
   [0, 1, 2, 3, 4].map(r => [r, 4 - r]), [0, 1, 2, 3, 4].map(r => [r, r]),
 ];
-export const LETTERS = [["T", [0, 3]], ["L", [2, 1]], ["X", [4, 5]]];
+export const LETTERS = [["T", [0, 3]], ["L", [2, 1]], ["X", [4, 5]],
+  // Letters 3-5 (issue #37): new shapes built from strokes the first three already use (Γ = T's top
+  // bar + L's left bar, ⊥ = L's bottom bar + T's middle bar, 7 = T's top bar + X's /). Only the
+  // optional NEW_LETTERS stage shows them, to measure transfer; tones and reading use 0-2 only.
+  ["Γ", [0, 2]], ["⊥", [1, 3]], ["7", [0, 4]]];
 export const COLORS = [[1, 0.15, 0.15], [0.15, 1, 0.25], [0.25, 0.35, 1]];
 export const TONES_HZ = [262, 392, 587];   // C4, G4, D5: one per letter / colour
 
@@ -54,6 +58,16 @@ export const STAGES = [
 // marked copy, after loading a graduated five-stage save.
 export const COPY = { key: "copy", name: "Copy", pass: 0.8,
   about: "At the board, no tone: a letter is shown on the fovea. Draw it with two pen strokes." };
+// Transfer (issue #37), also optional: copy, but the letter shown is one of the three new ones
+// (LETTERS 3-5). Learned after COPY it tests learning to learn: are new letters made of known
+// strokes learned in fewer episodes than by a naive brain? test_brain.mjs and transfer.mjs measure it.
+export const NEW_LETTERS = { key: "newletters", name: "Copy new letters", pass: 0.8,
+  about: "At the board, no tone: one of three new letters (Γ, ⊥, 7), each made of strokes it already knows, is shown on the fovea. Draw it." };
+
+// Reversal (issue #65), optional: the listen scene, but each tone names the next colour (low = green,
+// middle = blue, high = red). Its scene summary is listen's, so only surprise can tell them apart.
+export const REVERSE = { key: "reverse", name: "Listen, reversed", pass: 0.7,
+  about: "Three coloured objects, as in listen, but the rule changed: low = green, middle = blue, high = red." };
 
 // Inputs: retina, legs, cochlea, fovea, pen pad, at-board flag, then the fovea memory.
 const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 25, FAN_IN = 8;
@@ -79,7 +93,7 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // gain from it; grasp, listen and read are searches, and a fixed policy turns the same way from
   // the same view forever (the best memoryless policy can be stochastic: Singh, Jaakkola and
   // Jordan 1994). See README "Perform mode".
-  performGreedy: ["walk", "write", "copy"],
+  performGreedy: ["walk", "write", "copy", "newletters"],
   // Synaptic intelligence (issue #56; Zenke, Poole and Ganguli 2017): pull each actor and critic
   // synapse back toward its value at the last stage pass, in proportion to how much it did for the
   // stages so far. 0 = off: nothing is tracked, stage passes only re-anchor. Strengths of 1e-3 and
@@ -89,7 +103,15 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // pooled scene summaries and picks the gate row whose prototype matches the scene so far on every
   // channel within `vigilance`, adaptive-resonance style (Carpenter and Grossberg 1987). A full
   // store reclaims a slot used fewer than `minUses` times before it merges two contexts.
-  slots: 8, vigilance: 0.35, minUses: 20 };
+  slots: 8, vigilance: 0.35, minUses: 20,
+  // Jointed legs (issue #38): torque-driven hips with damped dynamics instead of two discrete leg
+  // states (see World.limbs). Off by default; the page turns it on with ?legs=joints.
+  joints: false, torque: 6, damping: 3,
+  // Surprise (issue #65, item 1): every slot keeps a fast (rate 0.2) and a slow (rate 0.01) running
+  // mean of its episodes' mean squared TD error. When a slot used surpriseMin times or more has
+  // fast > surprise x max(slow, 0.005), the scene may look the same but the rules have changed: the
+  // brain switches to another slot that fits the scene, or founds one. 0 = off (only tracks).
+  surprise: 0, surpriseMin: 100 };
 export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
 // The scene code each of the five v3 stages produces (walk, grasp, listen, read, write), for World.migrate.
 const V3_CODES = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 1, 0], [0, 0, 1, 0, 1]];
@@ -133,6 +155,10 @@ export class Brain {
     for (let i = 0; i < this.gate.length; i++) this.gate[i] = rand() >= GAINS.gate ? 1 : 0;
     this.proto = new Float32Array(GAINS.slots * SCENE);   // each slot's prototype scene summary
     this.uses = new Int32Array(GAINS.slots);               // episodes committed to it; 0 = free
+    // Surprise per slot (#65): fast and slow running means of each episode's mean squared TD error,
+    // and the slot that surprise last chose (-1 = none), which infer prefers while the scene fits it.
+    this.fast = new Float32Array(GAINS.slots); this.slow = new Float32Array(GAINS.slots); this.active = -1;
+    this.epS = 0; this.epN = 0;
     this.v = new Float32Array(this.nH);           // critic
     this.P = new Float32Array(N_ACT * this.nH);   // actor
     this.ev = new Float32Array(this.nH);
@@ -181,21 +207,58 @@ export class Brain {
     return m;
   }
 
+  fits(c, z) {   // slot c is in use and its prototype is within vigilance of z on every channel
+    if (c < 0 || !this.uses[c]) return false;
+    for (let k = 0; k < SCENE; k++) if (Math.abs(z[k] - this.proto[c * SCENE + k]) > GAINS.vigilance) return false;
+    return true;
+  }
+
   infer(z) {   // the slot for scene summary z; changes nothing
+    if (GAINS.surprise && this.fits(this.active, z)) return this.active;   // surprise chose it among look-alikes
     const m = this.match(z);
     return m.best >= 0 ? m.best : m.free >= 0 ? m.free : m.near;
   }
 
-  commit(z) {   // end of a training episode: z joins its slot's prototype or founds a new one
+  // End of a training episode: z joins its slot's prototype or founds a new one. With surprise on,
+  // the slot it played in (slot) is the one it joins whenever that slot fits z.
+  commit(z, slot = -1) {
     if (!this.learning) return;
     const m = this.match(z);
-    const c = m.best >= 0 ? m.best : m.free >= 0 ? m.free : m.rare >= 0 ? m.rare : m.near;
+    let c = m.best >= 0 ? m.best : m.free >= 0 ? m.free : m.rare >= 0 ? m.rare : m.near;
+    if (GAINS.surprise && this.fits(slot, z)) c = slot;
     if (c !== m.best && c === m.rare) this.uses[c] = 0;   // reclaim a rarely used slot
     for (let k = 0; k < SCENE; k++) {
       const i = c * SCENE + k;
       this.proto[i] = this.uses[c] ? this.proto[i] + 0.05 * (z[k] - this.proto[i]) : z[k];
     }
     this.uses[c]++;
+    this.surprised(c, z);
+  }
+
+  // Surprise (#65): track slot c's surprise; with GAINS.surprise on, leave it when it stays high.
+  // Latent-cause inference in the spirit of Gershman, Blei and Niv (2010): an outcome the current
+  // context keeps failing to predict is evidence of a new context, even when the scene looks the same.
+  surprised(c, z) {
+    const s = this.epN ? this.epS / this.epN : 0;
+    this.epS = 0; this.epN = 0;
+    if (this.uses[c] === 1) { this.fast[c] = this.slow[c] = s; return; }
+    this.fast[c] += 0.2 * (s - this.fast[c]);
+    this.slow[c] += 0.01 * (s - this.slow[c]);
+    if (!GAINS.surprise || this.uses[c] < GAINS.surpriseMin) return;   // a young slot is still learning
+    if (this.fast[c] <= GAINS.surprise * Math.max(this.slow[c], 0.005)) { this.active = c; return; }
+    // It stays surprised here: go to the look-alike slot it was usually least surprised in, or found one.
+    let next = -1;
+    for (let k = 0; k < GAINS.slots; k++)
+      if (k !== c && this.fits(k, z) && (next < 0 || this.slow[k] < this.slow[next])) next = k;
+    if (next < 0) {
+      const m = this.match(z);
+      next = m.free >= 0 ? m.free : m.rare;
+      if (next < 0) return;   // no room: stay
+      for (let k = 0; k < SCENE; k++) this.proto[next * SCENE + k] = z[k];
+      this.uses[next] = 1; this.fast[next] = this.slow[next] = this.slow[c];
+    }
+    this.fast[next] = this.slow[next];   // a fresh start for the slot it moves to
+    this.active = next;
   }
 
   value(h) { let s = 0; for (let i = 0; i < this.nH; i++) s += this.v[i] * h[i]; return s; }
@@ -235,6 +298,7 @@ export class Brain {
     const delta = r + (hNext ? GAINS.gamma * this.value(hNext) : 0) - this.value(this.h);
     this.dopamine = delta;   // still computed in perform mode, so the panel shows surprise
     if (!this.learning) return;
+    this.epS += delta * delta; this.epN++;   // this episode's surprise, for its slot (#65)
     // Step size over a running mean of |h|^2, not the current |h|^2: the trace holds past states,
     // and a small current one would blow the step up (it made the critic diverge).
     let hh = 0; for (let i = 0; i < this.nH; i++) hh += this.h[i] * this.h[i];
@@ -438,13 +502,14 @@ export class World {
       this.brain.greedy = GAINS.performGreedy.includes(this.mode);
     }
     const R = this.rand, m = this.mode;
-    this.board = m === "write" || m === "copy";   // the world puts the creature at the board: a fact about the scene
+    this.board = m === "write" || m === "copy" || m === "newletters";   // the world puts the creature at the board: a fact about the scene
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     const H = this.hippo;
     this.memAt = { head: H.head, n: H.n, epId: H.epId++ };   // and its episodic store from here
     this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
     this.heading = R() * 2 * Math.PI;
     this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
+    this.hip = [1, 1]; this.omega = [0, 0];   // jointed legs only (GAINS.joints): hip angles and velocities
     this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
     this.z = new Float32Array(SCENE);   // the scene summary so far: running max of scene(x), see sense
     this.objects = [];
@@ -460,8 +525,8 @@ export class World {
       this.objects.push({ pos: p, color: m === "read" ? [1, 1, 1] : COLORS[count === 1 ? pick : i], letter: m === "read" ? i : -1 });
     }
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
-    this.tone = m === "listen" || m === "read" || m === "write" ? this.target : -1;
-    this.shown = m === "copy" ? this.target : -1;   // the letter held up at the board
+    this.tone = m === "listen" || m === "read" || m === "write" ? this.target : m === "reverse" ? (this.target + 2) % 3 : -1;
+    this.shown = m === "copy" ? this.target : m === "newletters" ? 3 + this.target : -1;   // the letter held up at the board
     if (this.lesson) {   // teach mode: the viewer's room and tone; the tone names the first object that matches it
       const L = this.lesson, near = () => this.objects.some(o => Math.hypot(o.pos[0] - this.pos[0], o.pos[1] - this.pos[1]) < 1);
       this.objects = L.objects.map(o => ({ pos: [...o.pos], color: o.letter >= 0 ? [1, 1, 1] : COLORS[o.color], letter: o.letter }));
@@ -528,6 +593,43 @@ export class World {
     return Math.min(tx, ty);
   }
 
+  // Turn, then walk d forward; objects are solid. Returns the distance moved, also added to dist.
+  advance(turn, d) {
+    this.heading += turn;
+    const old = [...this.pos];
+    this.pos[0] = clamp(this.pos[0] + d * Math.cos(this.heading), 0.3, ARENA - 0.3);
+    this.pos[1] = clamp(this.pos[1] + d * Math.sin(this.heading), 0.3, ARENA - 0.3);
+    for (const o of this.objects) {   // objects are solid
+      const dd = Math.hypot(this.pos[0] - o.pos[0], this.pos[1] - o.pos[1]);
+      if (dd < OBJ_R + 0.25) this.pos = old;
+    }
+    const moved = Math.hypot(this.pos[0] - old[0], this.pos[1] - old[1]);
+    this.dist += moved;
+    return moved;
+  }
+
+  // Jointed legs (#38, GAINS.joints): each hip has an angle in [-1, 1] (1 = forward) and an angular
+  // velocity. Action a < 2 applies a backward torque to hip a (push), 2-3 a forward one to hip a - 2
+  // (lift), -1 none. Damped dynamics, 10 substeps of 0.1: omega += dt (torque - damping omega). A
+  // hip swinging back has its foot on the ground and propels the body; one swinging forward is in
+  // the air. A full back stroke (sweep 2) of one leg moves and turns as one discrete push did (0.22,
+  // 0.3 rad); both legs sweeping together walk straight. A push from rest sweeps about 1.4 in its
+  // step and coasts about 0.6 into the next, so timing matters: lifting a leg at once wastes the
+  // coast. The senses get each hip as (angle + 1) / 2, so a discrete leg state reads the same.
+  limbs(a) {
+    const u = [0, 0], sweep = [0, 0], dt = 0.1;
+    if (a >= 0) u[a % 2] = a < 2 ? -GAINS.torque : GAINS.torque;
+    for (let k = 0; k < 10; k++) for (let i = 0; i < 2; i++) {
+      this.omega[i] += dt * (u[i] - GAINS.damping * this.omega[i]);
+      const th = clamp(this.hip[i] + dt * this.omega[i], -1, 1);
+      if (th === -1 || th === 1) this.omega[i] = 0;   // the joint's stop
+      if (th < this.hip[i]) sweep[i] += this.hip[i] - th;
+      this.hip[i] = th;
+    }
+    this.legs = this.hip.map(h => (h + 1) / 2);
+    return sweep[0] + sweep[1] > 0 ? this.advance(0.15 * (sweep[0] - sweep[1]), 0.11 * (sweep[0] + sweep[1])) : 0;
+  }
+
   step() {
     const b = this.brain, m = this.mode;
     // Once walking is learned the gait is automatic (a practised skill runs as a habit, as spinal
@@ -535,38 +637,33 @@ export class World {
     // and later stages only choose which leg to push, or to grasp. The habit comes from the
     // brain's development and the action set from the body's situation, not from the task (#61).
     const habit = this.stage > 0 || this.graduated;
-    if (habit) this.legs = [1, 1];
+    if (habit) { this.legs = [1, 1]; this.hip = [1, 1]; this.omega = [0, 0]; }   // jointed: the reflex brings both hips forward, at rest
     if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
     const set = this.board ? 2 : habit ? 1 : 0;
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
-    if (this.board) {   // write and copy: the pen
+    if (this.board) {   // write and copy (old or new letters): the pen
       this.pad.push(a - BODY.length);
       this.events.push({ type: "stroke", stroke: a - BODY.length });
       if (this.pad.length === 2) {
-        const want = LETTERS[this.target][1];
+        const want = LETTERS[this.shown >= 0 ? this.shown : this.target][1];
         success = this.pad.every(s => want.includes(s)) && this.pad[0] !== this.pad[1];
         r = success ? 1 : 0; done = true;
       }
+    } else if (GAINS.joints && a < 4) {   // jointed legs (#38): a push or a lift is a torque on one hip
+      if (m === "walk") r += 2 * this.limbs(a);
+      else this.limbs(a);
     } else if (a < 2) {   // push a leg: moves only if that leg was forward
       if (this.legs[a]) {
         this.legs[a] = 0;
-        this.heading += a === 0 ? 0.3 : -0.3;
-        const old = [...this.pos];
-        this.pos[0] = clamp(this.pos[0] + 0.22 * Math.cos(this.heading), 0.3, ARENA - 0.3);
-        this.pos[1] = clamp(this.pos[1] + 0.22 * Math.sin(this.heading), 0.3, ARENA - 0.3);
-        for (const o of this.objects) {   // objects are solid
-          const d = Math.hypot(this.pos[0] - o.pos[0], this.pos[1] - o.pos[1]);
-          if (d < OBJ_R + 0.25) this.pos = old;
-        }
-        const moved = Math.hypot(this.pos[0] - old[0], this.pos[1] - old[1]);
-        this.dist += moved;
+        const moved = this.advance(a === 0 ? 0.3 : -0.3, 0.22);
         if (m === "walk") r += 2 * moved;
       }
     } else if (a < 4) {
       this.legs[a - 2] = 1;
     } else {   // grasp: whatever is in reach and roughly ahead
+      if (GAINS.joints) this.limbs(-1);   // the legs still coast while the arm grasps
       let got = -1;
       this.objects.forEach((o, i) => {
         const dx = o.pos[0] - this.pos[0], dy = o.pos[1] - this.pos[1];
@@ -610,7 +707,7 @@ export class World {
       this.reset();
       return;
     }
-    this.brain.commit(this.z);
+    this.brain.commit(this.z, this.slot);
     this.episode++;
     const win = this.windows[this.playing];
     win.push(success ? 1 : 0);
@@ -693,7 +790,7 @@ export class World {
     return { version: 5, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
-        proto: arr(b.proto), uses: arr(b.uses),
+        proto: arr(b.proto), uses: arr(b.uses), fast: arr(b.fast), slow: arr(b.slow), active: b.active,
         syn: mapSyn(b.syn, toB64) },   // without it a loaded SI brain forgets faster than the one saved
       hippo: this.hippo.toJSON(this.memAt), meta: this.meta };
   }
@@ -740,6 +837,7 @@ export class World {
       b.gate = b.gate.concat(Array.from({ length: add * H }, () => spare() >= GAINS.gate ? 1 : 0));
       b.proto = b.proto.concat(Array(add * SCENE).fill(0));
       b.uses = b.uses.concat(Array(add).fill(0));
+      for (const k of ["fast", "slow"]) if (Array.isArray(b[k]) && b[k].length === n) b[k] = b[k].concat(Array(add).fill(0));
     }
     // growStages: one empty window per new stage; a graduated brain resumes at the first new one.
     const s = o.windows.length;
@@ -771,6 +869,10 @@ export class World {
     w.hippo = hippo;
     for (const k of KEYS) b[k].set(ob[k]);
     b.hh = ob.hh; b.syn = sy;
+    // Surprise per slot (#65): optional, so a save from before it loads with none tracked yet.
+    const track = k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(x => Number.isFinite(x) && x >= 0);
+    if (track("fast") && track("slow")) { b.fast.set(ob.fast); b.slow.set(ob.slow); }
+    b.active = Number.isInteger(ob.active) && ob.active >= -1 && ob.active < GAINS.slots ? ob.active : -1;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
     // meta is a plain record, never read back into the brain; a save from before it has unknown birth facts.

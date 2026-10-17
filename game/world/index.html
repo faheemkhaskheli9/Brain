@@ -58,6 +58,14 @@
   #intro p { font-family: Cambria, Georgia, serif; line-height: 1.6; margin: 0 0 10px; }
   #intro button { background: var(--violet); color: var(--glass); margin-top: 6px; }
   [title] { cursor: help; }
+  /* Milestone toasts (#34): a stage passed, and what the creature can now do */
+  #toasts { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+  .toast { margin: 0; padding: 10px 14px; background: var(--violet); color: var(--glass); max-width: 32rem;
+           box-shadow: 0 2px 10px rgba(42, 37, 80, .25); transition: opacity .6s; }
+  .toast strong { display: block; font-weight: 600; }
+  .toast span { font-family: Cambria, Georgia, serif; }
+  .toast.out { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
   .teach { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; margin: 12px 0 0;
            padding: 10px 12px; border-left: 4px solid var(--pink); background: #fff; }
   .teach[hidden] { display: none; }
@@ -85,6 +93,7 @@
       <div class="view">
         <canvas id="world" tabindex="0" aria-label="3D view of the creature's room. Drag to orbit, scroll to zoom."></canvas>
         <p id="banner" role="status"></p>
+        <div id="toasts" aria-live="polite"></div>
       </div>
       <p id="narrate"></p>
       <div class="controls">
@@ -125,7 +134,7 @@
     <aside>
       <section><h2 title="Five skills, one after another. A skill passes when its success rate over the last 50 tries reaches the pink mark.">What it is learning</h2><ol id="stages"></ol></section>
       <section>
-        <h2>What it senses and does</h2>
+        <h2 title="Its senses this step, as the brain receives them, and the action it chose. Nothing else reaches it: no map, no task label.">What it senses and does</h2>
         <div class="senses">
           <span title="15 rays fanned across its field of view. Each square is the colour it sees in that direction; brighter means nearer.">Retina</span><div id="retina"></div>
           <span title="A 5×5 patch at the centre of its gaze, sharp enough to make out the letter on a cube straight ahead. A letter it has just seen fades out slowly: a short memory of it. In the room, the narrow cone turns dark violet while a letter is in it.">Fovea</span><div id="fovea"></div>
@@ -174,11 +183,15 @@
 <script type="module">
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { World, STAGES, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph } from "./brain.js";
+import { World, STAGES, GAINS, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph } from "./brain.js";
 
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const C = { glass: css("--glass"), lilac: css("--lilac"), muted: css("--muted"), violet: css("--violet"), pink: css("--pink"), ink: css("--ink") };
+
+// Jointed legs (#38): ?legs=joints gives each hip an angle, a velocity and torque-driven dynamics.
+const JOINTS = new URLSearchParams(location.search).get("legs") === "joints";
+GAINS.joints = JOINTS;
 
 // ---------- simulation state ----------
 let world, speed = "watch", paused = false, sound = true, lastStep = 0, freezeUntil = 0, frozen = null;
@@ -186,7 +199,8 @@ let daTrace = [], curve = [], bucket = [], stageStarts = [0], stageDone = [];
 function newBrain(seed) {
   world = new World(seed);
   daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = []; $("skill").value = ""; $("teach").hidden = true; clearCheckpoints();
-  $("banner").textContent = "A new brain. It starts by flailing its legs at random.";
+  $("banner").textContent = "A new brain. It starts by flailing its legs at random."
+    + (JOINTS ? " Its legs are jointed here: each push or lift is a torque on a hip, and a leg keeps swinging a little after it." : "");
   buildStages();
 }
 
@@ -410,17 +424,38 @@ function download(data, name) {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
+// Milestone toasts (#34): when a stage passes, say what the creature can now do that it could not.
+const CAN = {
+  walk: "It can now walk: push a leg, lift it, alternate. From here the gait runs by itself.",
+  grasp: "It can now find food and grasp it: walk up to the object and close the arm.",
+  listen: "It can now follow a tone: low means red, middle green, high blue, and it fetches that one.",
+  read: "It can now read: every cube is white, so it tells T, L and X apart by their shape alone.",
+  write: "It can now write: it hears a tone and draws that letter with two pen strokes.",
+  copy: "It can now copy: it draws the letter it sees.",
+};
+function toast(title, text) {
+  const el = document.createElement("p"), box = $("toasts");
+  el.className = "toast";
+  el.append(Object.assign(document.createElement("strong"), { textContent: title }), Object.assign(document.createElement("span"), { textContent: text }));
+  box.append(el);
+  while (box.children.length > 3) box.firstChild.remove();
+  setTimeout(() => el.classList.add("out"), 7000);
+  setTimeout(() => el.remove(), 7700);
+}
 function drainEvents() {
   for (const e of world.events) {
     if (e.type === "tone") playTone(e.tone);
     if (e.type === "stage") {
-      const next = STAGES[e.from + 1];
-      $("banner").textContent = `It learned "${STAGES[e.from].name.toLowerCase()}" in ${stageDone[e.from]} episodes. Next: ${next.name.toLowerCase()}. ${next.about}`;
+      const next = STAGES[e.from + 1], done = STAGES[e.from];
+      $("banner").textContent = `It learned "${done.name.toLowerCase()}" in ${stageDone[e.from]} episodes. Next: ${next.name.toLowerCase()}. ${next.about}`;
+      toast(`Skill ${e.from + 1} of ${STAGES.length} learned: ${done.name.toLowerCase()}`, CAN[done.key] || "");
     }
     if (e.type === "graduated") {
       const last = STAGES.length - 1;
       stageDone[last] = e.episodes - stageStarts[last];   // the event's count: fast-forward may have run on since
       $("banner").textContent = `All five skills learned in ${e.episodes} episodes. Now it practises grasp, listen, read and write in turn, still learning, so you can watch each one.`;
+      toast(`Skill ${STAGES.length} of ${STAGES.length} learned: ${STAGES[last].name.toLowerCase()}`, CAN[STAGES[last].key] || "");
+      toast("Graduated", `All ${STAGES.length} skills, from dopamine alone, in ${e.episodes} episodes. Try "Use: any scene" or "Teach".`);
     }
   }
   world.events.length = 0;
@@ -439,7 +474,7 @@ function sync3D(now) {
   } else {
     creature.position.set(v.pos[0], 0, v.pos[1]); creature.rotation.y = -v.heading;
   }
-  v.legs.forEach((f, i) => { legAngle[i] += ((f ? 0.5 : -0.5) - legAngle[i]) * 0.35; legs[i].rotation.z = legAngle[i]; });
+  v.legs.forEach((f, i) => { legAngle[i] += (f - 0.5 - legAngle[i]) * 0.35; legs[i].rotation.z = legAngle[i]; });   // f: 0 = back, 1 = forward (jointed: in between)
   if (v === frozen && frozen.action === 4) armT = armT < 0 ? now : armT; else if (now >= freezeUntil) armT = -1;
   if (v === frozen && frozen.action === 4) {
     const t = Math.min(1, (now - armT) / 250);
