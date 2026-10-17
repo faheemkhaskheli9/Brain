@@ -31,6 +31,37 @@ a draft is in [CONTRIBUTING.md](CONTRIBUTING.md).
 `pip install .` installs the one dependency (numpy, Python 3.10+). `ruff check .`
 lints; CI runs it with the index, code-block and game checks.
 
+## Brain World: the app
+
+![Brain World after a few minutes of fast-forward: walk and grasp learned, listen in progress](docs/screenshots/brain-world.png)
+
+A 3D creature with eyes, ears, legs, an arm and a pen. Nothing is scripted: it gets only a
+dopamine signal (reward prediction error) and learns walk, grasp, listen, read and write from
+it. The panels show what it senses, which skill it is on, and the dopamine trace.
+
+```bash
+python -m http.server 8000      # from the repo root, then open http://localhost:8000/game/world/
+```
+
+**Where to use it**
+- Reading `function/` or `learning/` (dopamine, eligibility traces, replay, working memory):
+  open it next to the topic and watch that mechanism act in one learner.
+- Teaching or a demo: press **Fast forward**, then **Watch**; the caption says in plain words
+  what it is doing and why dopamine rose or dipped. **Teach** mode lets the audience drop
+  food and play tones.
+- Testing an idea: change one gain in `game/world/brain.js`, run
+  `node game/world/sweep.mjs` over seeds, and compare episodes-to-learn.
+
+**Why it exists**
+- Topics describe mechanisms one at a time; this shows them working together, including
+  how they fail (forgetting, slow stages) as well as how they succeed.
+- It runs in any browser with no install and no backprop, so the claim "it learns from
+  dopamine alone" can be checked by anyone, headless in CI as well (`test_brain.mjs`).
+
+Brain Lab (`python game/play.py`, or `game/web/` in a browser) is the companion game: eleven
+levels where you operate one mechanism at a time. Both are described in
+[game/README.md](game/README.md).
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is
