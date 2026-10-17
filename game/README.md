@@ -4,6 +4,8 @@ A desktop game in Python where you learn how the brain works by operating workin
 models of it. Each level is one idea from this knowledge base. You win a level by
 making the simulated brain do something, not by answering a quiz.
 
+Illustrated guide to every level and to Brain World: [docs/app-guide.md](../docs/app-guide.md).
+
 ## Run
 
 ```

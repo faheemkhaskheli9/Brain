@@ -6,6 +6,8 @@ scripted. It gets a dopamine signal (a reward prediction error), and its synapse
 eligibility trace meets that signal. Brain Lab (`game/play.py`) has you operate one mechanism at a time.
 Here you watch the mechanisms work together in one learner.
 
+A user guide with a screenshot of every feature is in [docs/app-guide.md](../../docs/app-guide.md).
+
 ## Run
 
 ```
