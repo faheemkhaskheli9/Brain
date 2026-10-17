@@ -138,7 +138,8 @@ def fetch(cache):
 def features(spikes, labels, units, code):
     """Trials x features matrix for a subset of units (indices into the session's unit list)."""
     n, k = len(labels), len(units)
-    pos = np.full(spikes[:, 1].max(initial=0) + 1 if len(spikes) else 1, -1)
+    top = max(spikes[:, 1].max(initial=0) if len(spikes) else 0, max(units, default=0))
+    pos = np.full(top + 1, -1)  # silent selected units get all-zero features
     pos[units] = np.arange(k)
     s = spikes[(spikes[:, 1] < len(pos))]
     s = s[pos[s[:, 1]] >= 0]
@@ -232,7 +233,9 @@ def summarise(rows, boot=BOOT, seed=0):
             print(line)
         h = [a for a in HIERARCHY if (stim, a) in out]
         if len(h) >= 4:
-            rank = lambda v: np.argsort(np.argsort(v))
+            def rank(v):  # average ranks for ties, as Spearman requires
+                v = np.asarray(v)
+                return np.array([(v < x).sum() + ((v == x).sum() + 1) / 2 for x in v])
             g = np.array([out[(stim, a)]["bins10"][0] for a in h])
             rho = np.corrcoef(rank(np.arange(len(h))), rank(g))[0, 1]
             print(f"Spearman rho, bins10 gain vs hierarchy rank ({len(h)} areas): {rho:+.2f}")

@@ -10,7 +10,7 @@ dependencies = ["numpy"]
 
 [project.optional-dependencies]
 # research/credit_assignment.py loads sklearn's bundled 8x8 digits: pip install ".[research]"
-research = ["scikit-learn"]
+research = ["scikit-learn", "scipy"]
 
 # Not a library: `pip install .` only pulls the dependencies.
 [tool.setuptools]
