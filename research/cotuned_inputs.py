@@ -225,6 +225,18 @@ def prep(d):
     return d["post"]
 
 
+def pvalues(t, ts, null):
+    """One- and two-sided p for T and one-sided p for same-segment T. A statistic whose observed
+    subset is empty (NaN) is undefined, not significant; shuffles with an empty subset are dropped."""
+    def one(obs, col):
+        v = col[np.isfinite(col)]
+        return np.nan if not np.isfinite(obs) or not len(v) else (1 + (v >= obs).sum()) / (1 + len(v))
+    v = null[:, 0][np.isfinite(null[:, 0])]
+    p2 = np.nan if not np.isfinite(t) or not len(v) else \
+        (1 + (np.abs(v - v.mean()) >= abs(t - v.mean())).sum()) / (1 + len(v))
+    return one(t, null[:, 0]), p2, one(ts, null[:, 1])
+
+
 def analyse(d, shuffles=SHUFFLES, seed=0, label=""):
     """Print the pre-registered table; return {measure: (T, p_one_sided)}."""
     post = prep(d)
@@ -243,9 +255,7 @@ def analyse(d, shuffles=SHUFFLES, seed=0, label=""):
         x = sim[a[ok], b[ok]]
         t, ts = stats(d, sim, d["pre"])
         null = np.array([stats(d, sim, d["pre"], rng) for _ in range(shuffles)])
-        p1 = (1 + (null[:, 0] >= t).sum()) / (1 + shuffles)
-        p2 = (1 + (np.abs(null[:, 0] - null[:, 0].mean()) >= abs(t - null[:, 0].mean())).sum()) / (1 + shuffles)
-        ps = (1 + (null[:, 1] >= ts).sum()) / (1 + shuffles)
+        p1, p2, ps = pvalues(t, ts, null)
         res[str(name)] = (t, p1)
         print(f"{str(name):18s} {x.mean():7.3f} {x[near].mean() if near.any() else np.nan:7.3f} {t:+7.3f} {p1:7.3f}"
               f" {p2:6.3f} | {ts:+10.3f} {ps:7.3f}")

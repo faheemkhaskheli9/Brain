@@ -51,7 +51,7 @@ import warnings
 from pathlib import Path
 
 import numpy as np
-from scipy import optimize, special, stats
+from scipy import integrate, optimize, special, stats
 
 HERE = Path(__file__).parent
 CACHE = HERE / "data" / "delayed_estimation"
@@ -133,7 +133,7 @@ def tcc_probs(dprime, s):
     logcdf = special.log_ndtr(z - mu[None, :])                       # (Z, M)
     tot = logcdf.sum(1, keepdims=True)
     logpdf = -0.5 * (z - mu[None, :]) ** 2 - 0.5 * LOG2PI
-    p = np.trapezoid(np.exp(logpdf + tot - logcdf), dx=DZ, axis=0)
+    p = integrate.trapezoid(np.exp(logpdf + tot - logcdf), dx=DZ, axis=0)
     p = np.maximum(p, 1e-300)
     return p / p.sum()
 
@@ -305,12 +305,15 @@ def load(name):
 def signflip(d, n=100000, seed=0):
     """Two-sided sign-flip permutation p for mean(d) = 0 (exact when 2^len(d) <= n)."""
     d = np.asarray(d, float)
-    if 2 ** len(d) <= n:
+    exact = 2 ** len(d) <= n
+    if exact:
         signs = np.array(np.meshgrid(*[[-1, 1]] * len(d))).reshape(len(d), -1).T
     else:
         signs = np.random.default_rng(seed).choice([-1, 1], size=(n, len(d)))
     null = np.abs((signs * d).mean(1))
-    return (np.sum(null >= abs(d.mean()) - 1e-12) + 1) / (len(null) + 1)
+    hits = np.sum(null >= abs(d.mean()) - 1e-12)
+    # The observed assignment is in the enumeration, so the exact p needs no add-one correction.
+    return hits / len(null) if exact else (hits + 1) / (len(null) + 1)
 
 
 def analyse(name, quick=False):
