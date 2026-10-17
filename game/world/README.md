@@ -29,7 +29,9 @@ Then **Watch** shows it practising each skill, with the tones played aloud. **Sa
 downloads its weights and progress as JSON, and **Load brain** picks up from such a file, so a
 graduated creature does not need training again. A loaded brain restarts the episode it was saved in.
 Each save carries a `meta` model card (#55): seed, creation time and `GAINS` from birth, plus one
-row per save with the perform-mode score of every learned skill. When a skill passes, the
+row per save with the perform-mode score of every learned skill. It also records the episode at
+which each skill passed (`passedAt`, #98), so "What it is learning" can say how many episodes each
+took even for a save made without the page; an older save shows "Learned" alone. When a skill passes, the
 **Checkpoints** list next to Save offers that moment's brain for download.
 
 A first visit opens a three-line intro (reopen it with **What is this?**). A caption under the room

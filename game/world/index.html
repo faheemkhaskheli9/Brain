@@ -183,7 +183,7 @@
 <script type="module">
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { World, STAGES, GAINS, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph } from "./brain.js";
+import { World, STAGES, GAINS, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph, stageHistory, learnedText } from "./brain.js";
 
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -325,7 +325,7 @@ function updatePanel() {
     const rate = done && !world.windows[i].length ? 1 : i <= world.stage ? world.successRate(i) : 0;
     li.querySelector(".bar i").style.width = `${rate * 100}%`;
     li.querySelector(".meta").textContent = done
-      ? `Learned in ${stageDone[i]} episodes` + (world.windows[i].length && i > 0 ? ` · lately ${pct}%` : "")
+      ? learnedText(stageDone[i]) + (world.windows[i].length && i > 0 ? ` · lately ${pct}%` : "")
       : i === world.stage ? `Episode ${world.episode - stageStarts[i] + 1} · success ${pct}% (pass ${STAGES[i].pass * 100}%)` : "";
   });
   const p = world.playing;
@@ -402,7 +402,10 @@ function doStep() {
       freezeUntil = performance.now() + (snap.mode === "walk" ? 300 : 900);
     }
   }
-  if (world.stage !== stage) { stageDone[stage] = world.episode - stageStarts[stage]; stageStarts[world.stage] = world.episode; marks.push(curve.length); }
+  if (world.stage !== stage) {   // the pass episode, not this frame's: fast-forward may have run on since
+    const at = world.passedAt[stage] ?? world.episode;
+    stageDone[stage] = at - stageStarts[stage]; stageStarts[world.stage] = at; marks.push(curve.length);
+  }
   if (world.stage !== stage || world.graduated !== grad) checkpoint(STAGES[stage]);
 }
 let marks = [];
@@ -447,7 +450,7 @@ function drainEvents() {
     if (e.type === "tone") playTone(e.tone);
     if (e.type === "stage") {
       const next = STAGES[e.from + 1], done = STAGES[e.from];
-      $("banner").textContent = `It learned "${done.name.toLowerCase()}" in ${stageDone[e.from]} episodes. Next: ${next.name.toLowerCase()}. ${next.about}`;
+      $("banner").textContent = `It learned "${done.name.toLowerCase()}"${Number.isFinite(stageDone[e.from]) ? ` in ${stageDone[e.from]} episodes` : ""}. Next: ${next.name.toLowerCase()}. ${next.about}`;
       toast(`Skill ${e.from + 1} of ${STAGES.length} learned: ${done.name.toLowerCase()}`, CAN[done.key] || "");
     }
     if (e.type === "graduated") {
@@ -576,9 +579,9 @@ $("loadFile").onchange = async e => {
     world = next; frozen = null; freezeUntil = 0; buildStages(); $("skill").value = ""; $("teach").hidden = true; clearCheckpoints();
     const list = v => Array.isArray(v) ? v.filter(Number.isFinite) : [];
     daTrace = list(p.daTrace); curve = list(p.curve); bucket = list(p.bucket); marks = list(p.marks);
-    stageStarts = list(p.stageStarts); stageDone = Array.isArray(p.stageDone) ? p.stageDone.map(x => x == null ? undefined : Number(x)) : [];
-    if (!stageStarts.length) stageStarts = [0];
-    stageStarts[world.stage] ??= world.episode;   // a save without page state: count from the load
+    // Episodes per learned skill: from the page state, else the world's pass episodes; an old save
+    // (fixtures/v3-seed1.json) has neither and shows "Learned" without a count (#98).
+    ({ done: stageDone, starts: stageStarts } = stageHistory(world, p));
     $("banner").textContent = `Loaded a brain at episode ${world.episode}: ${world.graduated ? "graduated, practising every skill" : `learning "${STAGES[world.stage].name.toLowerCase()}"`}.`;
   } catch (err) {
     $("banner").textContent = `Could not load that file: ${err.message}`;

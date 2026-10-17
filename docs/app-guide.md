@@ -315,9 +315,10 @@ so there is no picture here.
   offline, the 3D view and the simulation do not start. Serve the page over HTTP, not `file://`.
 - **No sound.** Sound plays only in Watch mode, and browsers only allow audio after you have clicked
   the page once.
-- **Loading the fixture shows "Learned in undefined episodes".** `fixtures/v3-seed1.json` was saved
-  before saves carried the page's charts, so the panel has no per-skill episode counts and the
-  success curve starts empty. A brain saved from the current page loads with its counts and curve.
+- **A loaded brain shows "Learned" with no episode count.** `fixtures/v3-seed1.json` was saved
+  before saves recorded when each skill passed, so the panel cannot say how many episodes each one
+  took, and the success curve starts empty. A brain saved from the current page loads with its
+  counts and curve; a save without the page's charts (one from `sweep.mjs`) still has its counts.
 - **Saving uses downloads.** Save and Checkpoints trigger a file download; a browser that blocks
   downloads will block them too. A graduated brain's file is under 1 MB.
 - **It does not always graduate.** Learning is random per brain; some brains stall on listen or

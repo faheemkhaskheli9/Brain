@@ -482,6 +482,7 @@ export class World {
     this.hippo = new Hippocampus();
     this.stage = 0; this.playing = 0; this.episode = 0; this.log = []; this.graduated = false;
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
+    this.passedAt = [];   // the episode count at which each stage passed (#98); a hole where unknown
     this.events = [];   // for the UI: {type: "tone"|"grasp"|"stroke"|"stage"|"graduated", ...}
     this.task = -1; this.perf = { n: 0, ok: 0, scene: {} };   // perform mode: the locked skill (STAGES.length = any), and its score
     // A small model card that travels with the save (#55, Mitchell et al. 2019): birth facts once,
@@ -715,7 +716,7 @@ export class World {
     this.log.push({ stage: this.playing, success, steps: this.t, ret: this.ret });
     const rate = this.successRate();
     if (!this.graduated && this.playing === this.stage && win.length === 50 && rate >= STAGES[this.stage].pass) {
-      this.passedRate = rate;
+      this.passedRate = rate; this.passedAt[this.stage] = this.episode;
       this.brain.consolidate();
       if (this.stage < STAGES.length - 1) {
         this.events.push({ type: "stage", from: this.stage, episodes: this.episode, rate });
@@ -789,6 +790,7 @@ export class World {
     // A save made while performing resumes training on its own stage.
     return { version: 5, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
+      passedAt: Array.from(this.passedAt, x => x ?? null),
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
         proto: arr(b.proto), uses: arr(b.uses), fast: arr(b.fast), slow: arr(b.slow), active: b.active,
         syn: mapSyn(b.syn, toB64) },   // without it a loaded SI brain forgets faster than the one saved
@@ -875,6 +877,9 @@ export class World {
     b.active = Number.isInteger(ob.active) && ob.active >= -1 && ob.active < GAINS.slots ? ob.active : -1;
     Object.assign(w, { stage: o.stage, playing: o.playing, episode: o.episode | 0, graduated: !!o.graduated,
       passedRate: o.passedRate, windows: o.windows.map(win => win.slice(-50).map(x => x ? 1 : 0)), events: [] });
+    // Pass episodes (#98): optional, so a save from before them loads with none known. Read leniently,
+    // like meta: a bad entry is dropped, never a reason to reject the brain.
+    w.passedAt = Array.isArray(o.passedAt) ? o.passedAt.slice(0, STAGES.length).map(x => Number.isInteger(x) && x >= 0 ? x : undefined) : [];
     // meta is a plain record, never read back into the brain; a save from before it has unknown birth facts.
     const m = o.meta && typeof o.meta === "object" && !Array.isArray(o.meta) ? o.meta : { seed: null, created: null, gains: null };
     w.meta = { ...m, saves: Array.isArray(m.saves) ? [...m.saves] : [] };   // a copy: saving must not change o
@@ -888,6 +893,29 @@ export class World {
     return w.length ? w.reduce((p, q) => p + q, 0) / w.length : 0;
   }
 }
+
+// How many episodes each learned stage took, for the page's curriculum panel (#98). A count comes
+// from the page's own stageDone, else the world's pass episodes (passedAt). A save from before both
+// (fixtures/v3-seed1.json) has none, and its count stays undefined. Two other sources look usable
+// but are not: meta rows say when a save was made, not when a skill passed, and the page always
+// saved stageStarts with stageDone, so where stageDone lacks a count the next stage's start is the
+// episode the brain was loaded at. starts[i] is where stage i's episode counter begins.
+export function stageHistory(w, page = {}) {
+  const nums = v => Array.isArray(v) ? Array.from(v, x => Number.isFinite(x) && x >= 0 ? x : undefined) : [];
+  const done = nums(page && page.stageDone), starts = nums(page && page.stageStarts), at = w.passedAt || [];
+  const diff = (a, b) => a !== undefined && b !== undefined && a >= b ? a - b : undefined;
+  const begin = i => i === 0 ? 0 : at[i - 1];
+  for (let i = 0; i < STAGES.length; i++) {
+    if (i < w.stage || w.graduated) done[i] ??= diff(at[i], begin(i));
+    else done[i] = undefined;
+    if (i <= w.stage) starts[i] ??= begin(i) ?? (i === w.stage ? w.episode : undefined);
+  }
+  const fit = v => Array.from({ length: STAGES.length }, (_, i) => v[i]);
+  return { done: fit(done), starts: fit(starts) };
+}
+
+// The panel line for a learned stage: no number when none could be recovered, never "undefined".
+export const learnedText = n => Number.isFinite(n) ? `Learned in ${n} episodes` : "Learned";
 
 function rayCircle(p, dx, dy, c, r) {
   const fx = p[0] - c[0], fy = p[1] - c[1];

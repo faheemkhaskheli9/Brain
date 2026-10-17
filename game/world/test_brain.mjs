@@ -3,7 +3,7 @@
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW_LETTERS, LETTERS, BODY, rng, orient, glyph } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW_LETTERS, LETTERS, BODY, rng, orient, glyph, stageHistory, learnedText } from "./brain.js";
 import { transfer } from "./transfer.mjs";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
@@ -27,14 +27,17 @@ const KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };
 const seeds = process.argv.slice(2).map(Number);
 for (const seed of seeds.length ? seeds : [1]) {
   console.log(`seed ${seed}`);
-  const w = new World(seed);
+  const w = new World(seed), took = [];
   for (let s = 0; s < STAGES.length; s++) {
     const start = w.episode;
     while (w.stage === s && !w.graduated && w.episode - start < LIMIT) w.step();
     const passed = w.stage > s || w.graduated;
     console.log(`  ${STAGES[s].name}: ${passed ? "learned" : "NOT learned"} after ${w.episode - start} episodes`);
     assert.ok(passed, `seed ${seed}: ${STAGES[s].key} not learned within ${LIMIT} episodes`);
+    took.push(w.episode - start);
   }
+  // Episodes per skill (#98): a save without the page's charts (sweep.mjs, perform.mjs) still has them.
+  assert.deepEqual(stageHistory(World.fromJSON(JSON.parse(JSON.stringify(w)))).done, took, `seed ${seed}: passedAt lost a count`);
 
   // Graduated: it now cycles grasp, listen, read and write (walking is an automatic habit by then).
   // Every live encode must get the slot infer just returned (the brain is never handed the task).
@@ -183,6 +186,25 @@ for (const o of [v3, save8]) {
 }
 STAGES.pop();
 console.log("  Migration: v3 loads, 8 slots load at 12 unchanged, a sixth stage resumes there");
+
+// Episodes per learned skill (#98). The v3 fixture has no page state, meta or pass episodes: every
+// skill shows as "Learned", never "Learned in undefined episodes".
+const h3 = stageHistory(g3, v3.page);
+assert.ok(g3.graduated && h3.done.length === STAGES.length && h3.done.every(n => n === undefined), "v3 save: a count from nowhere");
+assert.deepEqual(h3.done.map(learnedText), STAGES.map(() => "Learned"));
+assert.ok(h3.starts.every(n => n === undefined || Number.isFinite(n)), "v3 save: a bad start");
+// A current save, with or without page state, and one from before passedAt (page state only).
+const hw = new World(1);
+Object.assign(hw, { stage: 3, episode: 900, passedAt: [100, 400, 700] });
+const hs = JSON.parse(JSON.stringify(hw));
+assert.deepEqual(World.fromJSON(hs).passedAt, [100, 400, 700]);
+assert.deepEqual(stageHistory(World.fromJSON(hs)), { done: [100, 300, 300, undefined, undefined], starts: [0, 100, 400, 700, undefined] });
+assert.deepEqual(stageHistory(World.fromJSON(hs), { stageDone: [90, 310, 300], stageStarts: [0, 90, 400, 702] }).done.slice(0, 3), [90, 310, 300], "page counts first");
+assert.deepEqual(stageHistory(World.fromJSON({ ...hs, passedAt: undefined }), { stageDone: [90, null], stageStarts: [0, 90, null, 702] }),
+  { done: [90, undefined, undefined, undefined, undefined], starts: [0, 90, undefined, 702, undefined] }, "page state, holes kept");
+assert.deepEqual(World.fromJSON({ ...hs, passedAt: [100, "x", -1, 5, 6, 7, 8] }).passedAt, [100, undefined, undefined, 5, 6], "bad passedAt entries dropped");
+assert.ok(stageHistory(World.fromJSON({ ...hs, passedAt: undefined })).done.slice(0, 3).map(learnedText).every(t => t === "Learned"));
+console.log(`  Episodes per skill: v3 save reads "${learnedText(h3.done[0])}", current saves keep their counts`);
 
 // The model card (#55): birth facts survive load and re-save, and each save adds one scored row.
 assert.equal(g3.meta.seed, null, "a save from before meta has an unknown seed");
