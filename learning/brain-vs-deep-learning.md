@@ -95,6 +95,15 @@ are what is missing: CLS memory, replay and sleep, intrinsic motivation, world
 models, embodiment, sparse activity. Swap in local learning rules where hardware
 or continual learning demands it. See [[build-a-brain-like-learner]].
 
+## Open questions
+- Which credit-assignment scheme, if any, cortex uses; none of the candidates above has
+  been confirmed in a living brain.
+- Whether local rules can reach backprop's accuracy at scale, or whether something the
+  brain adds (dendrites, neuromodulators, architecture, innate priors) closes the gap.
+- How much of the brain's sample efficiency comes from its learning rules and how much
+  from evolution's priors and from interacting with the world.
+- Which of the frontier items above matter most for general intelligence.
+
 ## Related
 - [[learning-and-plasticity]] - the biological rules.
 - [[brain-inspired-learning-algorithms]] - runnable versions.

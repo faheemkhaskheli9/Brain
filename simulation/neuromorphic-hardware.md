@@ -65,6 +65,15 @@ low latency and power for robotics and edge vision.
   research programs (e.g. Intel's Neuromorphic Research Community).
 - Product and access details change quickly. Check vendor pages before deciding.
 
+## Open questions
+- Which workloads give neuromorphic chips a clear energy advantage over an optimised
+  GPU or edge accelerator in fair, end-to-end comparisons.
+- Whether on-chip local learning can match the accuracy of offline training, so chips
+  can learn continually on the device.
+- How to program and train these systems without one vendor's toolchain: a common
+  model format and simulator-to-chip path are still immature.
+- Whether analog and memristive devices can be made reliable enough at scale.
+
 ## Related
 - [[neural-coding-and-computation]] - why sparse events save energy.
 - [[spiking-neural-networks]] - the models these chips run.

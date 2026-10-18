@@ -212,7 +212,7 @@ def sleep_day(net, task_a, task_b, replay, epochs=10):
 class Tracker:
     def __init__(self, gain):
         self.a = gain
-        self.b = gain * gain / (2 - gain)   # matched velocity gain (critically damped alpha-beta)
+        self.b = gain * gain / (2 - gain)   # velocity gain from the gain: the Benedict-Bordner alpha-beta relation
         self.pos, self.vel = 0.5, 0.0
 
     def step(self, obs, dt):

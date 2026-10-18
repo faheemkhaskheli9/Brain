@@ -143,6 +143,23 @@ lif = snn.Leaky(beta=0.9, spike_grad=surrogate.fast_sigmoid())  # drop-in PyTorc
 - **Energy claims** only hold on neuromorphic hardware. On a GPU, an SNN is
   usually *slower* than the equivalent ANN.
 
+## Relevance to building brain-like AI
+- SNNs are the only models here that carry spike timing, so they are where STDP,
+  three-factor rules and temporal codes can be tested ([[learning-and-plasticity]]).
+- Sparse, event-driven spiking is what neuromorphic chips need for their energy savings
+  ([[neuromorphic-hardware]]); a dense ANN does not map onto them well.
+- Today the best SNN accuracy comes from surrogate-gradient backprop through time,
+  which is not biologically plausible. A brain-like learner needs a local rule that
+  comes close (stage 2 of [[build-a-brain-like-learner]]).
+
+## Open questions
+- Whether spike timing adds computational power that rate-based networks lack on
+  real tasks, or mainly saves energy.
+- Whether local rules (STDP, three-factor, e-prop) can train deep SNNs to the accuracy
+  of surrogate gradients.
+- Which level of neuron detail (LIF, adaptive LIF, Izhikevich, multi-compartment) a
+  task needs; see [[levels-of-brain-modeling]].
+
 ## Related
 - [[levels-of-brain-modeling]] - where LIF and Izhikevich sit on the ladder.
 - [[learning-and-plasticity]] - the biology behind STDP and three-factor rules.
@@ -156,4 +173,5 @@ lif = snn.Leaky(beta=0.9, spike_grad=surrogate.fast_sigmoid())  # drop-in PyTorc
 - Eshraghian et al. (2023) "Training Spiking Neural Networks Using Lessons From Deep Learning", *Proc IEEE* 111:1016. doi:10.1109/JPROC.2023.3308088
 - Stimberg, Brette & Goodman (2019) "Brian 2, an intuitive and efficient neural simulator", *eLife* 8:e47314. doi:10.7554/eLife.47314
 - Diehl & Cook (2015) "Unsupervised learning of digit recognition using spike-timing-dependent plasticity", *Front Comput Neurosci* 9:99.
+- Bellec et al. (2020) "A solution to the learning dilemma for recurrent networks of spiking neurons", *Nat Commun* 11:3625. doi:10.1038/s41467-020-17236-y (e-prop)
 - Gerstner et al. (2014) *Neuronal Dynamics*: https://neuronaldynamics.epfl.ch/

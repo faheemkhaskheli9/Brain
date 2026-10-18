@@ -34,7 +34,9 @@ to extend.
 | Pattern completion | Hopfield network | [[memory-systems]] |
 | Curiosity / novelty (dopamine, ACh) | Prediction-error intrinsic reward | 6 |
 
-## 1. Hebbian learning with Oja's rule
+## How it works
+
+### 1. Hebbian learning with Oja's rule
 Pure Hebb (`Δw = ηxy`) explodes. Oja's decay term keeps `|w| = 1` and makes the
 neuron extract the input's first principal component, all with local information.
 
@@ -53,7 +55,7 @@ print(f"|cos(w, PC1)| = {abs(w @ pc1) / np.linalg.norm(w):.3f}, |w| = {np.linalg
 # |cos(w, PC1)| = 1.000, |w| = 1.00
 ```
 
-## 2. Predictive coding network (learns XOR with local updates)
+### 2. Predictive coding network (learns XOR with local updates)
 Hidden units first **relax** to reduce prediction errors (inference). Then each
 weight changes by *its own layer's error × its own presynaptic activity*. There is
 no backward pass of gradients through the network, yet it solves XOR, a
@@ -104,7 +106,7 @@ and 1.000 at 100x. A computational replication, not evidence that cortex does th
 Feedback alignment and its direct variant were measured in the same script: see
 *Choosing / trade-offs*.
 
-## 3. Three-factor learning: dopamine as reward prediction error
+### 3. Three-factor learning: dopamine as reward prediction error
 A Hebbian eligibility term (which action fired versus what was expected) is
 gated by a global prediction error `δ = r − V(s)`, the signal dopamine neurons
 carry (Schultz, Dayan & Montague 1997). This is actor-critic RL written as a
@@ -132,7 +134,7 @@ print(f"accuracy {(W_pi.argmax(0) == correct).mean():.0%}")   # accuracy 100%
 For delayed rewards, let `elig` decay over time (`elig = λ·elig + new`) instead of
 using it immediately, the way eligibility traces at real synapses last about a second.
 
-## 4. Synaptic consolidation: Elastic Weight Consolidation (EWC)
+### 4. Synaptic consolidation: Elastic Weight Consolidation (EWC)
 Brain: synapses that matter for old memories become less plastic.
 Algorithm (Kirkpatrick et al. 2017): after task A, estimate each weight's
 importance with the diagonal Fisher information `F_i`, then train task B with
@@ -159,7 +161,7 @@ help:
   `1e-4` left the later stages able to learn. The tuning that works for
   supervised tasks does not carry over.
 
-## 5. Hippocampal replay
+### 5. Hippocampal replay
 Brain: the hippocampus replays recent experience during sleep and interleaves it
 with old knowledge ([[memory-systems]]).
 Algorithms:
@@ -172,14 +174,15 @@ Algorithms:
 - **Sleep phases**: alternate an online "wake" phase (learn new data fast, store
   episodes) with an offline "sleep" phase (replay + consolidate into slow weights).
 
-## 6. Curiosity and intrinsic motivation
+### 6. Curiosity and intrinsic motivation
 Brain: novelty and surprise drive dopamine and acetylcholine; infants explore to
 learn. Algorithm: intrinsic reward = the prediction error of a learned forward
 model (ICM, Pathak et al. 2017), or the disagreement of an ensemble, or
 information gain (active inference, [[predictive-processing]]). The agent seeks
 experiences it can *learn from*, not just ones that are rewarded.
 
-## Choosing / trade-offs
+## Relevance to building brain-like AI
+Choosing between these rules:
 - **Accuracy today**: backprop leads on hard benchmarks. Feedback alignment and
   target propagation fell well behind it on ImageNet (Bartunov et al. 2018), and
   pure Hebbian/STDP rules trail further. The order among the other local rules is
@@ -192,6 +195,14 @@ experiences it can *learn from*, not just ones that are rewarded.
 - **Continual learning**: replay is the strongest simple method. EWC helps when you
   cannot store data. Combining both (with a CLS-style fast memory) works best.
 
+## Open questions
+- Which of these local rules, or which combination, the cortex actually uses.
+- Whether any local rule can match backprop on hard benchmarks at scale.
+- How replay should choose what to replay, and how it should be scheduled against new
+  learning (see [[sleep-and-memory-consolidation]]).
+- How to combine several rules in one system without them interfering
+  ([[build-a-brain-like-learner]]).
+
 ## Related
 - [[learning-and-plasticity]] - the biology behind each rule.
 - [[brain-vs-deep-learning]] - where these rules stand against backprop.
@@ -199,6 +210,7 @@ experiences it can *learn from*, not just ones that are rewarded.
 - [[build-a-brain-like-learner]] - how to combine them into one system.
 - [[sleep-and-memory-consolidation]] - the biology behind replay and offline "sleep" phases.
 - [[dendritic-computation]] - dendritic error signals as a route to local credit assignment.
+- [[hyperdimensional-computing]] - binding and bundling fixed random vectors: structured records with no gradient learning.
 - [Brain Lab](../game/README.md) - level 9, *Find the pattern*: Hebb against Oja's rule on 2-D inputs.
 
 ## References
