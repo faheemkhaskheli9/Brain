@@ -22,8 +22,9 @@ status change as a pull request and list what you checked.
 ```
 pip install . ruff
 ruff check .
-python build_index.py          # regenerates INDEX.md, fails on a broken [[link]]
-python run_code_blocks.py      # runs every python block in the topics
+python build_index.py          # regenerates INDEX.md, fails on bad frontmatter or a broken link
+python run_code_blocks.py      # runs every python block in the topics (or name the files)
+python test_build_index.py     # if you touched build_index.py or run_code_blocks.py
 python game/test_sim.py        # if you touched game/
 python game/eval.py            # if you touched a model in game/sim.py
 ```
