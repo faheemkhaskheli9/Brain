@@ -63,6 +63,20 @@ Brain Lab (`python game/play.py`, or `game/web/` in a browser) is the companion 
 levels where you operate one mechanism at a time. Both are described in
 [game/README.md](game/README.md) and, feature by feature, in [docs/app-guide.md](docs/app-guide.md).
 
+## Web app: read and edit the topics
+
+```bash
+python3 webapp/server.py --open     # http://localhost:8774 , stdlib only, no install
+```
+
+A local site to browse, search and edit the topic files: rendered Markdown with an outline and backlinks,
+a live preview while editing, new topics from `_template.md`, a Rebuild INDEX.md button and a Changes page
+with per-file diffs. It listens on 127.0.0.1 only and writes straight to your working copy; commit with git.
+
+![The web app showing the memory systems topic](docs/screenshots/webapp-file.png)
+
+Full guide with screenshots: [docs/webapp-guide.md](docs/webapp-guide.md)
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is

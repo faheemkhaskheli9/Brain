@@ -15,6 +15,8 @@ Brain Lab teaches one mechanism at a time; Brain World shows them working togeth
 
 Every screenshot below was taken from the running apps.
 
+To read and edit the topic files themselves in the browser, see the [web app guide](webapp-guide.md).
+
 ## Contents
 
 - [Start the apps](#start-the-apps)

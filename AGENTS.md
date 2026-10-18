@@ -33,6 +33,13 @@ build digital simulations and brain-inspired learning systems.
 
 `status`: `draft` until someone other than the author has reviewed it, then `stable`.
 
+## Web app
+
+`python3 webapp/server.py --open` serves a local site to read, search and edit the topics
+(guide: `docs/webapp-guide.md`). Its shared files are identical in the sibling knowledge bases; to change
+them, or to update and check all the bases together, use the `update-knowledge-bases` skill
+(`.claude/skills/update-knowledge-bases/SKILL.md`).
+
 ## Bugs
 
 When you find a bug (in code, tooling, CI or a wrong fact) that you do not fix in the same change,
