@@ -16,7 +16,7 @@ ML engineers, neuroscience students or players in
 | Folder | Holds |
 |---|---|
 | `guides/` | Entry point, glossary, learning paths, the build roadmap, a research workflow, the open-questions register and neuroethics |
-| `anatomy/` | Structure: regions, cell types, synapses, dendrites, glia and the energy budget, comparative and evolutionary neuroscience |
+| `anatomy/` | Structure: regions, cortical layers and columns, cell types, synapses, dendrites, glia and the energy budget, comparative and evolutionary neuroscience |
 | `function/` | How the brain computes, remembers, perceives, decides and learns: coding, population dynamics, memory, sleep, rhythms, attention, prefrontal abstraction, timing, emotion, language, social cognition, development, ageing, disorders |
 | `learning/` | Brain vs deep learning; brain-inspired learning algorithms with code; efficient (energy, samples) learning; hyperdimensional computing |
 | `simulation/` | Levels of modeling, spiking and reservoir networks, cognitive architectures, evaluation, datasets, hardware, brain-computer interfaces, emulation projects, saving a trained brain |
