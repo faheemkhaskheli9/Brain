@@ -24,6 +24,8 @@ jobs:
         run: |
           python build_index.py
           git diff --exit-code INDEX.md
+      - name: Web app write path, backlinks and git routes
+        run: python webapp/test_server.py
       - name: Topic code blocks run
         run: python run_code_blocks.py
       - name: Game models
