@@ -1,6 +1,6 @@
 // Headless check: from reward alone the creature learns every stage within a bounded number of
 // episodes, and with replay it still does all of them afterwards (no catastrophic forgetting).
-// Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; about 40 s per seed)
+// Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; several minutes per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW_LETTERS, LETTERS, BODY, rng, orient, glyph } from "./brain.js";
