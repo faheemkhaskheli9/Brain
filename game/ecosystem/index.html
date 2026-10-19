@@ -295,7 +295,7 @@ function stepOnce() {
 
 function frame(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
-  if (!paused) {
+  if (!paused && !$("intro").open) {   // the world waits while the intro is being read
     if (fast) { const t0 = performance.now(); do stepOnce(); while (performance.now() - t0 < 14); acc = 0; }
     else { acc += dt * 20; while (acc >= 1) { stepOnce(); acc -= 1; } }
   }
