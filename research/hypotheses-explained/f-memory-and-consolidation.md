@@ -333,7 +333,7 @@ memory that uses synapses, not firing. It is closely linked to H102 (silent work
 memory) and to H099, whose attention maths is related to fast weights.
 
 ## H101 - Main transfer experiment: local rule plus replay
-**Status:** open · **Tier:** T1 · **Source:** **new** (no published source)
+**Status:** weakened (one setup: new object colours; see the results log) · **Tier:** T1 · **Source:** **new** (no published source)
 
 **In simple words.** **Transfer** means using what you learned in one place to learn
 faster in a new place that has the same structure but looks different. Backprop (the

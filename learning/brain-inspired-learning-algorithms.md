@@ -172,6 +172,23 @@ Algorithms:
 - **Sleep phases**: alternate an online "wake" phase (learn new data fast, store
   episodes) with an offline "sleep" phase (replay + consolidate into slow weights).
 
+**Measured in this repo: does replay let a local rule transfer like backprop?**
+(hypothesis H101, [`research/h101_transfer.mjs`](../research/h101_transfer.mjs), 5 seeds,
+one setup.) Brain World's listen task (a tone names which coloured object is food) was
+trained for 4000 episodes with red, green and blue objects, then timed to pass again
+with yellow, cyan and magenta: same rule, new surface. All arms used the same network.
+- **Backprop** into the sparse expansion passed the new colours in a median of 394
+  episodes (118-590), against about 1900 for a naive brain. It transferred on every seed.
+- **The local rule** (trace x dopamine on the readouts, expansion fixed): median 783,
+  but from 89 to 2621. Two of five seeds saved nothing.
+- **Local rule plus sleep replay**: median 1230. Replay made transfer worse, and one
+  seed was slower than a naive brain.
+
+So in this test, replay did not close the gap: H101 is weakened, not refuted. Replay
+was not tuned for transfer, and the local arm cannot change its hidden layer at all,
+which is the likeliest reason it falls behind. Feedback alignment (measured above) is
+the obvious next local rule to try.
+
 ## 6. Curiosity and intrinsic motivation
 Brain: novelty and surprise drive dopamine and acetylcholine; infants explore to
 learn. Algorithm: intrinsic reward = the prediction error of a learned forward

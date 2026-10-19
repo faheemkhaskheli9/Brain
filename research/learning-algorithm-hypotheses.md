@@ -56,16 +56,16 @@ To resume in Claude from anywhere, say: "continue the learning-algorithm researc
 research/learning-algorithm-hypotheses.md".
 
 ## Next up (cheapest T1 rows with the biggest payoff)
-1. **H101**: the main transfer experiment in Brain World (local rule vs backprop on
-   layouts with shared structure). FA and DFA (H002, H003) are now measured and ready
-   to use as the local rules.
-2. **H103**: does a built-in prior close more of the transfer gap than a better rule
+1. **H103**: does a built-in prior close more of the transfer gap than a better rule
    does? (Feeds issue #83.)
-3. **H104**: does replay turn episodes into a reusable schema?
-4. **H001 as a Brain Lab level**: the gradient-match result (done, #92) as a playable
+2. **H104**: does replay turn episodes into a reusable schema?
+3. **H001 as a Brain Lab level**: the gradient-match result (done, #92) as a playable
    level: slide the output variance and watch the cosine reach 1.
+4. **H101 follow-up**: the local arm with FA or DFA (H002, H003) training the expansion,
+   and replay tuned for transfer, against the same backprop arm (`research/h101_transfer.mjs`).
 
-Done: H001-H003 (#92, `research/credit_assignment.py`).
+Done: H001-H003 (#92, `research/credit_assignment.py`); H101 weakened in one setup
+(`research/h101_transfer.mjs`).
 
 ---
 
@@ -192,7 +192,7 @@ Done: H001-H003 (#92, `research/credit_assignment.py`).
 | H098 | Retrieving a memory makes it changeable again (reconsolidation), which may let old knowledge be updated (the paper shows the memory becomes labile, not that it is updated). | [Nader, Schafe & LeDoux 2000](https://doi.org/10.1038/35021052), *Nature* | Retrieve-then-update model vs append-only → no better adaptation | T1 | open |
 | H099 | Hippocampal recall works like attention over stored patterns: modern Hopfield networks equal transformer attention (Ramsauer, no hippocampus claim), and a hippocampal model (TEM) maps onto a transformer (Whittington). | [Ramsauer et al. 2021](https://arxiv.org/abs/2008.02217), ICLR; [Whittington, Warren & Behrens 2022](https://arxiv.org/abs/2112.04035), ICLR | Hopfield-memory agent → no one-shot recall advantage | T1 | open |
 | H100 | Fast weights give short-term binding: a second, fast-decaying weight set stores recent context. | [Ba et al. 2016](https://arxiv.org/abs/1610.06258), NeurIPS | Fast-weight net vs plain RNN on associative recall → no gain | T1 | open |
-| H101 | **Main transfer experiment.** With equal parameters, a local rule plus replay reaches backprop's transfer to new Brain World layouts that share structure but differ on the surface. | **new** | Episodes to criterion on a new layout: local+replay stays far behind backprop | T1 | open |
+| H101 | **Main transfer experiment.** With equal parameters, a local rule plus replay reaches backprop's transfer to new Brain World layouts that share structure but differ on the surface. | **new** | Episodes to criterion on a new layout: local+replay stays far behind backprop | T1 | weakened (Brain World listen, new object colours, 5 seeds: backprop passes new colours in a median 394 episodes, local + sleep replay 1230, local alone 783) |
 | H102 | Working memory can be silent: it is held in short-term synaptic changes, not firing. | [Mongillo, Barak & Tsodyks 2008](https://doi.org/10.1126/science.1150769), *Science* | Silent-memory model → cannot hold items across a distractor | T1/T3 | open |
 | H103 | A built-in structural prior closes more of the transfer gap than a better learning rule does. | **new** (links to [Zador 2019](https://doi.org/10.1038/s41467-019-11786-6) and issue #83) | Prior vs better rule at equal compute → the rule wins | T1 | open |
 | H104 | Replay that overlaps several episodes builds schemas (what episodes share). | [Lewis & Durrant 2011](https://doi.org/10.1016/j.tics.2011.06.004), *Trends Cogn Sci* | Overlapping vs single-episode replay → no schema transfer | T1 | open |
@@ -296,3 +296,4 @@ One line per result. Newest at the bottom.
 | 2026-10-12 | H001 | Supported, 10 seeds, 64-32-32-10 tanh net on digits. With equal layer variances PC updates at equilibrium have median cosine 0.95-0.96 per layer with backprop's gradient for the 1%-nudged target (min 0.87), so the falsifier (median < 0.9) did not fire; with the full target error it is 0.83-0.93. The pre-registered prediction (> 0.99 with a 1%-nudged target) failed: shrinking the target scales every layer's error equally, so it is not the paper's limit. Exploratory: raising the output variance (the paper's Σ(0)) to 10/100/1000 gives cosine 0.991/1.000/1.000. Also: after 10 inference steps the match is better than at equilibrium (0.97-0.98). | [credit_assignment.py](credit_assignment.py), [topic](../learning/brain-inspired-learning-algorithms.md), #92 |
 | 2026-10-12 | H002, H003 | Supported (replication), 10 seeds, 64-64-64-10 on 8x8 digits, 30 epochs. Test error: backprop 3.7% ± 0.8, FA 4.5% ± 0.9, DFA 4.2% ± 0.8, readout only (hidden frozen) 12.9% ± 1.0. FA and DFA beat readout only in all 10 seeds (sign-flip p = 0.002). Their last-hidden error signal has cosine 0.72 with backprop's (about 44°): aligned, not equal, as Lillicrap reports. | [credit_assignment.py](credit_assignment.py), [topic](../learning/brain-inspired-learning-algorithms.md), #92 |
 | 2026-10-12 | H132 | Weakened (toy networks, 10 seeds). Two-layer dendritic neurons, with each neuron's inputs randomly split over k tanh branches, vs dense nets with one or two hidden layers, all at equal parameters. Under backprop: no gain (conjunction 0.978 vs 0.972 / 0.976; digits 0.960 vs 0.967 / 0.964). Under FA, dend was worse than point-1 on all three tasks (digits -0.020, p = 0.002). 8-bit parity sat at chance for backprop in every arm (a known gradient-descent failure case, not a bug: 2-6-bit parity is solved). Not tested: local receptive fields per branch, which is where Chavlis & Poirazi 2025 find their gains. | [dendritic_neurons.py](dendritic_neurons.py), [topic](../anatomy/dendritic-computation.md), #85 |
+| 2026-10-19 | H101 | Weakened, 5 seeds, in one setup: Brain World's listen task, trained 4000 episodes with red, green and blue objects, then timed to pass (70% of 50) with yellow, cyan and magenta. Same brain, wiring and random stream per seed in every arm. Episodes to pass the new colours, median (per seed): backprop into the sparse expansion 394 (590, 296, 515, 118, 394), local rule 783 (89, 483, 2621, 783, 2052), local + sleep replay 1230 (1230, 2726, 4139, 199, 672); naive brains need about 1750-1900. Backprop beat local + replay on all 5 seeds (sign test p = 0.06 two-sided) and was the only arm that transferred on every seed. Sleep replay (every 20 episodes, 200 transitions, actor and critic) made transfer worse, not better, and was not tuned; backprop's hidden-layer step was tuned on the old colours only. Not tested: other surface changes, replay tuned for transfer, FA or DFA as the local rule. | [h101_transfer.mjs](h101_transfer.mjs), [topic](../learning/brain-inspired-learning-algorithms.md) |
