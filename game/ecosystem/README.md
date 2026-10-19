@@ -79,8 +79,9 @@ Every creature has the same kind of brain, in three sizes:
 1. **Alone, learning pays.** Each species is run alone with energy and age held (so nothing dies), with
    learning on and off. Learning off freezes synapses and valence; memory still works.
 2. **In the shared world, grown beats newborn.** After 6000 steps, the three oldest foxes and humans are
-   copied into an empty world with the same layout, learning off, and compared with newborns that have
-   the same genome. What separates them was learned, not inherited.
+   copied into an empty world with the same layout, learning off, and compared with the same brains
+   with everything learned wiped (same genome, same fixed wiring), standing in for a newborn. What
+   separates them was learned, not inherited or lucky wiring.
 3. **Same seed, same world.**
 
 Means over the seeds named:

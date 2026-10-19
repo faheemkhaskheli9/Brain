@@ -96,6 +96,11 @@ export class Brain {
     for (const k of ["genome", "valence", "idx", "w", "wV", "wP", "eV", "eP", "f", "pre", "pi"]) b[k] = this[k].slice();
     b.prev = null; b.tmp = null; return b;
   }
+  unlearned() {   // the same body and wiring (genome, fixed expansion) with nothing learned
+    const b = this.clone();
+    for (const k of ["valence", "wV", "wP", "eV", "eP"]) b[k].fill(0);
+    return b;
+  }
   innate(x, a) {   // reflex: inborn (genome) plus learned (valence) pull per kind x sector template
     let s = 0;
     for (let sec = 0; sec < SECTORS; sec++) for (let k = 0; k < NC; k++) s += (this.genome[k] + this.valence[k]) * x[sec * NC + k] * TEMPLATE[sec][a];
@@ -121,7 +126,7 @@ export class Brain {
     if (this.prev) {
       const delta = r + GAINS.gamma * v - this.prev.v;   // dopamine: reward prediction error
       this.dopamine = delta;
-      if (learn) this.learn(delta, touched);
+      if (this.prev.learn) this.learn(delta, touched);   // credited as learning was when it acted
     }
     const pi = this.policy(x, f);
     let u = rand(), act = 0; while (act < pi.length - 1 && (u -= pi[act]) > 0) act++;
@@ -133,7 +138,7 @@ export class Brain {
     }
     // Slow forgetting: the inborn pull comes back, so a soured food gets tried again. Frozen with learning.
     if (learn) for (let k = 0; k < NC; k++) this.valence[k] *= GAINS.cueForget;
-    this.prev = { v, n: this.norm(f) };
+    this.prev = { v, n: this.norm(f), learn };
     return act;
   }
   learn(delta, touched) {   // the three-factor update: learning rate x dopamine x eligibility trace
@@ -144,10 +149,10 @@ export class Brain {
     // the cue, and crediting every cue in view would make everything attractive.
     if (touched >= 0) this.valence[touched] = Math.max(-3, Math.min(3, this.valence[touched] + GAINS.cueLr * delta));
   }
-  end(r, learn = true, touched = -1) {   // death: the last reward with no future
+  end(r, touched = -1) {   // death: the last reward with no future
     if (!this.prev) return;
     const delta = r - this.prev.v; this.dopamine = delta;
-    if (learn) this.learn(delta, touched);
+    if (this.prev.learn) this.learn(delta, touched);
     this.prev = null;
   }
 }
@@ -306,7 +311,7 @@ export class World {
     }
   }
   die(c, r, why, touched = -1) {
-    c.alive = false; c.brain.end(r, this.learn, touched); this.stats[c.sp].deaths++;
+    c.alive = false; c.brain.end(r, touched); this.stats[c.sp].deaths++;
     this.events.push({ type: "death", id: c.id, sp: c.sp, why });
   }
 }
@@ -325,14 +330,14 @@ function clamp(v) { return Math.max(0.5, Math.min(SIZE - 0.5, v)); }
 
 // What has a creature learned? Put a copy alone in a fresh world with the same layout and season as
 // its own world, learning off, and measure its food per step (and, for an insect, the share of its
-// flower visits that hit the rich colour). With newborn = true, test a newborn with the same genome
-// instead. Foxes get 20 naive insects to hunt. steps stays under a season, so the season holds.
+// flower visits that hit the rich colour). With newborn = true, test the same brain with everything
+// learned wiped (same genome and fixed wiring, so selection on lucky wiring cannot pass as learning). Foxes get 20 naive insects to hunt. steps stays under a season, so the season holds.
 export function probe(c, world, { newborn = false, steps = 3000 } = {}) {
   const sp = c.sp, pop = { insect: sp === "fox" ? 20 : 0, fox: 0, human: 0 }; pop[sp] = 1;
   const w = new World(world.seed, { learn: false, pop, births: false, social: false });
   w.richColor = world.richColor;
   const t = w.creatures.find(o => o.sp === sp);
-  t.brain = newborn ? new Brain(sp, rng(c.id), c.brain.genome) : c.brain.clone();
+  t.brain = newborn ? c.brain.unlearned() : c.brain.clone();
   if (c.map && !newborn) t.map = c.map.slice();
   for (let i = 0; i < steps; i++) { t.energy = 1.5; t.age = 0; w.step(); }
   const [rich, poor] = w.flowerVisits;

@@ -462,7 +462,8 @@ $("new").onclick = () => newWorld();
 $("help").onclick = () => $("intro").showModal();
 addEventListener("keydown", e => { if (e.key === " " && e.target === document.body) { e.preventDefault(); $("pause").click(); } });
 
-newWorld(Number(new URLSearchParams(location.search).get("seed")) || undefined);
+const seedParam = new URLSearchParams(location.search).get("seed");
+newWorld(seedParam !== null && seedParam.trim() !== "" && Number.isInteger(Number(seedParam)) ? Number(seedParam) : undefined);
 try { if (!localStorage.getItem("eco-intro")) { $("intro").showModal(); localStorage.setItem("eco-intro", "1"); } } catch { $("intro").showModal(); }
 requestAnimationFrame(frame);
 </script>

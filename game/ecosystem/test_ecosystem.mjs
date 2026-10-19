@@ -2,7 +2,7 @@
 // 1. Alone (energy and age held, so nothing dies), learning on beats learning off: humans and foxes
 //    eat more, and insects pick the colour that carries nectar this season.
 // 2. In the shared world, grown foxes and humans, tested alone with learning off, eat more than
-//    newborns with the same genome: what they gained is learned, not inherited.
+//    the same brains with everything learned wiped (same genome and wiring): the gain is learned.
 // Run: node game/ecosystem/test_ecosystem.mjs [seed ...]   (default seeds 1 2 3; about a minute)
 import assert from "node:assert/strict";
 import { World, SPECIES, probe } from "./ecosystem.js";
