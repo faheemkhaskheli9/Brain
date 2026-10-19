@@ -131,7 +131,8 @@ export class Brain {
     const pi = this.policy(x, f);
     let u = rand(), act = 0; while (act < pi.length - 1 && (u -= pi[act]) > 0) act++;
     const dec = GAINS.gamma * GAINS.lambda;   // eligibility traces decay, then tag what was just used
-    for (let i = 0; i < F; i++) {
+    if (!learn) { this.eV.fill(0); this.eP.fill(0); }   // nothing done while frozen is ever credited
+    else for (let i = 0; i < F; i++) {
       this.eV[i] = dec * this.eV[i] + f[i];
       if (f[i]) for (let a = 0; a < pi.length; a++) this.eP[a * F + i] = dec * this.eP[a * F + i] + ((a === act) - pi[a]) * f[i];
       else for (let a = 0; a < pi.length; a++) this.eP[a * F + i] *= dec;
