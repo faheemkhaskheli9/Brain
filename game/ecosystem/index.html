@@ -172,7 +172,7 @@ const opts = { learn: true, memory: true, social: true };
 function newWorld(seed = Math.floor(Math.random() * 1e6)) {
   world = new World(seed, opts);
   hist = []; selected = null; showInspect();
-  for (const m of meshes.values()) scene.remove(m.g);
+  for (const m of meshes.values()) dispose(m.g);
   meshes.clear();
   for (const p of plantMeshes) scene.remove(p);
   plantMeshes = world.plants.map(makePlant);
@@ -266,6 +266,10 @@ function makeCreature(c) {
   scene.add(g);
   return { g, parts, px: c.x, py: c.y, ph: c.h };
 }
+function dispose(g) {   // detaching is not enough: free the creature's own GPU buffers
+  scene.remove(g);
+  g.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); });
+}
 const ring = new THREE.Mesh(new THREE.RingGeometry(0.9, 1.1, 32), new THREE.MeshBasicMaterial({ color: C.pink, side: THREE.DoubleSide }));
 ring.rotation.x = -Math.PI / 2; ring.position.y = 0.03; ring.visible = false; scene.add(ring);
 const memMark = new THREE.Mesh(new THREE.ConeGeometry(0.4, 1.2, 4), mat(C.pink, { transparent: true, opacity: 0.7 }));
@@ -281,7 +285,7 @@ function stepOnce() {
     else if (e.type === "death" && e.sp !== "insect") feed(`A ${e.sp} died (${e.why}).`);
     else if (e.type === "birth" && e.sp !== "insect") feed(`A ${e.sp} was born. It has its parent's instincts but none of its learning.`);
   }
-  if (selected && !selected.alive) selected = null;
+  if (selected && !selected.alive) { selected = null; showInspect(); }
   if (world.t % 50 === 0) {
     const n = {}, food = {};
     for (const sp of SP) { n[sp] = world.count(sp); food[sp] = world.stats[sp].rate * 1000; }
@@ -313,7 +317,7 @@ function draw(alpha, time) {
     const s = c.age < 200 ? 0.6 + 0.4 * c.age / 200 : 1;   // newborns are small
     m.g.scale.setScalar(s);
   }
-  for (const [id, m] of meshes) if (!seen.has(id)) { scene.remove(m.g); meshes.delete(id); }
+  for (const [id, m] of meshes) if (!seen.has(id)) { dispose(m.g); meshes.delete(id); }
   world.plants.forEach((p, i) => {
     const g = plantMeshes[i];
     if (g.userData.head) g.userData.head.material = p.full ? (p.kind ? M.blue : M.red) : M.dull;
@@ -394,8 +398,18 @@ function updateInspect() {
     let m = 0; for (let s = 0; s < 6; s++) m = Math.max(m, x[s * CUES.length + k]);
     const v = (b.genome[k] + b.valence[k]) * m; if (Math.abs(v) > Math.abs(best)) { best = v; bk = k; }
   }
+  // The cue explains the move only if its pull agrees with what the whole policy most wants to do;
+  // otherwise the learned actor weights are steering.
+  const top = pi.indexOf(Math.max(...pi));
+  let agrees = false;
+  if (bk >= 0) {
+    let sec = 0, m = -1; for (let s = 0; s < 6; s++) if (x[s * CUES.length + bk] > m) { m = x[s * CUES.length + bk]; sec = s; }
+    const pull = [0, 1, 1, -1, 2, 2][sec];   // the action that turns toward that sector (-1: either way)
+    agrees = best > 0 ? pull === top || (pull === -1 && top > 0) : pull !== top;
+  }
   const learned = bk >= 0 && Math.abs(b.valence[bk]) > Math.abs(b.genome[bk]) ? " (learned)" : bk >= 0 && b.genome[bk] ? " (instinct)" : "";
-  $("doing").textContent = bk < 0 || Math.abs(best) < 0.05 ? "Exploring: nothing it cares about is in sight."
+  $("doing").textContent = bk < 0 || Math.abs(best) < 0.05 ? `Exploring: nothing it cares about is in sight, so it mostly tries "${ACTIONS[top]}".`
+    : !agrees ? `Following a learned habit: "${ACTIONS[top]}", not the pull of the ${CUES[bk]}.`
     : bk === 7 ? (c.sp === "fox" ? "Heading to where it last saw prey." : "Heading back to a place it remembers berries.")
     : best > 0 ? `Going toward a ${KINDS[bk]}${learned}.` : `Moving away from a ${KINDS[bk]}${learned}.`;
   plot($("i-dopa"), [Array.from({ length: c.dopa.length }, (_, i) => c.dopa[(c.dopaAt + i) % c.dopa.length])], [C.pink], true);

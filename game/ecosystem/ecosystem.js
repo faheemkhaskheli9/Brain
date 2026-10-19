@@ -131,8 +131,8 @@ export class Brain {
       if (f[i]) for (let a = 0; a < pi.length; a++) this.eP[a * F + i] = dec * this.eP[a * F + i] + ((a === act) - pi[a]) * f[i];
       else for (let a = 0; a < pi.length; a++) this.eP[a * F + i] *= dec;
     }
-    // Slow forgetting: the inborn pull comes back, so a soured food gets tried again.
-    for (let k = 0; k < NC; k++) this.valence[k] *= GAINS.cueForget;
+    // Slow forgetting: the inborn pull comes back, so a soured food gets tried again. Frozen with learning.
+    if (learn) for (let k = 0; k < NC; k++) this.valence[k] *= GAINS.cueForget;
     this.prev = { v, n: this.norm(f) };
     return act;
   }
@@ -248,11 +248,11 @@ export class World {
       c.energy -= p.cost;
       this.eat(c);
       if (c.sp === "fox") {
-        for (const o of this.creatures) if (o.alive && o.sp === "human" && Math.hypot(o.x - c.x, o.y - c.y) < 2.5) { c.energy -= GAINS.scare; c.touched = 5; }
+        for (const o of this.creatures) if (o.alive && o.sp === "human" && Math.hypot(o.x - c.x, o.y - c.y) < 2.5) { c.energy -= GAINS.scare; if (c.touched < 0) c.touched = 5; }   // a catch keeps the credit
         c.mem.s *= 0.95;
-        for (const o of this.creatures) if (o.alive && o.sp === "insect" && Math.hypot(o.x - c.x, o.y - c.y) < p.view) { c.mem.x = o.x; c.mem.y = o.y; c.mem.s = 1; break; }
+        if (this.memory) for (const o of this.creatures) if (o.alive && o.sp === "insect" && Math.hypot(o.x - c.x, o.y - c.y) < p.view) { c.mem.x = o.x; c.mem.y = o.y; c.mem.s = 1; break; }
       }
-      if (c.map) {   // place memory: a cell with no ripe bushes in sight slowly loses its value
+      if (c.map && this.memory) {   // place memory: a cell with no ripe bushes in sight slowly loses its value
         const i = cellOf(c.x, c.y);
         if (!c.ate && !x.some((v, j) => j < N_SENSE && j % NC === 2 && v > 0)) c.map[i] *= 0.97;
       }
@@ -296,7 +296,7 @@ export class World {
     } else if (c.sp === "human") {
       for (const p of this.plants) if (p.full && p.kind === 2 && Math.hypot(p.x - c.x, p.y - c.y) < 0.9) {
         p.full = false; p.t = GAINS.bushRegrow; gain(GAINS.berry, 2);
-        const i = cellOf(p.x, p.y); c.map[i] += 0.5 * (1 - c.map[i]);
+        if (this.memory) { const i = cellOf(p.x, p.y); c.map[i] += 0.5 * (1 - c.map[i]); }
         return;
       }
     } else if (c.sp === "fox") {

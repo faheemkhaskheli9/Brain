@@ -90,8 +90,8 @@ Means over the seeds named:
 | Human alone, food per 1000 steps, learning on / off | 40.3 / 16.0 | 62.3 / 25.2 | 50.8 / 20.4 |
 | Fox alone, on / off | 28.0 / 10.5 | 28.7 / 11.1 | 27.1 / 10.8 |
 | Insect alone, share of flower visits on the colour with nectar, on / off | 0.73 / 0.51 | 0.75 / 0.48 | 0.76 / 0.52 |
-| Grown human vs newborn, from the shared world | 24.2 / 15.9 | 32.1 / 21.9 | 28.4 / 18.1 |
-| Grown fox vs newborn | 15.7 / 10.5 | 15.6 / 9.5 | 16.0 / 12.1 |
+| Grown human vs newborn, from the shared world | 38.4 / 15.9 | 48.5 / 21.9 | 42.2 / 18.1 |
+| Grown fox vs newborn | 24.1 / 10.8 | 23.6 / 11.3 | 24.4 / 12.1 |
 
 The test asserts learning-on above 1.4 × learning-off for humans and foxes, an insect rich-colour share
 above 0.65 with learning (and below 0.6 without), and grown above 1.2 × newborn.
