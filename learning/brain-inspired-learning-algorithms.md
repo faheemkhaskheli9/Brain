@@ -13,6 +13,7 @@ sources:
   - https://doi.org/10.1162/NECO_a_00949
   - https://doi.org/10.1073/pnas.1611835114
   - https://doi.org/10.1126/science.275.5306.1593
+  - https://pubmed.ncbi.nlm.nih.gov/3283936/
 ---
 
 # Brain-inspired learning algorithms (with code)
@@ -188,6 +189,19 @@ So in this test, replay did not close the gap: H101 is weakened, not refuted. Re
 was not tuned for transfer, and the local arm cannot change its hidden layer at all,
 which is the likeliest reason it falls behind. Feedback alignment (measured above) is
 the obvious next local rule to try.
+
+**Measured in this repo: does a built-in prior beat the better rule?** (hypothesis
+H103, issue #125, same script and setup, 10 seeds.) The prior was a colour-blind "where"
+pathway, after the brain's magnocellular stream ([Livingstone & Hubel 1988](https://pubmed.ncbi.nlm.nih.gov/3283936/)):
+half of the retina-driven expansion units read how near an object is in each direction,
+whatever its hue, instead of one colour channel. Equal parameters.
+- Episodes to pass the new colours, median: backprop 553, local rule 978, local rule plus
+  the prior 2202, backprop plus the prior 2282.
+- The prior made the task harder, not transfer easier: success on the old colours fell
+  from 0.73 to 0.51, and naive brains with it needed about 4000 episodes instead of 2400.
+- By the pre-registered rule the result is inconclusive (backprop won on 8 of 10 seeds,
+  the bar was 9), so H103 stays open. A prior that removes information the task needs is
+  the wrong test of it; the next one should add structure without taking any away.
 
 ## 6. Curiosity and intrinsic motivation
 Brain: novelty and surprise drive dopamine and acetylcholine; infants explore to
