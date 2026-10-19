@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain Ecosystem</title>
+<style>
+  /* Palette from game/levels.py and Brain World: a stained histology slide */
+  :root { --glass: #F7F2F6; --lilac: #E6DCEE; --muted: #6F6890; --violet: #5B3A8C; --pink: #D9637E; --ink: #2A2550;
+          --insect: #3A3550; --fox: #D9772B; --human: #5B3A8C; --red: #D94A4A; --blue: #3E63D9; --bush: #4E8A4A; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--glass); color: var(--ink);
+         font: 15px/1.5 Bahnschrift, "DIN Alternate", "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 1280px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-weight: 600; font-size: 1.9rem; margin: 0; letter-spacing: -.01em; }
+  .lede { font-family: Cambria, Georgia, serif; font-size: 1.05rem; line-height: 1.6; max-width: 75ch; margin: 4px 0 18px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+  .view { position: relative; }
+  #world { display: block; width: 100%; aspect-ratio: 3 / 2; border: 1px solid var(--lilac); background: var(--glass); cursor: pointer; }
+  #season { position: absolute; left: 12px; top: 12px; margin: 0; padding: 6px 12px; background: rgba(247, 242, 246, .92);
+            border-left: 4px solid var(--violet); font-size: .9rem; }
+  #feed { position: absolute; left: 12px; bottom: 12px; right: 12px; margin: 0; padding: 0; list-style: none;
+          display: flex; flex-direction: column; gap: 4px; pointer-events: none; }
+  #feed li { align-self: flex-start; padding: 4px 10px; background: rgba(247, 242, 246, .92); font-size: .85rem; transition: opacity 1s; }
+  #feed li.out { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { #feed li { transition: none; } }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; align-items: center; }
+  button { font: inherit; color: var(--ink); background: var(--lilac); border: 0; padding: 8px 14px; cursor: pointer; }
+  button[aria-pressed="true"] { background: var(--violet); color: var(--glass); }
+  button:hover { outline: 1px solid var(--violet); }
+  button:focus-visible, a:focus-visible, #world:focus-visible { outline: 3px solid var(--pink); outline-offset: 2px; }
+  .sep { width: 1px; align-self: stretch; background: var(--lilac); margin: 0 4px; }
+  aside h2 { font-size: 1rem; font-weight: 600; margin: 0 0 6px; }
+  aside section { margin: 0 0 18px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .85rem; margin: 4px 0; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  canvas.plot { display: block; width: 100%; height: 90px; border: 1px solid var(--lilac); background: #fff; }
+  .note { font-family: Cambria, Georgia, serif; font-size: .9rem; color: var(--muted); margin: 4px 0 0; }
+  #inspect .empty { font-family: Cambria, Georgia, serif; color: var(--muted); }
+  #inspect dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; margin: 6px 0 8px; font-size: .9rem; }
+  #inspect dt { color: var(--muted); }
+  #inspect dd { margin: 0; }
+  #doing { font-family: Cambria, Georgia, serif; font-size: 1rem; margin: 4px 0 8px; min-height: 1.5em; }
+  .bar { position: relative; height: 6px; background: var(--lilac); margin-top: 4px; }
+  .bar i { position: absolute; inset: 0 auto 0 0; background: var(--violet); }
+  table.val { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  table.val td { padding: 1px 4px; }
+  table.val td:first-child { white-space: nowrap; color: var(--muted); width: 1%; }
+  .vb { position: relative; height: 10px; background: var(--lilac); }
+  .vb::after { content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--muted); }
+  .vb span { position: absolute; top: 0; bottom: 0; }
+  .vb .born { background: var(--muted); opacity: .45; }
+  .vb .lrn { background: var(--pink); top: 3px; bottom: 3px; }
+  .acts { display: flex; gap: 6px; font-size: .8rem; margin-top: 4px; }
+  .acts span { flex: 1; padding: 2px 4px; background: var(--lilac); position: relative; overflow: hidden; }
+  .acts span b { position: absolute; inset: auto 0 0 0; background: var(--violet); opacity: .35; }
+  .how { font-family: Cambria, Georgia, serif; line-height: 1.6; max-width: 78ch; margin-top: 26px; }
+  .how h2 { font-family: Bahnschrift, system-ui, sans-serif; font-size: 1.1rem; font-weight: 600; }
+  a { color: var(--violet); }
+  #intro { max-width: 36rem; border: 0; border-left: 4px solid var(--violet); background: var(--glass); color: var(--ink); padding: 20px 24px; }
+  #intro::backdrop { background: rgba(42, 37, 80, .45); }
+  #intro h2 { margin: 0 0 8px; font-weight: 600; }
+  #intro p { font-family: Cambria, Georgia, serif; line-height: 1.6; margin: 0 0 10px; }
+  #intro button { background: var(--violet); color: var(--glass); margin-top: 6px; }
+  [title] { cursor: help; }
+  @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } }
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<main>
+  <h1>Brain Ecosystem</h1>
+  <p class="lede">Insects, foxes and humans share one world, and each individual has its own brain. Nothing they do is
+    scripted. Every brain learns from its own dopamine signal; what it is born with differs by species.
+    Click any creature to see inside its brain.</p>
+
+  <div class="layout">
+    <div>
+      <div class="view">
+        <canvas id="world" tabindex="0" aria-label="3D view of the world. Click a creature to inspect its brain."></canvas>
+        <p id="season"></p>
+        <ul id="feed" aria-live="polite"></ul>
+      </div>
+      <div class="controls">
+        <button id="pause" aria-pressed="false">Pause</button>
+        <button id="watch" aria-pressed="true" title="Real time, about 20 steps a second">Watch</button>
+        <button id="fast" aria-pressed="false" title="As many steps as the browser can run">Fast forward</button>
+        <span class="sep"></span>
+        <button id="learn" aria-pressed="true" title="Off: every synapse and valence is frozen. Compare how the species do.">Learning</button>
+        <button id="memory" aria-pressed="true" title="Foxes remember where prey was; humans remember where berries grow">Memory</button>
+        <button id="social" aria-pressed="true" title="Humans near each other pass on where food grows">Telling</button>
+        <span class="sep"></span>
+        <button id="follow" aria-pressed="false" title="Camera follows the selected creature">Follow</button>
+        <button id="new">New world</button>
+        <button id="help">What is this?</button>
+      </div>
+    </div>
+
+    <aside>
+      <section>
+        <h2>Population</h2>
+        <div class="legend"><span><i style="background:var(--insect)"></i>insects <b id="n-insect"></b></span>
+          <span><i style="background:var(--fox)"></i>foxes <b id="n-fox"></b></span>
+          <span><i style="background:var(--human)"></i>humans <b id="n-human"></b></span></div>
+        <canvas id="pop" class="plot"></canvas>
+      </section>
+      <section>
+        <h2 title="Energy each species eats per individual per 1000 steps, smoothed">Food per individual</h2>
+        <canvas id="food" class="plot"></canvas>
+        <p class="note">Step <span id="t">0</span>. Turn Learning off and watch these fall.</p>
+      </section>
+      <section id="inspect">
+        <h2>Inside one brain</h2>
+        <p class="empty">Click a creature in the world.</p>
+      </section>
+    </aside>
+  </div>
+
+  <dialog id="intro">
+    <h2>What is this?</h2>
+    <p><b>Insects</b> sip nectar from flowers. Each season only one colour has nectar, and they must learn which.
+      <b>Foxes</b> hunt insects and are chased off by humans. <b>Humans</b> pick berries, which grow in clumps.</p>
+    <p>Every creature has its own brain that learns from reward alone: dopamine says "better than expected" or
+      "worse", and only recently used synapses change. Insects are born with strong instincts and live short lives;
+      humans are born nearly blank, live long, remember places and tell each other where food is.</p>
+    <p>Click a creature to see its dopamine, its instincts and what it has learned. A newborn inherits its parent's
+      instincts (slightly mutated) but none of what the parent learned.</p>
+    <form method="dialog"><button>Start</button></form>
+  </dialog>
+
+  <section class="how">
+    <h2>How it works</h2>
+    <p><b>One kind of brain, three sizes.</b> Every creature runs the learner from
+      <a href="../world/">Brain World</a>: a fixed random sparse expansion of its senses feeds an actor-critic.
+      Dopamine is the temporal-difference error, and a synapse changes only where its eligibility trace meets
+      dopamine (a three-factor rule, no backprop). Insects have 60 hidden units, foxes 200, humans 400. These are
+      game sizes, not neuron counts.</p>
+    <p><b>Senses.</b> Six 60° sectors around the head. In each it senses how close the nearest red flower, blue
+      flower, ripe bush, insect, fox, human and wall is, plus one remembered place.</p>
+    <p><b>Instincts and learned likes.</b> Each species is born with a pull toward or away from each kind of thing (its
+      genome): insects flee foxes and like flowers, foxes chase insects, humans barely care at first. On contact
+      (nectar, an empty flower, a bite, being chased off) dopamine moves a learned like or dislike for that kind,
+      as dopamine neurons do at the insect mushroom body. Learned likes fade slowly, so a soured food is tried again.</p>
+    <p><b>Memory.</b> A fox remembers, briefly, where it last saw prey. A human keeps a map of where berries were
+      found (a stand-in for the hippocampus) and walks back there.</p>
+    <p><b>Telling</b> (a hypothesis-level model of culture): humans near each other update their maps toward what
+      the other knows better. In our tests it did not make a newcomer eat more, perhaps because shared knowledge
+      sends everyone to the same bushes. Toggle it and see.</p>
+    <p><b>What is tested.</b> <code>node game/ecosystem/test_ecosystem.mjs</code> checks that learning pays for every
+      species and that grown foxes and humans beat newborns with the same genes. The numbers and their limits are in
+      <a href="README.md">the README</a>.</p>
+  </section>
+</main>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { World, SIZE, SPECIES, CUES, ACTIONS, GAINS, KINDS, N_IN } from "./ecosystem.js";
+
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C = {}; for (const k of ["glass", "lilac", "muted", "violet", "pink", "ink", "insect", "fox", "human", "red", "blue", "bush"]) C[k] = css("--" + k);
+const SP = ["insect", "fox", "human"];
+
+// ---------- simulation state ----------
+let world, paused = false, fast = false, acc = 0, last = performance.now(), selected = null;
+let hist = [];   // { t, n: {sp}, food: {sp} } every 50 steps
+const opts = { learn: true, memory: true, social: true };
+function newWorld(seed = Math.floor(Math.random() * 1e6)) {
+  world = new World(seed, opts);
+  hist = []; selected = null; showInspect();
+  for (const m of meshes.values()) scene.remove(m.g);
+  meshes.clear();
+  for (const p of plantMeshes) scene.remove(p);
+  plantMeshes = world.plants.map(makePlant);
+  feed(`A new world (seed ${seed}). Everyone is newborn.`);
+}
+
+// ---------- 3D scene ----------
+const canvas = $("world");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(C.glass);
+const camera = new THREE.PerspectiveCamera(45, 1.5, 0.1, 300);
+camera.position.set(SIZE / 2, 26, SIZE + 12);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(SIZE / 2, 0, SIZE / 2 + 4); controls.maxPolarAngle = Math.PI * 0.47; controls.update();
+new ResizeObserver(() => {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+}).observe(canvas);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0xcfe0c8, 1.5));
+const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+sun.position.set(SIZE * 0.2, 40, SIZE * 0.9); sun.target.position.set(SIZE / 2, 0, SIZE / 2);
+sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -40, right: 40, top: 40, bottom: -40, far: 120 });
+scene.add(sun, sun.target);
+
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.8, ...o });
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(SIZE, SIZE), mat("#DDE8D4"));
+ground.rotation.x = -Math.PI / 2; ground.position.set(SIZE / 2, 0, SIZE / 2); ground.receiveShadow = true;
+scene.add(ground);
+for (const [x, z, w, d] of [[SIZE / 2, 0, SIZE, 0.3], [SIZE / 2, SIZE, SIZE, 0.3], [0, SIZE / 2, 0.3, SIZE], [SIZE, SIZE / 2, 0.3, SIZE]]) {
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(w, 0.8, d), mat("#C9BBD8"));
+  wall.position.set(x, 0.4, z); wall.receiveShadow = true; scene.add(wall);
+}
+
+// Plants
+const G = {
+  stem: new THREE.CylinderGeometry(0.04, 0.04, 0.5, 6), petal: new THREE.SphereGeometry(0.22, 12, 8),
+  bush: new THREE.SphereGeometry(0.7, 14, 10), berry: new THREE.SphereGeometry(0.12, 8, 6),
+};
+const M = { stem: mat("#5C8A4E"), red: mat(C.red), blue: mat(C.blue), bush: mat(C.bush), berry: mat("#B0204A"), dull: mat("#B9B2A8") };
+let plantMeshes = [];
+function makePlant(p) {
+  const g = new THREE.Group(); g.position.set(p.x, 0, p.y);
+  if (p.kind < 2) {
+    const stem = new THREE.Mesh(G.stem, M.stem); stem.position.y = 0.25;
+    const head = new THREE.Mesh(G.petal, p.kind ? M.blue : M.red); head.position.y = 0.55; head.castShadow = true;
+    g.add(stem, head); g.userData.head = head;
+  } else {
+    const b = new THREE.Mesh(G.bush, M.bush); b.position.y = 0.55; b.scale.set(1, 0.8, 1); b.castShadow = true;
+    const berries = new THREE.Group();
+    for (let i = 0; i < 7; i++) {
+      const a = i / 7 * Math.PI * 2, s = new THREE.Mesh(G.berry, M.berry);
+      s.position.set(Math.cos(a) * 0.6, 0.55 + Math.sin(i * 2.1) * 0.25, Math.sin(a) * 0.6); berries.add(s);
+    }
+    g.add(b, berries); g.userData.berries = berries;
+  }
+  scene.add(g); return g;
+}
+
+// Creatures: local +x is forward.
+const meshes = new Map();   // id -> { g, parts, px, py, ph }
+function makeCreature(c) {
+  const g = new THREE.Group(), parts = {};
+  if (c.sp === "insect") {
+    const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.12, 0.25, 4, 8), mat(C.insect));
+    body.rotation.z = Math.PI / 2; body.position.y = 0.6; body.castShadow = true;
+    const wingG = new THREE.CircleGeometry(0.22, 12);
+    const wm = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.55, side: THREE.DoubleSide });
+    parts.wings = [1, -1].map(s => { const w = new THREE.Mesh(wingG, wm); w.position.set(0, 0.7, s * 0.18); w.rotation.x = Math.PI / 2; g.add(w); return w; });
+    g.add(body);
+  } else if (c.sp === "fox") {
+    const m = mat(C.fox), body = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.38, 0.38), m);
+    body.position.y = 0.5; body.castShadow = true;
+    const head = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.45, 8), m); head.rotation.z = -Math.PI / 2; head.position.set(0.6, 0.62, 0);
+    const tail = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.6, 8), mat("#F2E6D8")); tail.rotation.z = Math.PI / 2 + 0.4; tail.position.set(-0.7, 0.65, 0);
+    parts.legs = [[0.3, 0.13], [0.3, -0.13], [-0.3, 0.13], [-0.3, -0.13]].map(([x, z]) => {
+      const l = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.32, 0.08), mat(C.ink)); l.position.set(x, 0.16, z); g.add(l); return l;
+    });
+    g.add(body, head, tail);
+  } else {
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.9, 12), mat(C.human)); body.position.y = 0.95; body.castShadow = true;
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 14, 10), mat("#C99A78")); head.position.y = 1.6; head.castShadow = true;
+    parts.legs = [0.1, -0.1].map(z => { const l = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.5, 0.12), mat(C.ink)); l.position.set(0, 0.25, z); g.add(l); return l; });
+    g.add(body, head);
+  }
+  g.traverse(o => { o.userData.id = c.id; });
+  scene.add(g);
+  return { g, parts, px: c.x, py: c.y, ph: c.h };
+}
+const ring = new THREE.Mesh(new THREE.RingGeometry(0.9, 1.1, 32), new THREE.MeshBasicMaterial({ color: C.pink, side: THREE.DoubleSide }));
+ring.rotation.x = -Math.PI / 2; ring.position.y = 0.03; ring.visible = false; scene.add(ring);
+const memMark = new THREE.Mesh(new THREE.ConeGeometry(0.4, 1.2, 4), mat(C.pink, { transparent: true, opacity: 0.7 }));
+memMark.rotation.x = Math.PI; memMark.visible = false; scene.add(memMark);
+
+// ---------- stepping ----------
+function stepOnce() {
+  for (const c of world.creatures) { const m = meshes.get(c.id); if (m) { m.px = c.x; m.py = c.y; m.ph = c.h; } }
+  world.step();
+  for (const e of world.events) {
+    if (e.type === "season") feed(`New season: now only ${e.rich ? "blue" : "red"} flowers have nectar. The insects must relearn.`);
+    else if (e.type === "death" && e.why === "eaten" && selected?.id === e.id) feed("The insect you were watching was eaten by a fox.");
+    else if (e.type === "death" && e.sp !== "insect") feed(`A ${e.sp} died (${e.why}).`);
+    else if (e.type === "birth" && e.sp !== "insect") feed(`A ${e.sp} was born. It has its parent's instincts but none of its learning.`);
+  }
+  if (selected && !selected.alive) selected = null;
+  if (world.t % 50 === 0) {
+    const n = {}, food = {};
+    for (const sp of SP) { n[sp] = world.count(sp); food[sp] = world.stats[sp].rate * 1000; }
+    hist.push({ t: world.t, n, food }); if (hist.length > 600) hist.splice(0, hist.length - 600);
+  }
+}
+
+function frame(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (!paused) {
+    if (fast) { const t0 = performance.now(); do stepOnce(); while (performance.now() - t0 < 14); acc = 0; }
+    else { acc += dt * 20; while (acc >= 1) { stepOnce(); acc -= 1; } }
+  }
+  draw(fast || paused ? 1 : acc, now / 1000);
+  requestAnimationFrame(frame);
+}
+
+function draw(alpha, time) {
+  const seen = new Set();
+  for (const c of world.creatures) {
+    let m = meshes.get(c.id); if (!m) meshes.set(c.id, m = makeCreature(c));
+    seen.add(c.id);
+    const x = m.px + (c.x - m.px) * alpha, y = m.py + (c.y - m.py) * alpha;
+    let dh = Math.atan2(Math.sin(c.h - m.ph), Math.cos(c.h - m.ph));
+    m.g.position.set(x, 0, y); m.g.rotation.y = -(m.ph + dh * alpha);
+    const phase = time * 12 + c.id;
+    if (m.parts.wings) { m.parts.wings[0].rotation.y = Math.sin(time * 40 + c.id) * 0.6; m.parts.wings[1].rotation.y = -m.parts.wings[0].rotation.y; m.g.position.y = 0.1 * Math.sin(time * 6 + c.id); }
+    if (m.parts.legs) m.parts.legs.forEach((l, i) => { l.rotation.z = Math.sin(phase + i * Math.PI) * 0.5; });
+    const s = c.age < 200 ? 0.6 + 0.4 * c.age / 200 : 1;   // newborns are small
+    m.g.scale.setScalar(s);
+  }
+  for (const [id, m] of meshes) if (!seen.has(id)) { scene.remove(m.g); meshes.delete(id); }
+  world.plants.forEach((p, i) => {
+    const g = plantMeshes[i];
+    if (g.userData.head) g.userData.head.material = p.full ? (p.kind ? M.blue : M.red) : M.dull;
+    if (g.userData.berries) g.userData.berries.visible = p.full;
+  });
+  if (selected) {
+    const m = meshes.get(selected.id);
+    ring.visible = !!m; if (m) ring.position.set(m.g.position.x, 0.03, m.g.position.z);
+    const mem = memoryOf(selected);
+    memMark.visible = !!mem; if (mem) memMark.position.set(mem.x, 2 + 0.2 * Math.sin(time * 3), mem.y);
+    if ($("follow").getAttribute("aria-pressed") === "true" && m) {
+      const d = m.g.position.clone().sub(controls.target);
+      controls.target.add(d); camera.position.add(d);
+    }
+  } else { ring.visible = memMark.visible = false; }
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+function memoryOf(c) {
+  if (!world.memory) return null;
+  if (c.sp === "fox" && c.mem.s > 0.05) return { x: c.mem.x, y: c.mem.y };
+  if (c.map) {
+    let best = 0.05, bi = -1; for (let i = 0; i < c.map.length; i++) if (c.map[i] > best) { best = c.map[i]; bi = i; }
+    if (bi >= 0) { const cell = SIZE / GAINS.grid; return { x: (bi % GAINS.grid + 0.5) * cell, y: (Math.floor(bi / GAINS.grid) + 0.5) * cell }; }
+  }
+  return null;
+}
+
+// ---------- picking ----------
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+canvas.addEventListener("click", e => {
+  const r = canvas.getBoundingClientRect();
+  ptr.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObjects([...meshes.values()].map(m => m.g), true)[0];
+  if (hit) selected = world.creatures.find(c => c.id === hit.object.userData.id) ?? null;
+  else {   // a click near a creature on the ground still picks it
+    const p = ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3());
+    if (p) { let best = 2.5; selected = null; for (const c of world.creatures) { const d = Math.hypot(c.x - p.x, c.y - p.z); if (d < best) { best = d; selected = c; } } }
+  }
+  showInspect();
+});
+
+// ---------- panels ----------
+const NAMES = { insect: "Insect", fox: "Fox", human: "Human" };
+const SHORT = ["red flower", "blue flower", "berry bush", "insect", "fox", "human", "wall", "remembered"];
+function showInspect() {
+  const box = $("inspect");
+  if (!selected) { box.innerHTML = '<h2>Inside one brain</h2><p class="empty">Click a creature in the world.</p>'; return; }
+  const p = SPECIES[selected.sp];
+  box.innerHTML = `<h2>${NAMES[selected.sp]} #${selected.id}</h2>
+    <p id="doing"></p>
+    <dl><dt>Age</dt><dd id="i-age"></dd><dt>Generation</dt><dd>${selected.gen}${selected.gen ? "" : " (founder or newcomer)"}</dd>
+      <dt>Meals</dt><dd id="i-meals"></dd><dt>Brain</dt><dd>${p.hidden} hidden units, ${p.k} active at a time</dd>
+      <dt>Energy</dt><dd><div class="bar"><i id="i-energy"></i></div></dd></dl>
+    <h2 title="Dopamine: the reward prediction error, last 100 steps. Above the line: better than expected.">Dopamine</h2>
+    <canvas id="i-dopa" class="plot" style="height:60px"></canvas>
+    <h2 style="margin-top:10px" title="Grey: inborn pull (+) or push (-) from its genome. Pink: what it has learned from contact.">Instinct and learned likes</h2>
+    <table class="val">${CUES.map((k, i) => `<tr><td>${SHORT[i]}</td><td><div class="vb"><span class="born" id="vb${i}"></span><span class="lrn" id="vl${i}"></span></div></td></tr>`).join("")}</table>
+    <h2 style="margin-top:10px" title="How likely each action is right now">Next move</h2>
+    <div class="acts">${ACTIONS.map((a, i) => `<span>${a}<b id="a${i}"></b></span>`).join("")}</div>`;
+}
+const senseBuf = new Float32Array(N_IN);
+function updateInspect() {
+  if (!selected || !$("i-age")) return;
+  const c = selected, b = c.brain;
+  $("i-age").textContent = `${c.age} of ${SPECIES[c.sp].maxAge} steps`;
+  $("i-meals").textContent = c.meals;
+  $("i-energy").style.width = `${Math.max(0, c.energy / GAINS.maxEnergy * 100)}%`;
+  const bar = (el, v) => { const w = Math.min(50, Math.abs(v) / 3 * 50); el.style.left = v >= 0 ? "50%" : `${50 - w}%`; el.style.width = `${w}%`; };
+  for (let i = 0; i < CUES.length; i++) { bar($("vb" + i), b.genome[i]); bar($("vl" + i), b.valence[i]); }
+  const x = world.sense(c, senseBuf), pi = b.policy(x, b.features(x, new Float32Array(b.F)), new Float32Array(ACTIONS.length));
+  for (let a = 0; a < ACTIONS.length; a++) $("a" + a).style.height = `${pi[a] * 100}%`;
+  // Plain-words caption: the cue that pulls or pushes hardest right now.
+  let best = 0, bk = -1;
+  for (let k = 0; k < CUES.length; k++) {
+    let m = 0; for (let s = 0; s < 6; s++) m = Math.max(m, x[s * CUES.length + k]);
+    const v = (b.genome[k] + b.valence[k]) * m; if (Math.abs(v) > Math.abs(best)) { best = v; bk = k; }
+  }
+  const learned = bk >= 0 && Math.abs(b.valence[bk]) > Math.abs(b.genome[bk]) ? " (learned)" : bk >= 0 && b.genome[bk] ? " (instinct)" : "";
+  $("doing").textContent = bk < 0 || Math.abs(best) < 0.05 ? "Exploring: nothing it cares about is in sight."
+    : bk === 7 ? (c.sp === "fox" ? "Heading to where it last saw prey." : "Heading back to a place it remembers berries.")
+    : best > 0 ? `Going toward a ${KINDS[bk]}${learned}.` : `Moving away from a ${KINDS[bk]}${learned}.`;
+  plot($("i-dopa"), [Array.from({ length: c.dopa.length }, (_, i) => c.dopa[(c.dopaAt + i) % c.dopa.length])], [C.pink], true);
+}
+
+function plot(cv, series, colors, zero = false) {
+  const w = cv.width = cv.clientWidth * devicePixelRatio, h = cv.height = cv.clientHeight * devicePixelRatio, g = cv.getContext("2d");
+  g.clearRect(0, 0, w, h);
+  const all = series.flat(); if (!all.length) return;
+  let lo = zero ? Math.min(...all, -0.05) : 0, hi = Math.max(...all, zero ? 0.05 : 1e-6);
+  if (zero) { const m = Math.max(-lo, hi); lo = -m; hi = m; }
+  const Y = v => h - 4 - (v - lo) / (hi - lo) * (h - 8);
+  if (zero) { g.strokeStyle = C.lilac; g.lineWidth = devicePixelRatio; g.beginPath(); g.moveTo(0, Y(0)); g.lineTo(w, Y(0)); g.stroke(); }
+  series.forEach((s, j) => {
+    g.strokeStyle = colors[j]; g.lineWidth = 2 * devicePixelRatio; g.beginPath();
+    s.forEach((v, i) => { const X = i / Math.max(1, s.length - 1) * w; i ? g.lineTo(X, Y(v)) : g.moveTo(X, Y(v)); });
+    g.stroke();
+  });
+}
+function updatePanels() {
+  $("t").textContent = world.t;
+  for (const sp of SP) $("n-" + sp).textContent = world.count(sp);
+  plot($("pop"), SP.map(sp => hist.map(h => h.n[sp])), SP.map(sp => C[sp]));
+  plot($("food"), SP.map(sp => hist.map(h => h.food[sp])), SP.map(sp => C[sp]));
+  const rich = world.richColor ? "blue" : "red", poor = world.richColor ? "red" : "blue";
+  $("season").textContent = `Season ${Math.floor(world.t / GAINS.season) + 1}: ${rich} flowers have nectar, ${poor} are empty`;
+  updateInspect();
+}
+setInterval(updatePanels, 250);
+
+function feed(text) {
+  const li = document.createElement("li"); li.textContent = text; $("feed").append(li);
+  while ($("feed").children.length > 3) $("feed").firstChild.remove();
+  setTimeout(() => li.classList.add("out"), 5000); setTimeout(() => li.remove(), 6000);
+}
+
+// ---------- controls ----------
+const press = (id, on) => $(id).setAttribute("aria-pressed", on);
+$("pause").onclick = () => { paused = !paused; press("pause", paused); $("pause").textContent = paused ? "Resume" : "Pause"; };
+$("watch").onclick = () => { fast = false; press("watch", true); press("fast", false); };
+$("fast").onclick = () => { fast = true; press("watch", false); press("fast", true); };
+for (const k of ["learn", "memory", "social"]) $(k).onclick = () => {
+  opts[k] = !opts[k]; world[k] = opts[k]; press(k, opts[k]);
+  feed({ learn: opts.learn ? "Learning on." : "Learning off: every brain is frozen as it is now.",
+         memory: opts.memory ? "Memory on." : "Memory off: foxes and humans forget places.",
+         social: opts.social ? "Telling on: humans share where food grows." : "Telling off." }[k]);
+};
+$("follow").onclick = () => press("follow", $("follow").getAttribute("aria-pressed") !== "true");
+$("new").onclick = () => newWorld();
+$("help").onclick = () => $("intro").showModal();
+addEventListener("keydown", e => { if (e.key === " " && e.target === document.body) { e.preventDefault(); $("pause").click(); } });
+
+newWorld(Number(new URLSearchParams(location.search).get("seed")) || undefined);
+try { if (!localStorage.getItem("eco-intro")) { $("intro").showModal(); localStorage.setItem("eco-intro", "1"); } } catch { $("intro").showModal(); }
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
