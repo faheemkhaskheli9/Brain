@@ -2,7 +2,7 @@
 
 | Path | What |
 |---|---|
-| [papers.md](papers.md) | Every reference cited by the topic files: citation, which topics cite it, DOI/link, open-access status, PDF link. Generated. |
+| [papers.md](papers.md) | Every reference cited by the topic files: citation, which topics cite it, DOI/link, open-access status, PDF link. Generated, and refreshed weekly by the `Paper catalog` workflow, which opens a PR when it changes. |
 | [fetch_papers.py](fetch_papers.py) | Regenerates `papers.md` and downloads open-access PDFs. Stdlib only. |
 | [learning-algorithm-hypotheses.md](learning-algorithm-hypotheses.md) | Research thread: 170 ranked, testable hypotheses on the brain's unknown learning algorithm (abstraction, language, reasoning), with Next up and a results log. Start here to resume. |
 | [hypotheses-explained/](hypotheses-explained/README.md) | Every one of the 170 hypotheses in simple language, with a step-by-step brain workflow (if true) and a test workflow. One file per section A-K. |
