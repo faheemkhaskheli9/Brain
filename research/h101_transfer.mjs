@@ -21,11 +21,22 @@
 // 0.62, 0.67, 0.76, 0.76; 3 is the smaller of the tied best. The local arms use Brain World's own gains.
 // Result (seeds 1-5): research/learning-algorithm-hypotheses.md, H101.
 //
+// H103 (issue #125) adds two arms: does a built-in structural prior close more of the gap than the
+// better rule does? The prior is a colour-blind "where" pathway, after the magnocellular stream
+// (Livingstone and Hubel 1988): a fixed share PRIOR of the retina-driven hidden units read each
+// ray's max(r, g, b), which says how near an object is in that direction whatever its hue, instead
+// of one colour channel. Same units, wiring and weights, so same parameters; only what half the
+// retina units see changes. The share is not tuned. Which units are colour-blind comes from a
+// separate random stream, so the brain's own stream is untouched.
+//   local+prior     the local arm with the prior
+//   backprop+prior  the backprop arm with the prior
+//
 // Run: node research/h101_transfer.mjs [seeds, default 1-5]   (--quick: 2 seeds, short budgets)
 //      ARMS=backprop HID_LR=1 node research/h101_transfer.mjs 1 2 --quick   (one arm, another step)
 //      OUT=rows.json ...   (also write the per-seed rows as JSON)
+//      ARMS=local,local+prior,backprop,backprop+prior node research/h101_transfer.mjs 1 2 3 4 5 6 7 8 9 10   (H103)
 // About 40 minutes for all arms and 5 seeds; the backprop arm is about 4x slower per episode.
-import { World, Brain, GAINS, COLORS, STAGES } from "../game/world/brain.js";
+import { World, Brain, GAINS, COLORS, STAGES, RAYS, rng } from "../game/world/brain.js";
 
 const QUICK = process.argv.includes("--quick");
 const SEEDS = process.argv.slice(2).filter(a => /^\d+$/.test(a)).map(Number);
@@ -89,17 +100,55 @@ export class BackpropBrain extends Brain {
   }
 }
 
+// H103's prior. A colour-blind unit's drive inputs point at extra inputs after the senses, one per
+// ray, holding that ray's max(r, g, b). encode is Brain.encode reading the extended input; h.x is
+// set too, so BackpropBrain's gradient sees the values these units actually read.
+export function addPrior(b, share, seed) {
+  const rand = rng(seed + 1e6), F = b.wIn.length / b.hidden, nIn = b.nH - b.hidden, RET = RAYS * 3;
+  b.blind = 0;
+  for (let j = 0; j < b.hidden; j++) {
+    let retina = true;
+    for (let k = 3; k < F; k++) if (b.idx[j * F + k] >= RET) retina = false;
+    if (!retina || rand() >= share) continue;
+    for (let k = 3; k < F; k++) b.idx[j * F + k] = nIn + Math.floor(b.idx[j * F + k] / 3);
+    b.blind++;
+  }
+  b.encode = function (x, slot) {
+    const xa = new Float32Array(nIn + RAYS);
+    xa.set(x);
+    for (let i = 0; i < RAYS; i++) xa[nIn + i] = Math.max(x[i * 3], x[i * 3 + 1], x[i * 3 + 2]);
+    const h = new Float32Array(this.nH), gate = slot * this.hidden;
+    h.set(x);
+    for (let j = 0; j < this.hidden; j++) {
+      if (!this.gate[gate + j]) continue;
+      let gain = 1, drive = this.bias[j];
+      for (let k = 0; k < F; k++) {
+        const v = this.wIn[j * F + k] * xa[this.idx[j * F + k]];
+        if (k < 3) gain += v; else drive += v;
+      }
+      if (drive > 0 && gain > 0) h[nIn + j] = drive * gain;
+    }
+    h.x = xa;
+    return h;
+  };
+  return b;
+}
+
 const ARMS = {
   local: { sleep: 0, bp: 0 },
   "local+sleep": { sleep: 20, bp: 0 },
   backprop: { sleep: 0, bp: 1 },
+  "local+prior": { sleep: 0, bp: 0, prior: 1 },
+  "backprop+prior": { sleep: 0, bp: 1, prior: 1 },
 };
 const HID_LR = Number(process.env.HID_LR ?? 3);   // hidden-layer step relative to the readouts'
+const PRIOR = Number(process.env.PRIOR ?? 0.5);   // share of retina-driven units made colour-blind
 
 function make(seed, arm) {
   GAINS.sleepEvery = ARMS[arm].sleep; GAINS.sleepActor = ARMS[arm].sleep > 0;
   const w = new World(seed);
   if (ARMS[arm].bp) BackpropBrain.adopt(w.brain, HID_LR);
+  if (ARMS[arm].prior) addPrior(w.brain, PRIOR, seed);
   w.setStage(LISTEN);
   return w;
 }
@@ -119,7 +168,7 @@ function toPass(w) {
 }
 
 const rows = [];
-const ONLY = process.env.ARMS ? process.env.ARMS.split(",") : Object.keys(ARMS);   // e.g. ARMS=backprop
+const ONLY = process.env.ARMS ? process.env.ARMS.split(",").filter(a => a in ARMS) : Object.keys(ARMS);   // e.g. ARMS=backprop
 for (const arm of ONLY) for (const seed of seeds) {
   const t0 = Date.now();
   setColors(OLD);
