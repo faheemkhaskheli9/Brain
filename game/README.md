@@ -6,6 +6,9 @@ making the simulated brain do something, not by answering a quiz.
 
 Illustrated guide to every level and to Brain World: [docs/app-guide.md](../docs/app-guide.md).
 
+Two browser companions live next to it: [Brain World](world/README.md) (one creature, a curriculum of
+skills) and [Brain Ecosystem](ecosystem/README.md) (insects, foxes and humans, each with its own brain).
+
 ## Run
 
 ```

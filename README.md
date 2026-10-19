@@ -22,6 +22,7 @@ ML engineers, neuroscience students or players in
 | `simulation/` | Levels of modeling, spiking and reservoir networks, cognitive architectures, evaluation, datasets, hardware, brain-computer interfaces, emulation projects, saving a trained brain |
 | `research/` | Catalog of every paper the topics cite (`papers.md`), a script that fetches open-access PDFs, the learning-algorithm hypotheses, and numpy experiments (replay selection, local credit assignment, point vs dendritic neurons), and research notes and reports |
 | `game/` | Brain Lab: a playable simulation, on desktop or in the browser, where each level is one idea from the KB. See [game/README.md](game/README.md) |
+| `game/ecosystem/` | Brain Ecosystem: a 3D world of insects, foxes and humans, each with its own learning brain. See [game/ecosystem/README.md](game/ecosystem/README.md) |
 
 Every topic file has YAML frontmatter (title, tags, use_cases, status, sources).
 `python build_index.py` regenerates `INDEX.md` and checks `[[links]]`. The rules
@@ -58,6 +59,22 @@ python -m http.server 8000      # from the repo root, then open http://localhost
   how they fail (forgetting, slow stages) as well as how they succeed.
 - It runs in any browser with no install and no backprop, so the claim "it learns from
   dopamine alone" can be checked by anyone, headless in CI as well (`test_brain.mjs`).
+
+## Brain Ecosystem
+
+Insects, foxes and humans share one 3D world, and every individual has its own brain that learns from
+its own dopamine signal. Insects are born with strong instincts and live short lives; humans are born
+nearly blank, keep a map of where food grows and tell each other. Click any creature to see its
+dopamine, its instincts and what it has learned.
+
+![Brain Ecosystem: a human selected, with its learned liking for berry bushes](docs/screenshots/brain-ecosystem.png)
+
+```bash
+python -m http.server 8000      # from the repo root, then open http://localhost:8000/game/ecosystem/
+node game/ecosystem/test_ecosystem.mjs   # learning pays for every species; grown beats newborn
+```
+
+Details, measured results and limits: [game/ecosystem/README.md](game/ecosystem/README.md).
 
 Brain Lab (`python game/play.py`, or `game/web/` in a browser) is the companion game: eleven
 levels where you operate one mechanism at a time. Both are described in

@@ -35,3 +35,5 @@ jobs:
           node-version: "22"   # 22+ loads ES-module syntax from brain.js without a package.json
       - name: Brain World creature learns every stage and keeps them
         run: node game/world/test_brain.mjs 1 2 3   # several seeds, so tuning that only helps seed 1 fails
+      - name: Every species in Brain Ecosystem learns
+        run: node game/ecosystem/test_ecosystem.mjs 1 2 3
