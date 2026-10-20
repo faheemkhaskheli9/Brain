@@ -2,6 +2,7 @@
 
 | Path | What |
 |---|---|
+| [implementation-status.md](implementation-status.md) | Which open and closed issues are actually implemented, tested and recorded on `main`, with file links (#103). Lists closed issues whose code was never pushed (#128). |
 | [papers.md](papers.md) | Every reference cited by the topic files: citation, which topics cite it, DOI/link, open-access status, PDF link. Generated, and refreshed weekly by the `Paper catalog` workflow, which opens a PR when it changes. |
 | [fetch_papers.py](fetch_papers.py) | Builds `papers.md` offline from the topics and `papers.json` (the cache of OpenAlex lookups); `--check` fails when it is out of date (CI runs it); `--enrich` looks new references up online; `--pdf` downloads open-access PDFs. Stdlib only. |
 | [learning-algorithm-hypotheses.md](learning-algorithm-hypotheses.md) | Research thread: 170 ranked, testable hypotheses on the brain's unknown learning algorithm (abstraction, language, reasoning), with Next up and a results log. Start here to resume. |
