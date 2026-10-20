@@ -249,6 +249,7 @@ Output: the complex cell falls to 0 for the orthogonal orientation and stays at
 - [[evaluating-brain-models]] - neural predictivity, Brain-Score and error consistency.
 - [[neural-coding-and-computation]] - normalisation and sparse codes used at every stage.
 - [[measuring-the-brain-and-open-datasets]] - the recordings these comparisons use.
+- [[other-sensory-systems]] - hearing, touch, smell and pain: the senses beyond vision.
 
 ## References
 - Curcio, Sloan, Kalina & Hendrickson (1990) "Human photoreceptor topography", *J Comp Neurol* 292:497. doi:10.1002/cne.902920402

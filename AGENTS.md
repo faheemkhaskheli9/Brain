@@ -23,10 +23,22 @@ build digital simulations and brain-inspired learning systems.
    library says `not run here` on its first line and is skipped.
 4. Link the new topic from at least one existing topic's `## Related`.
 5. Run `python build_index.py` (stdlib only). It regenerates `INDEX.md` and fails
-   on missing frontmatter or a broken `[[link]]`.
+   on missing or invalid frontmatter (`category` must match the folder, `status` one
+   of the values below, `last_verified` a YYYY-MM-DD date, `tags`, `use_cases` and
+   `sources` non-empty), a broken `[[link]]`, or a relative Markdown link in any `.md`
+   file whose file or `#anchor` does not exist. It warns on an orphan topic (no other
+   topic links to it) and on a topic outside `guides/` missing a `_template.md` section.
+   `python run_code_blocks.py <topic.md>` runs the code of just the files you changed.
 6. Use LF line endings and UTF-8.
 
 `status`: `draft` until someone other than the author has reviewed it, then `stable`.
+
+## Web app
+
+`python3 webapp/server.py --open` serves a local site to read, search and edit the topics
+(guide: `docs/webapp-guide.md`). Its shared files are identical in the sibling knowledge bases; to change
+them, or to update and check all the bases together, use the `update-knowledge-bases` skill
+(`.claude/skills/update-knowledge-bases/SKILL.md`).
 
 ## Bugs
 

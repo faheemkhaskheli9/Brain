@@ -80,6 +80,7 @@ active at any moment (Lennie 2003). That sparsity is a large part of why it runs
 - [[efficient-brain-like-learning]] - put sparse, event-driven updates into a learner, with measurements.
 - [[brain-rhythms-and-oscillations]] - spike timing against theta and gamma rhythms.
 - [[dendritic-computation]] - single neurons compute more than a weighted sum.
+- [[hyperdimensional-computing]] - distributed codes put to work as symbols: binding roles to fillers.
 - [Brain World](../game/world/) - a 3D creature whose tone-hearing neurons use gain modulation: sound scales their visual drive.
 
 ## References

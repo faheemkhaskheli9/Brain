@@ -100,6 +100,17 @@ limited regions; how much this happens in the adult human hippocampus is debated
 - Dopamine-as-TD-error is directly usable: actor-critic RL is already
   brain-like at the systems level.
 
+## Open questions
+- Which rule solves **credit assignment** across many layers of cortex. Every candidate
+  in [[brain-vs-deep-learning]] is still a hypothesis.
+- How general eligibility traces are: how long a synaptic tag lasts, in which cell types
+  and regions, and which neuromodulator converts it into a lasting change.
+- How memories stay stable while spines and synapses keep turning over (the
+  stability-plasticity problem in the living brain).
+- How Hebbian, homeostatic and neuromodulated rules combine inside one neuron without
+  undoing each other, and on what time scales each acts.
+- How much adult neurogenesis contributes to learning in humans (see section 5).
+
 ## Related
 - [[neurons-and-synapses]] - NMDA receptors as coincidence detectors.
 - [[spiking-neural-networks]] - STDP and three-factor rules in code.

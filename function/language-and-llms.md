@@ -147,6 +147,7 @@ assert misfit > fit + 1.5                            # the odd word is far more 
 - [[brain-development-and-critical-periods]] - the critical period for language.
 - [[sensory-systems-and-vision]] - the visual dual-stream model the speech one parallels.
 - [[brain-structure-overview]] - where these regions sit.
+- [[social-cognition-and-theory-of-mind]] - theory of mind, which aphasic patients keep, and whether LLMs have it.
 
 ## References
 - Dronkers, Plaisant, Iba-Zizen & Cabanis (2007) "Paul Broca's historic cases: high resolution MR imaging of the brains of Leborgne and Lelong", *Brain* 130:1432. doi:10.1093/brain/awm042

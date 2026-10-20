@@ -18,12 +18,16 @@ jobs:
       - run: pip install . ruff
       - name: Lint
         run: ruff check .
+      - name: Index builder and code-block runner work
+        run: python test_build_index.py
       - name: Index is current and links resolve
         run: |
           python build_index.py
           git diff --exit-code INDEX.md
       - name: Paper catalog is current (offline)
         run: python research/fetch_papers.py --check
+      - name: Web app write path, backlinks and git routes
+        run: python webapp/test_server.py
       - name: Topic code blocks run
         run: python run_code_blocks.py
       - name: Game models
