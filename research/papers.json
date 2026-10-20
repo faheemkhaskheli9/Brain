@@ -1,0 +1,4975 @@
+{
+ "arxiv:1312.5663": {
+  "doi": "https://doi.org/10.48550/arxiv.1312.5663",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1312.5663"
+  ],
+  "title": "k-Sparse Autoencoders",
+  "year": 2013
+ },
+ "arxiv:1312.6199": {
+  "doi": "https://doi.org/10.48550/arxiv.1312.6199",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1312.6199"
+  ],
+  "title": "Intriguing properties of neural networks",
+  "year": 2013
+ },
+ "arxiv:1603.08983": {
+  "doi": "https://doi.org/10.48550/arxiv.1603.08983",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1603.08983"
+  ],
+  "title": "Adaptive Computation Time for Recurrent Neural Networks",
+  "year": 2016
+ },
+ "arxiv:1703.04200": {
+  "doi": "https://doi.org/10.48550/arxiv.1703.04200",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1703.04200"
+  ],
+  "title": "Continual Learning Through Synaptic Intelligence",
+  "year": 2017
+ },
+ "arxiv:1703.07950": {
+  "doi": "https://doi.org/10.48550/arxiv.1703.07950",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1703.07950"
+  ],
+  "title": "Failures of Gradient-Based Deep Learning",
+  "year": 2017
+ },
+ "arxiv:1705.05363": {
+  "doi": "https://doi.org/10.1109/cvprw.2017.70",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1705.05363"
+  ],
+  "title": "Curiosity-Driven Exploration by Self-Supervised Prediction",
+  "year": 2017
+ },
+ "arxiv:1706.03762": {
+  "doi": "https://doi.org/10.65215/2q58a426",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1706.03762"
+  ],
+  "title": "Attention Is All You Need",
+  "year": 2025
+ },
+ "arxiv:1706.04599": {
+  "doi": "https://doi.org/10.48550/arxiv.1706.04599",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1706.04599"
+  ],
+  "title": "On Calibration of Modern Neural Networks",
+  "year": 2017
+ },
+ "arxiv:1711.00350": {
+  "doi": "https://doi.org/10.48550/arxiv.1711.00350",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1711.00350"
+  ],
+  "title": "Generalization without systematicity: On the compositional skills of sequence-to-sequence recurrent networks",
+  "year": 2017
+ },
+ "arxiv:1711.10925": {
+  "doi": "https://doi.org/10.1007/s11263-020-01303-4",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1711.10925"
+  ],
+  "title": "Deep Image Prior",
+  "year": 2020
+ },
+ "arxiv:1802.07740": {
+  "doi": "https://doi.org/10.48550/arxiv.1802.07740",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1802.07740"
+  ],
+  "title": "Machine Theory of Mind",
+  "year": 2018
+ },
+ "arxiv:1807.04587": {
+  "doi": "https://doi.org/10.48550/arxiv.1807.04587",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1807.04587"
+  ],
+  "title": "Assessing the Scalability of Biologically-Motivated Deep Learning Algorithms and Architectures",
+  "year": 2018
+ },
+ "arxiv:1811.11682": {
+  "doi": "https://doi.org/10.48550/arxiv.1811.11682",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1811.11682"
+  ],
+  "title": "Experience Replay for Continual Learning",
+  "year": 2018
+ },
+ "arxiv:1811.12231": {
+  "doi": "https://doi.org/10.48550/arxiv.1811.12231",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1811.12231"
+  ],
+  "title": "ImageNet-trained CNNs are biased towards texture; increasing shape bias improves accuracy and robustness",
+  "year": 2018
+ },
+ "arxiv:1905.05675": {
+  "doi": "https://doi.org/10.32470/ccn.2019.1018-0",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1905.05675"
+  ],
+  "title": "The Algonauts Project: A Platform for Communication between the Sciences of Biological and Artificial Intelligence",
+  "year": 2019
+ },
+ "arxiv:1906.04358": {
+  "doi": "https://doi.org/10.13140/rg.2.2.16025.88169",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1906.04358"
+  ],
+  "title": "Weight Agnostic Neural Networks",
+  "year": 2019
+ },
+ "arxiv:1908.04742": {
+  "doi": "https://doi.org/10.48550/arxiv.1908.04742",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1908.04742",
+   "https://lirias.kuleuven.be/bitstream/123456789/645504/2/4454_final.pdf"
+  ],
+  "title": "Online Continual Learning with Maximally Interfered Retrieval",
+  "year": 2019
+ },
+ "arxiv:2006.16736": {
+  "doi": "https://doi.org/10.48550/arxiv.2006.16736",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2006.16736"
+  ],
+  "title": "Beyond accuracy: quantifying trial-by-trial behaviour of CNNs and humans by measuring error consistency",
+  "year": 2020
+ },
+ "arxiv:2008.02217": {
+  "doi": "https://doi.org/10.48550/arxiv.2008.02217",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2008.02217"
+  ],
+  "title": "Hopfield Networks is All You Need",
+  "year": 2020
+ },
+ "arxiv:2009.01269": {
+  "doi": "https://doi.org/10.48550/arxiv.2009.01269",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2009.01269"
+  ],
+  "title": "Can Single Neurons Solve MNIST? The Computational Power of Biological Dendritic Trees",
+  "year": 2020
+ },
+ "arxiv:2107.12979": {
+  "doi": "https://doi.org/10.48550/arxiv.2107.12979",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2107.12979"
+  ],
+  "title": "Predictive Coding: a Theoretical and Experimental Review",
+  "year": 2021
+ },
+ "arxiv:2108.13264": {
+  "doi": "https://doi.org/10.48550/arxiv.2108.13264",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2108.13264"
+  ],
+  "title": "Deep Reinforcement Learning at the Edge of the Statistical Precipice",
+  "year": 2021
+ },
+ "arxiv:2111.05498": {
+  "doi": "https://doi.org/10.48550/arxiv.2111.05498",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2111.05498"
+  ],
+  "title": "Attention Approximates Sparse Distributed Memory",
+  "year": 2021
+ },
+ "arxiv:2112.04035": {
+  "doi": "https://doi.org/10.48550/arxiv.2112.04035",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2112.04035"
+  ],
+  "title": "Relating transformers to models and neural representations of the hippocampal formation",
+  "year": 2021
+ },
+ "arxiv:2205.06175": {
+  "doi": "https://doi.org/10.48550/arxiv.2205.06175",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2205.06175"
+  ],
+  "title": "A Generalist Agent",
+  "year": 2022
+ },
+ "arxiv:2207.05221": {
+  "doi": "https://doi.org/10.48550/arxiv.2207.05221",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2207.05221"
+  ],
+  "title": "Language Models (Mostly) Know What They Know",
+  "year": 2022
+ },
+ "arxiv:2209.05245": {
+  "doi": "https://doi.org/10.48550/arxiv.2209.05245",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2209.05245"
+  ],
+  "title": "Continual learning benefits from multiple sleep mechanisms: NREM, REM, and Synaptic Downscaling",
+  "year": 2022
+ },
+ "arxiv:2212.13345": {
+  "doi": "https://doi.org/10.48550/arxiv.2212.13345",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2212.13345"
+  ],
+  "title": "The Forward-Forward Algorithm: Some Preliminary Investigations",
+  "year": 2022
+ },
+ "arxiv:2302.08399": {
+  "doi": "https://doi.org/10.48550/arxiv.2302.08399",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2302.08399"
+  ],
+  "title": "Large Language Models Fail on Trivial Alterations to Theory-of-Mind Tasks",
+  "year": 2023
+ },
+ "arxiv:2306.03779": {
+  "doi": "https://doi.org/10.48550/arxiv.2306.03779",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2306.03779"
+  ],
+  "title": "Performance-optimized deep neural networks are evolving into worse models of inferotemporal visual cortex",
+  "year": 2023
+ },
+ "arxiv:2308.08708": {
+  "doi": "https://doi.org/10.48550/arxiv.2308.08708",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2308.08708"
+  ],
+  "title": "Cheap Correlate or Discriminating Property? An Executable Validation Protocol for Consciousness- and Cognition-Theoretic Claims about AI",
+  "year": 2023
+ },
+ "arxiv:2309.02427": {
+  "doi": "https://doi.org/10.48550/arxiv.2309.02427",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2309.02427"
+  ],
+  "title": "Cognitive Architectures for Language Agents",
+  "year": 2023
+ },
+ "arxiv:2407.07530": {
+  "doi": "https://doi.org/10.48550/arxiv.2407.07530",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2407.07530"
+  ],
+  "title": "How Aligned are Different Alignment Metrics?",
+  "year": 2024
+ },
+ "arxiv:2408.06292": {
+  "doi": "https://doi.org/10.48550/arxiv.2408.06292",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2408.06292"
+  ],
+  "title": "The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery",
+  "year": 2024
+ },
+ "arxiv:2412.05149": {
+  "doi": "https://doi.org/10.48550/arxiv.2412.05149",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2412.05149"
+  ],
+  "title": "Findings of the Second BabyLM Challenge: Sample-Efficient Pretraining on Developmentally Plausible Corpora",
+  "year": 2024
+ },
+ "arxiv:2501.00504": {
+  "doi": "https://doi.org/10.48550/arxiv.2501.00504",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2501.00504"
+  ],
+  "title": "The Algonauts Project 2025 Challenge: How the Human Brain Makes Sense of Multimodal Movies",
+  "year": 2024
+ },
+ "arxiv:2507.06645": {
+  "doi": "https://doi.org/10.52202/085713-1702",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2507.06645"
+  ],
+  "title": "Quantifying Uncertainty in Error Consistency: Towards Reliable Behavioral Comparison of Classifiers",
+  "year": 2025
+ },
+ "doi:10.1001/archneur.1963.00460070100010": {
+  "doi": "https://doi.org/10.1001/archneur.1963.00460070100010",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Effects of Different Brain Lesions on Card Sorting",
+  "year": 1963
+ },
+ "doi:10.1002/cne.21974": {
+  "doi": "https://doi.org/10.1002/cne.21974",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Equal numbers of neuronal and nonneuronal cells make the human brain an isometrically scaled‐up primate brain",
+  "year": 2009
+ },
+ "doi:10.1002/cne.24040": {
+  "doi": "https://doi.org/10.1002/cne.24040",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The search for true numbers of neurons and glial cells in the human brain: A review of 150 years of cell counting",
+  "year": 2016
+ },
+ "doi:10.1002/cne.902240408": {
+  "doi": "https://doi.org/10.1002/cne.902240408",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Somatosensory cortical map changes following digit amputation in adult monkeys",
+  "year": 1984
+ },
+ "doi:10.1002/cne.902920402": {
+  "doi": "https://doi.org/10.1002/cne.902920402",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Human photoreceptor topography",
+  "year": 1990
+ },
+ "doi:10.1002/cne.903000103": {
+  "doi": "https://doi.org/10.1002/cne.903000103",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Topography of ganglion cells in human retina",
+  "year": 1990
+ },
+ "doi:10.1002/hipo.20345": {
+  "doi": "https://doi.org/10.1002/hipo.20345",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Hippocampal theta sequences",
+  "year": 2007
+ },
+ "doi:10.1002/hipo.22488": {
+  "doi": "https://doi.org/10.1002/hipo.22488",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "Hippocampal sharp wave‐ripple: A cognitive biomarker for episodic memory and planning",
+  "year": 2015
+ },
+ "doi:10.1002/hipo.450030307": {
+  "doi": "https://doi.org/10.1002/hipo.450030307",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Phase relationship between hippocampal place units and the EEG theta rhythm",
+  "year": 1993
+ },
+ "doi:10.1006/jmps.2001.1388": {
+  "doi": "https://doi.org/10.1006/jmps.2001.1388",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Distributed Representation of Temporal Context",
+  "year": 2002
+ },
+ "doi:10.1006/nimg.1998.0419": {
+  "doi": "https://doi.org/10.1006/nimg.1998.0419",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "Deconvolution of Impulse Response in Event-Related BOLD fMRI1",
+  "year": 1999
+ },
+ "doi:10.1006/nlme.1998.3843": {
+  "doi": "https://doi.org/10.1006/nlme.1998.3843",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The Basal Ganglia and Chunking of Action Repertoires",
+  "year": 1998
+ },
+ "doi:10.1007/978-3-642-35289-8_36": {
+  "doi": "https://doi.org/10.1007/978-3-642-35289-8_36",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Practical Guide to Applying Echo State Networks",
+  "year": 2012
+ },
+ "doi:10.1007/bf00230027": {
+  "doi": "https://doi.org/10.1007/bf00230027",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Understanding motor events: a neurophysiological study",
+  "year": 1992
+ },
+ "doi:10.1007/bf00275687": {
+  "doi": "https://doi.org/10.1007/bf00275687",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Simplified neuron model as a principal component analyzer",
+  "year": 1982
+ },
+ "doi:10.1007/bf00308809": {
+  "doi": "https://doi.org/10.1007/bf00308809",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neuropathological stageing of Alzheimer-related changes",
+  "year": 1991
+ },
+ "doi:10.1007/bf00344251": {
+  "doi": "https://doi.org/10.1007/bf00344251",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neocognitron: A self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position",
+  "year": 1980
+ },
+ "doi:10.1007/bf00992699": {
+  "doi": "https://doi.org/10.1007/bf00992699",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://link.springer.com/content/pdf/10.1007/BF00992699.pdf"
+  ],
+  "title": "Self-improving reactive agents based on reinforcement learning, planning and teaching",
+  "year": 1992
+ },
+ "doi:10.1007/bf01797193": {
+  "doi": "https://doi.org/10.1007/bf01797193",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Über das Elektrenkephalogramm des Menschen",
+  "year": 1929
+ },
+ "doi:10.1007/s10071-004-0239-6": {
+  "doi": "https://doi.org/10.1007/s10071-004-0239-6",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Causal knowledge and imitation/emulation switching in chimpanzees (Pan troglodytes) and children (Homo sapiens)",
+  "year": 2004
+ },
+ "doi:10.1007/s10462-018-9646-y": {
+  "doi": "https://doi.org/10.1007/s10462-018-9646-y",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://link.springer.com/content/pdf/10.1007/s10462-018-9646-y.pdf"
+  ],
+  "title": "40 years of cognitive architectures: core cognitive abilities and practical applications",
+  "year": 2018
+ },
+ "doi:10.1007/s12559-009-9009-8": {
+  "doi": "https://doi.org/10.1007/s12559-009-9009-8",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Hyperdimensional Computing: An Introduction to Computing in Distributed Representation with High-Dimensional Random Vectors",
+  "year": 2009
+ },
+ "doi:10.1016/0001-6918(67)90011-x": {
+  "doi": "https://doi.org/10.1016/0001-6918(67)90011-x",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Age differences in fluid and crystallized intelligence",
+  "year": 1967
+ },
+ "doi:10.1016/0004-3702(87)90050-6": {
+  "doi": "https://doi.org/10.1016/0004-3702(87)90050-6",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "SOAR: An architecture for general intelligence",
+  "year": 1987
+ },
+ "doi:10.1016/0006-8993(71)90358-1": {
+  "doi": "https://doi.org/10.1016/0006-8993(71)90358-1",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The hippocampus as a spatial map. Preliminary evidence from unit activity in the freely-moving rat",
+  "year": 1971
+ },
+ "doi:10.1016/0010-0277(83)90004-5": {
+  "doi": "https://doi.org/10.1016/0010-0277(83)90004-5",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Beliefs about beliefs: Representation and constraining function of wrong beliefs in young children's understanding of deception",
+  "year": 1983
+ },
+ "doi:10.1016/0010-0277(85)90008-3": {
+  "doi": "https://doi.org/10.1016/0010-0277(85)90008-3",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Object permanence in five-month-old infants",
+  "year": 1985
+ },
+ "doi:10.1016/0010-0277(85)90022-8": {
+  "doi": "https://doi.org/10.1016/0010-0277(85)90022-8",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Does the autistic child have a “theory of mind” ?",
+  "year": 1985
+ },
+ "doi:10.1016/0010-0277(88)90031-5": {
+  "doi": "https://doi.org/10.1016/0010-0277(88)90031-5",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Connectionism and cognitive architecture: A critical analysis",
+  "year": 1988
+ },
+ "doi:10.1016/0010-0277(93)90058-4": {
+  "doi": "https://doi.org/10.1016/0010-0277(93)90058-4",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [
+   "http://wexler.free.fr/library/files/elman (1993) learning and development in neural networks. the importance of starting small.pdf"
+  ],
+  "title": "Learning and development in neural networks: the importance of starting small",
+  "year": 1993
+ },
+ "doi:10.1016/0010-0277(95)00661-h": {
+  "doi": "https://doi.org/10.1016/0010-0277(95)00661-h",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Taking the intentional stance at 12 months of age",
+  "year": 1995
+ },
+ "doi:10.1016/0013-4694(88)90149-6": {
+  "doi": "https://doi.org/10.1016/0013-4694(88)90149-6",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Talking off the top of your head: toward a mental prosthesis utilizing event-related brain potentials",
+  "year": 1988
+ },
+ "doi:10.1016/0025-5564(71)90051-4": {
+  "doi": "https://doi.org/10.1016/0025-5564(71)90051-4",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A theory of cerebellar function",
+  "year": 1971
+ },
+ "doi:10.1016/0092-8674(91)90418-x": {
+  "doi": "https://doi.org/10.1016/0092-8674(91)90418-x",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [],
+  "title": "A novel multigene family may encode odorant receptors: A molecular basis for odor recognition",
+  "year": 1991
+ },
+ "doi:10.1016/0166-2236(89)90074-x": {
+  "doi": "https://doi.org/10.1016/0166-2236(89)90074-x",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The functional anatomy of basal ganglia disorders",
+  "year": 1989
+ },
+ "doi:10.1016/0166-2236(92)90344-8": {
+  "doi": "https://doi.org/10.1016/0166-2236(92)90344-8",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Separate visual pathways for perception and action",
+  "year": 1992
+ },
+ "doi:10.1016/0959-4388(95)80023-9": {
+  "doi": "https://doi.org/10.1016/0959-4388(95)80023-9",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Retrograde amnesia and memory consolidation: a neurobiological perspective",
+  "year": 1995
+ },
+ "doi:10.1016/j.asd.2011.02.004": {
+  "doi": "https://doi.org/10.1016/j.asd.2011.02.004",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Are mushroom bodies cerebellum-like structures?",
+  "year": 2011
+ },
+ "doi:10.1016/j.bandl.2014.10.006": {
+  "doi": "https://doi.org/10.1016/j.bandl.2014.10.006",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://eprints.kingston.ac.uk/id/eprint/31356/1/Galli-G-31356.pdf"
+  ],
+  "title": "The ERP response to the amount of information conveyed by words in sentences",
+  "year": 2014
+ },
+ "doi:10.1016/j.bbr.2008.03.020": {
+  "doi": "https://doi.org/10.1016/j.bbr.2008.03.020",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Molecular biology of 5-HT receptors",
+  "year": 2008
+ },
+ "doi:10.1016/j.biopsych.2018.05.015": {
+  "doi": "https://doi.org/10.1016/j.biopsych.2018.05.015",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "The Predictive Coding Account of Psychosis",
+  "year": 2018
+ },
+ "doi:10.1016/j.cell.2015.09.029": {
+  "doi": "https://doi.org/10.1016/j.cell.2015.09.029",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0092867415011915/pdf"
+  ],
+  "title": "Reconstruction and Simulation of Neocortical Microcircuitry",
+  "year": 2015
+ },
+ "doi:10.1016/j.cell.2017.07.021": {
+  "doi": "https://doi.org/10.1016/j.cell.2017.07.021",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0092867417308280/pdf"
+  ],
+  "title": "Dynamic Reorganization of Neuronal Activity Patterns in Parietal Cortex",
+  "year": 2017
+ },
+ "doi:10.1016/j.cell.2018.05.002": {
+  "doi": "https://doi.org/10.1016/j.cell.2018.05.002",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0092867418305750/pdf",
+   "https://www.cell.com/article/S0092867418305750/pdf"
+  ],
+  "title": "Astrocytic Activation Generates De Novo Neuronal Potentiation and Memory Enhancement",
+  "year": 2018
+ },
+ "doi:10.1016/j.cell.2020.09.031": {
+  "doi": "https://doi.org/10.1016/j.cell.2020.09.031",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0092867420312289/pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2019/10/04/408633.full.pdf"
+  ],
+  "title": "The Geometry of Abstraction in the Hippocampus and Prefrontal Cortex",
+  "year": 2020
+ },
+ "doi:10.1016/j.cell.2020.10.024": {
+  "doi": "https://doi.org/10.1016/j.cell.2020.10.024",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S009286742031388X/pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2019/09/24/770495.full.pdf"
+  ],
+  "title": "The Tolman-Eichenbaum Machine: Unifying Space and Relational Memory through Generalization in the Hippocampal Formation",
+  "year": 2020
+ },
+ "doi:10.1016/j.cogdev.2017.09.001": {
+  "doi": "https://doi.org/10.1016/j.cogdev.2017.09.001",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "How robust are anticipatory looking measures of Theory of Mind? Replication attempts across the life span",
+  "year": 2017
+ },
+ "doi:10.1016/j.cognition.2009.07.005": {
+  "doi": "https://doi.org/10.1016/j.cognition.2009.07.005",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Action understanding as inverse planning",
+  "year": 2009
+ },
+ "doi:10.1016/j.cognition.2018.04.007": {
+  "doi": "https://doi.org/10.1016/j.cognition.2018.04.007",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [],
+  "title": "A critical period for second language acquisition: Evidence from 2/3 million English speakers",
+  "year": 2018
+ },
+ "doi:10.1016/j.conb.2006.09.002": {
+  "doi": "https://doi.org/10.1016/j.conb.2006.09.002",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The role of acetylcholine in learning and memory",
+  "year": 2006
+ },
+ "doi:10.1016/j.conb.2015.04.003": {
+  "doi": "https://doi.org/10.1016/j.conb.2015.04.003",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "On simplicity and complexity in the brave new world of large-scale neuroscience",
+  "year": 2015
+ },
+ "doi:10.1016/j.conb.2019.08.005": {
+  "doi": "https://doi.org/10.1016/j.conb.2019.08.005",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Causes and consequences of representational drift",
+  "year": 2019
+ },
+ "doi:10.1016/j.cosrev.2009.03.005": {
+  "doi": "https://doi.org/10.1016/j.cosrev.2009.03.005",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Reservoir computing approaches to recurrent neural network training",
+  "year": 2009
+ },
+ "doi:10.1016/j.cub.2010.02.045": {
+  "doi": "https://doi.org/10.1016/j.cub.2010.02.045",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0960982210002332/pdf"
+  ],
+  "title": "Single-Neuron Responses in Humans during Execution and Observation of Actions",
+  "year": 2010
+ },
+ "doi:10.1016/j.cub.2010.11.042": {
+  "doi": "https://doi.org/10.1016/j.cub.2010.11.042",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [],
+  "title": "The Human Amygdala and the Induction and Experience of Fear",
+  "year": 2010
+ },
+ "doi:10.1016/j.cub.2012.09.001": {
+  "doi": "https://doi.org/10.1016/j.cub.2012.09.001",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0960982212010640/pdf"
+  ],
+  "title": "An Embodied View of Octopus Neurobiology",
+  "year": 2012
+ },
+ "doi:10.1016/j.cub.2014.07.041": {
+  "doi": "https://doi.org/10.1016/j.cub.2014.07.041",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S096098221400904X/pdf"
+  ],
+  "title": "Optogenetic Activation of Dorsal Raphe Serotonin Neurons Enhances Patience for Future Rewards",
+  "year": 2014
+ },
+ "doi:10.1016/j.cub.2015.02.036": {
+  "doi": "https://doi.org/10.1016/j.cub.2015.02.036",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0960982215002055/pdf"
+  ],
+  "title": "A Scalable Population Code for Time in the Striatum",
+  "year": 2015
+ },
+ "doi:10.1016/j.cub.2016.03.047": {
+  "doi": "https://doi.org/10.1016/j.cub.2016.03.047",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0960982216302573/pdf"
+  ],
+  "title": "Comprehensive Longitudinal Study Challenges the Existence of Neonatal Imitation in Humans",
+  "year": 2016
+ },
+ "doi:10.1016/j.heares.2008.06.005": {
+  "doi": "https://doi.org/10.1016/j.heares.2008.06.005",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Cochlear implants: A remarkable past and a brilliant future",
+  "year": 2008
+ },
+ "doi:10.1016/j.neubiorev.2009.11.007": {
+  "doi": "https://doi.org/10.1016/j.neubiorev.2009.11.007",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Where do mirror neurons come from?",
+  "year": 2009
+ },
+ "doi:10.1016/j.neunet.2012.07.005": {
+  "doi": "https://doi.org/10.1016/j.neunet.2012.07.005",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Re-visiting the echo state property",
+  "year": 2012
+ },
+ "doi:10.1016/j.neunet.2019.03.005": {
+  "doi": "https://doi.org/10.1016/j.neunet.2019.03.005",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.sciencedirect.com/science/article/pii/S0893608019300784/pdf",
+   "https://arxiv.org/pdf/1808.04962"
+  ],
+  "title": "Recent advances in physical reservoir computing: A review",
+  "year": 2019
+ },
+ "doi:10.1016/j.neurobiolaging.2008.09.023": {
+  "doi": "https://doi.org/10.1016/j.neurobiolaging.2008.09.023",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "When does age-related cognitive decline begin?",
+  "year": 2009
+ },
+ "doi:10.1016/j.neuroimage.2013.02.063": {
+  "doi": "https://doi.org/10.1016/j.neuroimage.2013.02.063",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The valuation system: A coordinate-based meta-analysis of BOLD fMRI experiments examining neural correlates of subjective value",
+  "year": 2013
+ },
+ "doi:10.1016/j.neuron.2005.04.026": {
+  "doi": "https://doi.org/10.1016/j.neuron.2005.04.026",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627305003624/pdf"
+  ],
+  "title": "Uncertainty, Neuromodulation, and Attention",
+  "year": 2005
+ },
+ "doi:10.1016/j.neuron.2006.03.016": {
+  "doi": "https://doi.org/10.1016/j.neuron.2006.03.016",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627306002133/pdf"
+  ],
+  "title": "Integrative Properties of Radial Oblique Dendrites in Hippocampal CA1 Pyramidal Neurons",
+  "year": 2006
+ },
+ "doi:10.1016/j.neuron.2006.05.001": {
+  "doi": "https://doi.org/10.1016/j.neuron.2006.05.001",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627306003448/pdf"
+  ],
+  "title": "The Neural Basis of Mentalizing",
+  "year": 2006
+ },
+ "doi:10.1016/j.neuron.2007.01.006": {
+  "doi": "https://doi.org/10.1016/j.neuron.2007.01.006",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627307000256/pdf"
+  ],
+  "title": "Timing in the Absence of Clocks: Encoding Time in Neural Network States",
+  "year": 2007
+ },
+ "doi:10.1016/j.neuron.2007.08.013": {
+  "doi": "https://doi.org/10.1016/j.neuron.2007.08.013",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627307006265/pdf"
+  ],
+  "title": "Neuromodulators Control the Polarity of Spike-Timing-Dependent Synaptic Plasticity",
+  "year": 2007
+ },
+ "doi:10.1016/j.neuron.2009.01.002": {
+  "doi": "https://doi.org/10.1016/j.neuron.2009.01.002",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627309000038/pdf"
+  ],
+  "title": "The Normalization Model of Attention",
+  "year": 2009
+ },
+ "doi:10.1016/j.neuron.2009.07.018": {
+  "doi": "https://doi.org/10.1016/j.neuron.2009.07.018",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627309005479/pdf"
+  ],
+  "title": "Generating Coherent Patterns of Activity from Chaotic Neural Networks",
+  "year": 2009
+ },
+ "doi:10.1016/j.neuron.2010.08.004": {
+  "doi": "https://doi.org/10.1016/j.neuron.2010.08.004",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627310006148/pdf"
+  ],
+  "title": "Differences in Gamma Frequencies across Visual Cortex Restrict Their Possible Use in Computation",
+  "year": 2010
+ },
+ "doi:10.1016/j.neuron.2011.02.027": {
+  "doi": "https://doi.org/10.1016/j.neuron.2011.02.027",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627311001255/pdf"
+  ],
+  "title": "Model-Based Influences on Humans' Choices and Striatal Prediction Errors",
+  "year": 2011
+ },
+ "doi:10.1016/j.neuron.2011.03.018": {
+  "doi": "https://doi.org/10.1016/j.neuron.2011.03.018",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627311002583/pdf"
+  ],
+  "title": "Experimental and Theoretical Approaches to Conscious Processing",
+  "year": 2011
+ },
+ "doi:10.1016/j.neuron.2011.07.012": {
+  "doi": "https://doi.org/10.1016/j.neuron.2011.07.012",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S089662731100609X/pdf"
+  ],
+  "title": "Hippocampal “Time Cells” Bridge the Gap in Memory for Discontiguous Events",
+  "year": 2011
+ },
+ "doi:10.1016/j.neuron.2012.03.026": {
+  "doi": "https://doi.org/10.1016/j.neuron.2012.03.026",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627312003340/pdf"
+  ],
+  "title": "Microglia Sculpt Postnatal Neural Circuits in an Activity and Complement-Dependent Manner",
+  "year": 2012
+ },
+ "doi:10.1016/j.neuron.2012.08.019": {
+  "doi": "https://doi.org/10.1016/j.neuron.2012.08.019",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627312007568/pdf"
+  ],
+  "title": "Synaptic Energy Use and Supply",
+  "year": 2012
+ },
+ "doi:10.1016/j.neuron.2013.03.006": {
+  "doi": "https://doi.org/10.1016/j.neuron.2013.03.006",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627313002304/pdf"
+  ],
+  "title": "Auditory Closed-Loop Stimulation of the Sleep Slow Oscillation Enhances Memory",
+  "year": 2013
+ },
+ "doi:10.1016/j.neuron.2013.03.007": {
+  "doi": "https://doi.org/10.1016/j.neuron.2013.03.007",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627313002316/pdf"
+  ],
+  "title": "The Theta-Gamma Neural Code",
+  "year": 2013
+ },
+ "doi:10.1016/j.neuron.2013.12.025": {
+  "doi": "https://doi.org/10.1016/j.neuron.2013.12.025",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627313011860/pdf"
+  ],
+  "title": "Sleep and the Price of Plasticity: From Synaptic and Cellular Homeostasis to Memory Consolidation and Integration",
+  "year": 2014
+ },
+ "doi:10.1016/j.neuron.2014.02.042": {
+  "doi": "https://doi.org/10.1016/j.neuron.2014.02.042",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627314001925/pdf"
+  ],
+  "title": "Placebo Analgesia: A Predictive Coding Perspective",
+  "year": 2014
+ },
+ "doi:10.1016/j.neuron.2015.09.034": {
+  "doi": "https://doi.org/10.1016/j.neuron.2015.09.034",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627315008235/pdf"
+  ],
+  "title": "Rhythms for Cognition: Communication through Coherence",
+  "year": 2015
+ },
+ "doi:10.1016/j.neuron.2017.01.030": {
+  "doi": "https://doi.org/10.1016/j.neuron.2017.01.030",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627317300545/pdf"
+  ],
+  "title": "Optimal Degrees of Synaptic Connectivity",
+  "year": 2017
+ },
+ "doi:10.1016/j.neuron.2017.02.004": {
+  "doi": "https://doi.org/10.1016/j.neuron.2017.02.004",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627317300880/pdf"
+  ],
+  "title": "Sleep and Human Aging",
+  "year": 2017
+ },
+ "doi:10.1016/j.neuron.2017.05.025": {
+  "doi": "https://doi.org/10.1016/j.neuron.2017.05.025",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627317304634/pdf"
+  ],
+  "title": "Neural Manifolds for the Control of Movement",
+  "year": 2017
+ },
+ "doi:10.1016/j.neuron.2017.06.011": {
+  "doi": "https://doi.org/10.1016/j.neuron.2017.06.011",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627317305093/pdf"
+  ],
+  "title": "Neuroscience-Inspired Artificial Intelligence",
+  "year": 2017
+ },
+ "doi:10.1016/j.neuron.2018.03.044": {
+  "doi": "https://doi.org/10.1016/j.neuron.2018.03.044",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627318302502/pdf"
+  ],
+  "title": "A Task-Optimized Neural Network Replicates Human Auditory Behavior, Predicts Brain Responses, and Reveals a Cortical Processing Hierarchy",
+  "year": 2018
+ },
+ "doi:10.1016/j.neuron.2018.10.002": {
+  "doi": "https://doi.org/10.1016/j.neuron.2018.10.002",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [],
+  "title": "What Is a Cognitive Map? Organizing Knowledge for Flexible Behavior",
+  "year": 2018
+ },
+ "doi:10.1016/j.neuron.2020.07.040": {
+  "doi": "https://doi.org/10.1016/j.neuron.2020.07.040",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S089662732030605X/pdf"
+  ],
+  "title": "Integrative Benchmarking to Advance Neurally Mechanistic Models of Human Intelligence",
+  "year": 2020
+ },
+ "doi:10.1016/j.neuron.2021.07.002": {
+  "doi": "https://doi.org/10.1016/j.neuron.2021.07.002",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/03/19/613141.full.pdf"
+  ],
+  "title": "Single cortical neurons as deep artificial neural networks",
+  "year": 2021
+ },
+ "doi:10.1016/j.neuron.2022.09.001": {
+  "doi": "https://doi.org/10.1016/j.neuron.2022.09.001",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627322008066/pdf"
+  ],
+  "title": "In vitro neurons learn and exhibit sentience when embodied in a simulated game-world",
+  "year": 2022
+ },
+ "doi:10.1016/j.stem.2018.03.015": {
+  "doi": "https://doi.org/10.1016/j.stem.2018.03.015",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S1934590918301218/pdf"
+  ],
+  "title": "Human Hippocampal Neurogenesis Persists throughout Aging",
+  "year": 2018
+ },
+ "doi:10.1016/j.stem.2019.08.002": {
+  "doi": "https://doi.org/10.1016/j.stem.2019.08.002",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S1934590919303376/pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2018/09/03/358622.full.pdf"
+  ],
+  "title": "Complex Oscillatory Waves Emerging from Cortical Organoids Model Early Human Brain Network Development",
+  "year": 2019
+ },
+ "doi:10.1016/j.tics.2006.09.001": {
+  "doi": "https://doi.org/10.1016/j.tics.2006.09.001",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Towards a true neural stance on consciousness",
+  "year": 2006
+ },
+ "doi:10.1016/j.tics.2009.01.005": {
+  "doi": "https://doi.org/10.1016/j.tics.2009.01.005",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Natural pedagogy",
+  "year": 2009
+ },
+ "doi:10.1016/j.tics.2011.05.009": {
+  "doi": "https://doi.org/10.1016/j.tics.2011.05.009",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Empirical support for higher-order theories of conscious awareness",
+  "year": 2011
+ },
+ "doi:10.1016/j.tics.2011.11.018": {
+  "doi": "https://doi.org/10.1016/j.tics.2011.11.018",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S1364661311002518/pdf"
+  ],
+  "title": "Computational psychiatry",
+  "year": 2011
+ },
+ "doi:10.1016/j.tics.2012.08.009": {
+  "doi": "https://doi.org/10.1016/j.tics.2012.08.009",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://discovery.ucl.ac.uk/1476122/3/Pellicano_TiCS_autism_final%20accepted.pdf"
+  ],
+  "title": "When the world becomes ‘too real’: a Bayesian explanation of autistic perception",
+  "year": 2012
+ },
+ "doi:10.1016/j.tics.2013.09.007": {
+  "doi": "https://doi.org/10.1016/j.tics.2013.09.007",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S1364661313002118/pdf",
+   "http://sro.sussex.ac.uk/id/eprint/49586/1/SethInteroceptive.pdf"
+  ],
+  "title": "Interoceptive inference, emotion, and the embodied self",
+  "year": 2013
+ },
+ "doi:10.1016/j.tics.2015.05.004": {
+  "doi": "https://doi.org/10.1016/j.tics.2015.05.004",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S1364661315001023/pdf"
+  ],
+  "title": "‘Activity-silent’ working memory in prefrontal cortex: a dynamic coding framework",
+  "year": 2015
+ },
+ "doi:10.1016/j.tics.2016.05.004": {
+  "doi": "https://doi.org/10.1016/j.tics.2016.05.004",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "What Learning Systems do Intelligent Agents Need? Complementary Learning Systems Theory Updated",
+  "year": 2016
+ },
+ "doi:10.1016/j.tics.2019.06.009": {
+  "doi": "https://doi.org/10.1016/j.tics.2019.06.009",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "http://www.cell.com/article/S1364661319301615/pdf"
+  ],
+  "title": "Understanding the Higher-Order Approach to Consciousness",
+  "year": 2019
+ },
+ "doi:10.1016/j.tics.2023.08.007": {
+  "doi": "https://doi.org/10.1016/j.tics.2023.08.007",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "Bridging the data gap between children and large language models",
+  "year": 2023
+ },
+ "doi:10.1016/j.tics.2024.01.011": {
+  "doi": "https://doi.org/10.1016/j.tics.2024.01.011",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11416727/pdf/nihms-2021156.pdf"
+  ],
+  "title": "Dissociating language and thought in large language models",
+  "year": 2024
+ },
+ "doi:10.1016/j.tins.2012.02.001": {
+  "doi": "https://doi.org/10.1016/j.tins.2012.02.001",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "How schema and novelty augment memory formation",
+  "year": 2012
+ },
+ "doi:10.1016/s0010-0277(02)00004-5": {
+  "doi": "https://doi.org/10.1016/s0010-0277(02)00004-5",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [
+   "https://eprints.bbk.ac.uk/id/eprint/5721/1/Kirkham_Slemmer_Johnson.pdf"
+  ],
+  "title": "Visual statistical learning in infancy: evidence for a domain general learning mechanism",
+  "year": 2002
+ },
+ "doi:10.1016/s0010-0277(98)00058-4": {
+  "doi": "https://doi.org/10.1016/s0010-0277(98)00058-4",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Infants selectively encode the goal object of an actor's reach",
+  "year": 1998
+ },
+ "doi:10.1016/s0010-0277(99)00066-9": {
+  "doi": "https://doi.org/10.1016/s0010-0277(99)00066-9",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Large number discrimination in 6-month-old infants",
+  "year": 2000
+ },
+ "doi:10.1016/s0013-4694(96)95176-0": {
+  "doi": "https://doi.org/10.1016/s0013-4694(96)95176-0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The Utah Intracortical Electrode Array: A recording structure for potential brain-computer interfaces",
+  "year": 1997
+ },
+ "doi:10.1016/s0079-7421(08)60536-8": {
+  "doi": "https://doi.org/10.1016/s0079-7421(08)60536-8",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Catastrophic Interference in Connectionist Networks: The Sequential Learning Problem",
+  "year": 1989
+ },
+ "doi:10.1016/s0140-6736(78)92762-9": {
+  "doi": "https://doi.org/10.1016/s0140-6736(78)92762-9",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "THE MECHANISM OF PLACEBO ANALGESIA",
+  "year": 1978
+ },
+ "doi:10.1016/s0163-6383(84)80022-3": {
+  "doi": "https://doi.org/10.1016/s0163-6383(84)80022-3",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Cross-language speech perception: Evidence for perceptual reorganization during the first year of life",
+  "year": 1984
+ },
+ "doi:10.1016/s0166-2236(00)01868-3": {
+  "doi": "https://doi.org/10.1016/s0166-2236(00)01868-3",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Synaptic reverberation underlying mnemonic persistent activity",
+  "year": 2001
+ },
+ "doi:10.1016/s0166-2236(98)01349-6": {
+  "doi": "https://doi.org/10.1016/s0166-2236(98)01349-6",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Tripartite synapses: glia, the unacknowledged partner",
+  "year": 1999
+ },
+ "doi:10.1016/s0301-0082(96)00042-1": {
+  "doi": "https://doi.org/10.1016/s0301-0082(96)00042-1",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "THE BASAL GANGLIA: FOCUSED SELECTION AND INHIBITION OF COMPETING MOTOR PROGRAMS",
+  "year": 1996
+ },
+ "doi:10.1016/s0306-4522(98)00319-4": {
+  "doi": "https://doi.org/10.1016/s0306-4522(98)00319-4",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [
+   "http://eprints.whiterose.ac.uk/107033/1/Redgrave%20Neuroscience%201999%20preprint.pdf"
+  ],
+  "title": "The basal ganglia: a vertebrate solution to the selection problem?",
+  "year": 1999
+ },
+ "doi:10.1016/s0734-189x(87)80014-2": {
+  "doi": "https://doi.org/10.1016/s0734-189x(87)80014-2",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A massively parallel architecture for a self-organizing neural pattern recognition machine",
+  "year": 1987
+ },
+ "doi:10.1016/s0893-6080(02)00044-8": {
+  "doi": "https://doi.org/10.1016/s0893-6080(02)00044-8",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Metalearning and neuromodulation",
+  "year": 2002
+ },
+ "doi:10.1016/s0893-6080(99)00046-5": {
+  "doi": "https://doi.org/10.1016/s0893-6080(99)00046-5",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "What are the computations of the cerebellum, the basal ganglia and the cerebral cortex?",
+  "year": 1999
+ },
+ "doi:10.1016/s0896-6273(03)00149-1": {
+  "doi": "https://doi.org/10.1016/s0896-6273(03)00149-1",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627303001491/pdf"
+  ],
+  "title": "Pyramidal Neuron as Two-Layer Neural Network",
+  "year": 2003
+ },
+ "doi:10.1016/s0896-6273(03)00568-3": {
+  "doi": "https://doi.org/10.1016/s0896-6273(03)00568-3",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627303005683/pdf"
+  ],
+  "title": "Parkinson's Disease",
+  "year": 2003
+ },
+ "doi:10.1016/s0959-4388(96)80070-5": {
+  "doi": "https://doi.org/10.1016/s0959-4388(96)80070-5",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The binding problem",
+  "year": 1996
+ },
+ "doi:10.1016/s0960-9822(03)00135-0": {
+  "doi": "https://doi.org/10.1016/s0960-9822(03)00135-0",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0960982203001350/pdf"
+  ],
+  "title": "The Cost of Cortical Computation",
+  "year": 2003
+ },
+ "doi:10.1016/s1053-8119(03)00230-1": {
+  "doi": "https://doi.org/10.1016/s1053-8119(03)00230-1",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "People thinking about thinking peopleThe role of the temporo-parietal junction in “theory of mind”",
+  "year": 2003
+ },
+ "doi:10.1016/s1364-6613(00)01601-6": {
+  "doi": "https://doi.org/10.1016/s1364-6613(00)01601-6",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Cognitive architecture of a mini-brain: the honeybee",
+  "year": 2001
+ },
+ "doi:10.1016/s1364-6613(98)01221-2": {
+  "doi": "https://doi.org/10.1016/s1364-6613(98)01221-2",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Internal models in the cerebellum",
+  "year": 1998
+ },
+ "doi:10.1016/s1388-2457(02)00057-3": {
+  "doi": "https://doi.org/10.1016/s1388-2457(02)00057-3",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Brain–computer interfaces for communication and control",
+  "year": 2002
+ },
+ "doi:10.1017/s0140525x00076512": {
+  "doi": "https://doi.org/10.1017/s0140525x00076512",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/1E96B02CD9850016B7C93BC6D2FEF1D0/S0140525X00076512a.pdf/div-class-title-does-the-chimpanzee-have-a-theory-of-mind-div.pdf"
+  ],
+  "title": "Does the chimpanzee have a theory of mind?",
+  "year": 1978
+ },
+ "doi:10.1017/s0140525x01003922": {
+  "doi": "https://doi.org/10.1017/s0140525x01003922",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/44023F1147D4A1D44BDC0AD226838496/S0140525X01003922a.pdf/div-class-title-the-magical-number-4-in-short-term-memory-a-reconsideration-of-mental-storage-capacity-div.pdf"
+  ],
+  "title": "The magical number 4 in short-term memory: A reconsideration of mental storage capacity",
+  "year": 2001
+ },
+ "doi:10.1017/s0140525x12000477": {
+  "doi": "https://doi.org/10.1017/s0140525x12000477",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/33542C736E17E3D1D44E8D03BE5F4CD9/S0140525X12000477a.pdf/div-class-title-whatever-next-predictive-brains-situated-agents-and-the-future-of-cognitive-science-div.pdf"
+  ],
+  "title": "Whatever next? Predictive brains, situated agents, and the future of cognitive science",
+  "year": 2013
+ },
+ "doi:10.1017/s0140525x16001837": {
+  "doi": "https://doi.org/10.1017/s0140525x16001837",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/A9535B1D745A0377E16C590E14B94993/S0140525X16001837a.pdf/div-class-title-building-machines-that-learn-and-think-like-people-div.pdf",
+   "https://arxiv.org/pdf/1604.00289"
+  ],
+  "title": "Building machines that learn and think like people",
+  "year": 2016
+ },
+ "doi:10.1017/s1355617702813248": {
+  "doi": "https://doi.org/10.1017/s1355617702813248",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "What is cognitive reserve? Theory and research application of the reserve concept",
+  "year": 2002
+ },
+ "doi:10.1037/0033-295x.102.3.419": {
+  "doi": "https://doi.org/10.1037/0033-295x.102.3.419",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Why there are complementary learning systems in the hippocampus and neocortex: Insights from the successes and failures of connectionist models of learning and memory.",
+  "year": 1995
+ },
+ "doi:10.1037/0033-295x.103.3.403": {
+  "doi": "https://doi.org/10.1037//0033-295x.103.3.403",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The processing-speed theory of adult age differences in cognition.",
+  "year": 1996
+ },
+ "doi:10.1037/0033-295x.111.4.1036": {
+  "doi": "https://doi.org/10.1037/0033-295x.111.4.1036",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "An Integrated Theory of the Mind.",
+  "year": 2004
+ },
+ "doi:10.1037/0033-295x.113.4.700": {
+  "doi": "https://doi.org/10.1037/0033-295x.113.4.700",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The physics of optimal decision making: A formal analysis of models of performance in two-alternative forced-choice tasks.",
+  "year": 2006
+ },
+ "doi:10.1037/0033-295x.84.3.279": {
+  "doi": "https://doi.org/10.1037//0033-295x.84.3.279",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Scalar expectancy theory and Weber's law in animal timing.",
+  "year": 1977
+ },
+ "doi:10.1037/0033-295x.85.2.59": {
+  "doi": "https://doi.org/10.1037//0033-295x.85.2.59",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A theory of memory retrieval.",
+  "year": 1978
+ },
+ "doi:10.1037/a0030852": {
+  "doi": "https://doi.org/10.1037/a0030852",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Cognitive control over learning: Creating, clustering, and generalizing task-set structure.",
+  "year": 2013
+ },
+ "doi:10.1037/a0033812": {
+  "doi": "https://doi.org/10.1037/a0033812",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Incorporating rapid neocortical learning of new schema-consistent information into complementary learning systems theory.",
+  "year": 2013
+ },
+ "doi:10.1037/a0037665": {
+  "doi": "https://doi.org/10.1037/a0037665",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Precise minds in uncertain worlds: Predictive coding in autism.",
+  "year": 2014
+ },
+ "doi:10.1037/a0038199": {
+  "doi": "https://doi.org/10.1037/a0038199",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Humans use directed and random exploration to solve the explore–exploit dilemma.",
+  "year": 2014
+ },
+ "doi:10.1037/h0043158": {
+  "doi": "https://doi.org/10.1037/h0043158",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The magical number seven, plus or minus two: Some limits on our capacity for processing information.",
+  "year": 1956
+ },
+ "doi:10.1037/h0045925": {
+  "doi": "https://doi.org/10.1037/h0045925",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Transmission of aggression through imitation of aggressive models.",
+  "year": 1961
+ },
+ "doi:10.1037/h0061495": {
+  "doi": "https://doi.org/10.1037/h0061495",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A place theory of sound localization.",
+  "year": 1948
+ },
+ "doi:10.1038/14819": {
+  "doi": "https://doi.org/10.1038/14819",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Hierarchical models of object recognition in cortex",
+  "year": 1999
+ },
+ "doi:10.1038/18686": {
+  "doi": "https://doi.org/10.1038/18686",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "A new cellular mechanism for coupling inputs arriving at different cortical layers",
+  "year": 1999
+ },
+ "doi:10.1038/338334a0": {
+  "doi": "https://doi.org/10.1038/338334a0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Oscillatory responses in cat visual cortex exhibit inter-columnar synchronization which reflects global stimulus properties",
+  "year": 1989
+ },
+ "doi:10.1038/35005094": {
+  "doi": "https://doi.org/10.1038/35005094",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "NMDA spikes in basal dendrites of cortical pyramidal neurons",
+  "year": 2000
+ },
+ "doi:10.1038/35082081": {
+  "doi": "https://doi.org/10.1038/35082081",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Single neurons in prefrontal cortex encode abstract rules",
+  "year": 2001
+ },
+ "doi:10.1038/35784": {
+  "doi": "https://doi.org/10.1038/35784",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Rubber hands ‘feel’ touch that eyes see",
+  "year": 1998
+ },
+ "doi:10.1038/361031a0": {
+  "doi": "https://doi.org/10.1038/361031a0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A synaptic model of memory: long-term potentiation in the hippocampus",
+  "year": 1993
+ },
+ "doi:10.1038/36846": {
+  "doi": "https://doi.org/10.1038/36846",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The capacity of visual working memory for features and conjunctions",
+  "year": 1997
+ },
+ "doi:10.1038/370057a0": {
+  "doi": "https://doi.org/10.1038/370057a0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A geometric process for spatial reorientation in young children",
+  "year": 1994
+ },
+ "doi:10.1038/381607a0": {
+  "doi": "https://doi.org/10.1038/381607a0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Emergence of simple-cell receptive field properties by learning a sparse code for natural images",
+  "year": 1996
+ },
+ "doi:10.1038/385533a0": {
+  "doi": "https://doi.org/10.1038/385533a0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Synaptic tagging and long-term potentiation",
+  "year": 1997
+ },
+ "doi:10.1038/386493a0": {
+  "doi": "https://doi.org/10.1038/386493a0",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "More hippocampal neurons in adult mice living in an enriched environment",
+  "year": 1997
+ },
+ "doi:10.1038/39807": {
+  "doi": "https://doi.org/10.1038/39807",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The capsaicin receptor: a heat-activated ion channel in the pain pathway",
+  "year": 1997
+ },
+ "doi:10.1038/417543a": {
+  "doi": "https://doi.org/10.1038/417543a",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Precise inhibition is essential for microsecond interaural time difference coding",
+  "year": 2002
+ },
+ "doi:10.1038/4580": {
+  "doi": "https://doi.org/10.1038/4580",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Predictive coding in the visual cortex: a functional interpretation of some extra-classical receptive-field effects",
+  "year": 1999
+ },
+ "doi:10.1038/551159a": {
+  "doi": "https://doi.org/10.1038/551159a",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Four ethical priorities for neurotechnologies and AI",
+  "year": 2017
+ },
+ "doi:10.1038/6368": {
+  "doi": "https://doi.org/10.1038/6368",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Running increases cell proliferation and neurogenesis in the adult mouse dentate gyrus",
+  "year": 1999
+ },
+ "doi:10.1038/d41586-018-04813-x": {
+  "doi": "https://doi.org/10.1038/d41586-018-04813-x",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The ethics of experimenting with human brain tissue",
+  "year": 2018
+ },
+ "doi:10.1038/jcbfm.2012.35": {
+  "doi": "https://doi.org/10.1038/jcbfm.2012.35",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://journals.sagepub.com/doi/pdf/10.1038/jcbfm.2012.35"
+  ],
+  "title": "Updated Energy Budgets for Neural Computation in the Neocortex and Cerebellum",
+  "year": 2012
+ },
+ "doi:10.1038/nature01138": {
+  "doi": "https://doi.org/10.1038/nature01138",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neurons in medial prefrontal cortex signal memory for fear extinction",
+  "year": 2002
+ },
+ "doi:10.1038/nature03721": {
+  "doi": "https://doi.org/10.1038/nature03721",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Microstructure of a spatial map in the entorhinal cortex",
+  "year": 2005
+ },
+ "doi:10.1038/nature04490": {
+  "doi": "https://doi.org/10.1038/nature04490",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The primate amygdala represents the positive and negative value of visual stimuli during learning",
+  "year": 2006
+ },
+ "doi:10.1038/nature04587": {
+  "doi": "https://doi.org/10.1038/nature04587",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Reverse replay of behavioural sequences in hippocampal place cells during the awake state",
+  "year": 2006
+ },
+ "doi:10.1038/nature04676": {
+  "doi": "https://doi.org/10.1038/nature04676",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neurons in the orbitofrontal cortex encode economic value",
+  "year": 2006
+ },
+ "doi:10.1038/nature04766": {
+  "doi": "https://doi.org/10.1038/nature04766",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/nature04766.pdf"
+  ],
+  "title": "Cortical substrates for exploratory decisions in humans",
+  "year": 2006
+ },
+ "doi:10.1038/nature04970": {
+  "doi": "https://doi.org/10.1038/nature04970",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neuronal ensemble control of prosthetic devices by a human with tetraplegia",
+  "year": 2006
+ },
+ "doi:10.1038/nature05278": {
+  "doi": "https://doi.org/10.1038/nature05278",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Boosting slow oscillations during sleep potentiates memory",
+  "year": 2006
+ },
+ "doi:10.1038/nature05413": {
+  "doi": "https://doi.org/10.1038/nature05413",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "An SCN9A channelopathy causes congenital inability to experience pain",
+  "year": 2006
+ },
+ "doi:10.1038/nature06976": {
+  "doi": "https://doi.org/10.1038/nature06976",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "What we can do and what we cannot do with fMRI",
+  "year": 2008
+ },
+ "doi:10.1038/nature06996": {
+  "doi": "https://doi.org/10.1038/nature06996",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Cortical control of a prosthetic arm for self-feeding",
+  "year": 2008
+ },
+ "doi:10.1038/nature07200": {
+  "doi": "https://doi.org/10.1038/nature07200",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neural correlates, computation and behavioural impact of decision confidence",
+  "year": 2008
+ },
+ "doi:10.1038/nature08002": {
+  "doi": "https://doi.org/10.1038/nature08002",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Driving fast-spiking cells induces gamma rhythm and controls sensory responses",
+  "year": 2009
+ },
+ "doi:10.1038/nature09159": {
+  "doi": "https://doi.org/10.1038/nature09159",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/nature09159.pdf"
+  ],
+  "title": "Regulation of parkinsonian motor behaviours by optogenetic control of basal ganglia circuitry",
+  "year": 2010
+ },
+ "doi:10.1038/nature09263": {
+  "doi": "https://doi.org/10.1038/nature09263",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Start/stop signals emerge in nigrostriatal circuits during sequence learning",
+  "year": 2010
+ },
+ "doi:10.1038/nature11076": {
+  "doi": "https://doi.org/10.1038/nature11076",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/nature11076.pdf"
+  ],
+  "title": "Reach and grasp by people with tetraplegia using a neurally controlled robotic arm",
+  "year": 2012
+ },
+ "doi:10.1038/nature11129": {
+  "doi": "https://doi.org/10.1038/nature11129",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neural population dynamics during reaching",
+  "year": 2012
+ },
+ "doi:10.1038/nature11649": {
+  "doi": "https://doi.org/10.1038/nature11649",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The entorhinal grid map is discretized",
+  "year": 2012
+ },
+ "doi:10.1038/nature12063": {
+  "doi": "https://doi.org/10.1038/nature12063",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Random convergence of olfactory inputs in the Drosophila mushroom body",
+  "year": 2013
+ },
+ "doi:10.1038/nature12160": {
+  "doi": "https://doi.org/10.1038/nature12160",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The importance of mixed selectivity in complex cognitive tasks",
+  "year": 2013
+ },
+ "doi:10.1038/nature12354": {
+  "doi": "https://doi.org/10.1038/nature12354",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/nature12354.pdf"
+  ],
+  "title": "Ultrasensitive fluorescent proteins for imaging neuronal activity",
+  "year": 2013
+ },
+ "doi:10.1038/nature12517": {
+  "doi": "https://doi.org/10.1038/nature12517",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Cerebral organoids model human brain development and microcephaly",
+  "year": 2013
+ },
+ "doi:10.1038/nature12742": {
+  "doi": "https://doi.org/10.1038/nature12742",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Context-dependent computation by recurrent dynamics in prefrontal cortex",
+  "year": 2013
+ },
+ "doi:10.1038/nature13665": {
+  "doi": "https://doi.org/10.1038/nature13665",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neural constraints on learning",
+  "year": 2014
+ },
+ "doi:10.1038/nature15398": {
+  "doi": "https://doi.org/10.1038/nature15398",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Thalamic control of sensory selection in divided attention",
+  "year": 2015
+ },
+ "doi:10.1038/nature17637": {
+  "doi": "https://doi.org/10.1038/nature17637",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Natural speech reveals the semantic maps that tile human cerebral cortex",
+  "year": 2016
+ },
+ "doi:10.1038/nature18617": {
+  "doi": "https://doi.org/10.1038/nature18617",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Dissociated functional significance of decision-related activity in the primate dorsal stream",
+  "year": 2016
+ },
+ "doi:10.1038/nature24636": {
+  "doi": "https://doi.org/10.1038/nature24636",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Fully integrated silicon probes for high-density recording of neural activity",
+  "year": 2017
+ },
+ "doi:10.1038/nature25975": {
+  "doi": "https://doi.org/10.1038/nature25975",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Human hippocampal neurogenesis drops sharply in children to undetectable levels in adults",
+  "year": 2018
+ },
+ "doi:10.1038/ncomms13276": {
+  "doi": "https://doi.org/10.1038/ncomms13276",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/ncomms13276.pdf"
+  ],
+  "title": "Random synaptic feedback weights support error backpropagation for deep learning",
+  "year": 2016
+ },
+ "doi:10.1038/ncomms1476": {
+  "doi": "https://doi.org/10.1038/ncomms1476",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/ncomms1476.pdf"
+  ],
+  "title": "Information processing using a single dynamical node as complex system",
+  "year": 2011
+ },
+ "doi:10.1038/nn.2123": {
+  "doi": "https://doi.org/10.1038/nn.2123",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Decision-making with multiple alternatives",
+  "year": 2008
+ },
+ "doi:10.1038/nn.2384": {
+  "doi": "https://doi.org/10.1038/nn.2384",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Selective suppression of hippocampal ripples impairs spatial memory",
+  "year": 2009
+ },
+ "doi:10.1038/nn.2635": {
+  "doi": "https://doi.org/10.1038/nn.2635",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Visual fixations and the computation and comparison of value in simple choice",
+  "year": 2010
+ },
+ "doi:10.1038/nn.3265": {
+  "doi": "https://doi.org/10.1038/nn.3265",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "A high-performance neural prosthesis enabled by control algorithm design",
+  "year": 2012
+ },
+ "doi:10.1038/nn.3329": {
+  "doi": "https://doi.org/10.1038/nn.3329",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Long-term dynamics of CA1 hippocampal place codes",
+  "year": 2013
+ },
+ "doi:10.1038/nn.3660": {
+  "doi": "https://doi.org/10.1038/nn.3660",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "http://eprints.whiterose.ac.uk/89890/1/Sparse%2C%20decorrelated%20odor%20coding%20in%20the%20mushroom%20body%20enhances%20learned%20odor%20discrimination..pdf"
+  ],
+  "title": "Sparse, decorrelated odor coding in the mushroom body enhances learned odor discrimination",
+  "year": 2014
+ },
+ "doi:10.1038/nn.3839": {
+  "doi": "https://doi.org/10.1038/nn.3839",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Putting big data to good use in neuroscience",
+  "year": 2014
+ },
+ "doi:10.1038/nn.3947": {
+  "doi": "https://doi.org/10.1038/nn.3947",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Molecular mechanisms of epilepsy",
+  "year": 2015
+ },
+ "doi:10.1038/nn.4238": {
+  "doi": "https://doi.org/10.1038/nn.4238",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.zora.uzh.ch/id/eprint/123870/1/Computational%20psychiatry%20as%20a%20bridge%20from.pdf"
+  ],
+  "title": "Computational psychiatry as a bridge from neuroscience to clinical applications",
+  "year": 2016
+ },
+ "doi:10.1038/nn.4244": {
+  "doi": "https://doi.org/10.1038/nn.4244",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Using goal-driven deep learning models to understand sensory cortex",
+  "year": 2016
+ },
+ "doi:10.1038/nn.4401": {
+  "doi": "https://doi.org/10.1038/nn.4401",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Computational principles of synaptic memory consolidation",
+  "year": 2016
+ },
+ "doi:10.1038/nn.4617": {
+  "doi": "https://doi.org/10.1038/nn.4617",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Structure in neural population recordings: an expected byproduct of simpler phenomena?",
+  "year": 2017
+ },
+ "doi:10.1038/nn.4650": {
+  "doi": "https://doi.org/10.1038/nn.4650",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2017/07/27/097170.full.pdf"
+  ],
+  "title": "The hippocampus as a predictive map",
+  "year": 2017
+ },
+ "doi:10.1038/nn1176": {
+  "doi": "https://doi.org/10.1038/nn1176",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neural systems supporting interoceptive awareness",
+  "year": 2004
+ },
+ "doi:10.1038/nn1525": {
+  "doi": "https://doi.org/10.1038/nn1525",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Millisecond-timescale, genetically targeted optical control of neural activity",
+  "year": 2005
+ },
+ "doi:10.1038/nn1560": {
+  "doi": "https://doi.org/10.1038/nn1560",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Uncertainty-based competition between prefrontal and dorsolateral striatal systems for behavioral control",
+  "year": 2005
+ },
+ "doi:10.1038/npp.2010.121": {
+  "doi": "https://doi.org/10.1038/npp.2010.121",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/npp2010121.pdf"
+  ],
+  "title": "Serotonin and Dopamine: Unifying Affective, Activational, and Decision Functions",
+  "year": 2010
+ },
+ "doi:10.1038/nrn.2016.44": {
+  "doi": "https://doi.org/10.1038/nrn.2016.44",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Integrated information theory: from consciousness to its physical substrate",
+  "year": 2016
+ },
+ "doi:10.1038/nrn1533": {
+  "doi": "https://doi.org/10.1038/nrn1533",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Early language acquisition: cracking the speech code",
+  "year": 2004
+ },
+ "doi:10.1038/nrn1606": {
+  "doi": "https://doi.org/10.1038/nrn1606",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Avian brains and a new understanding of vertebrate brain evolution",
+  "year": 2005
+ },
+ "doi:10.1038/nrn1723": {
+  "doi": "https://doi.org/10.1038/nrn1723",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Forty-five years of split-brain research and still going strong",
+  "year": 2005
+ },
+ "doi:10.1038/nrn1764": {
+  "doi": "https://doi.org/10.1038/nrn1764",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "What makes us tick? Functional and neural mechanisms of interval timing",
+  "year": 2005
+ },
+ "doi:10.1038/nrn1787": {
+  "doi": "https://doi.org/10.1038/nrn1787",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Critical period plasticity in local cortical circuits",
+  "year": 2005
+ },
+ "doi:10.1038/nrn1809": {
+  "doi": "https://doi.org/10.1038/nrn1809",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neural plasticity in the ageing brain",
+  "year": 2005
+ },
+ "doi:10.1038/nrn1919": {
+  "doi": "https://doi.org/10.1038/nrn1919",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The role of the basal ganglia in habit formation",
+  "year": 2006
+ },
+ "doi:10.1038/nrn2113": {
+  "doi": "https://doi.org/10.1038/nrn2113",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The cortical organization of speech processing",
+  "year": 2007
+ },
+ "doi:10.1038/nrn2332": {
+  "doi": "https://doi.org/10.1038/nrn2332",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Control of mental activities by internal models in the cerebellum",
+  "year": 2008
+ },
+ "doi:10.1038/nrn2555": {
+  "doi": "https://doi.org/10.1038/nrn2555",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "How do you feel — now? The anterior insula and human awareness",
+  "year": 2008
+ },
+ "doi:10.1038/nrn2558": {
+  "doi": "https://doi.org/10.1038/nrn2558",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "State-dependent computations: spatiotemporal processing in cortical networks",
+  "year": 2009
+ },
+ "doi:10.1038/nrn2573": {
+  "doi": "https://doi.org/10.1038/nrn2573",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The locus coeruleus and noradrenergic modulation of cognition",
+  "year": 2009
+ },
+ "doi:10.1038/nrn2621": {
+  "doi": "https://doi.org/10.1038/nrn2621",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Coding and use of tactile signals from the fingertips in object manipulation tasks",
+  "year": 2009
+ },
+ "doi:10.1038/nrn2787": {
+  "doi": "https://doi.org/10.1038/nrn2787",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The free-energy principle: a unified brain theory?",
+  "year": 2010
+ },
+ "doi:10.1038/nrn2920": {
+  "doi": "https://doi.org/10.1038/nrn2920",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Emotion processing and the amygdala: from a 'low road' to 'many roads' of evaluating biological significance",
+  "year": 2010
+ },
+ "doi:10.1038/nrn3357": {
+  "doi": "https://doi.org/10.1038/nrn3357",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The honeybee as a model for understanding the basis of cognition",
+  "year": 2012
+ },
+ "doi:10.1038/nrn3827": {
+  "doi": "https://doi.org/10.1038/nrn3827",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Time cells in the hippocampus: a new dimension for mapping memories",
+  "year": 2014
+ },
+ "doi:10.1038/nrn3950": {
+  "doi": "https://doi.org/10.1038/nrn3950",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Interoceptive predictions in the brain",
+  "year": 2015
+ },
+ "doi:10.1038/s41467-017-02337-y": {
+  "doi": "https://doi.org/10.1038/s41467-017-02337-y",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-017-02337-y.pdf"
+  ],
+  "title": "Reservoir computing using dynamic memristors for temporal information processing",
+  "year": 2017
+ },
+ "doi:10.1038/s41467-017-02717-4": {
+  "doi": "https://doi.org/10.1038/s41467-017-02717-4",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-017-02717-4.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2017/01/31/104703.full.pdf"
+  ],
+  "title": "Generalized leaky integrate-and-fire models classify multiple neuron types",
+  "year": 2018
+ },
+ "doi:10.1038/s41467-019-11786-6": {
+  "doi": "https://doi.org/10.1038/s41467-019-11786-6",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-019-11786-6.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2019/03/20/582643.full.pdf",
+   "https://repository.cshl.edu/id/eprint/38307/1/2019.Zador.ArtificialNeuralNetworks.pdf"
+  ],
+  "title": "A critique of pure learning and what artificial neural networks can learn from animal brains",
+  "year": 2019
+ },
+ "doi:10.1038/s41467-020-17866-2": {
+  "doi": "https://doi.org/10.1038/s41467-020-17866-2",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-020-17866-2.pdf"
+  ],
+  "title": "Brain-inspired replay for continual learning with artificial neural networks",
+  "year": 2020
+ },
+ "doi:10.1038/s41467-021-25801-2": {
+  "doi": "https://doi.org/10.1038/s41467-021-25801-2",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-021-25801-2.pdf",
+   "https://arxiv.org/pdf/2106.07688"
+  ],
+  "title": "Next generation reservoir computing",
+  "year": 2021
+ },
+ "doi:10.1038/s41467-025-56297-9": {
+  "doi": "https://doi.org/10.1038/s41467-025-56297-9",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-025-56297-9.pdf",
+   "https://arxiv.org/pdf/2404.03708",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11419189/pdf/nihpp-2404.03708v2.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11754790/pdf/41467_2025_Article_56297.pdf"
+  ],
+  "title": "Dendrites endow artificial neural networks with accurate, robust and parameter-efficient learning",
+  "year": 2025
+ },
+ "doi:10.1038/s41467-025-56739-4": {
+  "doi": "https://doi.org/10.1038/s41467-025-56739-4",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-025-56739-4.pdf",
+   "https://scholars.cityu.edu.hk/files/280413791/275530729.pdf",
+   "https://ir.cwi.nl/pub/35114/35114.pdf",
+   "https://escholarship.org/content/qt8dh2r027/qt8dh2r027.pdf",
+   "https://iris.polito.it/bitstream/11583/2999246/1/s41467-025-56739-4.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11814226/pdf/41467_2025_Article_56739.pdf"
+  ],
+  "title": "The neurobench framework for benchmarking neuromorphic computing algorithms and systems",
+  "year": 2025
+ },
+ "doi:10.1038/s41562-022-01394-8": {
+  "doi": "https://doi.org/10.1038/s41562-022-01394-8",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41562-022-01394-8.pdf"
+  ],
+  "title": "Intuitive physics learning in a deep-learning model inspired by developmental psychology",
+  "year": 2022
+ },
+ "doi:10.1038/s41562-022-01516-2": {
+  "doi": "https://doi.org/10.1038/s41562-022-01516-2",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41562-022-01516-2.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10038805/pdf/41562_2022_Article_1516.pdf"
+  ],
+  "title": "Evidence of a predictive coding hierarchy in the human brain listening to speech",
+  "year": 2023
+ },
+ "doi:10.1038/s41562-024-01882-z": {
+  "doi": "https://doi.org/10.1038/s41562-024-01882-z",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.researchsquare.com/article/rs-3262385/latest.pdf",
+   "https://iris.unito.it/bitstream/2318/1998510/1/s41562-024-01882-z.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11272575/pdf/41562_2024_Article_1882.pdf"
+  ],
+  "title": "Testing theory of mind in large language models and humans",
+  "year": 2024
+ },
+ "doi:10.1038/s41582-018-0128-2": {
+  "doi": "https://doi.org/10.1038/s41582-018-0128-2",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://cris.maastrichtuniversity.nl/ws/files/97462588/Temel_2019_Deep_brain_stimulation_current_challenges.pdf"
+  ],
+  "title": "Deep brain stimulation: current challenges and future directions",
+  "year": 2019
+ },
+ "doi:10.1038/s41583-020-0277-3": {
+  "doi": "https://doi.org/10.1038/s41583-020-0277-3",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Backpropagation and the brain",
+  "year": 2020
+ },
+ "doi:10.1038/s41583-022-00587-4": {
+  "doi": "https://doi.org/10.1038/s41583-022-00587-4",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Theories of consciousness",
+  "year": 2022
+ },
+ "doi:10.1038/s41586-018-0102-6": {
+  "doi": "https://doi.org/10.1038/s41586-018-0102-6",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC7619527/pdf/EMS219672.pdf"
+  ],
+  "title": "Vector-based navigation using grid-like representations in artificial agents",
+  "year": 2018
+ },
+ "doi:10.1038/s41586-018-0459-6": {
+  "doi": "https://doi.org/10.1038/s41586-018-0459-6",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Integrating time from experience in the lateral entorhinal cortex",
+  "year": 2018
+ },
+ "doi:10.1038/s41586-019-1075-9": {
+  "doi": "https://doi.org/10.1038/s41586-019-1075-9",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "Oxytocin-dependent reopening of a social reward learning critical period with MDMA",
+  "year": 2019
+ },
+ "doi:10.1038/s41586-019-1346-5": {
+  "doi": "https://doi.org/10.1038/s41586-019-1346-5",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2018/08/13/374090.full.pdf"
+  ],
+  "title": "High-dimensional geometry of population responses in visual cortex",
+  "year": 2019
+ },
+ "doi:10.1038/s41586-020-03171-x": {
+  "doi": "https://doi.org/10.1038/s41586-020-03171-x",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2019/10/16/805010.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10399640/pdf/nihms-1920814.pdf"
+  ],
+  "title": "Survey of spiking in the mouse visual system reveals functional hierarchy",
+  "year": 2021
+ },
+ "doi:10.1038/s41586-021-03506-2": {
+  "doi": "https://doi.org/10.1038/s41586-021-03506-2",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/07/02/2020.07.01.183384.full.pdf"
+  ],
+  "title": "High-performance brain-to-text communication via handwriting",
+  "year": 2021
+ },
+ "doi:10.1038/s41586-021-04129-3": {
+  "doi": "https://doi.org/10.1038/s41586-021-04129-3",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/11/23/2020.11.23.394320.full.pdf"
+  ],
+  "title": "Contextual inference underlies the learning of sensorimotor repertoires",
+  "year": 2021
+ },
+ "doi:10.1038/s41586-021-04268-7": {
+  "doi": "https://doi.org/10.1038/s41586-021-04268-7",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41586-021-04268-7.pdf"
+  ],
+  "title": "Toroidal topology of population activity in grid cells",
+  "year": 2022
+ },
+ "doi:10.1038/s41586-023-06377-x": {
+  "doi": "https://doi.org/10.1038/s41586-023-06377-x",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41586-023-06377-x.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2023/04/25/2023.01.21.524489.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10468393/pdf/41586_2023_Article_6377.pdf"
+  ],
+  "title": "A high-performance speech neuroprosthesis",
+  "year": 2023
+ },
+ "doi:10.1038/s41586-023-06443-4": {
+  "doi": "https://doi.org/10.1038/s41586-023-06443-4",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://escholarship.org/content/qt5829g475/qt5829g475.pdf?t=s8sffa",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10826467/pdf/nihms-1956622.pdf"
+  ],
+  "title": "A high-performance neuroprosthesis for speech decoding and avatar control",
+  "year": 2023
+ },
+ "doi:10.1038/s41586-023-06668-3": {
+  "doi": "https://doi.org/10.1038/s41586-023-06668-3",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41586-023-06668-3.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10620072/pdf/41586_2023_Article_6668.pdf"
+  ],
+  "title": "Human-like systematic generalization through a meta-learning neural network",
+  "year": 2023
+ },
+ "doi:10.1038/s41586-024-07522-w": {
+  "doi": "https://doi.org/10.1038/s41586-024-07522-w",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Language is primarily a tool for communication rather than thought",
+  "year": 2024
+ },
+ "doi:10.1038/s41586-024-07711-7": {
+  "doi": "https://doi.org/10.1038/s41586-024-07711-7",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41586-024-07711-7.pdf",
+   "https://www.researchsquare.com/article/rs-3256479/latest.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11338828/pdf/41586_2024_Article_7711.pdf"
+  ],
+  "title": "Loss of plasticity in deep continual learning",
+  "year": 2024
+ },
+ "doi:10.1038/s41586-025-08790-w": {
+  "doi": "https://doi.org/10.1038/s41586-025-08790-w",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://digitalcommons.library.tmc.edu/context/baylor_docs/article/8773/viewcontent/41586_2025_Article_8790_compressed.pdf"
+  ],
+  "title": "Functional connectomics spanning multiple areas of mouse visual cortex",
+  "year": 2025
+ },
+ "doi:10.1038/s41586-025-08888-1": {
+  "doi": "https://doi.org/10.1038/s41586-025-08888-1",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "Adversarial testing of global neuronal workspace and integrated information theories of consciousness",
+  "year": 2025
+ },
+ "doi:10.1038/s41591-019-0375-9": {
+  "doi": "https://doi.org/10.1038/s41591-019-0375-9",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Adult hippocampal neurogenesis is abundant in neurologically healthy subjects and drops sharply in patients with Alzheimer’s disease",
+  "year": 2019
+ },
+ "doi:10.1038/s41593-017-0020-1": {
+  "doi": "https://doi.org/10.1038/s41593-017-0020-1",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Thalamic functions in distributed cognitive control",
+  "year": 2017
+ },
+ "doi:10.1038/s41593-017-0028-6": {
+  "doi": "https://doi.org/10.1038/s41593-017-0028-6",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41593-017-0028-6.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2017/06/25/155390.full.pdf",
+   "https://dspace.mit.edu/bitstream/1721.1/124769/2/s41593-017-0028-6.pdf"
+  ],
+  "title": "Flexible timing by temporal scaling of cortical responses",
+  "year": 2017
+ },
+ "doi:10.1038/s41593-018-0147-8": {
+  "doi": "https://doi.org/10.1038/s41593-018-0147-8",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2018/04/13/295964.full.pdf"
+  ],
+  "title": "Prefrontal cortex as a meta-reinforcement learning system",
+  "year": 2018
+ },
+ "doi:10.1038/s41593-018-0269-z": {
+  "doi": "https://doi.org/10.1038/s41593-018-0269-z",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41593-018-0269-z.pdf"
+  ],
+  "title": "Thalamic regulation of switching between cortical representations enables cognitive flexibility",
+  "year": 2018
+ },
+ "doi:10.1038/s41593-018-0310-2": {
+  "doi": "https://doi.org/10.1038/s41593-018-0310-2",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Task representations in neural networks trained to perform many cognitive tasks",
+  "year": 2019
+ },
+ "doi:10.1038/s41593-019-0460-x": {
+  "doi": "https://doi.org/10.1038/s41593-019-0460-x",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The intrinsic attractor manifold and population dynamics of a canonical cognitive circuit across waking and sleep",
+  "year": 2019
+ },
+ "doi:10.1038/s41593-019-0550-9": {
+  "doi": "https://doi.org/10.1038/s41593-019-0550-9",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2018/06/29/359513.full.pdf"
+  ],
+  "title": "A large-scale standardized physiological survey reveals functional organization of the mouse visual cortex",
+  "year": 2019
+ },
+ "doi:10.1038/s41593-019-0555-4": {
+  "doi": "https://doi.org/10.1038/s41593-019-0555-4",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Long-term stability of cortical population dynamics underlying consistent behavior",
+  "year": 2020
+ },
+ "doi:10.1038/s41593-021-00857-x": {
+  "doi": "https://doi.org/10.1038/s41593-021-00857-x",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/09/14/2020.03.30.015511.full.pdf"
+  ],
+  "title": "Burst-dependent synaptic plasticity can coordinate learning in hierarchical circuits",
+  "year": 2021
+ },
+ "doi:10.1038/s41593-022-01026-4": {
+  "doi": "https://doi.org/10.1038/s41593-022-01026-4",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41593-022-01026-4.pdf"
+  ],
+  "title": "Shared computational principles for language processing in humans and deep language models",
+  "year": 2022
+ },
+ "doi:10.1038/s41593-023-01304-9": {
+  "doi": "https://doi.org/10.1038/s41593-023-01304-9",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2022/09/29/2022.09.29.509744.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11304553/pdf/nihms-2005151.pdf"
+  ],
+  "title": "Semantic reconstruction of continuous language from non-invasive brain recordings",
+  "year": 2023
+ },
+ "doi:10.1038/s41593-024-01668-6": {
+  "doi": "https://doi.org/10.1038/s41593-024-01668-6",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2022/08/15/2022.08.15.503870.full.pdf"
+  ],
+  "title": "Flexible multitask computation in recurrent networks utilizes shared dynamical motifs",
+  "year": 2024
+ },
+ "doi:10.1038/s41598-023-41032-5": {
+  "doi": "https://doi.org/10.1038/s41598-023-41032-5",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41598-023-41032-5.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10484980/pdf/41598_2023_Article_41032.pdf"
+  ],
+  "title": "Fabrication and errors in the bibliographic citations generated by ChatGPT",
+  "year": 2023
+ },
+ "doi:10.1038/s42003-022-03036-1": {
+  "doi": "https://doi.org/10.1038/s42003-022-03036-1",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s42003-022-03036-1.pdf",
+   "https://hal.science/hal-03361439v1/file/Mous_mapping.pdf"
+  ],
+  "title": "Brains and algorithms partially converge in natural language processing",
+  "year": 2022
+ },
+ "doi:10.1038/s42256-022-00465-9": {
+  "doi": "https://doi.org/10.1038/s42256-022-00465-9",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Dual use of artificial-intelligence-powered drug discovery",
+  "year": 2022
+ },
+ "doi:10.1056/nejm199810153391603": {
+  "doi": "https://doi.org/10.1056/nejm199810153391603",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nejm.org/doi/pdf/10.1056/NEJM199810153391603?articleTools=true"
+  ],
+  "title": "Electrical Stimulation of the Subthalamic Nucleus in Advanced Parkinson's Disease",
+  "year": 1998
+ },
+ "doi:10.1056/nejmoa060281": {
+  "doi": "https://doi.org/10.1056/nejmoa060281",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nejm.org/doi/pdf/10.1056/NEJMoa060281?articleTools=true"
+  ],
+  "title": "A Randomized Trial of Deep-Brain Stimulation for Parkinson's Disease",
+  "year": 2006
+ },
+ "doi:10.1056/nejmoa2314132": {
+  "doi": "https://doi.org/10.1056/nejmoa2314132",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.medrxiv.org/content/medrxiv/early/2023/12/26/2023.12.26.23300110.full.pdf",
+   "https://escholarship.org/content/qt9gw4j91v/qt9gw4j91v.pdf?t=sivgco",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11030484/pdf/nihpp-2023.12.26.23300110v2.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11328962/pdf/nihms-2004452.pdf"
+  ],
+  "title": "An Accurate and Rapidly Calibrating Speech Neuroprosthesis",
+  "year": 2024
+ },
+ "doi:10.1056/nejmoa2501396": {
+  "doi": "https://doi.org/10.1056/nejmoa2501396",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Subretinal Photovoltaic Implant to Restore Vision in Geographic Atrophy Due to AMD",
+  "year": 2025
+ },
+ "doi:10.1073/pnas.0406910101": {
+  "found": false
+ },
+ "doi:10.1073/pnas.0604911103": {
+  "doi": "https://doi.org/10.1073/pnas.0604911103",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Cellular scaling rules for rodent brains",
+  "year": 2006
+ },
+ "doi:10.1073/pnas.0611396104": {
+  "doi": "https://doi.org/10.1073/pnas.0611396104",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [],
+  "title": "Cellular scaling rules for primate brains",
+  "year": 2007
+ },
+ "doi:10.1073/pnas.0914826107": {
+  "doi": "https://doi.org/10.1073/pnas.0914826107",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Disruption of the right temporoparietal junction with transcranial magnetic stimulation reduces the role of beliefs in moral judgments",
+  "year": 2010
+ },
+ "doi:10.1073/pnas.1015950108": {
+  "doi": "https://doi.org/10.1073/pnas.1015950108",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Exercise training increases size of hippocampus and improves memory",
+  "year": 2011
+ },
+ "doi:10.1073/pnas.1105108108": {
+  "doi": "https://doi.org/10.1073/pnas.1105108108",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "http://medlib.mef.hr/2340/1/petanjek_z_et_al_rep_2340.pdf"
+  ],
+  "title": "Extraordinary neoteny of synaptic spines in the human prefrontal cortex",
+  "year": 2011
+ },
+ "doi:10.1073/pnas.1112937108": {
+  "doi": "https://doi.org/10.1073/pnas.1112937108",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Functional specificity for high-level linguistic processing in the human brain",
+  "year": 2011
+ },
+ "doi:10.1073/pnas.1201895109": {
+  "doi": "https://doi.org/10.1073/pnas.1201895109",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.pnas.org/content/pnas/109/Supplement_1/10661.full.pdf"
+  ],
+  "title": "The remarkable, yet not extraordinary, human brain as a scaled-up primate brain and its associated cost",
+  "year": 2012
+ },
+ "doi:10.1073/pnas.1308246110": {
+  "doi": "https://doi.org/10.1073/pnas.1308246110",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Newborn chickens generate invariant object representations at the onset of visual object experience",
+  "year": 2013
+ },
+ "doi:10.1073/pnas.1403112111": {
+  "doi": "https://doi.org/10.1073/pnas.1403112111",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.pnas.org/content/pnas/111/23/8619.full.pdf"
+  ],
+  "title": "Performance-optimized hierarchical models predict neural responses in higher visual cortex",
+  "year": 2014
+ },
+ "doi:10.1073/pnas.1415371111": {
+  "doi": "https://doi.org/10.1073/pnas.1415371111",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Memory trace and timing mechanism localized to cerebellar Purkinje cells",
+  "year": 2014
+ },
+ "doi:10.1073/pnas.1517131113": {
+  "doi": "https://doi.org/10.1073/pnas.1517131113",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Birds have primate-like numbers of neurons in the forebrain",
+  "year": 2016
+ },
+ "doi:10.1073/pnas.1611835114": {
+  "doi": "https://doi.org/10.1073/pnas.1611835114",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1612.00796"
+  ],
+  "title": "Overcoming catastrophic forgetting in neural networks",
+  "year": 2017
+ },
+ "doi:10.1073/pnas.1708274114": {
+  "doi": "https://doi.org/10.1073/pnas.1708274114",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The preregistration revolution",
+  "year": 2018
+ },
+ "doi:10.1073/pnas.172399499": {
+  "doi": "https://doi.org/10.1073/pnas.172399499",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Appraising the brain's energy budget",
+  "year": 2002
+ },
+ "doi:10.1073/pnas.1803839115": {
+  "doi": "https://doi.org/10.1073/pnas.1803839115",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.pnas.org/content/pnas/115/44/E10467.full.pdf",
+   "https://arxiv.org/pdf/1802.01569"
+  ],
+  "title": "Alleviating catastrophic forgetting using context-dependent gating and synaptic stabilization",
+  "year": 2018
+ },
+ "doi:10.1073/pnas.2105646118": {
+  "doi": "https://doi.org/10.1073/pnas.2105646118",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The neural architecture of language: Integrative modeling converges on predictive processing",
+  "year": 2021
+ },
+ "doi:10.1073/pnas.2405460121": {
+  "doi": "https://doi.org/10.1073/pnas.2405460121",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.pnas.org/doi/pdf/10.1073/pnas.2405460121",
+   "https://arxiv.org/pdf/2302.02083",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11551352/pdf/pnas.202405460.pdf"
+  ],
+  "title": "Evaluating large language models in theory of mind tasks",
+  "year": 2024
+ },
+ "doi:10.1073/pnas.2409160121": {
+  "doi": "https://doi.org/10.1073/pnas.2409160121",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://repository.cshl.edu/id/eprint/41661/1/10.1073.pnas.2409160121.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11420173/pdf/pnas.202409160.pdf"
+  ],
+  "title": "Encoding innate ability through a genomic bottleneck",
+  "year": 2024
+ },
+ "doi:10.1073/pnas.79.8.2554": {
+  "doi": "https://doi.org/10.1073/pnas.79.8.2554",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neural networks and physical systems with emergent collective computational abilities.",
+  "year": 1982
+ },
+ "doi:10.1073/pnas.81.14.4586": {
+  "doi": "https://doi.org/10.1073/pnas.81.14.4586",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Function of the thalamic reticular complex: the searchlight hypothesis.",
+  "year": 1984
+ },
+ "doi:10.1073/pnas.85.14.5287": {
+  "doi": "https://doi.org/10.1073/pnas.85.14.5287",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Path integration in desert ants, Cataglyphis fortis",
+  "year": 1988
+ },
+ "doi:10.1073/pnas.91.22.10625": {
+  "doi": "https://doi.org/10.1073/pnas.91.22.10625",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.pnas.org/doi/pdf/10.1073/pnas.91.22.10625"
+  ],
+  "title": "Glutamate uptake into astrocytes stimulates aerobic glycolysis: a mechanism coupling neuronal activity to glucose utilization.",
+  "year": 1994
+ },
+ "doi:10.1073/pnas.93.23.13339": {
+  "doi": "https://doi.org/10.1073/pnas.93.23.13339",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "How the brain keeps the eyes still",
+  "year": 1996
+ },
+ "doi:10.1080/0952813x.2014.895113": {
+  "doi": "https://doi.org/10.1080/0952813x.2014.895113",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Ethics of brain emulations",
+  "year": 2014
+ },
+ "doi:10.1093/brain/119.2.593": {
+  "doi": "https://doi.org/10.1093/brain/119.2.593",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Action recognition in the premotor cortex",
+  "year": 1996
+ },
+ "doi:10.1093/brain/40.4.461": {
+  "doi": "https://doi.org/10.1093/brain/40.4.461",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "THE SYMPTOMS OF ACUTE CEREBELLAR INJURIES DUE TO GUNSHOT INJURIES",
+  "year": 1917
+ },
+ "doi:10.1093/brain/60.4.389": {
+  "doi": "https://doi.org/10.1093/brain/60.4.389",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "SOMATIC MOTOR AND SENSORY REPRESENTATION IN THE CEREBRAL CORTEX OF MAN AS STUDIED BY ELECTRICAL STIMULATION",
+  "year": 1937
+ },
+ "doi:10.1093/brain/97.1.709": {
+  "doi": "https://doi.org/10.1093/brain/97.1.709",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "VISUAL CAPACITY IN THE HEMIANOPIC FIELD FOLLOWING A RESTRICTED OCCIPITAL ABLATION",
+  "year": 1974
+ },
+ "doi:10.1093/brain/awm042": {
+  "doi": "https://doi.org/10.1093/brain/awm042",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [
+   "https://academic.oup.com/brain/article-pdf/130/5/1432/795019/awm042.pdf"
+  ],
+  "title": "Paul Broca's historic cases: high resolution MR imaging of the brains of Leborgne and Lelong",
+  "year": 2007
+ },
+ "doi:10.1093/cercor/1.1.1-a": {
+  "doi": "https://doi.org/10.1093/cercor/1.1.1-a",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Preface: Cerebral Cortex Has Come of Age",
+  "year": 1991
+ },
+ "doi:10.1093/cercor/bhi044": {
+  "doi": "https://doi.org/10.1093/cercor/bhi044",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://academic.oup.com/cercor/article-pdf/15/11/1676/840400/bhi044.pdf"
+  ],
+  "title": "Regional Brain Changes in Aging Healthy Adults: General Trends, Individual Differences and Modifiers",
+  "year": 2005
+ },
+ "doi:10.1093/scan/nsw154": {
+  "doi": "https://doi.org/10.1093/scan/nsw154",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://academic.oup.com/scan/article-pdf/12/1/1/27103603/nsw154.pdf"
+  ],
+  "title": "The theory of constructed emotion: an active inference account of interoception and categorization",
+  "year": 2016
+ },
+ "doi:10.1093/schbul/sbp006": {
+  "doi": "https://doi.org/10.1093/schbul/sbp006",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The Dopamine Hypothesis of Schizophrenia: Version III--The Final Common Pathway",
+  "year": 2009
+ },
+ "doi:10.1097/00004647-200110000-00001": {
+  "doi": "https://doi.org/10.1097/00004647-200110000-00001",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://journals.sagepub.com/doi/pdf/10.1097/00004647-200110000-00001"
+  ],
+  "title": "An Energy Budget for Signaling in the Grey Matter of the Brain",
+  "year": 2001
+ },
+ "doi:10.1098/rstb.2002.1161": {
+  "doi": "https://doi.org/10.1098/rstb.2002.1161",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The role of the thalamus in the flow of information to the cortex",
+  "year": 2002
+ },
+ "doi:10.1098/rstb.2011.0417": {
+  "doi": "https://doi.org/10.1098/rstb.2011.0417",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "The neural basis of metacognitive ability",
+  "year": 2012
+ },
+ "doi:10.1101/407007": {
+  "doi": "https://doi.org/10.1101/407007",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/01/02/407007.full.pdf"
+  ],
+  "title": "Brain-Score: Which Artificial Neural Network for Object Recognition is most Brain-Like?",
+  "year": 2018
+ },
+ "doi:10.1101/lm.78804": {
+  "doi": "https://doi.org/10.1101/lm.78804",
+  "found": true,
+  "oa_status": "diamond",
+  "pdf_urls": [
+   "http://learnmem.cshlp.org/content/11/5/485.full.pdf"
+  ],
+  "title": "Context and Behavioral Processes in Extinction: Table 1.",
+  "year": 2004
+ },
+ "doi:10.1109/72.377968": {
+  "doi": "https://doi.org/10.1109/72.377968",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Holographic reduced representations",
+  "year": 1995
+ },
+ "doi:10.1109/jproc.2014.2304638": {
+  "doi": "https://doi.org/10.1109/jproc.2014.2304638",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://ieeexplore.ieee.org/ielx7/5/6807530/06750072.pdf"
+  ],
+  "title": "The SpiNNaker Project",
+  "year": 2014
+ },
+ "doi:10.1109/jproc.2023.3308088": {
+  "doi": "https://doi.org/10.1109/jproc.2023.3308088",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://ieeexplore.ieee.org/ielx7/5/4357935/10242251.pdf"
+  ],
+  "title": "Training Spiking Neural Networks Using Lessons From Deep Learning",
+  "year": 2023
+ },
+ "doi:10.1109/msp.2019.2931595": {
+  "doi": "https://doi.org/10.1109/msp.2019.2931595",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Surrogate Gradient Learning in Spiking Neural Networks: Bringing the Power of Gradient-Based Optimization to Spiking Neural Networks",
+  "year": 2019
+ },
+ "doi:10.1109/tnn.2003.820440": {
+  "doi": "https://doi.org/10.1109/tnn.2003.820440",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Simple model of spiking neurons",
+  "year": 2003
+ },
+ "doi:10.1109/tnn.2004.832719": {
+  "doi": "https://doi.org/10.1109/tnn.2004.832719",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Which Model to Use for Cortical Spiking Neurons?",
+  "year": 2004
+ },
+ "doi:10.1111/1467-8624.00304": {
+  "doi": "https://doi.org/10.1111/1467-8624.00304",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Meta-Analysis of Theory-of-Mind Development: The Truth about False Belief",
+  "year": 2001
+ },
+ "doi:10.1111/epi.12550": {
+  "doi": "https://doi.org/10.1111/epi.12550",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://escholarship.org/content/qt7xq1j7zf/qt7xq1j7zf.pdf"
+  ],
+  "title": "ILAE Official Report: A practical clinical definition of epilepsy",
+  "year": 2014
+ },
+ "doi:10.1111/j.1467-7687.2007.00569.x": {
+  "doi": "https://doi.org/10.1111/j.1467-7687.2007.00569.x",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Core knowledge",
+  "year": 2006
+ },
+ "doi:10.1113/jphysiol.1952.sp004764": {
+  "doi": "https://doi.org/10.1113/jphysiol.1952.sp004764",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "A quantitative description of membrane current and its application to conduction and excitation in nerve",
+  "year": 1952
+ },
+ "doi:10.1113/jphysiol.1959.sp006308": {
+  "doi": "https://doi.org/10.1113/jphysiol.1959.sp006308",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Receptive fields of single neurones in the cat's striate cortex",
+  "year": 1959
+ },
+ "doi:10.1113/jphysiol.1962.sp006837": {
+  "doi": "https://doi.org/10.1113/jphysiol.1962.sp006837",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Receptive fields, binocular interaction and functional architecture in the cat's visual cortex",
+  "year": 1962
+ },
+ "doi:10.1113/jphysiol.1969.sp008820": {
+  "doi": "https://doi.org/10.1113/jphysiol.1969.sp008820",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "A theory of cerebellar cortex",
+  "year": 1969
+ },
+ "doi:10.1113/jphysiol.1970.sp009022": {
+  "doi": "https://doi.org/10.1113/jphysiol.1970.sp009022",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The period of susceptibility to the physiological effects of unilateral eye closure in kittens",
+  "year": 1970
+ },
+ "doi:10.1126/science.1072699": {
+  "doi": "https://doi.org/10.1126/science.1072699",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Reactivation of Ocular Dominance Plasticity in the Adult Visual Cortex",
+  "year": 2002
+ },
+ "doi:10.1126/science.1091277": {
+  "doi": "https://doi.org/10.1126/science.1091277",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Harnessing Nonlinearity: Predicting Chaotic Systems and Saving Energy in Wireless Communication",
+  "year": 2004
+ },
+ "doi:10.1126/science.1093065": {
+  "doi": "https://doi.org/10.1126/science.1093065",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Placebo-Induced Changes in fMRI in the Anticipation and Experience of Pain",
+  "year": 2004
+ },
+ "doi:10.1126/science.1098410": {
+  "doi": "https://doi.org/10.1126/science.1098410",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The Mentality of Crows: Convergent Evolution of Intelligence in Corvids and Apes",
+  "year": 2004
+ },
+ "doi:10.1126/science.1099745": {
+  "doi": "https://doi.org/10.1126/science.1099745",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neuronal Oscillations in Cortical Networks",
+  "year": 2004
+ },
+ "doi:10.1126/science.1102384": {
+  "doi": "https://doi.org/10.1126/science.1102384",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Addiction as a Computational Process Gone Awry",
+  "year": 2004
+ },
+ "doi:10.1126/science.1102941": {
+  "doi": "https://doi.org/10.1126/science.1102941",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "By Carrot or by Stick: Cognitive Reinforcement Learning in Parkinsonism",
+  "year": 2004
+ },
+ "doi:10.1126/science.1107621": {
+  "doi": "https://doi.org/10.1126/science.1107621",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Do 15-Month-Old Infants Understand False Beliefs?",
+  "year": 2005
+ },
+ "doi:10.1126/science.1117593": {
+  "doi": "https://doi.org/10.1126/science.1117593",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Fast Readout of Object Identity from Macaque Inferior Temporal Cortex",
+  "year": 2005
+ },
+ "doi:10.1126/science.1135935": {
+  "doi": "https://doi.org/10.1126/science.1135935",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Schemas and Memory Consolidation",
+  "year": 2007
+ },
+ "doi:10.1126/science.1138581": {
+  "doi": "https://doi.org/10.1126/science.1138581",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Odor Cues During Slow-Wave Sleep Prompt Declarative Memory Consolidation",
+  "year": 2007
+ },
+ "doi:10.1126/science.1150516": {
+  "doi": "https://doi.org/10.1126/science.1150516",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The Antidepressant Fluoxetine Restores Plasticity in the Adult Visual Cortex",
+  "year": 2008
+ },
+ "doi:10.1126/science.1150769": {
+  "doi": "https://doi.org/10.1126/science.1150769",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Synaptic Theory of Working Memory",
+  "year": 2008
+ },
+ "doi:10.1126/science.1159775": {
+  "doi": "https://doi.org/10.1126/science.1159775",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Internally Generated Cell Assembly Sequences in the Rat Hippocampus",
+  "year": 2008
+ },
+ "doi:10.1126/science.1166466": {
+  "doi": "https://doi.org/10.1126/science.1166466",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Representation of Geometric Borders in the Entorhinal Cortex",
+  "year": 2008
+ },
+ "doi:10.1126/science.1169405": {
+  "doi": "https://doi.org/10.1126/science.1169405",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Representation of Confidence Associated with a Decision by Neurons in the Parietal Cortex",
+  "year": 2009
+ },
+ "doi:10.1126/science.1174331": {
+  "doi": "https://doi.org/10.1126/science.1174331",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [
+   "https://www.degruyter.com/document/doi/10.1515/nf-2009-0405/pdf"
+  ],
+  "title": "Energy-Efficient Action Potentials in Hippocampal Mossy Fibers",
+  "year": 2009
+ },
+ "doi:10.1126/science.1205274": {
+  "doi": "https://doi.org/10.1126/science.1205274",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Schema-Dependent Gene Activation and Memory Encoding in Neocortex",
+  "year": 2011
+ },
+ "doi:10.1126/science.1223082": {
+  "doi": "https://doi.org/10.1126/science.1223082",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The Pulvinar Regulates Information Transmission Between Cortical Areas Based on Attention Demands",
+  "year": 2012
+ },
+ "doi:10.1126/science.1225266": {
+  "doi": "https://doi.org/10.1126/science.1225266",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Large-Scale Model of the Functioning Brain",
+  "year": 2012
+ },
+ "doi:10.1126/science.1252304": {
+  "doi": "https://doi.org/10.1126/science.1252304",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Neuronal Activity Promotes Oligodendrogenesis and Adaptive Myelination in the Mammalian Brain",
+  "year": 2014
+ },
+ "doi:10.1126/science.1254642": {
+  "doi": "https://doi.org/10.1126/science.1254642",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A million spiking-neuron integrated circuit with a scalable communication network and interface",
+  "year": 2014
+ },
+ "doi:10.1126/science.1254960": {
+  "doi": "https://doi.org/10.1126/science.1254960",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Motor skill learning requires active central myelination",
+  "year": 2014
+ },
+ "doi:10.1126/science.150.3699.971": {
+  "doi": "https://doi.org/10.1126/science.150.3699.971",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Pain Mechanisms: A New Theory",
+  "year": 1965
+ },
+ "doi:10.1126/science.1566067": {
+  "doi": "https://doi.org/10.1126/science.1566067",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Alzheimer's Disease: The Amyloid Cascade Hypothesis",
+  "year": 1992
+ },
+ "doi:10.1126/science.163.3870.955": {
+  "doi": "https://doi.org/10.1126/science.163.3870.955",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Operant Conditioning of Cortical Unit Activity",
+  "year": 1969
+ },
+ "doi:10.1126/science.173.3997.652": {
+  "doi": "https://doi.org/10.1126/science.173.3997.652",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neuron Activity Related to Short-Term Memory",
+  "year": 1971
+ },
+ "doi:10.1126/science.198.4312.75": {
+  "doi": "https://doi.org/10.1126/science.198.4312.75",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Imitation of Facial and Manual Gestures by Human Neonates",
+  "year": 1977
+ },
+ "doi:10.1126/science.2035024": {
+  "doi": "https://doi.org/10.1126/science.2035024",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Synchronous Bursts of Action Potentials in Ganglion Cells of the Developing Mammalian Retina",
+  "year": 1991
+ },
+ "doi:10.1126/science.267326": {
+  "doi": "https://doi.org/10.1126/science.267326",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Oscillation and Chaos in Physiological Control Systems",
+  "year": 1977
+ },
+ "doi:10.1126/science.273.5280.1399": {
+  "doi": "https://doi.org/10.1126/science.273.5280.1399",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Neostriatal Habit Learning System in Humans",
+  "year": 1996
+ },
+ "doi:10.1126/science.274.5286.427": {
+  "doi": "https://doi.org/10.1126/science.274.5286.427",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neural Control of Voluntary Movement Initiation",
+  "year": 1996
+ },
+ "doi:10.1126/science.274.5294.1926": {
+  "doi": "https://doi.org/10.1126/science.274.5294.1926",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Statistical Learning by 8-Month-Old Infants",
+  "year": 1996
+ },
+ "doi:10.1126/science.275.5304.1293": {
+  "doi": "https://doi.org/10.1126/science.275.5304.1293",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Deciding Advantageously Before Knowing the Advantageous Strategy",
+  "year": 1997
+ },
+ "doi:10.1126/science.275.5306.1593": {
+  "doi": "https://doi.org/10.1126/science.275.5306.1593",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Neural Substrate of Prediction and Reward",
+  "year": 1997
+ },
+ "doi:10.1126/science.278.5337.412": {
+  "doi": "https://doi.org/10.1126/science.278.5337.412",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Life and Death of Neurons in the Aging Brain",
+  "year": 1997
+ },
+ "doi:10.1126/science.3291116": {
+  "doi": "https://doi.org/10.1126/science.3291116",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Specification of Cerebral Cortical Areas",
+  "year": 1988
+ },
+ "doi:10.1126/science.3749885": {
+  "doi": "https://doi.org/10.1126/science.3749885",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neuronal Population Coding of Movement Direction",
+  "year": 1986
+ },
+ "doi:10.1126/science.3966153": {
+  "doi": "https://doi.org/10.1126/science.3966153",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Evoked Mechanical Responses of Isolated Cochlear Outer Hair Cells",
+  "year": 1985
+ },
+ "doi:10.1126/science.4023713": {
+  "doi": "https://doi.org/10.1126/science.4023713",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Selective Attention Gates Visual Processing in the Extrastriate Cortex",
+  "year": 1985
+ },
+ "doi:10.1126/science.7350657": {
+  "doi": "https://doi.org/10.1126/science.7350657",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Reading Senseless Sentences: Brain Potentials Reflect Semantic Incongruity",
+  "year": 1980
+ },
+ "doi:10.1126/science.7652558": {
+  "doi": "https://doi.org/10.1126/science.7652558",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Double Dissociation of Conditioning and Declarative Knowledge Relative to the Amygdala and Hippocampus in Humans",
+  "year": 1995
+ },
+ "doi:10.1126/science.7761831": {
+  "doi": "https://doi.org/10.1126/science.7761831",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The \"Wake-Sleep\" Algorithm for Unsupervised Neural Networks",
+  "year": 1995
+ },
+ "doi:10.1126/science.8036517": {
+  "doi": "https://doi.org/10.1126/science.8036517",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Reactivation of Hippocampal Ensemble Memories During Sleep",
+  "year": 1994
+ },
+ "doi:10.1126/science.aaa3799": {
+  "doi": "https://doi.org/10.1126/science.aaa3799",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Observing the unexpected enhances infants’ learning and exploration",
+  "year": 2015
+ },
+ "doi:10.1126/science.aaa4056": {
+  "doi": "https://doi.org/10.1126/science.aaa4056",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Single-trial spike trains in parietal cortex reveal discrete steps during decision-making",
+  "year": 2015
+ },
+ "doi:10.1126/science.aaf0941": {
+  "doi": "https://doi.org/10.1126/science.aaf0941",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Organizing conceptual knowledge in humans with a gridlike code",
+  "year": 2016
+ },
+ "doi:10.1126/science.aah5982": {
+  "doi": "https://doi.org/10.1126/science.aah5982",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "http://science.sciencemag.org/content/sci/355/6324/507.full.pdf"
+  ],
+  "title": "Ultrastructural evidence for synaptic scaling across the wake/sleep cycle",
+  "year": 2017
+ },
+ "doi:10.1126/science.aal4835": {
+  "doi": "https://doi.org/10.1126/science.aal4835",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Ring attractor dynamics in the Drosophila central brain",
+  "year": 2017
+ },
+ "doi:10.1126/science.aam9868": {
+  "doi": "https://doi.org/10.1126/science.aam9868",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2017/08/25/180471.full.pdf"
+  ],
+  "title": "A neural algorithm for a fundamental computing problem",
+  "year": 2017
+ },
+ "doi:10.1126/science.aan3458": {
+  "doi": "https://doi.org/10.1126/science.aan3458",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.zora.uzh.ch/id/eprint/139314/1/596.full.pdf"
+  ],
+  "title": "Pavlovian conditioning–induced hallucinations result from overweighting of perceptual priors",
+  "year": 2017
+ },
+ "doi:10.1126/science.aan3846": {
+  "doi": "https://doi.org/10.1126/science.aan3846",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Behavioral time scale synaptic plasticity underlies CA1 place fields",
+  "year": 2017
+ },
+ "doi:10.1126/science.aax6239": {
+  "doi": "https://doi.org/10.1126/science.aax6239",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Dendritic action potentials and computation in human layer 2/3 cortical neurons",
+  "year": 2020
+ },
+ "doi:10.1126/science.abc5534": {
+  "doi": "https://doi.org/10.1126/science.abc5534",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A cortex-like canonical circuit in the avian forebrain",
+  "year": 2020
+ },
+ "doi:10.1126/science.abf4588": {
+  "doi": "https://doi.org/10.1126/science.abf4588",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/10/28/2020.10.27.358291.full.pdf",
+   "https://eprints.whiterose.ac.uk/186947/3/SteinmetzEtAl_main.pdf",
+   "https://eprints.soton.ac.uk/449117/1/accepted_abf4588.pdf"
+  ],
+  "title": "Neuropixels 2.0: A miniaturized high-density probe for stable, long-term brain recordings",
+  "year": 2021
+ },
+ "doi:10.1126/science.adi1374": {
+  "doi": "https://doi.org/10.1126/science.adi1374",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Grounded language acquisition through the eyes and ears of a single child",
+  "year": 2024
+ },
+ "doi:10.1126/science.adk4858": {
+  "doi": "https://doi.org/10.1126/science.adk4858",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11718559/pdf/nihms-2023839.pdf"
+  ],
+  "title": "A petavoxel fragment of human cerebral cortex reconstructed at nanoscale resolution",
+  "year": 2024
+ },
+ "doi:10.1126/scitranslmed.3006294": {
+  "doi": "https://doi.org/10.1126/scitranslmed.3006294",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://orbi.uliege.be/bitstream/2268/171542/1/A%20theoretically%20based%20index%20of%20consciousness%20independent%20of%20sensory%20processing%20and%20behavior.pdf"
+  ],
+  "title": "A Theoretically Based Index of Consciousness Independent of Sensory Processing and Behavior",
+  "year": 2013
+ },
+ "doi:10.1136/jnnp.20.1.11": {
+  "doi": "https://doi.org/10.1136/jnnp.20.1.11",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://jnnp.bmj.com/content/jnnp/20/1/11.full.pdf"
+  ],
+  "title": "LOSS OF RECENT MEMORY AFTER BILATERAL HIPPOCAMPAL LESIONS",
+  "year": 1957
+ },
+ "doi:10.1136/neurintsurg-2020-016862": {
+  "doi": "https://doi.org/10.1136/neurintsurg-2020-016862",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://jnis.bmj.com/content/neurintsurg/13/2/102.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC7848062/pdf/neurintsurg-2020-016862.pdf"
+  ],
+  "title": "Motor neuroprosthesis implanted with neurointerventional surgery improves capacity for activities of daily living tasks in severe paralysis: first in-human experience",
+  "year": 2020
+ },
+ "doi:10.1142/s270507852150003x": {
+  "doi": "https://doi.org/10.1142/s270507852150003x",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "Artificial Suffering: An Argument for a Global Moratorium on Synthetic Phenomenology",
+  "year": 2021
+ },
+ "doi:10.1145/1553374.1553380": {
+  "doi": "https://doi.org/10.1145/1553374.1553380",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Curriculum learning",
+  "year": 2009
+ },
+ "doi:10.1145/3538531": {
+  "doi": "https://doi.org/10.1145/3538531",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2111.06077"
+  ],
+  "title": "A Survey on Hyperdimensional Computing aka Vector Symbolic Architectures, Part I: Models and Data Transformations",
+  "year": 2022
+ },
+ "doi:10.1145/3586183.3606763": {
+  "doi": "https://doi.org/10.1145/3586183.3606763",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://dl.acm.org/doi/pdf/10.1145/3586183.3606763",
+   "https://arxiv.org/pdf/2304.03442"
+  ],
+  "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+  "year": 2023
+ },
+ "doi:10.1146/annurev-neuro-062111-150444": {
+  "doi": "https://doi.org/10.1146/annurev-neuro-062111-150444",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Mechanisms of Gamma Oscillations",
+  "year": 2012
+ },
+ "doi:10.1146/annurev-neuro-092619-094115": {
+  "doi": "https://doi.org/10.1146/annurev-neuro-092619-094115",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Computation Through Neural Population Dynamics",
+  "year": 2020
+ },
+ "doi:10.1146/annurev.ne.07.030184.001521": {
+  "doi": "https://doi.org/10.1146/annurev.ne.07.030184.001521",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Endogenous Pain Control Systems: Brainstem Spinal Pathways and Endorphin Circuitry",
+  "year": 1984
+ },
+ "doi:10.1146/annurev.ne.18.030195.001205": {
+  "doi": "https://doi.org/10.1146/annurev.ne.18.030195.001205",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Neural Mechanisms of Selective Visual Attention",
+  "year": 1995
+ },
+ "doi:10.1146/annurev.ne.18.030195.003011": {
+  "doi": "https://doi.org/10.1146/annurev.ne.18.030195.003011",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Visual Feature Integration and the Temporal Correlation Hypothesis",
+  "year": 1995
+ },
+ "doi:10.1146/annurev.neuro.23.1.155": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.23.1.155",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Emotion Circuits in the Brain",
+  "year": 2000
+ },
+ "doi:10.1146/annurev.neuro.24.1.167": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.24.1.167",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "An Integrative Theory of Prefrontal Cortex Function",
+  "year": 2001
+ },
+ "doi:10.1146/annurev.neuro.27.070203.144230": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.27.070203.144230",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "THE MIRROR-NEURON SYSTEM",
+  "year": 2004
+ },
+ "doi:10.1146/annurev.neuro.27.070203.144247": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.27.070203.144247",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "THE NEURAL BASIS OF TEMPORAL PROCESSING",
+  "year": 2004
+ },
+ "doi:10.1146/annurev.neuro.28.061604.135703": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.28.061604.135703",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "DENDRITIC COMPUTATION",
+  "year": 2005
+ },
+ "doi:10.1146/annurev.neuro.28.061604.135709": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.28.061604.135709",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "AN INTEGRATIVE THEORY OF LOCUS COERULEUS-NOREPINEPHRINE FUNCTION: Adaptive Gain and Optimal Performance",
+  "year": 2005
+ },
+ "doi:10.1146/annurev.neuro.29.051605.113038": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.29.051605.113038",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The Neural Basis of Decision Making",
+  "year": 2007
+ },
+ "doi:10.1146/annurev.psych.59.103006.093656": {
+  "doi": "https://doi.org/10.1146/annurev.psych.59.103006.093656",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The Adaptive Brain: Aging and Neurocognitive Scaffolding",
+  "year": 2008
+ },
+ "doi:10.1152/jn.1963.26.6.1003": {
+  "doi": "https://doi.org/10.1152/jn.1963.26.6.1003",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://journals.physiology.org/doi/pdf/10.1152/jn.1963.26.6.1003"
+  ],
+  "title": "SINGLE-CELL RESPONSES IN STRIATE CORTEX OF KITTENS DEPRIVED OF VISION IN ONE EYE",
+  "year": 1963
+ },
+ "doi:10.1152/jn.1989.61.2.331": {
+  "doi": "https://doi.org/10.1152/jn.1989.61.2.331",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Mnemonic coding of visual space in the monkey's dorsolateral prefrontal cortex",
+  "year": 1989
+ },
+ "doi:10.1152/jn.90941.2008": {
+  "doi": "https://doi.org/10.1152/jn.90941.2008",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Gaussian-Process Factor Analysis for Low-Dimensional Single-Trial Analysis of Neural Population Activity",
+  "year": 2009
+ },
+ "doi:10.1152/physrev.00026.2009": {
+  "doi": "https://doi.org/10.1152/physrev.00026.2009",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Mechanisms of Sound Localization in Mammals",
+  "year": 2010
+ },
+ "doi:10.1152/physrev.00032.2012": {
+  "doi": "https://doi.org/10.1152/physrev.00032.2012",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.zora.uzh.ch/id/eprint/77770/1/physiol_rev_93.pdf"
+  ],
+  "title": "About Sleep's Role in Memory",
+  "year": 2013
+ },
+ "doi:10.1152/physrev.00048.2011": {
+  "doi": "https://doi.org/10.1152/physrev.00048.2011",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The Proprioceptive Senses: Their Roles in Signaling Body Shape, Body Position and Movement, and Muscle Force",
+  "year": 2012
+ },
+ "doi:10.1161/01.str.0000087786.38997.9e": {
+  "doi": "https://doi.org/10.1161/01.str.0000087786.38997.9e",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Vascular Syndromes of the Thalamus",
+  "year": 2003
+ },
+ "doi:10.1162/0898929052880093": {
+  "doi": "https://doi.org/10.1162/0898929052880093",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Dynamic Dopamine Modulation in the Basal Ganglia: A Neurocomputational Account of Cognitive Deficits in Medicated and Nonmedicated Parkinsonism",
+  "year": 2005
+ },
+ "doi:10.1162/089976602760407955": {
+  "doi": "https://doi.org/10.1162/089976602760407955",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Real-Time Computing Without Stable States: A New Framework for Neural Computation Based on Perturbations",
+  "year": 2002
+ },
+ "doi:10.1162/089976604323057443": {
+  "doi": "https://doi.org/10.1162/089976604323057443",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Real-Time Computation at the Edge of Chaos in Recurrent Neural Networks",
+  "year": 2004
+ },
+ "doi:10.1162/089976606774841585": {
+  "doi": "https://doi.org/10.1162/089976606774841585",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Bayesian Population Decoding of Motor Cortical Activity Using a Kalman Filter",
+  "year": 2005
+ },
+ "doi:10.1162/089976606775093909": {
+  "doi": "https://doi.org/10.1162/089976606775093909",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Making Working Memory Work: A Computational Model of Learning in the Prefrontal Cortex and Basal Ganglia",
+  "year": 2005
+ },
+ "doi:10.1162/jocn.1989.1.2.136": {
+  "doi": "https://doi.org/10.1162/jocn.1989.1.2.136",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Timing Functions of The Cerebellum",
+  "year": 1989
+ },
+ "doi:10.1162/jocn.2009.21189": {
+  "doi": "https://doi.org/10.1162/jocn.2009.21189",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://direct.mit.edu/jocn/article-pdf/21/7/1229/1937789/jocn.2009.21189.pdf"
+  ],
+  "title": "Eight Problems for the Mirror Neuron Theory of Action Understanding in Monkeys and Humans",
+  "year": 2009
+ },
+ "doi:10.1162/neco.1996.8.3.531": {
+  "doi": "https://doi.org/10.1162/neco.1996.8.3.531",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Energy Efficient Neural Codes",
+  "year": 1996
+ },
+ "doi:10.1162/neco.2008.12-06-420": {
+  "doi": "https://doi.org/10.1162/neco.2008.12-06-420",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The Diffusion Decision Model: Theory and Data for Two-Choice Decision Tasks",
+  "year": 2007
+ },
+ "doi:10.1162/neco_a_00212": {
+  "doi": "https://doi.org/10.1162/neco_a_00212",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Scale-Invariant Internal Representation of Time",
+  "year": 2011
+ },
+ "doi:10.1162/neco_a_00409": {
+  "doi": "https://doi.org/10.1162/neco_a_00409",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Opening the Black Box: Low-Dimensional Dynamics in High-Dimensional Recurrent Neural Networks",
+  "year": 2012
+ },
+ "doi:10.1162/neco_a_00949": {
+  "doi": "https://doi.org/10.1162/neco_a_00949",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2016/12/23/035451.full.pdf"
+  ],
+  "title": "An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local Hebbian Synaptic Plasticity",
+  "year": 2017
+ },
+ "doi:10.1176/appi.ajp.160.1.13": {
+  "doi": "https://doi.org/10.1176/appi.ajp.160.1.13",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Psychosis as a State of Aberrant Salience: A Framework Linking Biology, Phenomenology, and Pharmacology in Schizophrenia",
+  "year": 2002
+ },
+ "doi:10.1177/0956797611417632": {
+  "doi": "https://doi.org/10.1177/0956797611417632",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "False-Positive Psychology",
+  "year": 2011
+ },
+ "doi:10.1177/0956797614567339": {
+  "doi": "https://doi.org/10.1177/0956797614567339",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "When Does Cognitive Functioning Peak? The Asynchronous Rise and Fall of Different Cognitive Abilities Across the Life Span",
+  "year": 2015
+ },
+ "doi:10.1186/1471-2202-5-42": {
+  "doi": "https://doi.org/10.1186/1471-2202-5-42",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://bmcneurosci.biomedcentral.com/counter/pdf/10.1186/1471-2202-5-42"
+  ],
+  "title": "An information integration theory of consciousness",
+  "year": 2004
+ },
+ "doi:10.1186/2045-5380-3-12": {
+  "doi": "https://doi.org/10.1186/2045-5380-3-12",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://biolmoodanxietydisord.biomedcentral.com/counter/pdf/10.1186/2045-5380-3-12",
+   "https://www.zora.uzh.ch/id/eprint/91358/1/2045-5380-3-12%281%29.pdf"
+  ],
+  "title": "Mapping anhedonia onto reinforcement learning: a behavioural meta-analysis",
+  "year": 2013
+ },
+ "doi:10.1186/s40504-017-0050-1": {
+  "doi": "https://doi.org/10.1186/s40504-017-0050-1",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://lsspjournal.biomedcentral.com/track/pdf/10.1186/s40504-017-0050-1",
+   "https://www.zora.uzh.ch/id/eprint/150046/1/2017_Andorno_R_Towards_new_human_rights_in_the_age_of_neuroscience.pdf"
+  ],
+  "title": "Towards new human rights in the age of neuroscience and neurotechnology",
+  "year": 2017
+ },
+ "doi:10.1207/s15516709cog0702_3": {
+  "doi": "https://doi.org/10.1207/s15516709cog0702_3",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Structure‐Mapping: A Theoretical Framework for Analogy*",
+  "year": 1983
+ },
+ "doi:10.1348/174866407x214172": {
+  "doi": "https://doi.org/10.1348/174866407x214172",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Structure and function in acquired prosopagnosia: Lessons from a series of 10 patients with brain damage",
+  "year": 2008
+ },
+ "doi:10.1371/journal.pbio.1000153": {
+  "doi": "https://doi.org/10.1371/journal.pbio.1000153",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "Emergence of a Stable Cortical Map for Neuroprosthetic Control",
+  "year": 2009
+ },
+ "doi:10.1371/journal.pcbi.1004967": {
+  "doi": "https://doi.org/10.1371/journal.pcbi.1004967",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "Reservoir Computing Properties of Neural Dynamics in Prefrontal Cortex",
+  "year": 2016
+ },
+ "doi:10.1371/journal.pone.0036399": {
+  "doi": "https://doi.org/10.1371/journal.pone.0036399",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "The Goldilocks Effect: Human Infants Allocate Attention to Visual Sequences That Are Neither Too Simple Nor Too Complex",
+  "year": 2012
+ },
+ "doi:10.1371/journal.pone.0268577": {
+  "doi": "https://doi.org/10.1371/journal.pone.0268577",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC9916582/pdf/pone.0268577.pdf",
+   "https://repository.ubn.ru.nl/bitstream/handle/2066/292546/1/292546.pdf"
+  ],
+  "title": "An adversarial collaboration protocol for testing contrasting predictions of global neuronal workspace and integrated information theory",
+  "year": 2023
+ },
+ "doi:10.1523/jneurosci.10-02-00420.1990": {
+  "doi": "https://doi.org/10.1523/jneurosci.10-02-00420.1990",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/10/2/420.full.pdf"
+  ],
+  "title": "Head-direction cells recorded from the postsubiculum in freely moving rats. I. Description and quantitative analysis",
+  "year": 1990
+ },
+ "doi:10.1523/jneurosci.10-10-03227.1990": {
+  "doi": "https://doi.org/10.1523/jneurosci.10-10-03227.1990",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/10/10/3227.full.pdf"
+  ],
+  "title": "A circuit for detection of interaural time differences in the brain stem of the barn owl",
+  "year": 1990
+ },
+ "doi:10.1523/jneurosci.13-04-01479.1993": {
+  "doi": "https://doi.org/10.1523/jneurosci.13-04-01479.1993",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/13/4/1479.full.pdf"
+  ],
+  "title": "Dorsolateral prefrontal lesions and oculomotor delayed-response performance: evidence for mnemonic \"scotomas\"",
+  "year": 1993
+ },
+ "doi:10.1523/jneurosci.16-06-02112.1996": {
+  "doi": "https://doi.org/10.1523/jneurosci.16-06-02112.1996",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/16/6/2112.full.pdf"
+  ],
+  "title": "Representation of spatial orientation by the intrinsic dynamics of the head-direction cell ensemble: a theory",
+  "year": 1996
+ },
+ "doi:10.1523/jneurosci.18-24-10464.1998": {
+  "doi": "https://doi.org/10.1523/jneurosci.18-24-10464.1998",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/18/24/10464.full.pdf"
+  ],
+  "title": "Synaptic Modifications in Cultured Hippocampal Neurons: Dependence on Spike Timing, Synaptic Strength, and Postsynaptic Cell Type",
+  "year": 1998
+ },
+ "doi:10.1523/jneurosci.1844-09.2009": {
+  "doi": "https://doi.org/10.1523/jneurosci.1844-09.2009",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/29/37/11560.full.pdf"
+  ],
+  "title": "Decisions in Changing Conditions: The Urgency-Gating Model",
+  "year": 2009
+ },
+ "doi:10.1523/jneurosci.22-21-09475.2002": {
+  "doi": "https://doi.org/10.1523/jneurosci.22-21-09475.2002",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/22/21/9475.full.pdf"
+  ],
+  "title": "Response of Neurons in the Lateral Intraparietal Area during a Combined Visual Discrimination Reaction Time Task",
+  "year": 2002
+ },
+ "doi:10.1523/jneurosci.5302-10.2011": {
+  "doi": "https://doi.org/10.1523/jneurosci.5302-10.2011",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/31/30/10937.full.pdf"
+  ],
+  "title": "Longitudinal Development of Human Brain Wiring Continues from Childhood into Adulthood",
+  "year": 2011
+ },
+ "doi:10.1609/aimag.v38i4.2744": {
+  "doi": "https://doi.org/10.1609/aimag.v38i4.2744",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "A Standard Model of the Mind: Toward a Common Computational Framework Across Artificial Intelligence, Cognitive Science, Neuroscience, and Robotics",
+  "year": 2017
+ },
+ "doi:10.17226/26078": {
+  "doi": "https://doi.org/10.17226/26078",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The Emerging Field of Human Neural Organoids, Transplants, and Chimeras",
+  "year": 2021
+ },
+ "doi:10.31234/osf.io/zsr78": {
+  "doi": "https://doi.org/10.31234/osf.io/zsr78",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "The Integrated Information Theory of Consciousness as Pseudoscience",
+  "year": 2023
+ },
+ "doi:10.3389/fncir.2015.00085": {
+  "doi": "https://doi.org/10.3389/fncir.2015.00085",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncir.2015.00085/pdf"
+  ],
+  "title": "Neuromodulated Spike-Timing-Dependent Plasticity, and Theory of Three-Factor Learning Rules",
+  "year": 2016
+ },
+ "doi:10.3389/fncir.2016.00023": {
+  "doi": "https://doi.org/10.3389/fncir.2016.00023",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncir.2016.00023/pdf",
+   "https://arxiv.org/pdf/1511.00083"
+  ],
+  "title": "Why Neurons Have Thousands of Synapses, a Theory of Sequence Memory in Neocortex",
+  "year": 2016
+ },
+ "doi:10.3389/fncir.2017.00081": {
+  "doi": "https://doi.org/10.3389/fncir.2017.00081",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncir.2017.00081/pdf"
+  ],
+  "title": "A Theory of How Columns in the Neocortex Enable Learning the Structure of the World",
+  "year": 2017
+ },
+ "doi:10.3389/fncir.2018.00053": {
+  "doi": "https://doi.org/10.3389/fncir.2018.00053",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncir.2018.00053/pdf",
+   "https://arxiv.org/pdf/1801.05219"
+  ],
+  "title": "Eligibility Traces and Plasticity on Behavioral Time Scales: Experimental Support of NeoHebbian Three-Factor Learning Rules",
+  "year": 2018
+ },
+ "doi:10.3389/fncir.2018.00121": {
+  "doi": "https://doi.org/10.3389/fncir.2018.00121",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncir.2018.00121/pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2018/12/21/442418.full.pdf"
+  ],
+  "title": "A Framework for Intelligence and Cortical Function Based on Grid Cells in the Neocortex",
+  "year": 2019
+ },
+ "doi:10.3389/fncom.2017.00024": {
+  "doi": "https://doi.org/10.3389/fncom.2017.00024",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncom.2017.00024/pdf",
+   "https://arxiv.org/pdf/1602.05179"
+  ],
+  "title": "Equilibrium Propagation: Bridging the Gap between Energy-Based Models and Backpropagation",
+  "year": 2017
+ },
+ "doi:10.3389/fncom.2020.00029": {
+  "doi": "https://doi.org/10.3389/fncom.2020.00029",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncom.2020.00029/pdf"
+  ],
+  "title": "Attention in Psychology, Neuroscience, and Machine Learning",
+  "year": 2020
+ },
+ "doi:10.3389/fnhum.2014.00302": {
+  "doi": "https://doi.org/10.3389/fnhum.2014.00302",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fnhum.2014.00302/pdf"
+  ],
+  "title": "An aberrant precision account of autism",
+  "year": 2014
+ },
+ "doi:10.3389/fninf.2013.00048": {
+  "doi": "https://doi.org/10.3389/fninf.2013.00048",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fninf.2013.00048/pdf"
+  ],
+  "title": "Nengo: a Python tool for building large-scale functional brain models",
+  "year": 2014
+ },
+ "doi:10.3389/fnsys.2013.00102": {
+  "doi": "https://doi.org/10.3389/fnsys.2013.00102",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fnsys.2013.00102/pdf"
+  ],
+  "title": "Valproate reopens critical-period learning of absolute pitch",
+  "year": 2013
+ },
+ "doi:10.3389/fphys.2017.00164": {
+  "doi": "https://doi.org/10.3389/fphys.2017.00164",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fphys.2017.00164/pdf"
+  ],
+  "title": "Embodied Organization of Octopus vulgaris Morphology, Vision, and Locomotion",
+  "year": 2017
+ },
+ "doi:10.3389/fpsyt.2013.00047": {
+  "doi": "https://doi.org/10.3389/fpsyt.2013.00047",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fpsyt.2013.00047/pdf",
+   "https://www.zora.uzh.ch/id/eprint/80415/1/fpsyt-04-00047.pdf"
+  ],
+  "title": "The Computational Anatomy of Psychosis",
+  "year": 2013
+ },
+ "doi:10.3389/neuro.06.004.2008": {
+  "doi": "https://doi.org/10.3389/neuro.06.004.2008",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/neuro.06.004.2008/pdf"
+  ],
+  "title": "Representational similarity analysis – connecting the branches of systems neuroscience",
+  "year": 2008
+ },
+ "doi:10.3389/neuro.09.031.2009": {
+  "doi": "https://doi.org/10.3389/neuro.09.031.2009",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/neuro.09.031.2009/pdf"
+  ],
+  "title": "The human brain in numbers: a linearly scaled-up primate brain",
+  "year": 2009
+ },
+ "doi:10.48550/arxiv.1711.08856": {
+  "doi": "https://doi.org/10.48550/arxiv.1711.08856",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1711.08856"
+  ],
+  "title": "Critical Learning Periods in Deep Neural Networks",
+  "year": 2017
+ },
+ "doi:10.48550/arxiv.1803.03635": {
+  "doi": "https://doi.org/10.48550/arxiv.1803.03635",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1803.03635"
+  ],
+  "title": "The Lottery Ticket Hypothesis: Finding Sparse, Trainable Neural Networks",
+  "year": 2018
+ },
+ "doi:10.48550/arxiv.1810.11393": {
+  "doi": "https://doi.org/10.48550/arxiv.1810.11393",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1810.11393"
+  ],
+  "title": "Dendritic cortical microcircuits approximate the backpropagation algorithm",
+  "year": 2018
+ },
+ "doi:10.48550/arxiv.1910.08475": {
+  "doi": "https://doi.org/10.48550/arxiv.1910.08475",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1910.08475"
+  ],
+  "title": "On Warm-Starting Neural Network Training",
+  "year": 2019
+ },
+ "doi:10.48550/arxiv.2302.12902": {
+  "doi": "https://doi.org/10.48550/arxiv.2302.12902",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2302.12902",
+   "http://arxiv.org/pdf/2302.12902"
+  ],
+  "title": "The Dormant Neuron Phenomenon in Deep Reinforcement Learning",
+  "year": 2023
+ },
+ "doi:10.48550/arxiv.2303.01486": {
+  "doi": "https://doi.org/10.48550/arxiv.2303.01486",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2303.01486"
+  ],
+  "title": "Understanding plasticity in neural networks",
+  "year": 2023
+ },
+ "doi:10.48550/arxiv.2308.08708": {
+  "doi": "https://doi.org/10.48550/arxiv.2308.08708",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2308.08708"
+  ],
+  "title": "Cheap Correlate or Discriminating Property? An Executable Validation Protocol for Consciousness- and Cognition-Theoretic Claims about AI",
+  "year": 2023
+ },
+ "doi:10.48550/arxiv.2411.00986": {
+  "doi": "https://doi.org/10.48550/arxiv.2411.00986",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/2411.00986"
+  ],
+  "title": "Logotic Violence: Training-Layer Ethics and the Moral Status of Ephemeral Computation",
+  "year": 2024
+ },
+ "doi:10.7554/elife.04811": {
+  "doi": "https://doi.org/10.7554/elife.04811",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2014/06/05/005140.full.pdf"
+  ],
+  "title": "Homeostatic reinforcement learning for integrating reward collection and physiological stability",
+  "year": 2014
+ },
+ "doi:10.7554/elife.11305": {
+  "doi": "https://doi.org/10.7554/elife.11305",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "Characterizing a psychiatric symptom dimension related to deficits in goal-directed control",
+  "year": 2016
+ },
+ "doi:10.7554/elife.22901": {
+  "doi": "https://doi.org/10.7554/elife.22901",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "Towards deep learning with segregated dendrites",
+  "year": 2017
+ },
+ "doi:10.7554/elife.47314": {
+  "doi": "https://doi.org/10.7554/elife.47314",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2019/04/01/595710.full.pdf"
+  ],
+  "title": "Brian 2, an intuitive and efficient neural simulator",
+  "year": 2019
+ },
+ "doi:10.7554/elife.63711": {
+  "doi": "https://doi.org/10.7554/elife.63711",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://repository.cshl.edu/id/eprint/40172/1/2021.International_Brain_Lab.decision_making.pdf"
+  ],
+  "title": "Standardized and reproducible measurement of decision-making in mice",
+  "year": 2021
+ },
+ "doi:10.7554/elife.71774": {
+  "doi": "https://doi.org/10.7554/elife.71774",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2021/10/10/2021.06.28.450168.full.pdf"
+  ],
+  "title": "The OpenNeuro resource for sharing of neuroscience data",
+  "year": 2021
+ },
+ "doi:10.7554/elife.78362": {
+  "doi": "https://doi.org/10.7554/elife.78362",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2022/03/29/2021.03.13.435173.full.pdf"
+  ],
+  "title": "The Neurodata Without Borders ecosystem for neurophysiological data science",
+  "year": 2022
+ },
+ "title:acritiqueofpurelearningandwhatartificialneuralnetworkscanlearnfromanimalbrains": {
+  "doi": "https://doi.org/10.1038/s41467-019-11786-6",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-019-11786-6.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2019/03/20/582643.full.pdf",
+   "https://repository.cshl.edu/id/eprint/38307/1/2019.Zador.ArtificialNeuralNetworks.pdf"
+  ],
+  "title": "A critique of pure learning and what artificial neural networks can learn from animal brains",
+  "year": 2019
+ },
+ "title:adeeplearningframeworkforneuroscience": {
+  "doi": "https://doi.org/10.1038/s41593-019-0520-2",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "A deep learning framework for neuroscience",
+  "year": 2019
+ },
+ "title:adrosophilacomputationalbrainmodelrevealssensorimotorprocessing": {
+  "doi": "https://doi.org/10.1038/s41586-024-07763-9",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41586-024-07763-9.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2023/05/02/2023.05.02.539144.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10187186/pdf/nihpp-2023.05.02.539144v1.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11446845/pdf/41586_2024_Article_7763.pdf"
+  ],
+  "title": "A Drosophila computational brain model reveals sensorimotor processing",
+  "year": 2024
+ },
+ "title:algorithmsforinversereinforcementlearning": {
+  "found": false
+ },
+ "title:anapproximationoftheerrorbackpropagationalgorithminapredictivecodingnetworkwithlocalhebbiansynapticplasticity": {
+  "doi": "https://doi.org/10.1162/neco_a_00949",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2016/12/23/035451.full.pdf"
+  ],
+  "title": "An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local Hebbian Synaptic Plasticity",
+  "year": 2017
+ },
+ "title:apathtowardsautonomousmachineintelligence": {
+  "found": false
+ },
+ "title:atheoryofpavlovianconditioningvariationsintheeffectivenessofreinforcementandnonreinforcement": {
+  "doi": null,
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A theory of Pavlovian conditioning : Variations in the effectiveness of reinforcement and nonreinforcement",
+  "year": 1972
+ },
+ "title:bridgingthedatagapbetweenchildrenandlargelanguagemodels": {
+  "doi": "https://doi.org/10.1016/j.tics.2023.08.007",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "Bridging the data gap between children and large language models",
+  "year": 2023
+ },
+ "title:buildingmachinesthatlearnandthinklikepeople": {
+  "doi": "https://doi.org/10.1017/s0140525x16001837",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.cambridge.org/core/services/aop-cambridge-core/content/view/A9535B1D745A0377E16C590E14B94993/S0140525X16001837a.pdf/div-class-title-building-machines-that-learn-and-think-like-people-div.pdf",
+   "https://arxiv.org/pdf/1604.00289"
+  ],
+  "title": "Building machines that learn and think like people",
+  "year": 2016
+ },
+ "title:burstdependentsynapticplasticitycancoordinatelearninginhierarchicalcircuits": {
+  "doi": "https://doi.org/10.1038/s41593-021-00857-x",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/09/14/2020.03.30.015511.full.pdf"
+  ],
+  "title": "Burst-dependent synaptic plasticity can coordinate learning in hierarchical circuits",
+  "year": 2021
+ },
+ "title:catalyzingnextgenerationartificialintelligencethroughneuroai": {
+  "doi": "https://doi.org/10.1038/s41467-023-37180-x",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-023-37180-x.pdf",
+   "https://repository.cshl.edu/id/eprint/41061/1/Catalyzing%20next-generation%20Artificial%20Intelligence%20through%20NeuroAI.pdf",
+   "https://escholarship.org/content/qt1s66n7s9/qt1s66n7s9.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10033876/pdf/41467_2023_Article_37180.pdf"
+  ],
+  "title": "Catalyzing next-generation Artificial Intelligence through NeuroAI",
+  "year": 2023
+ },
+ "title:cognitivemapsinratsandmen": {
+  "doi": "https://doi.org/10.1037/h0061626",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Cognitive maps in rats and men.",
+  "year": 1948
+ },
+ "title:connectomeconstrainednetworkspredictneuralactivityacrosstheflyvisualsystem": {
+  "doi": "https://doi.org/10.1038/s41586-024-07939-3",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41586-024-07939-3.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC11525180/pdf/41586_2024_Article_7939.pdf"
+  ],
+  "title": "Connectome-constrained networks predict neural activity across the fly visual system",
+  "year": 2024
+ },
+ "title:continuallearningwithdeepgenerativereplay": {
+  "doi": "https://doi.org/10.48550/arxiv.1705.08690",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1705.08690"
+  ],
+  "title": "Continual Learning with Deep Generative Replay",
+  "year": 2017
+ },
+ "title:curiositydrivenexplorationbyselfsupervisedprediction": {
+  "doi": "https://doi.org/10.1109/cvprw.2017.70",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1705.05363"
+  ],
+  "title": "Curiosity-Driven Exploration by Self-Supervised Prediction",
+  "year": 2017
+ },
+ "title:dendriticcorticalmicrocircuitsapproximatethebackpropagationalgorithm": {
+  "doi": "https://doi.org/10.48550/arxiv.1810.11393",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/1810.11393"
+  ],
+  "title": "Dendritic cortical microcircuits approximate the backpropagation algorithm",
+  "year": 2018
+ },
+ "title:directrecordingsofgridlikeneuronalactivityinhumanspatialnavigation": {
+  "doi": "https://doi.org/10.1038/nn.3466",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "http://cogprints.org/9085/1/JacobsEtAl2013.pdf"
+  ],
+  "title": "Direct recordings of grid-like neuronal activity in human spatial navigation",
+  "year": 2013
+ },
+ "title:eligibilitytracesandplasticityonbehavioraltimescales": {
+  "doi": "https://doi.org/10.3389/fncir.2018.00053",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncir.2018.00053/pdf",
+   "https://arxiv.org/pdf/1801.05219"
+  ],
+  "title": "Eligibility Traces and Plasticity on Behavioral Time Scales: Experimental Support of NeoHebbian Three-Factor Learning Rules",
+  "year": 2018
+ },
+ "title:evidenceforgridcellsinahumanmemorynetwork": {
+  "doi": "https://doi.org/10.1038/nature08704",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/nature08704.pdf"
+  ],
+  "title": "Evidence for grid cells in a human memory network",
+  "year": 2010
+ },
+ "title:hippocampalremappingandgridrealignmentinentorhinalcortex": {
+  "doi": "https://doi.org/10.1038/nature05601",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Hippocampal remapping and grid realignment in entorhinal cortex",
+  "year": 2007
+ },
+ "title:hippocampalsharpwaverippleacognitivebiomarkerforepisodicmemoryandplanning": {
+  "doi": "https://doi.org/10.1002/hipo.22488",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [],
+  "title": "Hippocampal sharp wave‐ripple: A cognitive biomarker for episodic memory and planning",
+  "year": 2015
+ },
+ "title:integratedarchitecturesforlearningplanningandreactingbasedonapproximatingdynamicprogramming": {
+  "doi": "https://doi.org/10.1016/b978-1-55860-141-3.50030-4",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Integrated Architectures for Learning, Planning, and Reacting Based on Approximating Dynamic Programming",
+  "year": 1990
+ },
+ "title:intelbuildsworldslargestneuromorphicsystemtoenablemoresustainableai": {
+  "found": false
+ },
+ "title:isitsystemsorcellularconsolidationtimewilltellanalternativeinterpretationofthemorrisgroupsrecentsciencepaper": {
+  "found": false
+ },
+ "title:learningwiththreefactors": {
+  "doi": "https://doi.org/10.1016/j.conb.2017.08.020",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.sciencedirect.com/science/article/pii/S0959438817300612/pdf"
+  ],
+  "title": "Learning with three factors: modulating Hebbian plasticity with errors",
+  "year": 2017
+ },
+ "title:loihianeuromorphicmanycoreprocessorwithonchiplearning": {
+  "doi": "https://doi.org/10.1109/mm.2018.112130359",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Loihi: A Neuromorphic Manycore Processor with On-Chip Learning",
+  "year": 2018
+ },
+ "title:neuroscienceinspiredartificialintelligence": {
+  "doi": "https://doi.org/10.1016/j.neuron.2017.06.011",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0896627317305093/pdf"
+  ],
+  "title": "Neuroscience-Inspired Artificial Intelligence",
+  "year": 2017
+ },
+ "title:normalizationasacanonicalneuralcomputation": {
+  "doi": "https://doi.org/10.1038/nrn3136",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Normalization as a canonical neural computation",
+  "year": 2011
+ },
+ "title:opportunitiesforneuromorphiccomputingalgorithmsandapplications": {
+  "doi": "https://doi.org/10.1038/s43588-021-00184-y",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s43588-021-00184-y.pdf"
+  ],
+  "title": "Opportunities for neuromorphic computing algorithms and applications",
+  "year": 2022
+ },
+ "title:organizingconceptualknowledgeinhumanswithagridlikecode": {
+  "doi": "https://doi.org/10.1126/science.aaf0941",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Organizing conceptual knowledge in humans with a gridlike code",
+  "year": 2016
+ },
+ "title:regionaldifferencesinsynaptogenesisinhumancerebralcortex": {
+  "doi": "https://doi.org/10.1002/(sici)1096-9861(19971020)387:2<167::aid-cne1>3.0.co;2-z",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Regional differences in synaptogenesis in human cerebral cortex",
+  "year": 1997
+ },
+ "title:theconnectomeofaninsectbrain": {
+  "doi": "https://doi.org/10.1126/science.add9330",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2022/11/28/2022.11.28.516756.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC7614541/pdf/EMS175448.pdf"
+  ],
+  "title": "The connectome of an insect brain",
+  "year": 2023
+ },
+ "title:theeffectsofchangesintheenvironmentonthespatialfiringofhippocampalcomplexspikecells": {
+  "doi": "https://doi.org/10.1523/jneurosci.07-07-01951.1987",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/7/7/1951.full.pdf"
+  ],
+  "title": "The effects of changes in the environment on the spatial firing of hippocampal complex-spike cells",
+  "year": 1987
+ },
+ "title:thenumberandsizesofnervecellsinoctopus": {
+  "found": false
+ },
+ "title:theselftuningneuronsynapticscalingofexcitatorysynapses": {
+  "doi": "https://doi.org/10.1016/j.cell.2008.10.008",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "http://www.cell.com/article/S0092867408012981/pdf"
+  ],
+  "title": "The Self-Tuning Neuron: Synaptic Scaling of Excitatory Synapses",
+  "year": 2008
+ },
+ "title:unsupervisedlearningofdigitrecognitionusingspiketimingdependentplasticity": {
+  "doi": "https://doi.org/10.3389/fncom.2015.00099",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.frontiersin.org/articles/10.3389/fncom.2015.00099/pdf",
+   "https://www.zora.uzh.ch/id/eprint/107763/1/diehl_cook_2014_spiking_MNIST.pdf",
+   "https://www.zora.uzh.ch/id/eprint/121701/1/fncom-09-00099.pdf"
+  ],
+  "title": "Unsupervised learning of digit recognition using spike-timing-dependent plasticity",
+  "year": 2015
+ },
+ "title:usinggoaldrivendeeplearningmodelstounderstandsensorycortex": {
+  "doi": "https://doi.org/10.1038/nn.4244",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Using goal-driven deep learning models to understand sensory cortex",
+  "year": 2016
+ },
+ "title:vectorsymbolicarchitecturesanswerjackendoffschallengesforcognitiveneuroscience": {
+  "doi": "https://doi.org/10.48550/arxiv.cs/0412059",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://arxiv.org/pdf/cs/0412059",
+   "http://cogprints.org/3983/1/Jackendoff_challenges_V3.pdf"
+  ],
+  "title": "Vector Symbolic Architectures answer Jackendoff's challenges for cognitive neuroscience",
+  "year": 2004
+ },
+ "title:whatgridcellsconveyaboutratlocation": {
+  "doi": "https://doi.org/10.1523/jneurosci.5684-07.2008",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.jneurosci.org/content/jneuro/28/27/6858.full.pdf"
+  ],
+  "title": "What Grid Cells Convey about Rat Location",
+  "year": 2008
+ },
+ "title:whatwemeanwhenwesaywhatsthedollarofmexicoprototypesandmappinginconceptspace": {
+  "found": false
+ },
+ "title:wholebrainemulationaroadmap": {
+  "found": false
+ },
+ "title:whoputthecogininfantcognitionisrichinterpretationtoocostly": {
+  "found": false
+ }
+}
