@@ -113,6 +113,7 @@ separate memory systems ([[memory-systems]]). Brain Lab level 3 is built on this
 
 ## Related
 - [[neurons-and-synapses]] - the components these regions are built from.
+- [[cortical-layers-and-columns]] - the six layers of the neocortex, columns and the canonical microcircuit.
 - [[memory-systems]] - hippocampus and cortex in detail.
 - [[learning-and-plasticity]] - the learning rules each region uses.
 - [[levels-of-brain-modeling]] - at what level of detail to simulate these regions.

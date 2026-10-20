@@ -77,12 +77,23 @@ specific process models can be tested.
 - Active inference gives a single objective for perception, action and curiosity
   (seeking information that reduces uncertainty). See [[build-a-brain-like-learner]].
 
+## Open questions
+- Whether cortex has dedicated **prediction-error neurons** in each area and layer, as
+  canonical predictive-coding circuits propose, or computes errors some other way.
+- How precision (the weight given to each error) is set in neurons: attention and
+  neuromodulators are the main **hypotheses**.
+- Whether the free-energy principle makes predictions a plain Bayesian-brain account
+  does not, so that it can be tested as more than a framework.
+- How far predictive learning alone goes: whether it can train a deep sensory
+  hierarchy without other learning signals.
+
 ## Related
 - [[sensory-systems-and-vision]] - the visual hierarchy in detail, and CNNs as models of it.
 - [[neural-coding-and-computation]] - normalisation, gain and attention primitives.
 - [[brain-inspired-learning-algorithms]] - a runnable predictive coding network.
 - [[emotion-amygdala-and-interoception]] - interoceptive inference: the same scheme applied to the body.
 - [[brain-vs-deep-learning]] - predictive coding as a backprop alternative.
+- [[cortical-layers-and-columns]] - the laminar anatomy that error and prediction units are mapped onto.
 - [Brain Lab](../game/README.md) - level 7, *Guess what's next*: set the gain on prediction errors while tracking a hidden dot.
 
 ## References

@@ -192,6 +192,7 @@ assert r["A+B"] > 2 * (r["A"] + r["B"])         # supralinear: more than the sum
   efficient, tested against a dense net with the same locality.
 
 ## Related
+- [[cortical-layers-and-columns]] - which layer each input arrives in, and layer 1 feedback onto apical tufts.
 - [[neurons-and-synapses]] - the neuron parts; this file is about what the dendrites compute.
 - [[brain-inspired-learning-algorithms]] - local learning rules that dendritic error signals could support.
 - [[brain-vs-deep-learning]] - the credit-assignment problem dendrites may help solve.

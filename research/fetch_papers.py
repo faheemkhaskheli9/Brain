@@ -87,8 +87,17 @@ def parse_refs():
             m = re.search(r"^## References\s*$(.*?)(?=^## |\Z)", text, re.M | re.S)
             if m:
                 for line in m.group(1).splitlines():
-                    if line.strip().startswith("- "):
-                        yield f.stem, line.strip()[2:]
+                    item = line.strip()[2:]
+                    # A pointer to another file in this repo (e.g. "see research/papers.md") is not a paper.
+                    if line.strip().startswith("- ") and not is_repo_pointer(item):
+                        yield f.stem, item
+
+
+def is_repo_pointer(item):
+    """True when a reference bullet's only links are relative links to files in this repo."""
+    targets = re.findall(r"\]\(([^)\s]+)\)", item)
+    return bool(targets) and not re.search(r"https?://|doi\.org|10\.\d{4,}/|arxiv", item, re.I) and \
+        all(not re.match(r"[a-z][a-z0-9+.-]*:", t, re.I) for t in targets)
 
 
 def key_of(text):

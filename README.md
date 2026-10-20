@@ -16,7 +16,7 @@ ML engineers, neuroscience students or players in
 | Folder | Holds |
 |---|---|
 | `guides/` | Entry point, glossary, learning paths, the build roadmap, a research workflow, the open-questions register and neuroethics |
-| `anatomy/` | Structure: regions, cell types, synapses, dendrites, glia and the energy budget, comparative and evolutionary neuroscience |
+| `anatomy/` | Structure: regions, cortical layers and columns, cell types, synapses, dendrites, glia and the energy budget, comparative and evolutionary neuroscience |
 | `function/` | How the brain computes, remembers, perceives, decides and learns: coding, population dynamics, memory, sleep, rhythms, attention, prefrontal abstraction, timing, emotion, language, social cognition, development, ageing, disorders |
 | `learning/` | Brain vs deep learning; brain-inspired learning algorithms with code; efficient (energy, samples) learning; hyperdimensional computing |
 | `simulation/` | Levels of modeling, spiking and reservoir networks, cognitive architectures, evaluation, datasets, hardware, brain-computer interfaces, emulation projects, saving a trained brain |
@@ -79,6 +79,20 @@ Details, measured results and limits: [game/ecosystem/README.md](game/ecosystem/
 Brain Lab (`python game/play.py`, or `game/web/` in a browser) is the companion game: eleven
 levels where you operate one mechanism at a time. Both are described in
 [game/README.md](game/README.md) and, feature by feature, in [docs/app-guide.md](docs/app-guide.md).
+
+## Web app: read and edit the topics
+
+```bash
+python3 webapp/server.py --open     # http://localhost:8774 , stdlib only, no install
+```
+
+A local site to browse, search and edit the topic files: rendered Markdown with an outline and backlinks,
+a live preview while editing, new topics from `_template.md`, a Rebuild INDEX.md button and a Changes page
+with per-file diffs. It listens on 127.0.0.1 only and writes straight to your working copy; commit with git.
+
+![The web app showing the memory systems topic](docs/screenshots/webapp-file.png)
+
+Full guide with screenshots: [docs/webapp-guide.md](docs/webapp-guide.md)
 
 ## License
 

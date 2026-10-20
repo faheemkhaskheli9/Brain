@@ -177,6 +177,7 @@ assert min(within) == 1.0 and max(across) < 0.6
 - [[language-and-llms]] - how far statistical learning goes towards language.
 - [[sensory-systems-and-vision]] - the visual machinery that newborn object recognition relies on.
 - [[prefrontal-cortex-and-abstraction]] - schemas: prior knowledge that speeds up new learning.
+- [[social-cognition-and-theory-of-mind]] - false-belief tasks and learning by watching others.
 
 ## References
 - Spelke & Kinzler (2007) "Core knowledge", *Dev Sci* 10:89. doi:10.1111/j.1467-7687.2007.00569.x

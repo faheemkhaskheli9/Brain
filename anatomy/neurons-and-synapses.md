@@ -11,6 +11,7 @@ last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1113/jphysiol.1952.sp004764
   - https://doi.org/10.1016/j.neuron.2021.07.002
+  - https://doi.org/10.7554/eLife.10778
 ---
 
 # Neurons, synapses and glia
@@ -32,7 +33,9 @@ sum plus nonlinearity used in artificial networks.
 2. Excitatory input depolarises the membrane. At threshold, voltage-gated **Na+**
    channels open, Na+ rushes in, and the voltage spikes to about +40 mV.
 3. Na+ channels inactivate and **K+** channels open, so the voltage falls back,
-   briefly undershooting (the refractory period, which caps firing at a few hundred Hz).
+   briefly undershooting rest (the afterhyperpolarisation). Until the Na+ channels
+   recover, the cell cannot fire again or needs a stronger input (the refractory
+   period), which caps firing at a few hundred Hz.
 4. The spike regenerates along the axon. Myelin (made by glia) makes it jump
    between nodes, at up to ~100 m/s.
 
@@ -92,7 +95,7 @@ to about -75 mV, below rest: steps 2 and 3 above, from the equations alone.
 - **Excitatory** synapses mostly use glutamate (AMPA and NMDA receptors).
   **Inhibitory** ones mostly use GABA. A neuron generally releases the same
   transmitters at all its outputs (Dale's principle), so it is excitatory or
-  inhibitory, never both. In cortex ~80% of neurons are excitatory and ~20% inhibitory.
+  inhibitory, with rare exceptions that co-release glutamate and GABA. In cortex ~80% of neurons are excitatory and ~20% inhibitory.
 - **NMDA receptors** open only when the cell is already depolarised *and*
   glutamate is present. That makes them a molecular coincidence detector, the
   basis of Hebbian learning ([[learning-and-plasticity]]).
@@ -138,6 +141,18 @@ cortical neuron's input-output behaviour at millisecond precision.
 - Dale's principle and noisy synapses are often dropped in models. Whether they
   matter for learning is an open question.
 
+## Open questions
+- Whether the brain's "noise" is a cost or a feature. Single synapses often fail to
+  transmit; one **hypothesis** is that this randomness acts like sampling or dropout and
+  helps learning, but how much it matters in vivo is not settled.
+- Whether Dale's principle and fixed excitatory/inhibitory identity matter for what a
+  network can learn, or only constrain how it is built. Models usually drop them.
+- What most cell types compute. Transcriptomic atlases split cortex into far more types
+  than the classic pyramidal, PV, SST and VIP classes; the function of most is unknown.
+- How much information one synapse stores. An electron-microscopy study of rat
+  hippocampus estimated about 4.7 bits from how precisely paired spines match in size
+  (Bartol et al. 2015); whether other synapses and regions are similar is open.
+
 ## Related
 - [[brain-structure-overview]] - where these cells sit.
 - [[learning-and-plasticity]] - how synapses change.
@@ -149,3 +164,4 @@ cortical neuron's input-output behaviour at millisecond precision.
 - Beniaguev, Segev & London (2021) "Single cortical neurons as deep artificial neural networks", *Neuron*. doi:10.1016/j.neuron.2021.07.002
 - Kandel et al., *Principles of Neural Science* (6th ed.).
 - Dayan & Abbott, *Theoretical Neuroscience* (MIT Press, 2001), chapter 5: the Hodgkin-Huxley constants used in the code.
+- Bartol et al. (2015) "Nanoconnectomic upper bound on the variability of synaptic plasticity", *eLife* 4:e10778. doi:10.7554/eLife.10778

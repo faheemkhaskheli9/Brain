@@ -41,6 +41,7 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 | 8 | Which set points and drives does an agent need for useful emotion-like behaviour? | [[emotion-amygdala-and-interoception]] | - | candidate |
 | 9 | How can an agent infer its task with no task index? | [[saving-and-reusing-a-trained-brain]] | #57, #60, #65 | in Brain World backlog |
 | 22 | Can local learning rules learn reusable abstract structure, or what does the brain add? 170 hypotheses (H001-H170), each with a test, in [research/learning-algorithm-hypotheses.md](../research/learning-algorithm-hypotheses.md), explained simply in [research/hypotheses-explained](../research/hypotheses-explained/README.md) | [[build-a-brain-like-learner]] | #92 | in progress: H001-H003 replicated (PC matches backprop when the output variance is large; FA and DFA train hidden layers on digits) |
+| 23 | Can a local rule (STDP, three-factor, e-prop) train a multi-layer spiking network close to surrogate-gradient accuracy, and does spike timing add anything over rates? | [[spiking-neural-networks]], [[brain-inspired-learning-algorithms]] | - | candidate |
 
 ### Tier 2: open-data analysis (weeks)
 | # | Question | Raised in | Data | Issue | Status |
@@ -64,6 +65,12 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 | [[brain-structure-overview]] | What the canonical microcircuit computes; how subsystems coordinate into general intelligence. |
 | [[dendritic-computation]] | How often dendritic spikes occur in natural behaviour; which credit-assignment hypothesis the cortex uses (also [[key-papers]]). |
 | [[glia-and-energy-budget]] | Astrocyte computation in behaving animals; adult myelin plasticity; the lactate-shuttle debate; how close codes are to the energy optimum. |
+| [[cortical-layers-and-columns]] | What the canonical microcircuit computes; whether columns are computational units; what layer 1 feedback does in behaviour. |
+| [[neurons-and-synapses]] | Whether synaptic noise and Dale's principle help learning; what most cell types compute; how much one synapse stores. |
+| [[learning-and-plasticity]] | Cortical credit assignment; how general eligibility traces are; stable memories on turning-over synapses; how plasticity rules combine. |
+| [[predictive-processing]] | Dedicated prediction-error neurons; how precision is set; testable predictions of the free-energy principle. |
+| [[brain-vs-deep-learning]] | Which credit-assignment scheme cortex uses; rules vs priors as the source of sample efficiency. |
+| [[neuromorphic-hardware]] | Fair energy comparisons with GPUs; on-chip learning accuracy; reliable analog devices at scale. |
 | [[action-selection-and-motor-control]] | Cerebellum in cognition and language; what climbing fibres carry; parameters vs dynamics in motor cortex. |
 | [[attention-and-working-memory]] | Persistent vs silent storage; routing of top-down attention; all-pairs attention in the hippocampus. |
 | [[brain-development-and-critical-periods]] | Adult human neurogenesis; safely reopening critical periods; how genomic rules unfold; language-learning decline. |
