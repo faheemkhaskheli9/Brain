@@ -1,13 +1,20 @@
-"""Collect every paper the knowledge base cites, download open-access PDFs.
+"""Collect every paper the knowledge base cites into research/papers.md.
 
-Reads the `sources:` frontmatter and `## References` bullets of every topic,
-resolves each reference through OpenAlex (DOI, arXiv id, or title search),
-downloads a PDF when an open-access copy exists, and writes research/papers.md.
+Two separate steps:
+1. Extraction (offline, deterministic): read the `sources:` frontmatter and `## References`
+   bullets of every topic and key each reference by its cited DOI, arXiv id, title or URL.
+2. Enrichment (online, only when asked): look references up in OpenAlex (and Semantic Scholar
+   for PDFs) and store what was found in research/papers.json, keyed by reference. The catalog
+   is built from the extraction plus that file, so it never depends on the network.
 
-    python research/fetch_papers.py            # resolve + download
-    python research/fetch_papers.py --no-pdf   # catalog only
+    python research/fetch_papers.py            # rebuild papers.md offline from papers.json
+    python research/fetch_papers.py --check    # offline: exit 1 if papers.md is out of date (CI)
+    python research/fetch_papers.py --enrich   # online: look up references not in papers.json yet
+    python research/fetch_papers.py --enrich --refresh   # online: look every reference up again
+    python research/fetch_papers.py --enrich --pdf       # also download open-access PDFs
 
-Stdlib only. Re-run after adding references; existing PDFs are skipped.
+Every row says whether its reference was resolved, looked up and not found, or not looked up
+yet. Stdlib only.
 """
 import json
 import re
@@ -20,6 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "research"
 PDFS = OUT / "pdfs"
+CACHE = OUT / "papers.json"   # enrichment results, keyed by reference key; written only by --enrich
 FOLDERS = ["anatomy", "function", "learning", "simulation", "guides"]
 UA = {"User-Agent": "Mozilla/5.0 (Brain KB reference fetcher)"}
 
@@ -124,6 +132,38 @@ def collect():
             continue
         out.append(r)
     return out
+
+
+def resolvable(r):
+    """Whether enrichment looks this reference up. Books, bare URLs and cited web pages (a
+    citation with its own URL) are taken as cited."""
+    k = r["key"]
+    return k.startswith(("doi:", "arxiv:")) or (k.startswith("title:") and not URL_RE.search(r["cite"]))
+
+
+def lookup(r):
+    """Online: what OpenAlex (and Semantic Scholar) know about r, as a cache entry."""
+    tmp = {"key": r["key"], "cite": r["cite"]}
+    resolve(tmp)
+    if "pdf_urls" not in tmp:   # resolve sets it only when OpenAlex matched a work
+        return {"found": False}
+    return {"found": True, **{f: tmp.get(f) for f in ("title", "year", "doi", "oa_status")},
+            "pdf_urls": tmp["pdf_urls"]}
+
+
+def apply(r, entry):
+    """Offline: copy a cache entry onto r and record its status."""
+    if not resolvable(r):
+        r["status"] = "-"
+    elif entry is None:
+        r["status"] = "not looked up"
+    elif not entry.get("found"):
+        r["status"] = "not found"
+    else:
+        r["status"] = "resolved"
+        for f in ("title", "year", "doi", "oa_status", "pdf_urls"):
+            if entry.get(f) is not None:
+                r[f] = entry[f]
 
 
 def resolve(r):
@@ -237,48 +277,54 @@ def link(r):
     # What the topic cites wins: its DOI, arXiv id or URL. OpenAlex's DOI is only a fallback
     # for a citation found by title, since OpenAlex may normalise a DOI into another one or
     # file an arXiv paper under a later copy's DOI.
+    # Returns (url, cited): cited is False when the URL came from OpenAlex, not the topic.
     k = r["key"]
     if k.startswith("doi:"):
-        return "https://doi.org/" + k[4:]
+        return "https://doi.org/" + k[4:], True
     if k.startswith("arxiv:"):
-        return "https://arxiv.org/abs/" + k[6:]
+        return "https://arxiv.org/abs/" + k[6:], True
     if k.startswith("url:"):
-        return k[4:]
+        return k[4:], True
     if m := URL_RE.search(r["cite"]):
-        return m.group(0).rstrip(".)")
-    return r.get("doi") or ""
+        return m.group(0).rstrip(".)"), True
+    return r.get("doi") or "", False
 
 
 def md_url(u):
     return u.replace("(", "%28").replace(")", "%29")   # a bare ) would end the Markdown link
 
 
-def write_catalog(refs):
-    # The catalog depends only on the references and OpenAlex, not on which PDFs this machine has
-    # downloaded, so a run on CI and a run on a laptop write the same file.
-    refs.sort(key=lambda r: r["cite"].lower())
-    n_oa = sum(1 for r in refs if r.get("pdf_urls"))
+def catalog(refs):
+    """The text of papers.md: a function of the topics and papers.json only, so a rebuild with no
+    network gives the same file, and --check can compare it with the committed one."""
+    refs = sorted(refs, key=lambda r: (r["cite"].lower(), r["key"]))
+    count = {s: sum(1 for r in refs if r["status"] == s) for s in ("resolved", "not found", "not looked up")}
+    n_pdf = sum(1 for r in refs if r.get("pdf_urls"))
     lines = [
         "# Papers cited by the knowledge base",
         "",
-        "Generated by `python research/fetch_papers.py` - do not edit by hand.",
-        f"{len(refs)} references, {n_oa} with an open-access PDF. Without `--no-pdf` the script also",
-        "downloads them to `research/pdfs/` (git-ignored: PDFs stay local).",
+        "Generated by `python research/fetch_papers.py` from the topics and `research/papers.json` -",
+        "do not edit by hand. `python research/fetch_papers.py --enrich` looks new references up online.",
+        f"{len(refs)} references: {count['resolved']} resolved, {count['not found']} not found, "
+        f"{count['not looked up']} not looked up yet, and {len(refs) - sum(count.values())} books, pages or",
+        f"bare URLs taken as cited. {n_pdf} have a direct open-access PDF link.",
         "Annotated takeaways live in [guides/key-papers.md](../guides/key-papers.md).",
         "",
-        "| Reference | Cited in | Link | Open access | PDF |",
-        "|---|---|---|---|---|",
+        "Link: the DOI, arXiv id or URL the topic cites; \"(OpenAlex)\" marks a DOI OpenAlex found for a",
+        "citation that gave none.",
+        "",
+        "| Reference | Cited in | Link | Status | Open access | PDF |",
+        "|---|---|---|---|---|---|",
     ]
     for r in refs:
         cite = r["cite"].replace("|", "/")
-        topics = ", ".join(f"[{t}](../{find(t)})" for t in r["topics"])
-        url = link(r)
-        lk = f"[link]({md_url(url)})" if url else "book / no link"
-        oa = r.get("oa_status") or ("-" if not r["key"].startswith(("doi", "arxiv", "title")) else "unknown")
+        topics = ", ".join(f"[{t}](../{find(t)})" for t in sorted(r["topics"]))
+        url, cited = link(r)
+        lk = (f"[link]({md_url(url)})" + ("" if cited else " (OpenAlex)")) if url else "book / no link"
+        oa = r.get("oa_status") or "-"
         pdf = f"[pdf]({md_url(r['pdf_urls'][0])})" if r.get("pdf_urls") else ""
-        lines.append(f"| {cite} | {topics} | {lk} | {oa} | {pdf} |")
-    (OUT / "papers.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-    return n_oa
+        lines.append(f"| {cite} | {topics} | {lk} | {r['status']} | {oa} | {pdf} |")
+    return "\n".join(lines) + "\n"
 
 
 def find(stem):
@@ -288,20 +334,49 @@ def find(stem):
     return stem
 
 
-def main():
-    sys.stdout.reconfigure(encoding="utf-8")
+def load_cache():
+    return json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else {}
+
+
+def build(cache):
     refs = collect()
     for r in refs:
-        resolve(r)
-        time.sleep(0.2)  # polite to OpenAlex
-    refs = merge(refs)
-    for i, r in enumerate(refs, 1):
-        if "--no-pdf" not in sys.argv:
+        apply(r, cache.get(r["key"]))
+    return merge(refs)
+
+
+def main():
+    sys.stdout.reconfigure(encoding="utf-8")
+    args = set(sys.argv[1:])
+    cache = load_cache()
+    if "--check" in args:   # offline: is papers.md what the topics and papers.json give?
+        want = catalog(build(cache))
+        have = (OUT / "papers.md").read_text(encoding="utf-8") if (OUT / "papers.md").exists() else ""
+        if want != have:
+            new = sum(1 for r in collect() if resolvable(r) and r["key"] not in cache)
+            print("research/papers.md is out of date: run python research/fetch_papers.py"
+                  + (f" (and --enrich: {new} references are not in papers.json)" if new else ""))
+            sys.exit(1)
+        print("research/papers.md is current")
+        return
+    if "--enrich" in args:   # online
+        todo = [r for r in collect() if resolvable(r) and ("--refresh" in args or r["key"] not in cache)]
+        for i, r in enumerate(todo, 1):
+            cache[r["key"]] = lookup(r)
+            print(f"[{i}/{len(todo)}] {'found    ' if cache[r['key']]['found'] else 'not found'} {r['cite'][:70]}")
+            time.sleep(0.2)  # polite to OpenAlex
+        live = {r["key"] for r in collect()}
+        cache = {k: v for k, v in sorted(cache.items()) if k in live}   # drop references no topic cites
+        CACHE.write_text(json.dumps(cache, indent=1, ensure_ascii=False, sort_keys=True) + "\n",
+                         encoding="utf-8", newline="\n")
+    refs = build(cache)
+    if "--pdf" in args:
+        for r in refs:
             download(r)
-        print(f"[{i}/{len(refs)}] {'PDF ' if r.get('pdf') else '    '}{r['cite'][:80]}")
-    n_oa = write_catalog(refs)
-    n_local = sum(1 for r in refs if r.get("pdf"))
-    print(f"{len(refs)} references, {n_oa} open access, {n_local} PDFs here -> research/papers.md")
+    (OUT / "papers.md").write_text(catalog(refs), encoding="utf-8", newline="\n")
+    st = {s: sum(1 for r in refs if r["status"] == s) for s in ("resolved", "not found", "not looked up")}
+    print(f"{len(refs)} references ({st['resolved']} resolved, {st['not found']} not found, "
+          f"{st['not looked up']} not looked up) -> research/papers.md")
 
 
 if __name__ == "__main__":
