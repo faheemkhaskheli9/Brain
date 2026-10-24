@@ -468,6 +468,46 @@ claims the page marks as established are that dopamine signals reward prediction
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
 is enough for a real brain's version of these skills is a hypothesis.
 
+## Reversal: does surprise find a hidden context? (#65, #106)
+
+`node game/world/reversal.mjs [seeds] --arms off,surprise,surprise+replay,off+replay,surprise+slots3 --out run.json`.
+A brain learns walk, grasp and listen, then plays eight blocks of 300 episodes that alternate
+"listen, reversed" (same scene, each tone names the next colour) and listen, reversed first.
+Arms: surprise switching (`GAINS.surprise` 3) on or off, 30% rehearsal of earlier skills during the
+blocks or none, and 8 context slots or 3 (`slots3`: walk, grasp and listen fill them, so the
+reversed rule finds none free). Metrics were fixed before the run: success per block; success over
+the first 50 episodes of blocks 3-8 (a rule seen before: savings); retention (that, for listen
+only); episodes until the last 20 reach the pass mark 0.7 (capped at 300); a slot change after
+episode 50 of a block (a false switch, the rule has not changed there); and detection (a slot
+change in a block after a rule change). Seeds 1-10, 2026-10-24, all 50 runs learned listen. Paired
+sign-flip p against `off`, n 10. Full per-seed file:
+[research/results/reversal-2026-10-24.json](../../research/results/reversal-2026-10-24.json).
+
+| Arm | Reverse blocks reaching 0.7 | Success reverse / listen | Return first-50 | Listen retention | Detection | False switches per block | Slots used |
+|---|---|---|---|---|---|---|---|
+| off | 0/40 | 0.16 / 0.53 | 0.28 | 0.40 | 0.07 | 0.15 | 3.4 |
+| surprise | 3/40 | 0.22 / 0.40 | 0.29 (p 0.72) | 0.38 (p 0.27) | 0.30 (p 0.06) | 2.3 (p 0.13) | 4.8 |
+| surprise + replay | 0/40 | 0.16 / 0.54 | 0.33 (p 0.053) | 0.49 (p 0.012) | 0.76 (p 0.002) | 3.9 (p 0.002) | 7.5 |
+| off + replay | 0/40 | 0.15 / 0.57 | 0.32 (p 0.11) | 0.50 (p 0.016) | 0.10 (p 0.50) | 0.5 (p 0.50) | 5.7 |
+| surprise, 3 slots | 0/40 | 0.09 / 0.59 | 0.31 (p 0.46) | 0.51 (p 0.043) | 0.01 (p 1.0) | 0 | 3.0 |
+
+- **No savings.** No arm does better on its first 50 episodes back in a rule it has seen than the
+  off arm (0.28-0.33, all p > 0.05). The reversed rule almost never reaches the pass mark within a
+  block (3 of 200 blocks over all arms).
+- **Surprise alone hurts listen**: it adapts on fewer blocks (0.29 vs 0.48 of all blocks, p 0.016)
+  and takes 34 more episodes to adapt on return blocks (p 0.025). It moves the reversed rule to a
+  new slot, but that slot then also wins some listen episodes.
+- **With replay, surprise detects the change** (0.76 of blocks, p 0.002) but also switches when
+  nothing changed (3.9 false switches per block, p 0.002), and fills 7.5 of 8 slots.
+- **The retention gain is replay's, not surprise's**: off + replay keeps listen as well (0.50) as
+  surprise + replay (0.49).
+- **Exhausted slots** (3 slots) turn surprise off in effect: no switches, and listen is kept best
+  because nothing competes with its slot; the reversed rule is learned worst (0.09).
+
+Limits: replay arms play extra rehearsal episodes on top of the 300 scored per block, so they get
+more total training; during reversed blocks rehearsal may also play listen. One surprise threshold
+(3); no noisy cues yet (#135). The 0.7 pass mark is listen's.
+
 ## The science behind it
 
 | Mechanism here | Topic file |
