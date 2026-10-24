@@ -1,0 +1,855 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/heldout",
+ "commit": "23dbe4e",
+ "created": "2026-10-24T14:35:44Z",
+ "command": "node game/world/heldout.mjs 1 2 3 4 5 6 7 8 9 10 --out research/results/heldout-2026-10-24.json",
+ "environment": {
+  "runtime": "node v22.22.0",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "splits": {
+   "layout": {
+    "train": [
+     0,
+     1
+    ],
+    "dev": [
+     2
+    ],
+    "eval": [
+     3
+    ]
+   },
+   "quadrant": "x >= 4 adds 1, y >= 4 adds 2 (target object)",
+   "tone": {
+    "train": "listen: tone t -> colour t",
+    "eval": "reverse: tone t -> colour t+1"
+   },
+   "glyph": {
+    "train": [
+     "T",
+     "L",
+     "X"
+    ],
+    "eval": [
+     "Γ",
+     "⊥",
+     "7"
+    ]
+   }
+  },
+  "adaptation": "no rehearsal (replay 0), learning on, a fixed number of episodes",
+  "gains": {
+   "gamma": 0.96,
+   "lambda": 0.85,
+   "lrV": 0.05,
+   "lrP": 0.05,
+   "stepCost": 0.005,
+   "wrongCost": 0.6,
+   "hidden": 1000,
+   "maxSteps": 150,
+   "replay": 0.3,
+   "gate": 0.5,
+   "memory": 0.9,
+   "memCap": 2048,
+   "sleepEvery": 0,
+   "sleepSize": 200,
+   "sleepActor": false,
+   "kwta": 0,
+   "timeoutBootstrap": 0,
+   "orient": 0,
+   "performGreedy": [
+    "walk",
+    "write",
+    "copy",
+    "newletters"
+   ],
+   "si": 0,
+   "slots": 8,
+   "vigilance": 0.35,
+   "minUses": 20,
+   "joints": false,
+   "torque": 6,
+   "damping": 3,
+   "surprise": 0,
+   "surpriseMin": 100,
+   "toneNoise": 0
+  }
+ },
+ "budgets": {
+  "episodes_per_stage": 20000,
+  "adapt_episodes": 2000,
+  "eval_episodes": 300
+ },
+ "metrics": {
+  "tone.adapted": "higher",
+  "glyph.adapted": "higher",
+  "tone.zeroShot": "higher",
+  "glyph.zeroShot": "higher",
+  "tone.forgetting": "lower",
+  "glyph.forgetting": "lower",
+  "gap.grasp": "higher",
+  "gap.listen": "higher",
+  "gap.read": "higher"
+ },
+ "baseline": "scratch",
+ "runs": [
+  {
+   "arm": "pretrained",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 101.989,
+   "scores": {
+    "pretrain": 15507,
+    "copyPretrain": 5590,
+    "layout": {
+     "grasp": {
+      "train": 0.9033333333333333,
+      "dev": 0.8633333333333333,
+      "eval": 0.87
+     },
+     "listen": {
+      "train": 0.6533333333333333,
+      "dev": 0.6566666666666666,
+      "eval": 0.65
+     },
+     "read": {
+      "train": 0.5833333333333334,
+      "dev": 0.5266666666666666,
+      "eval": 0.52
+     },
+     "write": {
+      "train": 1
+     }
+    },
+    "gap": {
+     "grasp": -0.033333333333333326,
+     "listen": -0.0033333333333332993,
+     "read": -0.06333333333333335
+    },
+    "tone": {
+     "zeroShot": 0.05,
+     "adapted": 0.16,
+     "forgetting": 0.5333333333333333,
+     "listenBefore": 0.65,
+     "listenAfter": 0.11666666666666667,
+     "episodes": 17507
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0.33666666666666667,
+     "forgetting": 0.6366666666666667,
+     "copyBefore": 1,
+     "copyAfter": 0.36333333333333334,
+     "episodes": 23097
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.07,
+     "adapted": 0.7233333333333334,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.06,
+     "adapted": 0.6533333333333333,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 171.902,
+   "scores": {
+    "pretrain": 13425,
+    "copyPretrain": 3426,
+    "layout": {
+     "grasp": {
+      "train": 0.8533333333333334,
+      "dev": 0.86,
+      "eval": 0.82
+     },
+     "listen": {
+      "train": 0.7766666666666666,
+      "dev": 0.7266666666666667,
+      "eval": 0.7466666666666667
+     },
+     "read": {
+      "train": 0.6533333333333333,
+      "dev": 0.6633333333333333,
+      "eval": 0.6633333333333333
+     },
+     "write": {
+      "train": 1
+     }
+    },
+    "gap": {
+     "grasp": -0.03333333333333344,
+     "listen": -0.029999999999999916,
+     "read": 0.010000000000000009
+    },
+    "tone": {
+     "zeroShot": 0.05,
+     "adapted": 0,
+     "forgetting": 0.7466666666666667,
+     "listenBefore": 0.75,
+     "listenAfter": 0.0033333333333333335,
+     "episodes": 15425
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0.6233333333333333,
+     "forgetting": 0.7433333333333334,
+     "copyBefore": 1,
+     "copyAfter": 0.25666666666666665,
+     "episodes": 18851
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.09666666666666666,
+     "adapted": 0.44333333333333336,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.06,
+     "adapted": 0.2866666666666667,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 256.541,
+   "scores": {
+    "pretrain": 19682,
+    "copyPretrain": 11485,
+    "layout": {
+     "grasp": {
+      "train": 0.8833333333333333,
+      "dev": 0.8566666666666667,
+      "eval": 0.8866666666666667
+     },
+     "listen": {
+      "train": 0.61,
+      "dev": 0.6233333333333333,
+      "eval": 0.6133333333333333
+     },
+     "read": {
+      "train": 0.6,
+      "dev": 0.59,
+      "eval": 0.6066666666666667
+     },
+     "write": {
+      "train": 1
+     }
+    },
+    "gap": {
+     "grasp": 0.0033333333333334103,
+     "listen": 0.0033333333333332993,
+     "read": 0.00666666666666671
+    },
+    "tone": {
+     "zeroShot": 0.03,
+     "adapted": 0,
+     "forgetting": 0.5766666666666667,
+     "listenBefore": 0.6066666666666667,
+     "listenAfter": 0.03,
+     "episodes": 21682
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0.65,
+     "forgetting": 1,
+     "copyBefore": 1,
+     "copyAfter": 0,
+     "episodes": 33167
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.1,
+     "adapted": 0.45666666666666667,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.09,
+     "adapted": 0,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 217.746,
+   "scores": {
+    "pretrain": 18757,
+    "copyPretrain": 9914,
+    "layout": {
+     "grasp": {
+      "train": 0.8366666666666667,
+      "dev": 0.8833333333333333,
+      "eval": 0.8366666666666667
+     },
+     "listen": {
+      "train": 0.6433333333333333,
+      "dev": 0.62,
+      "eval": 0.6133333333333333
+     },
+     "read": {
+      "train": 0.47,
+      "dev": 0.37333333333333335,
+      "eval": 0.4066666666666667
+     },
+     "write": {
+      "train": 1
+     }
+    },
+    "gap": {
+     "grasp": 0,
+     "listen": -0.030000000000000027,
+     "read": -0.0633333333333333
+    },
+    "tone": {
+     "zeroShot": 0.06,
+     "adapted": 0.11,
+     "forgetting": 0.5966666666666667,
+     "listenBefore": 0.6366666666666667,
+     "listenAfter": 0.04,
+     "episodes": 20757
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 1,
+     "forgetting": 0.7166666666666667,
+     "copyBefore": 1,
+     "copyAfter": 0.2833333333333333,
+     "episodes": 30671
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.10666666666666667,
+     "adapted": 0.6766666666666666,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.03333333333333333,
+     "adapted": 0,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 5,
+   "split": null,
+   "status": "failed",
+   "reason": "read not learned within 20000 episodes",
+   "seconds": 219.417,
+   "scores": {
+    "pretrain": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 226.47,
+   "scores": {
+    "pretrain": 28984,
+    "copyPretrain": 11291,
+    "layout": {
+     "grasp": {
+      "train": 0.8366666666666667,
+      "dev": 0.8166666666666667,
+      "eval": 0.83
+     },
+     "listen": {
+      "train": 0.63,
+      "dev": 0.6133333333333333,
+      "eval": 0.6866666666666666
+     },
+     "read": {
+      "train": 0.54,
+      "dev": 0.54,
+      "eval": 0.57
+     },
+     "write": {
+      "train": 1
+     }
+    },
+    "gap": {
+     "grasp": -0.00666666666666671,
+     "listen": 0.05666666666666664,
+     "read": 0.029999999999999916
+    },
+    "tone": {
+     "zeroShot": 0.06666666666666667,
+     "adapted": 0.2633333333333333,
+     "forgetting": 0.5233333333333333,
+     "listenBefore": 0.6433333333333333,
+     "listenAfter": 0.12,
+     "episodes": 30984
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0,
+     "forgetting": -0.010000000000000009,
+     "copyBefore": 0.66,
+     "copyAfter": 0.67,
+     "episodes": 42275
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.07666666666666666,
+     "adapted": 0.5033333333333333,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.04666666666666667,
+     "adapted": 0.6533333333333333,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 7,
+   "split": null,
+   "status": "timeout",
+   "reason": "copy not learned within 20000 episodes",
+   "seconds": 260.054,
+   "scores": {
+    "pretrain": 17969,
+    "copyPretrain": null,
+    "layout": {
+     "grasp": {
+      "train": 0.89,
+      "dev": 0.8866666666666667,
+      "eval": 0.9
+     },
+     "listen": {
+      "train": 0.5533333333333333,
+      "dev": 0.5,
+      "eval": 0.57
+     },
+     "read": {
+      "train": 0.4166666666666667,
+      "dev": 0.41333333333333333,
+      "eval": 0.38666666666666666
+     },
+     "write": {
+      "train": 0.67
+     }
+    },
+    "gap": {
+     "grasp": 0.010000000000000009,
+     "listen": 0.016666666666666607,
+     "read": -0.030000000000000027
+    },
+    "tone": {
+     "zeroShot": 0.03333333333333333,
+     "adapted": 0.02666666666666667,
+     "forgetting": 0.4833333333333334,
+     "listenBefore": 0.55,
+     "listenAfter": 0.06666666666666667,
+     "episodes": 19969
+    },
+    "glyph": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.08,
+     "adapted": 0.32666666666666666,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.06333333333333334,
+     "adapted": 0.29,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 206.926,
+   "scores": {
+    "pretrain": 15844,
+    "copyPretrain": 13301,
+    "layout": {
+     "grasp": {
+      "train": 0.84,
+      "dev": 0.8366666666666667,
+      "eval": 0.8
+     },
+     "listen": {
+      "train": 0.6866666666666666,
+      "dev": 0.7266666666666667,
+      "eval": 0.68
+     },
+     "read": {
+      "train": 0.47,
+      "dev": 0.47,
+      "eval": 0.49
+     },
+     "write": {
+      "train": 0.6366666666666667
+     }
+    },
+    "gap": {
+     "grasp": -0.039999999999999925,
+     "listen": -0.006666666666666599,
+     "read": 0.020000000000000018
+    },
+    "tone": {
+     "zeroShot": 0.043333333333333335,
+     "adapted": 0.0033333333333333335,
+     "forgetting": 0.7733333333333333,
+     "listenBefore": 0.7866666666666666,
+     "listenAfter": 0.013333333333333334,
+     "episodes": 17844
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0,
+     "forgetting": 0.009999999999999898,
+     "copyBefore": 0.69,
+     "copyAfter": 0.68,
+     "episodes": 31145
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.08333333333333333,
+     "adapted": 0.39666666666666667,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.05,
+     "adapted": 0.37666666666666665,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 179.322,
+   "scores": {
+    "pretrain": 12280,
+    "copyPretrain": 14582,
+    "layout": {
+     "grasp": {
+      "train": 0.79,
+      "dev": 0.72,
+      "eval": 0.8133333333333334
+     },
+     "listen": {
+      "train": 0.7066666666666667,
+      "dev": 0.7,
+      "eval": 0.68
+     },
+     "read": {
+      "train": 0.5633333333333334,
+      "dev": 0.55,
+      "eval": 0.5233333333333333
+     },
+     "write": {
+      "train": 0.6833333333333333
+     }
+    },
+    "gap": {
+     "grasp": 0.023333333333333317,
+     "listen": -0.026666666666666616,
+     "read": -0.040000000000000036
+    },
+    "tone": {
+     "zeroShot": 0.11333333333333333,
+     "adapted": 0.21666666666666667,
+     "forgetting": 0.6333333333333334,
+     "listenBefore": 0.68,
+     "listenAfter": 0.04666666666666667,
+     "episodes": 14280
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0,
+     "forgetting": 0.040000000000000036,
+     "copyBefore": 0.6633333333333333,
+     "copyAfter": 0.6233333333333333,
+     "episodes": 28862
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.10333333333333333,
+     "adapted": 0.6166666666666667,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.06,
+     "adapted": 0.3566666666666667,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "pretrained",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 194.282,
+   "scores": {
+    "pretrain": 11848,
+    "copyPretrain": 7849,
+    "layout": {
+     "grasp": {
+      "train": 0.78,
+      "dev": 0.7766666666666666,
+      "eval": 0.7833333333333333
+     },
+     "listen": {
+      "train": 0.6233333333333333,
+      "dev": 0.5833333333333334,
+      "eval": 0.62
+     },
+     "read": {
+      "train": 0.59,
+      "dev": 0.5333333333333333,
+      "eval": 0.6
+     },
+     "write": {
+      "train": 0.6966666666666667
+     }
+    },
+    "gap": {
+     "grasp": 0.0033333333333332993,
+     "listen": -0.0033333333333332993,
+     "read": 0.010000000000000009
+    },
+    "tone": {
+     "zeroShot": 0.03333333333333333,
+     "adapted": 0.21333333333333335,
+     "forgetting": 0.45333333333333325,
+     "listenBefore": 0.58,
+     "listenAfter": 0.12666666666666668,
+     "episodes": 13848
+    },
+    "glyph": {
+     "zeroShot": 0,
+     "adapted": 0.6666666666666666,
+     "forgetting": 1,
+     "copyBefore": 1,
+     "copyAfter": 0,
+     "episodes": 21697
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "scratch",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "gap": {
+     "grasp": null,
+     "listen": null,
+     "read": null
+    },
+    "tone": {
+     "zeroShot": 0.09666666666666666,
+     "adapted": 0.37333333333333335,
+     "forgetting": null,
+     "episodes": 2000
+    },
+    "glyph": {
+     "zeroShot": 0.06333333333333334,
+     "adapted": 0,
+     "forgetting": null,
+     "episodes": 2000
+    }
+   },
+   "checkpoint": null
+  }
+ ]
+}
