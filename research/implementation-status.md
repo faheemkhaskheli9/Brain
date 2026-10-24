@@ -39,7 +39,7 @@ result of this repository**. Do not cite them. The register rows correctly say "
 | #105, #108, #110-#116 | Nothing specific | All |
 | #107 dashboard, #109 browser tests | Nothing | All (no browser test of any page) |
 | #117 claim tracking | `build_index.py` checks frontmatter and links only | All |
-| #118 baselines | H101 has a backprop arm in `research/h101_transfer.mjs` | No heuristic or conventional-RL baseline for Brain World |
+| #118 baselines | `game/world/env.mjs` (common interface, tested in CI), `baselines.mjs`: random, heuristic and creature per skill with environment and training steps; result in README "Baselines". H101 has a backprop arm | No conventional (backprop) RL learner on `env.mjs` |
 | #119 release, #120 roadmap, #124 external repos | Planning issues | - |
 
 ## Closed issues checked and present

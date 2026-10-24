@@ -16,6 +16,8 @@ python -m http.server 8000        # from the repo root
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
+node game/world/baselines.mjs --creature  # random and heuristic baselines vs the creature (see "Baselines")
+node game/world/reversal.mjs --arms off,surprise   # hidden rule changes (see "Reversal")
 node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor --jobs 2   # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
@@ -529,6 +531,32 @@ same metrics, paired against `off` (no noise):
   overall success a little (0.31 vs 0.35, p 0.002) and leaves retention alone (0.39). With
   surprise it cuts listen retention to 0.29 (p 0.012 against `off`) and the share of blocks that
   reach the pass mark to 0.15.
+
+## Baselines: what does learning add? (#118)
+
+`node game/world/baselines.mjs [seeds] [--creature] [--out run.json]`. `env.mjs` is a common
+interface to the World: an agent gets the creature's observations (`World.sense()`), may only
+choose actions its body allows, and gets the World's rewards and time limits, nothing else
+(`test_env.mjs` checks this in CI). Every arm is scored in perform mode with the gait reflex on,
+300 episodes per skill. The heuristic reads only the observation: it turns toward what stands out
+on the retina, grasps when an object fills the centre, and draws two different strokes at the
+board. It was tuned on seeds 101-103. Seeds 1-5, 2026-10-24:
+[research/results/baselines-2026-10-24.json](../../research/results/baselines-2026-10-24.json).
+
+| Arm | walk | grasp | listen | read | write | Training steps |
+|---|---|---|---|---|---|---|
+| random | 0.99 | 0.18 | 0.15 | 0.15 | 0.06 | 0 |
+| heuristic (engineered) | 1.00 | 1.00 | 0.32 | 0.32 | 0.07 | 0 |
+| creature (learned) | 1.00 | 0.88 | 0.65 | 0.57 | 0.94 | 637,000 (466,000-885,000) |
+
+- **Walk is solved by the reflex**, not by learning: random actions walk 99% of episodes once the
+  gait reflex is on. Walk measures only the first stage's learning, when the reflex is off.
+- **Grasp: a ten-line heuristic beats the creature** (1.00 vs 0.88 on every seed).
+- **Listen, read and write are where learning shows**: the heuristic grasps the nearest object
+  (about 1/3) and draws a right letter 1 time in 15; the creature roughly doubles the first two and
+  writes 94% right. With 5 seeds the smallest possible sign-flip p is 0.062, so none of these
+  differences reaches p < 0.05 on its own.
+- No conventional (backprop) RL learner yet; it should plug into `env.mjs`.
 
 ## The science behind it
 

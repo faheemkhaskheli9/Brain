@@ -1,0 +1,1092 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/baselines",
+ "commit": "f941bce",
+ "created": "2026-10-24T11:23:37Z",
+ "command": "node game/world/baselines.mjs <seed> --creature --out ...  for seeds 1-5 (one process per seed, merged)",
+ "environment": {
+  "runtime": "node v22.22.0",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "arms": [
+   "random",
+   "heuristic",
+   "creature"
+  ],
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "mode": "perform, graduated (gait reflex on)",
+  "greedy": [
+   "walk",
+   "write",
+   "copy",
+   "newletters"
+  ]
+ },
+ "budgets": {
+  "eval_episodes_per_skill": 300,
+  "train_episodes_per_stage": 20000
+ },
+ "metrics": {
+  "success": "higher"
+ },
+ "baseline": "random",
+ "runs": [
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.399,
+   "scores": {
+    "success": 0.99,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.461,
+   "scores": {
+    "success": 0.16,
+    "evalSteps": 40694,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.475,
+   "scores": {
+    "success": 0.15,
+    "evalSteps": 32433,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.4,
+   "scores": {
+    "success": 0.15,
+    "evalSteps": 32433,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.01,
+   "scores": {
+    "success": 0.06,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.224,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.066,
+   "scores": {
+    "success": 1,
+    "evalSteps": 5467,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.049,
+   "scores": {
+    "success": 0.30666666666666664,
+    "evalSteps": 3237,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.031,
+   "scores": {
+    "success": 0.30666666666666664,
+    "evalSteps": 3237,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.011,
+   "scores": {
+    "success": 0.08333333333333333,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 43.526,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 43.526,
+   "scores": {
+    "success": 0.8866666666666667,
+    "evalSteps": 14205,
+    "trainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 43.526,
+   "scores": {
+    "success": 0.5966666666666667,
+    "evalSteps": 20738,
+    "trainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 43.526,
+   "scores": {
+    "success": 0.5333333333333333,
+    "evalSteps": 22466,
+    "trainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 43.526,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.375,
+   "scores": {
+    "success": 0.9933333333333333,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.359,
+   "scores": {
+    "success": 0.16666666666666666,
+    "evalSteps": 40372,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.426,
+   "scores": {
+    "success": 0.15666666666666668,
+    "evalSteps": 32110,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.414,
+   "scores": {
+    "success": 0.15666666666666668,
+    "evalSteps": 32110,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.007,
+   "scores": {
+    "success": 0.07333333333333333,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.216,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.073,
+   "scores": {
+    "success": 1,
+    "evalSteps": 5212,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.052,
+   "scores": {
+    "success": 0.35333333333333333,
+    "evalSteps": 3125,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.041,
+   "scores": {
+    "success": 0.35333333333333333,
+    "evalSteps": 3125,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.014,
+   "scores": {
+    "success": 0.08,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 49.576,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 49.576,
+   "scores": {
+    "success": 0.8366666666666667,
+    "evalSteps": 17588,
+    "trainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 49.576,
+   "scores": {
+    "success": 0.6966666666666667,
+    "evalSteps": 20403,
+    "trainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 49.576,
+   "scores": {
+    "success": 0.75,
+    "evalSteps": 16822,
+    "trainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 49.576,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.192,
+   "scores": {
+    "success": 0.9866666666666667,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.494,
+   "scores": {
+    "success": 0.18,
+    "evalSteps": 40398,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.429,
+   "scores": {
+    "success": 0.14333333333333334,
+    "evalSteps": 32297,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.281,
+   "scores": {
+    "success": 0.14333333333333334,
+    "evalSteps": 32297,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.009,
+   "scores": {
+    "success": 0.056666666666666664,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.167,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.082,
+   "scores": {
+    "success": 1,
+    "evalSteps": 5232,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.063,
+   "scores": {
+    "success": 0.2866666666666667,
+    "evalSteps": 3154,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.059,
+   "scores": {
+    "success": 0.2866666666666667,
+    "evalSteps": 3154,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.005,
+   "scores": {
+    "success": 0.07666666666666666,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 58.19,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 58.19,
+   "scores": {
+    "success": 0.8733333333333333,
+    "evalSteps": 15780,
+    "trainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 58.19,
+   "scores": {
+    "success": 0.6,
+    "evalSteps": 21702,
+    "trainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 58.19,
+   "scores": {
+    "success": 0.52,
+    "evalSteps": 19982,
+    "trainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 58.19,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.379,
+   "scores": {
+    "success": 0.98,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.537,
+   "scores": {
+    "success": 0.16,
+    "evalSteps": 39962,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.299,
+   "scores": {
+    "success": 0.15,
+    "evalSteps": 32299,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.277,
+   "scores": {
+    "success": 0.15,
+    "evalSteps": 32299,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.011,
+   "scores": {
+    "success": 0.06333333333333334,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.161,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.053,
+   "scores": {
+    "success": 1,
+    "evalSteps": 5270,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.04,
+   "scores": {
+    "success": 0.35,
+    "evalSteps": 3225,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.034,
+   "scores": {
+    "success": 0.35,
+    "evalSteps": 3225,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.016,
+   "scores": {
+    "success": 0.056666666666666664,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 71.504,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 71.504,
+   "scores": {
+    "success": 0.8766666666666667,
+    "evalSteps": 14681,
+    "trainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 71.504,
+   "scores": {
+    "success": 0.69,
+    "evalSteps": 21769,
+    "trainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 71.504,
+   "scores": {
+    "success": 0.45666666666666667,
+    "evalSteps": 23721,
+    "trainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 71.504,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.396,
+   "scores": {
+    "success": 0.99,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.498,
+   "scores": {
+    "success": 0.23,
+    "evalSteps": 38044,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.267,
+   "scores": {
+    "success": 0.12666666666666668,
+    "evalSteps": 31565,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.316,
+   "scores": {
+    "success": 0.12666666666666668,
+    "evalSteps": 31565,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.006,
+   "scores": {
+    "success": 0.05333333333333334,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.122,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.033,
+   "scores": {
+    "success": 1,
+    "evalSteps": 5363,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.03,
+   "scores": {
+    "success": 0.31666666666666665,
+    "evalSteps": 3262,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.02,
+   "scores": {
+    "success": 0.31666666666666665,
+    "evalSteps": 3262,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.006,
+   "scores": {
+    "success": 0.06666666666666667,
+    "evalSteps": 600,
+    "trainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.622,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.622,
+   "scores": {
+    "success": 0.91,
+    "evalSteps": 14045,
+    "trainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.622,
+   "scores": {
+    "success": 0.67,
+    "evalSteps": 22591,
+    "trainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.622,
+   "scores": {
+    "success": 0.5966666666666667,
+    "evalSteps": 18113,
+    "trainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.622,
+   "scores": {
+    "success": 0.6866666666666666,
+    "evalSteps": 600,
+    "trainSteps": 596820
+   },
+   "checkpoint": null
+  }
+ ]
+}
