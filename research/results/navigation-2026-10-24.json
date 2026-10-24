@@ -1,0 +1,636 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/navigation",
+ "commit": "23dbe4e",
+ "created": "2026-10-24T14:26:10Z",
+ "command": "node game/world/navigation.mjs 1 2 3 4 5 --out research/results/navigation-2026-10-24.json",
+ "environment": {
+  "runtime": "node v22.22.0",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "arms": {
+   "default": {},
+   "timeoutBootstrap": {
+    "timeoutBootstrap": 2
+   },
+   "orient": {
+    "orient": 1
+   }
+  },
+  "suite": {
+   "seeds": {
+    "tune": [
+     1000,
+     1001,
+     1002,
+     1003,
+     1004,
+     1005,
+     1006,
+     1007,
+     1008,
+     1009,
+     1010,
+     1011,
+     1012,
+     1013,
+     1014,
+     1015,
+     1016,
+     1017,
+     1018,
+     1019
+    ],
+    "eval": [
+     2000,
+     2001,
+     2002,
+     2003,
+     2004,
+     2005,
+     2006,
+     2007,
+     2008,
+     2009,
+     2010,
+     2011,
+     2012,
+     2013,
+     2014,
+     2015,
+     2016,
+     2017,
+     2018,
+     2019
+    ]
+   },
+   "hash": "dea85e7930545dbf",
+   "rule": "target in a corner (within 1.2 of both walls), a distractor within 1.5 of the centre-target line; listen and read, every tone"
+  },
+  "gains": {
+   "gamma": 0.96,
+   "lambda": 0.85,
+   "lrV": 0.05,
+   "lrP": 0.05,
+   "stepCost": 0.005,
+   "wrongCost": 0.6,
+   "hidden": 1000,
+   "maxSteps": 150,
+   "replay": 0.3,
+   "gate": 0.5,
+   "memory": 0.9,
+   "memCap": 2048,
+   "sleepEvery": 0,
+   "sleepSize": 200,
+   "sleepActor": false,
+   "kwta": 0,
+   "timeoutBootstrap": 0,
+   "orient": 0,
+   "performGreedy": [
+    "walk",
+    "write",
+    "copy",
+    "newletters"
+   ],
+   "si": 0,
+   "slots": 8,
+   "vigilance": 0.35,
+   "minUses": 20,
+   "joints": false,
+   "torque": 6,
+   "damping": 3,
+   "surprise": 0,
+   "surpriseMin": 100,
+   "toneNoise": 0
+  }
+ },
+ "budgets": {
+  "episodes_per_stage": 20000,
+  "episodes_per_room_mode_tone": 5
+ },
+ "metrics": {
+  "success": "higher",
+  "wrong": "lower",
+  "timeout": "lower",
+  "loops": "lower",
+  "collisions": "lower",
+  "steps": "lower"
+ },
+ "baseline": "default",
+ "runs": [
+  {
+   "arm": "default",
+   "seed": 1,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 36.098,
+   "scores": {
+    "success": 0.15666666666666668,
+    "wrong": 0.31333333333333335,
+    "timeout": 0.53,
+    "loops": 0.5883333333333334,
+    "collisions": 0.300022871083327,
+    "steps": 109.30833333333334,
+    "trained": 14683,
+    "failingRooms": [
+     1011
+    ]
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 1,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 36.098,
+   "scores": {
+    "success": 0.14,
+    "wrong": 0.32666666666666666,
+    "timeout": 0.5333333333333333,
+    "loops": 0.5766666666666667,
+    "collisions": 0.32700866009141205,
+    "steps": 110.85333333333334,
+    "trained": 14683,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 1,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 154.252,
+   "scores": {
+    "success": 0.2783333333333333,
+    "wrong": 0.14666666666666667,
+    "timeout": 0.575,
+    "loops": 0.39166666666666666,
+    "collisions": 0.457307156133829,
+    "steps": 114.77333333333333,
+    "trained": 41045,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 1,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 154.252,
+   "scores": {
+    "success": 0.22833333333333333,
+    "wrong": 0.13666666666666666,
+    "timeout": 0.635,
+    "loops": 0.43666666666666665,
+    "collisions": 0.43939285150135704,
+    "steps": 116.06166666666667,
+    "trained": 41045,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 1,
+   "split": "tune",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 99.145,
+   "scores": {
+    "trained": 20149
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 1,
+   "split": "eval",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 99.145,
+   "scores": {
+    "trained": 20149
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 2,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 44.407,
+   "scores": {
+    "success": 0.22666666666666666,
+    "wrong": 0.15333333333333332,
+    "timeout": 0.62,
+    "loops": 0.805,
+    "collisions": 0.13182948794922378,
+    "steps": 116.59,
+    "trained": 16762,
+    "failingRooms": [
+     1015
+    ]
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 2,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 44.407,
+   "scores": {
+    "success": 0.16833333333333333,
+    "wrong": 0.18333333333333332,
+    "timeout": 0.6483333333333333,
+    "loops": 0.8033333333333333,
+    "collisions": 0.14471851299441388,
+    "steps": 118.44833333333334,
+    "trained": 16762,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 2,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 84.795,
+   "scores": {
+    "success": 0.33,
+    "wrong": 0.09333333333333334,
+    "timeout": 0.5766666666666667,
+    "loops": 0.45,
+    "collisions": 0.35866265942971637,
+    "steps": 111.465,
+    "trained": 22979,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 2,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 84.795,
+   "scores": {
+    "success": 0.295,
+    "wrong": 0.14333333333333334,
+    "timeout": 0.5616666666666666,
+    "loops": 0.4866666666666667,
+    "collisions": 0.33646110584803235,
+    "steps": 110.835,
+    "trained": 22979,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 2,
+   "split": "tune",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 102.217,
+   "scores": {
+    "trained": 20175
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 2,
+   "split": "eval",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 102.217,
+   "scores": {
+    "trained": 20175
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 3,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.693,
+   "scores": {
+    "success": 0.22666666666666666,
+    "wrong": 0.25333333333333335,
+    "timeout": 0.52,
+    "loops": 0.4083333333333333,
+    "collisions": 0.3200909322141676,
+    "steps": 104.84,
+    "trained": 14258,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 3,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 51.693,
+   "scores": {
+    "success": 0.18333333333333332,
+    "wrong": 0.31333333333333335,
+    "timeout": 0.5033333333333333,
+    "loops": 0.45166666666666666,
+    "collisions": 0.3155544253905691,
+    "steps": 104.86833333333334,
+    "trained": 14258,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 3,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 57.314,
+   "scores": {
+    "success": 0.17,
+    "wrong": 0.24,
+    "timeout": 0.59,
+    "loops": 0.6216666666666667,
+    "collisions": 0.1540140561627295,
+    "steps": 107.66333333333333,
+    "trained": 17429,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 3,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 57.314,
+   "scores": {
+    "success": 0.10666666666666667,
+    "wrong": 0.26166666666666666,
+    "timeout": 0.6316666666666667,
+    "loops": 0.6566666666666666,
+    "collisions": 0.15177204586811474,
+    "steps": 115.40333333333334,
+    "trained": 17429,
+    "failingRooms": [
+     2008
+    ]
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 3,
+   "split": "tune",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 103.134,
+   "scores": {
+    "trained": 20141
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 3,
+   "split": "eval",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 103.134,
+   "scores": {
+    "trained": 20141
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 4,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 63.387,
+   "scores": {
+    "success": 0.27166666666666667,
+    "wrong": 0.15666666666666668,
+    "timeout": 0.5716666666666667,
+    "loops": 0.465,
+    "collisions": 0.28938800120590896,
+    "steps": 110.56666666666666,
+    "trained": 18592,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 4,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 63.387,
+   "scores": {
+    "success": 0.21833333333333332,
+    "wrong": 0.15833333333333333,
+    "timeout": 0.6233333333333333,
+    "loops": 0.5316666666666666,
+    "collisions": 0.28172246024253866,
+    "steps": 114.75833333333334,
+    "trained": 18592,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 4,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 45.749,
+   "scores": {
+    "success": 0.31666666666666665,
+    "wrong": 0.21833333333333332,
+    "timeout": 0.465,
+    "loops": 0.41333333333333333,
+    "collisions": 0.32426948726903826,
+    "steps": 100.215,
+    "trained": 19088,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 4,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 45.749,
+   "scores": {
+    "success": 0.235,
+    "wrong": 0.235,
+    "timeout": 0.53,
+    "loops": 0.475,
+    "collisions": 0.31843343702640187,
+    "steps": 104.475,
+    "trained": 19088,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 4,
+   "split": "tune",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 96.294,
+   "scores": {
+    "trained": 20153
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 4,
+   "split": "eval",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 96.294,
+   "scores": {
+    "trained": 20153
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 5,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 42.109,
+   "scores": {
+    "success": 0.31666666666666665,
+    "wrong": 0.2,
+    "timeout": 0.48333333333333334,
+    "loops": 0.4683333333333333,
+    "collisions": 0.2171826371826372,
+    "steps": 101.75,
+    "trained": 16950,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "default",
+   "seed": 5,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 42.109,
+   "scores": {
+    "success": 0.2633333333333333,
+    "wrong": 0.23166666666666666,
+    "timeout": 0.505,
+    "loops": 0.5066666666666667,
+    "collisions": 0.23511381564119901,
+    "steps": 110.925,
+    "trained": 16950,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 5,
+   "split": "tune",
+   "status": "ok",
+   "reason": null,
+   "seconds": 48.465,
+   "scores": {
+    "success": 0.33,
+    "wrong": 0.175,
+    "timeout": 0.495,
+    "loops": 0.4716666666666667,
+    "collisions": 0.20155585826590733,
+    "steps": 101.55166666666666,
+    "trained": 22776,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "timeoutBootstrap",
+   "seed": 5,
+   "split": "eval",
+   "status": "ok",
+   "reason": null,
+   "seconds": 48.465,
+   "scores": {
+    "success": 0.28,
+    "wrong": 0.21333333333333335,
+    "timeout": 0.5066666666666667,
+    "loops": 0.5066666666666667,
+    "collisions": 0.20560238054434699,
+    "steps": 106.97833333333334,
+    "trained": 22776,
+    "failingRooms": []
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 5,
+   "split": "tune",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 110.04,
+   "scores": {
+    "trained": 20220
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "orient",
+   "seed": 5,
+   "split": "eval",
+   "status": "failed",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": 110.04,
+   "scores": {
+    "trained": 20220
+   },
+   "checkpoint": null
+  }
+ ]
+}

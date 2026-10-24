@@ -24,7 +24,14 @@ node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
 node game/world/transfer.mjs              # new letters from known strokes, seeds 1-10, about 1 min (see "New letters")
+node game/world/heldout.mjs               # held-out rooms, tone mapping and letters, seeds 1-10 (see "Held-out")
+node game/test_browser.mjs                # both demos in headless Chromium: save/load, teach, mobile (#109)
 ```
+
+`game/test_browser.mjs` needs playwright and chromium (`npm i -g playwright three@0.160.0`,
+`npx playwright install chromium`). It serves the repo itself and three.js from the local copy, so
+it runs offline, and fails on any console error. CI runs it; `--extended` also loads Brain Lab,
+which downloads Pyodide from its CDN.
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
 `index.html` (3D view, panels, sound). Press **Fast forward** to reach graduation in about two minutes.
@@ -574,6 +581,64 @@ board. It was tuned on seeds 101-103. Seeds 1-5, 2026-10-24:
 - **With four times the steps it catches up**: listen 0.62, read 0.70, grasp 0.82. So the
   creature's lead is sample efficiency at this budget, not something backprop cannot learn here;
   neither arm reaches the heuristic's grasp.
+
+## Held-out: what carries over to rooms, rules and letters it has not seen? (#105)
+
+`node game/world/heldout.mjs [seeds] [--adapt N] [--out run.json]`. Splits were fixed in the
+script before any run and nothing was tuned on them; `test_heldout.mjs` (CI) asserts that they are
+disjoint, that every room stays in its split, and that frozen scoring changes nothing in the brain.
+
+- **Layout**: the quadrant the target object stands in. Training uses train rooms only (quadrants
+  0 and 1); dev is quadrant 2, eval quadrant 3.
+- **Tone mapping**: trained on listen (tone t names colour t), evaluated on "listen, reversed"
+  (tone t names colour t + 1), which differs on every tone.
+- **Glyphs**: copy is trained on T, L and X, evaluated on Γ, ⊥ and 7.
+
+The pretrained arm learns the curriculum (and copy, for glyphs) and is scored with learning off
+(zero-shot), then trains 2,000 episodes on the new task with no rehearsal (bounded adaptation), and
+is scored again on the new task and on the skill it came from (forgetting). The scratch arm is a
+fresh brain of the same seed with the same 2,000 episodes. Seeds 1-10, 2026-10-24; seed 5 did not
+learn read and seed 7 did not learn copy (both kept in the file as failed runs), so the means are
+over 8 seeds. Paired sign-flip p against scratch:
+[research/results/heldout-2026-10-24.json](../../research/results/heldout-2026-10-24.json).
+
+| Axis | Train | Held out, frozen | After 2,000 episodes | Scratch, 2,000 episodes | Source skill before -> after |
+|---|---|---|---|---|---|
+| Layout: grasp / listen / read | 0.85 / 0.65 / 0.54 | eval 0.84 / 0.65 / 0.53 (dev 0.83 / 0.64 / 0.52) | - | - | - |
+| Tone mapping (reversed listen) | listen 0.65 | 0.06 (scratch untrained 0.09, p 0.023) | 0.12 | 0.50 (p 0.008) | listen 0.65 -> 0.06 |
+| Glyphs (new letters) | copy 0.88 | 0.00 (untrained 0.06, p 0.008) | 0.41 | 0.29 (p 0.66) | copy 0.88 -> 0.36 |
+
+- **New room layouts cost nothing** (gaps -0.01 to -0.005, intervals spanning 0): the senses are
+  egocentric, so a target in an unseen quadrant looks like one in a seen quadrant.
+- **A new tone mapping is negative transfer.** Frozen, the trained brain follows the old rule and
+  does worse than an untrained brain. With 2,000 episodes it reaches 0.12 against scratch's 0.50, and it loses
+  listen (0.65 to 0.06). The old habit is both an obstacle and erased.
+- **New letters: no zero-shot transfer** (0 of 8 seeds draw any new letter right with learning off),
+  and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
+  matches "New letters" above.
+
+## Navigation: hard rooms (#108)
+
+`node game/world/navigation.mjs [seeds] [--arms a,b] [--out run.json]`. A frozen suite of 40 hard
+rooms: the target in a corner and a distractor near the line from the centre, where the creature
+starts, to the target. 20 rooms (suite seeds 1000-1019) may be used for tuning; 20 others
+(2000-2019) are unseen layouts. `test_navigation.mjs` pins the suite's hash, so a change to the
+suite fails CI. Each arm learns the curriculum on ordinary random rooms with the same budget, then
+plays every suite room with learning off, as listen and as read, with each tone, 5 episodes each.
+Measured per episode: success, wrong grasp, timeout, a loop (the heading turned a full circle or
+more, net) and collisions per step (a push that moved less than half a stride). Seeds 1-5,
+2026-10-24: [research/results/navigation-2026-10-24.json](../../research/results/navigation-2026-10-24.json).
+
+| Arm | Success tune / unseen | Wrong | Timeout | Loops | Collisions per step |
+|---|---|---|---|---|---|
+| default | 0.24 / 0.19 | 0.24 | 0.56 | 0.57 | 0.26 |
+| timeoutBootstrap (#54) | 0.29 / 0.23 (p 0.25 / 0.31) | 0.20 | 0.57 | 0.51 | 0.29 |
+| orient reflex (#83) | listen not learned on 5/5 seeds | - | - | - | - |
+
+(Wrong, timeout, loops and collisions on unseen rooms.) Hard rooms cut listen and read from about
+0.6 to 0.2: most failures are timeouts, and more than half of the episodes include a full circle.
+Neither change helps reliably; the orienting reflex fails training, as in "Innate prior". Each run
+lists its rooms with no success at all (`failingRooms`) as regression scenarios.
 
 ## The science behind it
 

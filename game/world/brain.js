@@ -487,6 +487,7 @@ export class World {
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
     this.passedAt = [];   // the episode count at which each stage passed (#98); a hole where unknown
     this.events = [];   // for the UI: {type: "tone"|"grasp"|"stroke"|"stage"|"graduated", ...}
+    this.roomFilter = null;   // held-out splits (#105), see reset
     this.task = -1; this.perf = { n: 0, ok: 0, scene: {} };   // perform mode: the locked skill (STAGES.length = any), and its score
     // A small model card that travels with the save (#55, Mitchell et al. 2019): birth facts once,
     // one row per save. A caller may add more birth facts (sweep.mjs adds the git commit).
@@ -510,25 +511,29 @@ export class World {
     this.episodeRand = R.state;   // a saved brain restarts the episode it was saved in from here
     const H = this.hippo;
     this.memAt = { head: H.head, n: H.n, epId: H.epId++ };   // and its episodic store from here
-    this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
-    this.heading = R() * 2 * Math.PI;
-    this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
-    this.hip = [1, 1]; this.omega = [0, 0];   // jointed legs only (GAINS.joints): hip angles and velocities
-    this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
-    this.z = new Float32Array(SCENE);   // the scene summary so far: running max of scene(x), see sense
-    this.objects = [];
-    // The grasp stage has one object of a random colour, so it teaches "approach and grasp", not
-    // "red is food": a colour habit there made the listen stage perseverate on red.
-    const count = m === "walk" || this.board || this.lesson ? 0 : m === "grasp" ? 1 : 3;
-    const pick = Math.floor(R() * 3);
-    while (this.objects.length < count) {
-      const p = [0.8 + R() * (ARENA - 1.6), 0.8 + R() * (ARENA - 1.6)];
-      if (Math.hypot(p[0] - this.pos[0], p[1] - this.pos[1]) < 2) continue;
-      if (this.objects.some(o => Math.hypot(o.pos[0] - p[0], o.pos[1] - p[1]) < 1.6)) continue;
-      const i = this.objects.length;
-      this.objects.push({ pos: p, color: m === "read" ? [1, 1, 1] : COLORS[count === 1 ? pick : i], letter: m === "read" ? i : -1 });
-    }
-    this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
+    // Held-out splits (#105): roomFilter(pos), if set, must accept the target object's position, or the
+    // room is drawn again. Not saved; null (the default) draws exactly as before.
+    do {
+      this.pos = [ARENA / 2 + (R() - 0.5) * 2, ARENA / 2 + (R() - 0.5) * 2];
+      this.heading = R() * 2 * Math.PI;
+      this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
+      this.hip = [1, 1]; this.omega = [0, 0];   // jointed legs only (GAINS.joints): hip angles and velocities
+      this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
+      this.z = new Float32Array(SCENE);   // the scene summary so far: running max of scene(x), see sense
+      this.objects = [];
+      // The grasp stage has one object of a random colour, so it teaches "approach and grasp", not
+      // "red is food": a colour habit there made the listen stage perseverate on red.
+      const count = m === "walk" || this.board || this.lesson ? 0 : m === "grasp" ? 1 : 3;
+      const pick = Math.floor(R() * 3);
+      while (this.objects.length < count) {
+        const p = [0.8 + R() * (ARENA - 1.6), 0.8 + R() * (ARENA - 1.6)];
+        if (Math.hypot(p[0] - this.pos[0], p[1] - this.pos[1]) < 2) continue;
+        if (this.objects.some(o => Math.hypot(o.pos[0] - p[0], o.pos[1] - p[1]) < 1.6)) continue;
+        const i = this.objects.length;
+        this.objects.push({ pos: p, color: m === "read" ? [1, 1, 1] : COLORS[count === 1 ? pick : i], letter: m === "read" ? i : -1 });
+      }
+      this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
+    } while (this.roomFilter && this.objects.length && !this.roomFilter(this.objects[this.target].pos));
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : m === "reverse" ? (this.target + 2) % 3 : -1;
     if (GAINS.toneNoise && this.tone >= 0 && R() < GAINS.toneNoise) this.tone = Math.floor(R() * 3);
     this.shown = m === "copy" ? this.target : m === "newletters" ? 3 + this.target : -1;   // the letter held up at the board
