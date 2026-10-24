@@ -44,6 +44,7 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
+os.environ.setdefault("OMP_NUM_THREADS", "1")   # one BLAS thread per worker; must precede the numpy import
 import numpy as np
 
 S3 = "https://allen-brain-observatory.s3.amazonaws.com/visual-coding-neuropixels/ecephys-cache/"
@@ -302,7 +303,6 @@ def main():
     paths = sorted(args.cache.glob("session_*_trials.npz"))
     if not paths:
         raise SystemExit(f"no extracted sessions in {args.cache}: run with --fetch first (or --synthetic)")
-    os.environ.setdefault("OMP_NUM_THREADS", "1")
     with ProcessPoolExecutor(args.jobs) as ex:
         rows = [r for rs in ex.map(decode_session, paths) for r in rs]
     DATA.mkdir(exist_ok=True)

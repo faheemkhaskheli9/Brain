@@ -46,7 +46,7 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 ### Tier 2: open-data analysis (weeks)
 | # | Question | Raised in | Data | Issue | Status |
 |---|---|---|---|---|---|
-| 10 | Spike timing vs count, per mouse visual area | [[neural-coding-and-computation]] | Allen Neuropixels | #86 | open |
+| 10 | Spike timing vs count, per mouse visual area | [[neural-coding-and-computation]] | Allen Neuropixels | #86 | answered (32 sessions, linear decoder): 10 ms timing adds +19 points only in LGN with gratings; in cortex and for natural scenes binned codes do slightly worse than counts |
 | 11 | Do co-tuned inputs cluster on the same dendritic branch? | [[dendritic-computation]] | MICrONS | #87 | open |
 | 12 | Has the accuracy-to-Brain-Score link saturated? | [[sensory-systems-and-vision]], [[evaluating-brain-models]] | Brain-Score leaderboard | #88 | answered (snapshot 2026-10-12): not saturated, the slope above 70% top-1 is steeper (mostly behaviour); parameter count does not predict neural match; accuracy and pretraining-data scale cannot be separated |
 | 13 | LLM-brain match: shared computation or word statistics? | [[language-and-llms]] | Narratives (OpenNeuro) | #89 | open |
