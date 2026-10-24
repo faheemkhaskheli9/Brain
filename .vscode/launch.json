@@ -163,6 +163,7 @@
       "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/research/cotuned_inputs.py",
+      "args": ["--fetch"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal"
     },
