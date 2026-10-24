@@ -38,8 +38,8 @@ result of this repository**. Do not cite them. The register rows correctly say "
 | #106 reversal benchmark | `reversal.mjs` measures adaptation, retention, false switches, detection; arms ablate surprise, replay, free slots; 10-seed results with and without tone noise (#135) in `game/world/README.md` "Reversal" and `research/results/reversal-*.json` | One surprise threshold only |
 | #105, #108, #110-#116 | Nothing specific | All |
 | #107 dashboard, #109 browser tests | Nothing | All (no browser test of any page) |
-| #117 claim tracking | `build_index.py` checks frontmatter and links only | All |
-| #118 baselines | `game/world/env.mjs` (common interface, tested in CI), `baselines.mjs`: random, heuristic and creature per skill with environment and training steps; result in README "Baselines". H101 has a backprop arm | No conventional (backprop) RL learner on `env.mjs` |
+| #117 claim tracking | `research/claims.tsv` and `check_claims.py` (CI): status, kind, quote, source or result file, commit, recomputed mean, review date; stale reviews and unsupported claims warn | The register holds the main measured and cited claims, not every claim in every topic |
+| #118 baselines | `game/world/env.mjs` (common interface, tested in CI), `baselines.mjs`: random, heuristic and creature per skill; `rl.mjs`: backprop actor-critic per skill at 1x and 4x the creature's steps; results in README "Baselines" and `research/results/` | Inference compute is not reported; the RL arm has one network per skill, not one for all |
 | #119 release, #120 roadmap, #124 external repos | Planning issues | - |
 
 ## Closed issues checked and present

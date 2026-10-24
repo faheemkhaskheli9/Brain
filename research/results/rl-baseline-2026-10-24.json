@@ -1,0 +1,420 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/rl-baseline",
+ "commit": "19af07c",
+ "created": "2026-10-24T13:21:22Z",
+ "command": "node game/world/rl.mjs --out research/results/rl-baseline-2026-10-24.json",
+ "environment": {
+  "runtime": "node v22.22.0",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "arms": [
+   "actor-critic"
+  ],
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "hidden": 64,
+  "lr": 0.003,
+  "entropy": 0.03,
+  "gamma": 0.99,
+  "mode": "perform, graduated (gait reflex on)",
+  "greedy": [
+   "walk",
+   "write",
+   "copy",
+   "newletters"
+  ],
+  "network": "one per skill"
+ },
+ "budgets": {
+  "train_steps_per_skill": 125000,
+  "eval_episodes_per_skill": 300
+ },
+ "metrics": {
+  "success": "higher"
+ },
+ "baseline": "actor-critic",
+ "runs": [
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.598,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 125040,
+    "trainSuccess": 0.9985604606525912
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.595,
+   "scores": {
+    "success": 0.43333333333333335,
+    "evalSteps": 29611,
+    "trainSteps": 125054,
+    "trainSuccess": 0.5451155853840418
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.242,
+   "scores": {
+    "success": 0.48333333333333334,
+    "evalSteps": 18439,
+    "trainSteps": 125122,
+    "trainSuccess": 0.3271461716937355
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.372,
+   "scores": {
+    "success": 0.3,
+    "evalSteps": 19052,
+    "trainSteps": 125070,
+    "trainSuccess": 0.17732115677321156
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.549,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 125000,
+    "trainSuccess": 0.989488
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.926,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 125040,
+    "trainSuccess": 1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.218,
+   "scores": {
+    "success": 0.8966666666666666,
+    "evalSteps": 15027,
+    "trainSteps": 125112,
+    "trainSuccess": 0.610733695652174
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.704,
+   "scores": {
+    "success": 0.27666666666666667,
+    "evalSteps": 21510,
+    "trainSteps": 125031,
+    "trainSuccess": 0.18413173652694612
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.912,
+   "scores": {
+    "success": 0.18666666666666668,
+    "evalSteps": 27272,
+    "trainSteps": 125025,
+    "trainSuccess": 0.19985304922850844
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.897,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 125000,
+    "trainSuccess": 0.99112
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.55,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 125040,
+    "trainSuccess": 1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.809,
+   "scores": {
+    "success": 0.56,
+    "evalSteps": 25065,
+    "trainSteps": 125066,
+    "trainSuccess": 0.6034364261168385
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.518,
+   "scores": {
+    "success": 0.23,
+    "evalSteps": 26209,
+    "trainSteps": 125039,
+    "trainSuccess": 0.22083639031548055
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.282,
+   "scores": {
+    "success": 0.11333333333333333,
+    "evalSteps": 33810,
+    "trainSteps": 125024,
+    "trainSuccess": 0.22454873646209386
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.784,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 125000,
+    "trainSuccess": 0.990736
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.914,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 125040,
+    "trainSuccess": 1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.216,
+   "scores": {
+    "success": 0.8666666666666667,
+    "evalSteps": 16928,
+    "trainSteps": 125045,
+    "trainSuccess": 0.6052814454482279
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.298,
+   "scores": {
+    "success": 0.21,
+    "evalSteps": 27196,
+    "trainSteps": 125046,
+    "trainSuccess": 0.20059656972408652
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.945,
+   "scores": {
+    "success": 0.36,
+    "evalSteps": 15384,
+    "trainSteps": 125008,
+    "trainSuccess": 0.18870843000773396
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.98,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 125000,
+    "trainSuccess": 0.991968
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.732,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 125040,
+    "trainSuccess": 0.9995201535508638
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.304,
+   "scores": {
+    "success": 0.85,
+    "evalSteps": 17708,
+    "trainSteps": 125020,
+    "trainSuccess": 0.6106816584680252
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.533,
+   "scores": {
+    "success": 0.31,
+    "evalSteps": 22389,
+    "trainSteps": 125019,
+    "trainSuccess": 0.2742254449571523
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.331,
+   "scores": {
+    "success": 0.3233333333333333,
+    "evalSteps": 28627,
+    "trainSteps": 125090,
+    "trainSuccess": 0.21362229102167182
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.205,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 125000,
+    "trainSuccess": 0.981072
+   },
+   "checkpoint": null
+  }
+ ]
+}

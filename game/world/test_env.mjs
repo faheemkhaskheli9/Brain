@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { World, ACT_SETS } from "./brain.js";
 import { Env } from "./env.mjs";
 import { POLICIES, evaluate } from "./baselines.mjs";
+import { trainAndScore } from "./rl.mjs";
 
 // Observations are the creature's senses: same length as World.sense(), no extra fields.
 const w = new World(1), env = new Env(1, "grasp");
@@ -25,4 +26,9 @@ assert.deepEqual(evaluate(POLICIES.random, 1, "grasp", 50), evaluate(POLICIES.ra
 assert.ok(evaluate(POLICIES.heuristic, 1, "grasp", 100).success > 0.9);
 const l = evaluate(POLICIES.heuristic, 1, "listen", 300).success;
 assert.ok(l > 0.2 && l < 0.5, `heuristic listen ${l}`);
+// The backprop actor-critic learns through the same interface: write (one step per stroke) within
+// 30,000 steps, and scoring leaves its weights alone (trainAndScore throws if they change).
+const rl = trainAndScore(1, "write", { budget: 30000, episodes: 100 });
+assert.ok(rl.success > 0.9, `actor-critic write ${rl.success}`);
+assert.ok(rl.trainSteps >= 30000 && rl.trainSteps < 30200);
 console.log("env interface: ok");

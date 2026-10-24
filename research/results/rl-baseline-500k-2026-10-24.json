@@ -1,0 +1,420 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/rl-baseline",
+ "commit": "19af07c",
+ "created": "2026-10-24T13:28:14Z",
+ "command": "node game/world/rl.mjs --budget 500000 --out research/results/rl-baseline-500k-2026-10-24.json",
+ "environment": {
+  "runtime": "node v22.22.0",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "arms": [
+   "actor-critic"
+  ],
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "hidden": 64,
+  "lr": 0.003,
+  "entropy": 0.03,
+  "gamma": 0.99,
+  "mode": "perform, graduated (gait reflex on)",
+  "greedy": [
+   "walk",
+   "write",
+   "copy",
+   "newletters"
+  ],
+  "network": "one per skill"
+ },
+ "budgets": {
+  "train_steps_per_skill": 500000,
+  "eval_episodes_per_skill": 300
+ },
+ "metrics": {
+  "success": "higher"
+ },
+ "baseline": "actor-critic",
+ "runs": [
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 17.074,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 500040,
+    "trainSuccess": 0.9996400287976962
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 19.628,
+   "scores": {
+    "success": 0.7933333333333333,
+    "evalSteps": 20061,
+    "trainSteps": 500144,
+    "trainSuccess": 0.7549749560037904
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.962,
+   "scores": {
+    "success": 0.5933333333333334,
+    "evalSteps": 21736,
+    "trainSteps": 500051,
+    "trainSuccess": 0.5231825185600224
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.441,
+   "scores": {
+    "success": 0.4266666666666667,
+    "evalSteps": 26586,
+    "trainSteps": 500016,
+    "trainSuccess": 0.42696629213483145
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 28.583,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 500000,
+    "trainSuccess": 0.996084
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 19.639,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 500040,
+    "trainSuccess": 1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.675,
+   "scores": {
+    "success": 0.82,
+    "evalSteps": 18976,
+    "trainSteps": 500055,
+    "trainSuccess": 0.7151962914674779
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.851,
+   "scores": {
+    "success": 0.6033333333333334,
+    "evalSteps": 17949,
+    "trainSteps": 500101,
+    "trainSuccess": 0.2604183298738624
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 19.964,
+   "scores": {
+    "success": 0.7966666666666666,
+    "evalSteps": 15993,
+    "trainSteps": 500084,
+    "trainSuccess": 0.4552217855137563
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 28.841,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 500000,
+    "trainSuccess": 0.996432
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 19.707,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 500040,
+    "trainSuccess": 1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.066,
+   "scores": {
+    "success": 0.6866666666666666,
+    "evalSteps": 19818,
+    "trainSteps": 500031,
+    "trainSuccess": 0.6800822561692127
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.041,
+   "scores": {
+    "success": 0.6566666666666666,
+    "evalSteps": 19487,
+    "trainSteps": 500053,
+    "trainSuccess": 0.39740620657711906
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 22.444,
+   "scores": {
+    "success": 0.8133333333333334,
+    "evalSteps": 15521,
+    "trainSteps": 500018,
+    "trainSuccess": 0.5455818512813332
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 29.793,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 500000,
+    "trainSuccess": 0.996292
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.6,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 500040,
+    "trainSuccess": 1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.78,
+   "scores": {
+    "success": 0.8933333333333333,
+    "evalSteps": 15176,
+    "trainSteps": 500008,
+    "trainSuccess": 0.7479118170614816
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.417,
+   "scores": {
+    "success": 0.5866666666666667,
+    "evalSteps": 20984,
+    "trainSteps": 500019,
+    "trainSuccess": 0.4269075705539794
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 19.724,
+   "scores": {
+    "success": 0.8666666666666667,
+    "evalSteps": 14590,
+    "trainSteps": 500010,
+    "trainSuccess": 0.4472277378952192
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 28.283,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 500000,
+    "trainSuccess": 0.996572
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.096,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 500040,
+    "trainSuccess": 0.9998800095992321
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 20.41,
+   "scores": {
+    "success": 0.8933333333333333,
+    "evalSteps": 14982,
+    "trainSteps": 500029,
+    "trainSuccess": 0.7548440291328844
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 19.833,
+   "scores": {
+    "success": 0.65,
+    "evalSteps": 18663,
+    "trainSteps": 500039,
+    "trainSuccess": 0.5203440742763518
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.668,
+   "scores": {
+    "success": 0.62,
+    "evalSteps": 20747,
+    "trainSteps": 500068,
+    "trainSuccess": 0.37732598208132323
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "actor-critic",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 31.771,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 500000,
+    "trainSuccess": 0.994
+   },
+   "checkpoint": null
+  }
+ ]
+}
