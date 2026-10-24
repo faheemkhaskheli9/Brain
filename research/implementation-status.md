@@ -19,7 +19,7 @@ no result. Tracked in #128.
 | #86 spike timing vs count | `research/timing_vs_count.py`; result section in `function/neural-coding-and-computation.md` (LGN gratings +13.9 points, CI [5.9, 21.5]) | `research/spike_timing_areas.py` (WIP, `--synthetic` only verified); no result in the topic; register row 10 still "open" |
 | #87 co-tuned inputs (MICrONS) | `research/microns_clustering.py`; RF distance 5.5% below shuffle within 10 µm; section in `anatomy/dendritic-computation.md` | `research/cotuned_inputs.py` (WIP, different data versions: v661 meshworks); no result in the topic; register row 11 "open". #96 builds on the missing result and script |
 | #89 LLM-brain match | `research/llm_brain_match.py`; GPT-2 adds unique r² +0.042 over word statistics; result in `function/language-and-llms.md` | No script, no result; register row 13 "open" |
-| #90 WM capacity | `research/wm_capacity.py`; TCC and VP beat slot models in cross-validated likelihood; section in `function/attention-and-working-memory.md` | `research/wm_capacity_models.py` (WIP); no result; register row 14 "open" |
+| #90 WM capacity | `research/wm_capacity.py`; TCC and VP beat slot models in cross-validated likelihood; section in `function/attention-and-working-memory.md` | Re-run 2026-10-24 with `research/wm_capacity_models.py` on three open sets (39 subjects): result in the topic, register row 14 answered. The numbers in the issue comment (5 sets, 68 subjects) are still not reproduced |
 
 Until the commits are found and pushed, or the analyses are re-run, **none of these numbers is a
 result of this repository**. Do not cite them. The register rows correctly say "open".
