@@ -150,6 +150,15 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: spike_timing_areas (timing vs count per visual area, #86)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/spike_timing_areas.py",
+      "args": ["--fetch"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",
