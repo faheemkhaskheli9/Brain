@@ -43,5 +43,7 @@ jobs:
         run: python research/test_result_schema.py
       - name: Brain World creature learns every stage and keeps them
         run: node game/world/test_brain.mjs 1 2 3   # several seeds, so tuning that only helps seed 1 fails
+      - name: Baselines see what the creature sees (#118)
+        run: node game/world/test_env.mjs
       - name: Every species in Brain Ecosystem learns
         run: node game/ecosystem/test_ecosystem.mjs 1 2 3
