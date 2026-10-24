@@ -6,9 +6,12 @@ H003: direct feedback alignment (DFA) sends the output error straight to each hi
 Method pre-registered on issue #92. A replication in a toy: it says what works here, not what cortex does.
 Data: sklearn's bundled 8x8 digits (no download; pip install ".[research]").
 
-Run: python research/credit_assignment.py [--seeds N] [--quick]
+Run: python research/credit_assignment.py [--seeds N] [--quick] [--out FILE.json]
+--out writes the H002/H003 runs as the shared result file (#104): python research/result_schema.py FILE.json
 """
 import argparse
+import json
+import sys
 
 import numpy as np
 
@@ -18,6 +21,7 @@ except ImportError:
     raise SystemExit('needs scikit-learn for the digits data: pip install ".[research]"') from None
 
 from replay_selection import sign_flip
+from result_schema import make_result
 
 X_ALL, Y_ALL = load_digits(return_X_y=True)
 X_ALL = X_ALL / 16.0
@@ -128,6 +132,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--quick", action="store_true", help="2 seeds: a smoke run")
+    ap.add_argument("--out", help="write the H002/H003 runs as a brain-result/1 file")
     a = ap.parse_args()
     seeds = range(1, 3 if a.quick else a.seeds + 1)
 
@@ -155,6 +160,15 @@ def main():
             d = err - ro
             line += f"  vs readout {d.mean():+.4f} (sign-flip p {sign_flip(d):.4f})"
         print(line)
+    if a.out:
+        runs = [{"arm": r, "seed": s, "status": "ok", "scores": {"error": v[0], "align_h2": v[1]}}
+                for r in RULES for s, v in zip(seeds, res[r])]
+        out = make_result("credit-assignment", "python research/" + " ".join(sys.argv),
+                          {"rules": RULES, "hidden": H, "lr": LR, "batch": BATCH, "epochs": EPOCHS,
+                           "n_train": N_TRAIN, "data": "sklearn digits 8x8", "seeds": list(seeds)},
+                          {"epochs": EPOCHS}, {"error": "lower"}, runs, baseline="readout")
+        with open(a.out, "w", encoding="utf-8") as fh:
+            json.dump(out, fh, indent=1)
 
 
 if __name__ == "__main__":

@@ -138,24 +138,26 @@ def bootstrap_ci(xs, rng=None, samples=5000, level=0.95):
 
 
 def summary(r):
-    """Per arm: runs started, ok, and per metric the mean over ok runs with a bootstrap 95% interval;
-    against the baseline, the paired mean difference over seeds ok in both, with its sign-flip p."""
-    arms = list(dict.fromkeys(run["arm"] for run in r["runs"]))
+    """Per arm (and per split, when runs have one: scores from different tasks are never pooled):
+    runs started, ok, and per metric the mean over ok runs with a bootstrap 95% interval; against
+    the baseline arm in the same split, the paired mean difference over seeds ok in both, with its
+    sign-flip p."""
+    groups = list(dict.fromkeys((run.get("split"), run["arm"]) for run in r["runs"]))
     base = r.get("baseline")
-    key = lambda run: (run["seed"], run.get("split"))   # noqa: E731
-    ok = {a: {key(x): x for x in r["runs"] if x["arm"] == a and x["status"] == "ok"} for a in arms}
+    ok = {g: {x["seed"]: x for x in r["runs"] if (x.get("split"), x["arm"]) == g and x["status"] == "ok"} for g in groups}
     out = []
-    for a in arms:
-        runs = [x for x in r["runs"] if x["arm"] == a]
+    for split, a in groups:
+        runs = [x for x in r["runs"] if (x.get("split"), x["arm"]) == (split, a)]
         statuses = {s: sum(x["status"] == s for x in runs) for s in STATUSES if any(x["status"] == s for x in runs)}
-        row = {"arm": a, "started": len(runs), "statuses": statuses, "metrics": {}}
+        row = {"arm": a, "split": split, "started": len(runs), "statuses": statuses, "metrics": {}}
+        mine, ref = ok[split, a], ok.get((split, base), {})
         for m in r["metrics"]:
-            xs = [v for v in (metric(x["scores"], m) for x in ok[a].values()) if v is not None]
+            xs = [v for v in (metric(x["scores"], m) for x in mine.values()) if v is not None]
             row["metrics"][m] = {"n": len(xs), "mean": sum(xs) / len(xs) if xs else None, "ci95": bootstrap_ci(xs)}
             if base and a != base:
-                shared = [k for k in ok[a] if k in ok[base] and metric(ok[a][k]["scores"], m) is not None
-                          and metric(ok[base][k]["scores"], m) is not None]
-                d = [metric(ok[a][k]["scores"], m) - metric(ok[base][k]["scores"], m) for k in shared]
+                shared = [k for k in mine if k in ref and metric(mine[k]["scores"], m) is not None
+                          and metric(ref[k]["scores"], m) is not None]
+                d = [metric(mine[k]["scores"], m) - metric(ref[k]["scores"], m) for k in shared]
                 row["metrics"][m]["vs_baseline"] = {"n": len(d), "diff": sum(d) / len(d) if d else None,
                                                     "p": sign_flip(d) if d else None}
         out.append(row)
@@ -167,7 +169,8 @@ def format_summary(r, rows):
     lines = [f"{r['experiment']} at {r['commit']}, {len(r['runs'])} runs; budgets {json.dumps(r['budgets'])}"]
     for row in rows:
         st = ", ".join(f"{k} {v}" for k, v in row["statuses"].items())
-        lines.append(f"{row['arm']}: {row['statuses'].get('ok', 0)}/{row['started']} ok ({st})")
+        where = f" [{row['split']}]" if row["split"] is not None else ""
+        lines.append(f"{row['arm']}{where}: {row['statuses'].get('ok', 0)}/{row['started']} ok ({st})")
         for m, s in row["metrics"].items():
             ci = f" [{f(s['ci95'][0])}, {f(s['ci95'][1])}]" if s["ci95"] else ""
             line = f"  {m} ({r['metrics'][m]} is better): {f(s['mean'])}{ci}, n {s['n']}"

@@ -10,13 +10,19 @@ Tasks: 8-bit parity (train accuracy, a capacity test), a sparse feature-conjunct
 8x8 digits (a stand-in for MNIST). Learning: backprop and feedback alignment. Method pre-registered on #85.
 A computational result about network design, not a claim about cortex.
 
-Run: python research/dendritic_neurons.py [--seeds N] [--quick]
+Run: python research/dendritic_neurons.py [--seeds N] [--quick] [--out FILE.json]
+--out writes the shared result file (#104), one row per arm/rule x seed with the task as the split:
+python research/result_schema.py FILE.json
 """
 import argparse
 import itertools
+import json
+import sys
 
 import numpy as np
 from sklearn.datasets import load_digits
+
+from result_schema import make_result
 
 LRS, TUNE_SEEDS, BATCH = (0.03, 0.1, 0.3), (101, 102, 103), 32
 TASKS = {  # name: (budget, branches k, epochs)
@@ -159,8 +165,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--quick", action="store_true", help="2 seeds, lr 0.1, 1/10 of the epochs: a smoke run")
+    ap.add_argument("--out", help="write a brain-result/1 file")
     a = ap.parse_args()
     seeds = range(1, 3 if a.quick else a.seeds + 1)
+    runs, chosen = [], {}   # for --out; chosen: the tuned learning rate per task, arm and rule
     for task, (budget, k, ep) in TASKS.items():
         D, C = (8, 2) if task == "parity" else (40, 2) if task == "conjunction" else (64, 10)
         print(f"\n{task}: budget {budget} params, k = {k} branches, {ep} epochs"
@@ -178,6 +186,9 @@ def main():
                     [run(task, arm, rule, s, lr)[0] for s in TUNE_SEEDS]))
                 res[arm, rule] = lr, np.array([run(task, arm, rule, s, lr, ep // 10 if a.quick else None)[1]
                                                for s in seeds])
+                chosen[f"{task}/{arm}/{rule}"] = lr
+                runs += [{"arm": f"{arm}/{rule}", "seed": s, "split": task, "status": "ok", "scores": {"acc": float(v)}}
+                         for s, v in zip(seeds, res[arm, rule][1])]
         for arm in ARMS:
             for rule in RULES:
                 lr, r = res[arm, rule]
@@ -187,6 +198,15 @@ def main():
                         d = r - res[ref, rule][1]
                         lines[arm] += f" {d.mean():+.3f} p{sign_flip(d):.3f}"
             print(lines[arm])
+    if a.out:
+        out = make_result("dendritic-neurons", "python research/" + " ".join(sys.argv),
+                          {"tasks": {t: {"budget": b, "branches": k, "epochs": e} for t, (b, k, e) in TASKS.items()},
+                           "arms": ARMS, "rules": RULES, "lr_grid": LRS, "tune_seeds": list(TUNE_SEEDS),
+                           "lr_chosen": chosen, "quick": a.quick, "seeds": list(seeds)},
+                          {"params_per_task": {t: b for t, (b, _, _) in TASKS.items()}}, {"acc": "higher"},
+                          runs, baseline="point-1/bp")
+        with open(a.out, "w", encoding="utf-8") as fh:
+            json.dump(out, fh, indent=1)
 
 
 if __name__ == "__main__":

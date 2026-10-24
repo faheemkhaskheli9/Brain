@@ -34,7 +34,7 @@ result of this repository**. Do not cite them. The register rows correctly say "
 | #94 richer vision | Nothing beyond the 15-ray retina | All |
 | #95 CPG body | Depends on #38's missing CPG body | All; the `GAINS.joints` body has no later-stage measurement |
 | #96 MICrONS follow-up | Depends on #87's missing result | All |
-| #104 result schema | `brain-result/1` in `research/result_schema.py` (validator, summary with bootstrap CIs and paired sign-flip p), `game/world/result.mjs`; `sweep.mjs`, `reversal.mjs` and `transfer.mjs --out` write it; fixture test in CI | Not yet written by `h101_transfer.mjs` or `research/*.py`; no checkpoint references |
+| #104 result schema | `brain-result/1` in `research/result_schema.py` (validator, summary with bootstrap CIs and paired sign-flip p), `game/world/result.mjs`; every arm-by-seed experiment writes it with `--out` (#131); fixture test in CI | No checkpoint references; no committed result file yet for the runs the topics cite |
 | #106 reversal benchmark | `reversal.mjs` measures adaptation, retention, false switches, detection; arms ablate surprise, replay, free slots; 10-seed result in `game/world/README.md` "Reversal" and `research/results/reversal-2026-10-24.json` | Noisy cues (#135) |
 | #105, #108, #110-#116 | Nothing specific | All |
 | #107 dashboard, #109 browser tests | Nothing | All (no browser test of any page) |

@@ -40,6 +40,18 @@ def test_valid_and_summary():
     assert "a: 2/3 ok" in rs.format_summary(r, rs.summary(r))
 
 
+def test_splits_are_not_pooled():
+    r = sample()
+    for x in r["runs"]:
+        x["split"] = "t1"
+    extra = [dict(x, split="t2", scores={"x": 100.0 + x["seed"], "k": {"y": 0}}) for x in r["runs"] if x["status"] == "ok"]
+    r["runs"] += extra
+    assert rs.validate(r) == []
+    rows = {(row["split"], row["arm"]): row for row in rs.summary(r)}
+    assert rows["t1", "a"]["metrics"]["x"]["mean"] == 2.0 and rows["t2", "a"]["metrics"]["x"]["mean"] == 101.5
+    assert rows["t2", "b"]["metrics"]["x"]["vs_baseline"] == {"n": 2, "diff": 0.0, "p": 1.0}   # paired within t2 only
+
+
 def test_invalid():
     def bad(mutate, expect):
         r = sample()

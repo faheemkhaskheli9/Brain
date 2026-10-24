@@ -18,7 +18,7 @@ export const run = ({ arm, seed, split = null, status, reason = null, seconds = 
 export function resultRecord({ experiment, config, budgets, metrics, baseline = null, runs, environment = {} }) {
   return {
     schema: SCHEMA, experiment, commit: gitCommit(), created: new Date().toISOString().replace(/\.\d+Z$/, "Z"),
-    command: ["node", ...process.argv.slice(1).map(a => a.replace(/^.*\/game\/world\//, "game/world/"))].join(" "),
+    command: ["node", ...process.argv.slice(1).map(a => a.replace(/^.*\/(game\/world|research)\//, "$1/"))].join(" "),
     environment: { runtime: `node ${process.version}`, world: `brain.js save v${new World(0).toJSON().version}`, ...environment },
     config, budgets, metrics, ...(baseline && { baseline }), runs,
   };
