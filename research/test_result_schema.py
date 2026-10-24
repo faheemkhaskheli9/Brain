@@ -52,6 +52,10 @@ def test_invalid():
     bad(lambda r: r["runs"][2].pop("reason"), "needs a reason")
     bad(lambda r: r["runs"][0].update(status="passed"), "status")
     bad(lambda r: r["runs"][0]["scores"].pop("x"), "lacks metric")
+    bad(lambda r: r["runs"][0]["scores"].update(x="1"), "lacks metric")
+    r = sample()
+    r["runs"][0]["scores"]["x"] = None   # explicitly not measurable: valid, left out of the mean
+    assert rs.validate(r) == [] and rs.summary(r)[0]["metrics"]["x"]["n"] == 1
     bad(lambda r: r["runs"].append(copy.deepcopy(r["runs"][0])), "duplicate")
     bad(lambda r: r.update(baseline="z"), "baseline")
     bad(lambda r: r["runs"][0].update(seed=True), "seed")

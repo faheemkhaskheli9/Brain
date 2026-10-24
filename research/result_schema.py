@@ -61,6 +61,14 @@ def metric(scores, name):
     return x if isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) else None
 
 
+def is_null(scores, name):
+    """True if the dotted metric is present and explicitly null."""
+    *path, last = name.split(".")
+    for part in path:
+        scores = scores.get(part) if isinstance(scores, dict) else None
+    return isinstance(scores, dict) and last in scores and scores[last] is None
+
+
 def validate(r):
     """Return a list of problems (empty if the record is valid)."""
     if not isinstance(r, dict):
@@ -95,7 +103,8 @@ def validate(r):
         elif run["status"] != "ok" and not run.get("reason"):
             errs.append(f"{where}: status {run['status']} needs a reason")
         elif run["status"] == "ok":
-            missing = [m for m in r["metrics"] if metric(run["scores"], m) is None]
+            # A metric may be null (not measurable in this configuration) but not absent or non-numeric.
+            missing = [m for m in r["metrics"] if metric(run["scores"], m) is None and not is_null(run["scores"], m)]
             if missing:
                 errs.append(f"{where}: ok run lacks metric(s) {', '.join(missing)}")
     if r.get("baseline") is not None and r["baseline"] not in arms:
@@ -141,10 +150,11 @@ def summary(r):
         statuses = {s: sum(x["status"] == s for x in runs) for s in STATUSES if any(x["status"] == s for x in runs)}
         row = {"arm": a, "started": len(runs), "statuses": statuses, "metrics": {}}
         for m in r["metrics"]:
-            xs = [metric(x["scores"], m) for x in ok[a].values()]
+            xs = [v for v in (metric(x["scores"], m) for x in ok[a].values()) if v is not None]
             row["metrics"][m] = {"n": len(xs), "mean": sum(xs) / len(xs) if xs else None, "ci95": bootstrap_ci(xs)}
             if base and a != base:
-                shared = [k for k in ok[a] if k in ok[base]]
+                shared = [k for k in ok[a] if k in ok[base] and metric(ok[a][k]["scores"], m) is not None
+                          and metric(ok[base][k]["scores"], m) is not None]
                 d = [metric(ok[a][k]["scores"], m) - metric(ok[base][k]["scores"], m) for k in shared]
                 row["metrics"][m]["vs_baseline"] = {"n": len(d), "diff": sum(d) / len(d) if d else None,
                                                     "p": sign_flip(d) if d else None}
