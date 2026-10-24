@@ -51,8 +51,8 @@ An external audit of the repo recommended, before adding more topics: CI, a
 license, `pyproject.toml`, community files, headless level-winnability tests,
 read-only CI permissions, unique topic names in `build_index.py`, atomic save
 files, independent review of the `draft` topics, and a per-model scorecard
-against published data. All of these have landed except two: splitting
-`game/levels.py` into a pure level engine plus Tk UI, and the topic review
-(issue #21). Its evaluation advice now lives in
+against published data. All of these have landed except the topic review
+(issue #21, now #132). The level split is `game/level_engine.py` (rules, no Tk)
+under `game/levels.py` (Tk view), #133. Its evaluation advice now lives in
 [simulation/evaluating-brain-models.md](../simulation/evaluating-brain-models.md).
 The full report is in git history (`git show 033e79a:research/deep-research-report.md`).

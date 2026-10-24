@@ -11,6 +11,7 @@ import sys
 
 import numpy as np
 
+import level_engine
 import sim
 
 ALLEN = "Allen Cell Types Database, mouse L2/3 cell 490170480 (Cux2), GLIF1 model 491611694"
@@ -168,7 +169,7 @@ def front_loaded(t, y):
 
 def level6_forgetting():
     """Level 6 forgetting of task A vs the human savings curve (issue #27). Shape only."""
-    DAYS, curves = 8, {}   # level 6's day budget (levels.Sleep.DAYS; levels imports tkinter)
+    DAYS, curves = level_engine.Sleep.DAYS, {}   # level 6's day budget
     for replay in (False, True):
         a, b = sim.make_tasks()
         net = sim.Associator()
