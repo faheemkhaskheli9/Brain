@@ -34,8 +34,10 @@ jobs:
         run: python game/test_sim.py
       - name: Models match published brain data
         run: python game/eval.py
-      - name: Every game level can be won
-        run: xvfb-run python game/test_levels.py
+      - name: Every game level can be won (engine, no display)
+        run: python game/test_levels.py
+      - name: Game level views build and play (Tk)
+        run: xvfb-run python game/test_levels_ui.py
       - uses: actions/setup-node@v4
         with:
           node-version: "22"   # 22+ loads ES-module syntax from brain.js without a package.json

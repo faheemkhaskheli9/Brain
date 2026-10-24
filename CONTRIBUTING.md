@@ -26,10 +26,11 @@ python build_index.py          # regenerates INDEX.md, fails on bad frontmatter 
 python run_code_blocks.py      # runs every python block in the topics (or name the files)
 python test_build_index.py     # if you touched build_index.py or run_code_blocks.py
 python game/test_sim.py        # if you touched game/
+python game/test_levels.py     # if you touched a level (game/level_engine.py)
 python game/eval.py            # if you touched a model in game/sim.py
 ```
 
-CI runs the same checks, plus `game/test_levels.py` under xvfb.
+CI runs the same checks, plus `game/test_levels_ui.py` (the Tk views) under xvfb.
 
 By contributing you agree that code is licensed Apache-2.0 and prose CC BY 4.0
 (see the README).

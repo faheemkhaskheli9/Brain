@@ -15,7 +15,8 @@ skills) and [Brain Ecosystem](ecosystem/README.md) (insects, foxes and humans, e
 pip install numpy
 python game/play.py        # the game (tkinter ships with Python)
 python game/test_sim.py    # headless checks for every model
-python game/test_levels.py # a scripted play wins every level (needs a display; xvfb-run on CI)
+python game/test_levels.py # a scripted play wins every level (no display needed)
+python game/test_levels_ui.py # the Tk views build and play (needs a display; xvfb-run on CI)
 ```
 
 Progress (stars per level) is saved in `~/.brain_lab/save.json`. Delete it to start over.
@@ -63,10 +64,12 @@ worth seeing, for example juice with no bell in level 4.
 ```
 game/
   sim.py         numpy models, no UI imports
-  levels.py      one class per level: text, canvas drawing, win check
+  level_engine.py one class per level: text, state, rules, win check and stars; no UI imports
+  levels.py      the Tk view of each level: widgets and canvas drawing over the engine
   play.py        tkinter shell: menu, intro, level, debrief, save file
   test_sim.py    plain asserts on sim.py
-  test_levels.py drives each level headlessly: a good play wins, a bad one does not
+  test_levels.py drives each level's engine: a good play wins, a bad one does not
+  test_levels_ui.py builds every view, plays one level through the UI
   eval.py        brain-match scorecard: models vs published recordings
 ```
 
