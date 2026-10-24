@@ -4,9 +4,11 @@
 // rehearsal. Both produce the same scene summary, so the scene alone puts them in one slot and the
 // actor must relearn at every switch. With GAINS.surprise on, a slot that stays surprised hands over
 // to a look-alike slot, or founds one, so a context seen before can be picked up again.
-// Run: node game/world/reversal.mjs [seeds, default 1-10] [--surprise X] [--block N] [--blocks N]
+// Run: node game/world/reversal.mjs [seeds, default 1-10] [--surprise X] [--block N] [--blocks N] [--out FILE.json]
+// --out writes the shared result file (#104): python research/result_schema.py FILE.json
 import { pathToFileURL } from "node:url";
 import { World, STAGES, GAINS, REVERSE } from "./brain.js";
+import { resultRecord, run, writeResult } from "./result.mjs";
 
 export const LIMIT = 20000;
 
@@ -47,6 +49,7 @@ export function reversal(seed, { surprise = 0, block = 300, blocks = 8 } = {}) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2), opt = (name, dflt) => { const i = args.indexOf(name); return i < 0 ? dflt : Number(args.splice(i, 2)[1]); };
+  const oi = args.indexOf("--out"), out = oi < 0 ? null : args.splice(oi, 2)[1];
   const surprise = opt("--surprise", 3), block = opt("--block", 300), blocks = opt("--blocks", 8);
   const seeds = args.length ? args.map(Number) : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const rows = { off: [], on: [] };
@@ -62,5 +65,17 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     console.log(`surprise ${arm === "off" ? "off" : `x${surprise}`}, ${ok.length}/${rows[arm].length} learned listen: `
       + Array.from({ length: blocks }, (_, k) => `${ok[0] ? ok[0].blocks[k].key.slice(0, 3) : ""} ${mean(ok.map(r => r.blocks[k].ok)).toFixed(2)} (${mean(ok.map(r => r.blocks[k].first)).toFixed(2)})`).join(" | ")
       + `; slots used ${mean(ok.map(r => r.slotsUsed)).toFixed(1)}`);
+  }
+  if (out) {
+    // Per run: success over every block, and over the first 50 episodes of the blocks that return to
+    // a context seen before (blocks 3 on), where a remembered context should save relearning.
+    const runs = ["off", "on"].flatMap(arm => rows[arm].map(r => run({
+      arm, seed: r.seed, status: r.blocks ? "ok" : "timeout", reason: r.blocks ? null : `${r.failed} not learned within ${LIMIT} episodes`,
+      scores: r.blocks ? { ok: +mean(r.blocks.map(b => b.ok)).toFixed(3), returnFirst: +mean(r.blocks.slice(2).map(b => b.first)).toFixed(3),
+        slotsUsed: r.slotsUsed, blocks: r.blocks } : {},
+    })));
+    writeResult(out, resultRecord({ experiment: "brain-world/reversal", baseline: "off", runs,
+      metrics: { ok: "higher", returnFirst: "higher" }, config: { surprise: { off: 0, on: surprise }, block, blocks, seeds, gains: { ...GAINS } },
+      budgets: { episodes_per_stage: LIMIT, episodes_per_block: block } }));
   }
 }

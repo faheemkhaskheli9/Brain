@@ -34,7 +34,7 @@ result of this repository**. Do not cite them. The register rows correctly say "
 | #94 richer vision | Nothing beyond the 15-ray retina | All |
 | #95 CPG body | Depends on #38's missing CPG body | All; the `GAINS.joints` body has no later-stage measurement |
 | #96 MICrONS follow-up | Depends on #87's missing result | All |
-| #104 result schema | `sweep.mjs` prints per-seed rows, paired sign-flip p values and model cards with git commit (#55) | No common schema across `sweep.mjs`, `transfer.mjs`, `reversal.mjs`, `h101_transfer.mjs`, `research/*.py`; no validation |
+| #104 result schema | `brain-result/1` in `research/result_schema.py` (validator, summary with bootstrap CIs and paired sign-flip p), `game/world/result.mjs`; `sweep.mjs --out` and `reversal.mjs --out` write it; fixture test in CI | Not yet written by `transfer.mjs`, `h101_transfer.mjs` or `research/*.py`; no checkpoint references |
 | #105, #106, #108, #110-#116 | Nothing specific; #106's reversal case can reuse `reversal.mjs` instead of new code | All |
 | #107 dashboard, #109 browser tests | Nothing | All (no browser test of any page) |
 | #117 claim tracking | `build_index.py` checks frontmatter and links only | All |

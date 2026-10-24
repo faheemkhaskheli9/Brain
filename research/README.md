@@ -15,6 +15,7 @@
 | [dendritic_neurons.py](dendritic_neurons.py) | Experiment for #85: point neurons (one or two dense hidden layers) vs two-layer dendritic neurons at equal parameters and multiply-adds, on parity, a feature-conjunction task and 8x8 digits, trained by backprop and by feedback alignment. numpy plus sklearn's digits, a few minutes (learning-rate tuning included). Result in `anatomy/dendritic-computation.md`. |
 | [brainscore_saturation.py](brainscore_saturation.py) | Analysis for #88: has the ImageNet-accuracy to Brain-Score link saturated? Line vs hinge fits per score (average, neural, behaviour, V1-IT), rank tests above 70% top-1, and an exploratory pretraining-data control. numpy, a few seconds. `--fetch` saves a new dated leaderboard snapshot to `data/`. Result in `function/sensory-systems-and-vision.md`. |
 | [h101_transfer.mjs](h101_transfer.mjs) | Experiment for H101: in Brain World's listen task, train with red, green and blue objects, then time how fast each arm passes with yellow, cyan and magenta. Arms: the local rule, the local rule plus sleep replay, and backprop into the same network; for H103 also each of the first and third with a colour-blind where-pathway prior. Node, about 40 minutes for 5 seeds. Result in `learning/brain-inspired-learning-algorithms.md`. |
+| [result_schema.py](result_schema.py) | The shared result file for learning experiments (#104), `brain-result/1`: commit, command, environment, full config, budgets, metric directions, and one row per arm x seed with status (`ok`, `failed`, `timeout`, `error`), reason, seconds and scores. Failed and crashed runs stay in the denominators. Validates a file and prints per-arm means with bootstrap 95% intervals and paired sign-flip p values against the baseline arm. `make_result()` builds one from Python; `game/world/result.mjs` from Node (`sweep.mjs --out`, `reversal.mjs --out`). Stdlib only; `test_result_schema.py` checks it against `results/fixtures/sweep.log`. |
 | `data/` | Small dated snapshots of public data the analyses read (Brain-Score vision leaderboard: model, ImageNet top-1, average, neural, behaviour and per-region scores). |
 | `pdfs/` | Downloaded open-access PDFs. Git-ignored (publisher copyright); run the script to fetch them. |
 
@@ -28,6 +29,7 @@ python research/replay_selection.py        # replay rule experiment (#84); --qui
 python research/credit_assignment.py       # PC vs backprop, FA, DFA (#92); --quick for a smoke run
 python research/dendritic_neurons.py       # point vs dendritic neurons (#85); --quick for a smoke run
 python research/brainscore_saturation.py   # Brain-Score saturation re-check (#88); --fetch for a new snapshot
+python research/result_schema.py run.json  # validate a result file and summarise it per arm (#104)
 node research/h101_transfer.mjs            # local rule (+ replay) vs backprop transfer (H101), and prior arms (H103); --quick for a smoke run
 ```
 

@@ -148,6 +148,8 @@ at least as many seeds as 30% rehearsal.
 Episode means cover the seeds that passed. The comparisons with 30% rehearsal use an exact paired
 sign-flip test on per-seed differences, over the seeds that passed in both arms. `sweep.mjs`
 prints this table and the p values, and `--from <log>` reprints them from a saved run.
+`--out run.json` (with or without `--from`) also writes the shared result file (#104), every run
+included with its status; `python research/result_schema.py run.json` validates and summarises it.
 - **10% + critic sleep** passes the decision rule. It saves 3,144 episodes, which is not
   significant (p = 0.21).
 - **Replaying the actor** saves 5,854 episodes (p = 0.029) and 4,134 on write (p = 0.002), but

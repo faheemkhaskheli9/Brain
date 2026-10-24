@@ -2,13 +2,15 @@
 // replay from the episodic store (issue #64). Each arm x seed trains the full curriculum in its own
 // process, as test_brain.mjs does, then scores the skills it kept over 4,000 graduated episodes,
 // and saves and reloads it: each row carries the save's perform-mode scores and git commit.
-// Run: node game/world/sweep.mjs [seeds, default 1-10] [--arms A,B,...] [--jobs N] > sweep.log
-//      node game/world/sweep.mjs --from sweep.log    (summarise a saved run again, no training)
+// Run: node game/world/sweep.mjs [seeds, default 1-10] [--arms A,B,...] [--jobs N] [--out FILE.json] > sweep.log
+//      node game/world/sweep.mjs --from sweep.log [--out FILE.json]   (summarise a saved run again, no training)
+// --out writes the shared result file (#104): python research/result_schema.py FILE.json
 import { execSync, fork } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { availableParallelism } from "node:os";
 import { fileURLToPath } from "node:url";
 import { World, STAGES, GAINS, COPY } from "./brain.js";
+import { resultRecord, run, writeResult } from "./result.mjs";
 
 export const ARMS = {
   rehearse30: { replay: 0.3, sleepEvery: 0 },                           // the current design; the baseline
@@ -182,6 +184,22 @@ function factorial(results) {
   }
 }
 
+// The shared result file (#104): a stage not passed within LIMIT is a timeout, a crash an error.
+function toResult(results, arms, seeds) {
+  const keys = STAGES.map(s => s.key), metrics = { total: "lower", ...Object.fromEntries(keys.map(k => [`episodes.${k}`, "lower"])),
+    ...Object.fromEntries(Object.keys(KEEP).map(k => [`kept.${k}`, "higher"])) };
+  const runs = results.map(r => run({
+    arm: r.arm, seed: r.seed, seconds: r.seconds ?? null,
+    status: r.error ? "error" : r.passed ? "ok" : "timeout",
+    reason: r.error ?? (r.passed ? null : `${r.failed} not learned within ${LIMIT} episodes`),
+    scores: { ...(r.episodes && { episodes: Object.fromEntries(r.episodes.map((e, i) => [keys[i], e])) }),
+      ...(r.passed && { total: r.total, kept: r.kept, perform: r.perform, active: r.active }), ...(r.copy && { copy: r.copy }) },
+  }));
+  return resultRecord({ experiment: "brain-world/sweep", metrics, baseline: arms[0], runs,
+    config: { arms: Object.fromEntries(arms.map(a => [a, ARMS[a]])), seeds, gains: { ...GAINS }, keep: KEEP },
+    budgets: { episodes_per_stage: LIMIT, scored_episodes: 4000 } });
+}
+
 if (process.send) {   // child: run one trial and report it
   process.on("message", ({ arm, seed }) => { process.send(trial(arm, seed)); process.exit(0); });
 } else {
@@ -189,7 +207,7 @@ if (process.send) {   // child: run one trial and report it
     const i = args.indexOf(name);
     return i < 0 ? dflt : args.splice(i, 2)[1];
   };
-  const from = opt("--from", null);
+  const from = opt("--from", null), out = opt("--out", null);
   const arms = opt("--arms", Object.keys(ARMS).join(",")).split(",");
   const nJobs = Number(opt("--jobs", Math.max(1, availableParallelism() - 2)));   // each job needs ~100 MB
   const seeds = args.length ? args.map(Number) : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -198,7 +216,9 @@ if (process.send) {   // child: run one trial and report it
   if (bad) { console.error(`bad argument: ${bad}; arms: ${Object.keys(ARMS).join(", ")}`); process.exit(2); }
   if (from) {
     const results = readFileSync(from, "utf8").split("\n").filter(l => l.startsWith("{")).map(l => JSON.parse(l));
-    summarise(results, arms.filter(a => results.some(r => r.arm === a)));
+    const used = arms.filter(a => results.some(r => r.arm === a));
+    summarise(results, used);
+    if (out) writeResult(out, toResult(results, used, [...new Set(results.map(r => r.seed))]));
   } else {
     const jobs = arms.flatMap(arm => seeds.map(seed => ({ arm, seed }))), results = [];
     const runOne = job => new Promise(done => {
@@ -213,6 +233,7 @@ if (process.send) {   // child: run one trial and report it
     });
     await Promise.all(Array.from({ length: nJobs }, async () => { while (jobs.length) await runOne(jobs.shift()); }));
     summarise(results, arms);
+    if (out) writeResult(out, toResult(results, arms, seeds));
     if (results.some(r => r.error)) process.exit(1);
   }
 }

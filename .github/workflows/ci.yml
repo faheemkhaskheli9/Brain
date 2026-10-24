@@ -39,6 +39,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"   # 22+ loads ES-module syntax from brain.js without a package.json
+      - name: Experiment result files validate and keep failed runs (#104)
+        run: python research/test_result_schema.py
       - name: Brain World creature learns every stage and keeps them
         run: node game/world/test_brain.mjs 1 2 3   # several seeds, so tuning that only helps seed 1 fails
       - name: Every species in Brain Ecosystem learns
