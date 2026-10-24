@@ -40,6 +40,7 @@ import io
 import os
 import pickle
 import re
+import time
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -64,9 +65,16 @@ def get(key, dest):
     if not dest.exists():
         dest.parent.mkdir(parents=True, exist_ok=True)
         tmp = dest.with_suffix(dest.suffix + ".part")
-        with urllib.request.urlopen(S3 + key, timeout=600) as r, open(tmp, "wb") as f:
-            while chunk := r.read(1 << 20):
-                f.write(chunk)
+        for attempt in range(5):                 # thousands of files: retry dropped connections
+            try:
+                with urllib.request.urlopen(S3 + key, timeout=600) as r, open(tmp, "wb") as f:
+                    while chunk := r.read(1 << 20):
+                        f.write(chunk)
+                break
+            except OSError:
+                if attempt == 4:
+                    raise
+                time.sleep(2 ** attempt)
         tmp.rename(dest)
     return dest
 

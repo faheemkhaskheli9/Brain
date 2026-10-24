@@ -159,6 +159,15 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: cotuned_inputs (co-tuned inputs on one branch, MICrONS, #87)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/cotuned_inputs.py",
+      "args": ["--fetch"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",

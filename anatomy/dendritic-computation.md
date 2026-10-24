@@ -8,7 +8,7 @@ use_cases:
   - how could dendrites carry error signals for credit assignment
   - model a neuron with nonlinear dendritic branches
 status: draft
-last_verified: 2026-10-12
+last_verified: 2026-10-24
 sources:
   - https://doi.org/10.1146/annurev.neuro.28.061604.135703
   - https://doi.org/10.1016/S0896-6273(03)00149-1
@@ -16,6 +16,7 @@ sources:
   - https://doi.org/10.1038/18686
   - https://doi.org/10.48550/arxiv.1810.11393
   - https://doi.org/10.1038/s41467-025-56297-9
+  - https://doi.org/10.1038/s41586-025-08840-3
 ---
 
 # Dendritic computation
@@ -137,6 +138,40 @@ matched; dend uses 3-20% fewer. Trained by backprop (BP) and by feedback alignme
   leaves out on purpose. Other limits: small budgets, one k per task, tanh branches
   (monotonic, unlike the XOR-capable human branches of Gidon et al. 2020).
 
+**Do inputs with similar tuning land on the same branch? (#87, measured here on
+MICrONS, 2026-10-24.)** Spine imaging in mouse V1 found receptive-field clusters
+(Iacaruso et al. 2017) but no orientation clusters (Jia et al. 2010). MICrONS has
+both the wiring and the tuning of the same tissue (MICrONS Consortium 2025).
+[`research/cotuned_inputs.py`](../research/cotuned_inputs.py) (method pre-registered
+in its docstring) takes the 148 proofread presynaptic neurons with digital-twin
+tuning from Ding et al. (2025), finds their dendritic synapses on 1,740 postsynaptic
+neurons (v661 skeletons, axon and soma synapses dropped), and asks whether pairs of
+inputs from *different* neurons that sit within 10 µm of each other along the
+dendrite are more alike than the neuron's input pairs in general. The null permutes
+which presynaptic neuron sits at which synapse site within each postsynaptic neuron
+(1,000 shuffles). T = mean similarity of near pairs minus mean of all pairs; the
+shuffle's T is below zero, so the table gives both.
+
+| Similarity (5,732 synapses, 8,931 pairs, 35 within 10 µm) | All pairs | Within 10 µm | T | Shuffle T (mean ± sd) | p (one-sided) | Same segment p |
+|---|---|---|---|---|---|---|
+| **Signal correlation, digital twin (primary)** | 0.069 | 0.073 | +0.004 | -0.011 ± 0.007 | **0.018** | 0.003 |
+| Readout (feature) similarity | 0.054 | 0.069 | +0.015 | -0.012 ± 0.007 | 0.001 | 0.16 |
+| Signal correlation, in vivo | 0.082 | 0.148 | +0.066 | -0.001 ± 0.012 | 0.001 | 0.11 |
+| Receptive-field closeness (minus centre distance) | -0.124 | -0.129 | -0.005 | +0.002 ± 0.004 | 0.94 | 0.050 |
+
+- **Weak evidence that co-tuned inputs sit closer together.** The primary test passes
+  its pre-registered threshold (p = 0.018), and the readout and in-vivo measures agree.
+  The effect is small: near pairs are only 0.004 more correlated than all pairs, about
+  two shuffle standard deviations.
+- **Receptive-field position does not cluster** in this sample, the opposite of the
+  spine-imaging result. Orientation was not tested separately here.
+- **Caveats.** Only 35 pairs on 29 neurons are within 10 µm, because only 148
+  presynaptic neurons are both proofread and tuned. The raw similarity barely changes
+  with distance (0.073 within 10 µm, 0.078 at 50-100 µm, 0.065 beyond 400 µm), so the
+  test leans on the shuffle, whose mean is below zero. Whether this is clustering on a
+  branch or presynaptic neurons that are close together contacting nearby dendrite
+  is the question of #96. Not yet replicated on another data version.
+
 ## Code: clustered inputs fire a branch, scattered ones do not
 
 A point neuron sums all synapses, so eight active synapses give the same output
@@ -184,7 +219,9 @@ assert r["A+B"] > 2 * (r["A"] + r["B"])         # supralinear: more than the sum
 - How often cortical neurons use dendritic spikes during natural behaviour, not
   only in slices.
 - Whether synapses carrying related features actually cluster on the same branch,
-  and how plasticity puts them there.
+  and how plasticity puts them there. MICrONS gives weak evidence for tuning
+  similarity within 10 µm and none for receptive-field position (#87, above);
+  whether that is more than presynaptic soma proximity is #96.
 - Which, if any, of the dendritic credit-assignment hypotheses the cortex uses.
 - How much dendritic detail a useful AI model needs, given that it multiplies cost.
   With random branch inputs, none paid off at equal parameters (#85, above). Still
@@ -214,4 +251,8 @@ assert r["A+B"] > 2 * (r["A"] + r["B"])         # supralinear: more than the sum
 - Chavlis & Poirazi (2025) "Dendrites endow artificial neural networks with accurate, robust and parameter-efficient learning", *Nat Commun*. doi:10.1038/s41467-025-56297-9
 - Jones & Kording (2020) "Can single neurons solve MNIST? The computational power of biological dendritic trees", arXiv:2009.01269
 - Shalev-Shwartz, Shamir & Shammah (2017) "Failures of gradient-based deep learning", ICML. arXiv:1703.07950
+- MICrONS Consortium (2025) "Functional connectomics spanning multiple areas of mouse visual cortex", *Nature* 640:435. doi:10.1038/s41586-025-08790-w
+- Ding et al. (2025) "Functional connectomics reveals general wiring rule in mouse visual cortex", *Nature* 640:459. doi:10.1038/s41586-025-08840-3
+- Iacaruso, Gasler & Hofer (2017) "Synaptic organization of visual space in primary visual cortex", *Nature* 547:449. doi:10.1038/nature23019
+- Jia, Rochefort, Chen & Konnerth (2010) "Dendritic organization of sensory input to cortical neurons in vivo", *Nature* 464:1307. doi:10.1038/nature08947
 - Hawkins & Ahmad (2016) "Why neurons have thousands of synapses, a theory of sequence memory in neocortex", *Front Neural Circuits* 10:23. doi:10.3389/fncir.2016.00023
