@@ -24,7 +24,14 @@ node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
 node game/world/transfer.mjs              # new letters from known strokes, seeds 1-10, about 1 min (see "New letters")
+node game/world/heldout.mjs               # held-out rooms, tone mapping and letters, seeds 1-10 (see "Held-out")
+node game/test_browser.mjs                # both demos in headless Chromium: save/load, teach, mobile (#109)
 ```
+
+`game/test_browser.mjs` needs playwright and chromium (`npm i -g playwright three@0.160.0`,
+`npx playwright install chromium`). It serves the repo itself and three.js from the local copy, so
+it runs offline, and fails on any console error. CI runs it; `--extended` also loads Brain Lab,
+which downloads Pyodide from its CDN.
 
 Three.js loads from the jsDelivr CDN. Everything else is in `brain.js` (simulation, no DOM) and
 `index.html` (3D view, panels, sound). Press **Fast forward** to reach graduation in about two minutes.

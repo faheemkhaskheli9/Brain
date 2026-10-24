@@ -41,6 +41,8 @@ jobs:
           node-version: "22"   # 22+ loads ES-module syntax from brain.js without a package.json
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: Results dashboard reports bad files and exports exact values (#107)
+        run: python research/test_dashboard.py
       - name: Claims match their evidence (#117)
         run: python research/test_check_claims.py
       - name: Brain World creature learns every stage and keeps them
@@ -49,5 +51,12 @@ jobs:
         run: node game/world/test_env.mjs
       - name: Held-out splits are disjoint and frozen scoring learns nothing (#105)
         run: node game/world/test_heldout.mjs
+      - name: Navigation suite is frozen and its splits are disjoint (#108)
+        run: node game/world/test_navigation.mjs
       - name: Every species in Brain Ecosystem learns
         run: node game/ecosystem/test_ecosystem.mjs 1 2 3
+      - name: Interactive demos work in a browser (#109)
+        run: |
+          npm install -g playwright@1.56.1 three@0.160.0
+          playwright install --with-deps chromium
+          node game/test_browser.mjs
