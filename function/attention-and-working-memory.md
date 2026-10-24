@@ -8,7 +8,7 @@ use_cases:
   - is transformer attention like attention in the brain
   - add a gated working-memory buffer to an agent
 status: stable
-last_verified: 2026-10-11
+last_verified: 2026-10-24
 sources:
   - https://doi.org/10.1017/S0140525X01003922
   - https://doi.org/10.1152/jn.1989.61.2.331
@@ -17,6 +17,8 @@ sources:
   - https://doi.org/10.1146/annurev.ne.18.030195.001205
   - https://doi.org/10.1016/j.neuron.2009.01.002
   - https://doi.org/10.3389/fncom.2020.00029
+  - https://doi.org/10.1037/a0035234
+  - https://doi.org/10.1038/nature06860
 ---
 
 # Attention and working memory
@@ -37,6 +39,41 @@ rehearsal and chunking are prevented, the limit is closer to **3-5 chunks** (Cow
 2001). For simple visual objects, Luck & Vogel (1997) measured about 4 items, and
 found that objects with several features cost about the same as single-feature ones,
 suggesting storage is in units of objects.
+
+### Slots or resource? A cross-validated re-fit on open data (#90, measured here)
+Whether the limit is a fixed number of **slots** or a **resource** spread over every item
+is debated. Zhang & Luck (2008) argued for slots ("slots plus averaging"); van den Berg
+et al. (2012, 2014) found that a variable-precision (VP) resource model fits better;
+Schurgin, Wixted & Brady (2020) proposed target confusability competition (TCC), a
+signal-detection model with one memory-strength parameter per set size.
+
+`research/wm_capacity_models.py` fits four models per subject to colour-wheel response
+errors, jointly across set sizes: **slots**, **slots + averaging**, **VP** (precision
+falls as a power of set size, gamma-distributed across items) and **TCC**. Score:
+5-fold cross-validated log-likelihood on held-out trials (pre-registered 2026-10-15 in
+the script, before the real-data run). Model recovery on simulated subjects picked the
+generating model 21 of 24 times (88%; pass mark 75%).
+
+| Data | Subjects (trials) | Subjects won | VP - best slot model, nats/subject | TCC - VP |
+|---|---|---|---|---|
+| Zhang & Luck 2008, Exp. 2 | 8 (4,000) | VP 8 | +20.7, 8/8 positive, p = 0.008 | -6.6, 0/8 positive, p = 0.008 |
+| Oberauer & Lin 2017, Exp. 1 | 19 (15,200) | VP 16, TCC 3 | +40.3, 19/19 positive, p < 0.001 | -3.1, 3/19 positive, p < 0.001 |
+| Bays, Catalao & Husain 2009 | 12 (4,835) | VP 11, TCC 1 | +25.5, 12/12 positive, p < 0.001 | -4.7, 1/12 positive, p = 0.001 |
+
+p: two-sided sign-flip test across subjects. Per-subject table:
+`research/data/wm_capacity_cvll.csv`.
+
+- **Measured:** the resource model beats both slot models in **every one of 39
+  subjects**; no subject is best fit by a slot model. This matches the pre-registered
+  prediction from van den Berg et al. (2014).
+- **Measured:** slots + averaging beats plain slots on two of three sets (p 0.026 and
+  0.035), not on Zhang & Luck's own data (p 0.32).
+- **Measured, with a caveat:** VP beats TCC in 35 of 39 subjects. The TCC here uses a
+  fitted exponential similarity function, not the published one measured in a
+  separate similarity experiment, so this is not a test of TCC as published.
+- **Not tested:** swap errors (reporting a non-target colour), lapses, motor noise and
+  item-limited VP (a resource model with a cap), so whether a resource model also needs
+  an item limit is not answered here.
 
 ### Mechanism 1: persistent activity (established)
 Neurons in prefrontal cortex keep firing through a delay while a monkey remembers a
@@ -159,8 +196,9 @@ assert gated == cue
 ## Open questions
 - How much of working memory is persistent firing and how much is silent synaptic
   storage, and whether this differs by task.
-- What sets the capacity limit: a fixed number of slots, or a shared resource spread
-  over items.
+- What sets the capacity limit: on open colour-wheel data a shared resource fits better
+  than fixed slots (measured above, #90); whether a resource model also needs an item
+  cap, and what the brain's "resource" is (neurons, gain, spikes), stays open.
 - How top-down attention signals are routed: through cortical feedback, the
   thalamus, synchrony between areas, or all three.
 - Whether anything in the brain does all-pairs, content-based attention like a
@@ -178,6 +216,12 @@ assert gated == cue
 - Miller (1956) "The magical number seven, plus or minus two", *Psychol Rev* 63:81. doi:10.1037/h0043158
 - Cowan (2001) "The magical number 4 in short-term memory: a reconsideration of mental storage capacity", *Behav Brain Sci* 24:87. doi:10.1017/S0140525X01003922
 - Luck & Vogel (1997) "The capacity of visual working memory for features and conjunctions", *Nature* 390:279. doi:10.1038/36846
+- Zhang & Luck (2008) "Discrete fixed-resolution representations in visual working memory", *Nature* 453:233. doi:10.1038/nature06860
+- van den Berg, Shin, Chou, George & Ma (2012) "Variability in encoding precision accounts for visual short-term memory limitations", *PNAS* 109:8780. doi:10.1073/pnas.1117465109
+- van den Berg, Awh & Ma (2014) "Factorial comparison of working memory models", *Psychol Rev* 121:124. doi:10.1037/a0035234
+- Schurgin, Wixted & Brady (2020) "Psychophysical scaling reveals a unified theory of visual memory strength", *Nat Hum Behav* 4:1156. doi:10.1038/s41562-020-00938-0
+- Oberauer & Lin (2017) "An interference model of visual working memory", *Psychol Rev* 124:21. doi:10.1037/rev0000044
+- Bays, Catalao & Husain (2009) "The precision of visual working memory is set by allocation of a shared resource", *J Vis* 9(10):7. doi:10.1167/9.10.7
 - Fuster & Alexander (1971) "Neuron activity related to short-term memory", *Science* 173:652. doi:10.1126/science.173.3997.652
 - Funahashi, Bruce & Goldman-Rakic (1989) "Mnemonic coding of visual space in the monkey's dorsolateral prefrontal cortex", *J Neurophysiol* 61:331. doi:10.1152/jn.1989.61.2.331
 - Wang (2001) "Synaptic reverberation underlying mnemonic persistent activity", *Trends Neurosci* 24:455. doi:10.1016/S0166-2236(00)01868-3
