@@ -6,12 +6,17 @@ scaled by DOWN after each task
 (a "night" of synaptic downscaling, Tononi & Cirelli 2014). Method pre-registered on issue #84.
 A computational result: it says which rule works in this toy, not what the hippocampus selects.
 
-Run: python research/replay_selection.py [--seeds N] [--quick]
+Run: python research/replay_selection.py [--seeds N] [--quick] [--out FILE.json]
+--out writes the shared result file (#104): python research/result_schema.py FILE.json
 """
 import argparse
 import itertools
+import json
+import sys
 
 import numpy as np
+
+from result_schema import make_result
 
 T, D, H, STEPS, BATCH, LR, MEM, DOWN = 5, 20, 64, 300, 16, 0.05, 50, 0.8
 RULES = ("random", "recent", "error", "rare")
@@ -103,16 +108,26 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--quick", action="store_true", help="2 seeds, budget 4 only: a smoke run")
+    ap.add_argument("--out", help="write a brain-result/1 file")
     a = ap.parse_args()
     seeds = range(1, 3 if a.quick else a.seeds + 1)
     budgets = (4,) if a.quick else BUDGETS
+    runs = []   # for --out: arm "none" or "<rule>-b<budget>", "+down" with downscaling
+
+    def record(arm, res):
+        runs.extend({"arm": arm, "seed": s, "status": "ok", "scores": {"bwt": r[0], "final": r[1], "replayed": r[2]}}
+                    for s, r in zip(seeds, res))
+
     for down in (False, True):
         base = [run(s, down=down) for s in seeds]
+        record("none" + "+down" * down, base)
         print(f"\ndownscaling {'x' + str(DOWN) + ' after each task' if down else 'off'}:"
               f" no replay BWT {np.mean([r[0] for r in base]):+.3f}, final acc {np.mean([r[1] for r in base]):.3f}")
         print(f"{'budget':>6} {'rule':>7} {'BWT':>7} {'final':>6} {'gain/1k':>8}  vs random (paired)")
         for b in budgets:
             res = {rule: [run(s, rule, b, down) for s in seeds] for rule in RULES}
+            for rule in RULES:
+                record(f"{rule}-b{b}" + "+down" * down, res[rule])
             for rule in RULES:
                 bwt = np.array([r[0] for r in res[rule]])
                 gain = np.mean([(r[0] - n[0]) / (r[2] / 1000) for r, n in zip(res[rule], base)])
@@ -121,6 +136,14 @@ def main():
                     d = bwt - np.array([r[0] for r in res["random"]])
                     line += f"  BWT {d.mean():+.3f} (p {sign_flip(d):.3f})"
                 print(line)
+    if a.out:
+        r = make_result("replay-selection", "python research/" + " ".join(sys.argv),
+                        {"T": T, "D": D, "H": H, "steps": STEPS, "batch": BATCH, "lr": LR, "mem": MEM, "down": DOWN,
+                         "rules": RULES, "budgets": budgets, "seeds": list(seeds)},
+                        {"steps_per_task": STEPS, "memory_per_task": MEM}, {"bwt": "higher", "final": "higher"},
+                        runs, baseline="none")
+        with open(a.out, "w", encoding="utf-8") as fh:
+            json.dump(r, fh, indent=1)
 
 
 if __name__ == "__main__":

@@ -34,11 +34,12 @@ result of this repository**. Do not cite them. The register rows correctly say "
 | #94 richer vision | Nothing beyond the 15-ray retina | All |
 | #95 CPG body | Depends on #38's missing CPG body | All; the `GAINS.joints` body has no later-stage measurement |
 | #96 MICrONS follow-up | Depends on #87's missing result | All |
-| #104 result schema | `sweep.mjs` prints per-seed rows, paired sign-flip p values and model cards with git commit (#55) | No common schema across `sweep.mjs`, `transfer.mjs`, `reversal.mjs`, `h101_transfer.mjs`, `research/*.py`; no validation |
-| #105, #106, #108, #110-#116 | Nothing specific; #106's reversal case can reuse `reversal.mjs` instead of new code | All |
+| #104 result schema | `brain-result/1` in `research/result_schema.py` (validator, summary with bootstrap CIs and paired sign-flip p), `game/world/result.mjs`; every arm-by-seed experiment writes it with `--out` (#131); fixture test in CI | No checkpoint references; no committed result file yet for the runs the topics cite |
+| #106 reversal benchmark | `reversal.mjs` measures adaptation, retention, false switches, detection; arms ablate surprise, replay, free slots; 10-seed results with and without tone noise (#135) in `game/world/README.md` "Reversal" and `research/results/reversal-*.json` | One surprise threshold only |
+| #105, #108, #110-#116 | Nothing specific | All |
 | #107 dashboard, #109 browser tests | Nothing | All (no browser test of any page) |
 | #117 claim tracking | `build_index.py` checks frontmatter and links only | All |
-| #118 baselines | H101 has a backprop arm in `research/h101_transfer.mjs` | No heuristic or conventional-RL baseline for Brain World |
+| #118 baselines | `game/world/env.mjs` (common interface, tested in CI), `baselines.mjs`: random, heuristic and creature per skill with environment and training steps; result in README "Baselines". H101 has a backprop arm | No conventional (backprop) RL learner on `env.mjs` |
 | #119 release, #120 roadmap, #124 external repos | Planning issues | - |
 
 ## Closed issues checked and present

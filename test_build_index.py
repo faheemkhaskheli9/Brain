@@ -27,6 +27,15 @@ def test_check_meta_accepts_a_good_topic_and_names_each_problem():
         assert part in errs, (part, errs)
 
 
+def test_stale_warns_only_past_the_age_limit():
+    from datetime import date
+    today = date(2026, 10, 24)
+    assert b.stale("a/t.md", {"last_verified": "2026-01-01"}, today) is not None
+    assert b.stale("a/t.md", {"last_verified": "2026-10-24"}, today) is None
+    assert b.stale("a/t.md", {"last_verified": "2026-10-01"}, today, max_age=10) is not None
+    assert b.stale("a/t.md", {"last_verified": "bad"}, today) is None   # check_meta reports it
+
+
 def test_slug_matches_github():
     assert b.slug("Jointed legs (?legs=joints)") == "jointed-legs-legsjoints"
     assert b.slug("Watch, Fast forward, Pause, Sound") == "watch-fast-forward-pause-sound"

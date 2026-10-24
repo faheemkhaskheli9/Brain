@@ -34,11 +34,14 @@
 // Run: node research/h101_transfer.mjs [seeds, default 1-5]   (--quick: 2 seeds, short budgets)
 //      ARMS=backprop HID_LR=1 node research/h101_transfer.mjs 1 2 --quick   (one arm, another step)
 //      OUT=rows.json ...   (also write the per-seed rows as JSON)
+//      ... --out run.json   (the shared result file, #104: python research/result_schema.py run.json)
 //      ARMS=local,local+prior,backprop,backprop+prior node research/h101_transfer.mjs 1 2 3 4 5 6 7 8 9 10   (H103)
 // About 40 minutes for all arms and 5 seeds; the backprop arm is about 4x slower per episode.
 import { World, Brain, GAINS, COLORS, STAGES, RAYS, rng } from "../game/world/brain.js";
+import { resultRecord, run as row, writeResult } from "../game/world/result.mjs";
 
 const QUICK = process.argv.includes("--quick");
+const OUT_AT = process.argv.indexOf("--out"), RESULT = OUT_AT < 0 ? null : process.argv[OUT_AT + 1];
 const SEEDS = process.argv.slice(2).filter(a => /^\d+$/.test(a)).map(Number);
 const seeds = SEEDS.length ? SEEDS : QUICK ? [1, 2] : [1, 2, 3, 4, 5];
 const TRAIN = QUICK ? 2500 : 4000;   // episodes on the old layouts, past the ~2000 listen needs from scratch
@@ -181,7 +184,7 @@ for (const arm of ONLY) for (const seed of seeds) {
   setColors(NEW);
   const naive = toPass(make(seed, arm));
   setColors(OLD);
-  rows.push({ arm, seed, oldRate, firstNew, trained, naive });
+  rows.push({ arm, seed, oldRate, firstNew, trained, naive, seconds: (Date.now() - t0) / 1000 });
   console.log(`${arm.padEnd(12)} seed ${seed}: old layouts ${oldRate.toFixed(2)} after ${TRAIN}, first 100 on new ${firstNew.toFixed(2)},`
     + ` new layouts passed in ${trained ?? ">" + CAP} (naive ${naive ?? ">" + CAP})  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
 }
@@ -193,4 +196,17 @@ for (const arm of ONLY) {
   const saved = r.map(x => x.trained === null || x.naive === null ? null : x.naive - x.trained);
   console.log(`${arm.padEnd(12)} ${m("oldRate").toFixed(2)} ${m("firstNew").toFixed(2).padStart(9)} ${String(med(r.map(x => x.trained))).padStart(16)}`
     + ` ${String(med(r.map(x => x.naive))).padStart(14)} ${String(med(saved.filter(v => v !== null))).padStart(14)}`);
+}
+if (RESULT) {
+  // A run passes if the trained brain reached the pass mark on the new layouts within CAP. saved is
+  // null when the naive brain did not pass within CAP (its true time is unknown, only > CAP).
+  const runs = rows.map(r => row({ arm: r.arm, seed: r.seed, seconds: r.seconds, status: r.trained === null ? "timeout" : "ok",
+    reason: r.trained === null ? `new layouts not passed within ${CAP} episodes` : null,
+    scores: { oldRate: r.oldRate, firstNew: r.firstNew, trained: r.trained, naive: r.naive,
+      saved: r.trained === null || r.naive === null ? null : r.naive - r.trained } }));
+  writeResult(RESULT, resultRecord({ experiment: "h101-transfer", baseline: ONLY[0], runs,
+    metrics: { firstNew: "higher", trained: "lower", saved: "higher" },
+    config: { arms: Object.fromEntries(ONLY.map(a => [a, ARMS[a]])), seeds, hidLr: HID_LR, prior: PRIOR, quick: QUICK,
+      old: OLD, new: NEW, pass: PASS },
+    budgets: { train_episodes: TRAIN, cap_episodes: CAP, first_window: 100 } }));
 }

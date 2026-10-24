@@ -3,9 +3,11 @@
 //   experienced: learn COPY (T, L, X), then NEW_LETTERS (Γ, ⊥, 7);
 //   naive:       learn NEW_LETTERS from scratch.
 // Both at the board only, no rehearsal (GAINS.replay = 0), so the only difference is what it learned first.
-// Run: node game/world/transfer.mjs [seeds, default 1-10]
+// Run: node game/world/transfer.mjs [seeds, default 1-10] [--out FILE.json]
+// --out writes the shared result file (#104): python research/result_schema.py FILE.json
 import { pathToFileURL } from "node:url";
 import { World, STAGES, GAINS, COPY, NEW_LETTERS } from "./brain.js";
+import { resultRecord, run, writeResult } from "./result.mjs";
 
 export const LIMIT = 20000;   // episodes per stage, as in test_brain.mjs
 
@@ -36,10 +38,11 @@ export function transfer(seed) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const seeds = process.argv.length > 2 ? process.argv.slice(2).map(Number) : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const args = process.argv.slice(2), oi = args.indexOf("--out"), out = oi < 0 ? null : args.splice(oi, 2)[1];
+  const seeds = args.length ? args.map(Number) : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const rows = [];
   for (const seed of seeds) {
-    const r = transfer(seed);
+    const t0 = Date.now(), r = { ...transfer(seed), seconds: (Date.now() - t0) / 1000 };
     rows.push(r);
     const e = k => r.early[k] === null ? "-" : r.early[k].toFixed(2);
     console.log(`seed ${String(seed).padStart(2)}: copy T/L/X ${r.copy ?? "not learned"}, then new letters ${r.after ?? "not learned"}; naive new letters ${r.naive ?? "not learned"}`
@@ -51,6 +54,22 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     console.log(`mean over ${ok.length} seeds: first letters ${mean(rows.filter(r => r.copy !== null).map(r => r.copy)).toFixed(0)}, new letters after them ${mean(ok.map(r => r.after)).toFixed(0)}, naive ${mean(ok.map(r => r.naive)).toFixed(0)};`
       + ` experienced faster on ${d.filter(x => x < 0).length}/${ok.length}, paired sign-flip p ${signFlip(d).toFixed(3)};`
       + ` first-100 success after ${mean(ok.map(r => r.early.after)).toFixed(2)} vs naive ${mean(ok.map(r => r.early.naive)).toFixed(2)}`);
+  }
+  if (out) {
+    // Two arms per seed. total = all episodes the arm trained (pretraining included), so the
+    // experienced arm's head start is set against what it cost. seconds is for the seed's pair.
+    const runs = rows.flatMap(r => [
+      run({ arm: "naive", seed: r.seed, seconds: r.seconds, status: r.naive === null ? "timeout" : "ok",
+        reason: r.naive === null ? `new letters not learned within ${LIMIT} episodes` : null,
+        scores: { newLetters: r.naive, early: r.early.naive, pretrain: 0, total: r.naive } }),
+      run({ arm: "experienced", seed: r.seed, seconds: r.seconds, status: r.copy === null || r.after === null ? "timeout" : "ok",
+        reason: r.copy === null ? `copy not learned within ${LIMIT} episodes` : r.after === null ? `new letters not learned within ${LIMIT} episodes` : null,
+        scores: { newLetters: r.after, early: r.early.after, pretrain: r.copy, total: r.copy === null || r.after === null ? null : r.copy + r.after } }),
+    ]);
+    writeResult(out, resultRecord({ experiment: "brain-world/transfer", baseline: "naive", runs,
+      metrics: { newLetters: "lower", early: "higher", total: "lower" },
+      config: { seeds, replay: 0, pretrain: COPY.key, target: NEW_LETTERS.key, gains: { ...GAINS } },
+      budgets: { episodes_per_stage: LIMIT, early_window: 100 } }));
   }
 }
 

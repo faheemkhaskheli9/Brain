@@ -16,6 +16,8 @@ python -m http.server 8000        # from the repo root
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
+node game/world/baselines.mjs --creature  # random and heuristic baselines vs the creature (see "Baselines")
+node game/world/reversal.mjs --arms off,surprise   # hidden rule changes (see "Reversal")
 node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor --jobs 2   # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
@@ -148,6 +150,8 @@ at least as many seeds as 30% rehearsal.
 Episode means cover the seeds that passed. The comparisons with 30% rehearsal use an exact paired
 sign-flip test on per-seed differences, over the seeds that passed in both arms. `sweep.mjs`
 prints this table and the p values, and `--from <log>` reprints them from a saved run.
+`--out run.json` (with or without `--from`) also writes the shared result file (#104), every run
+included with its status; `python research/result_schema.py run.json` validates and summarises it.
 - **10% + critic sleep** passes the decision rule. It saves 3,144 episodes, which is not
   significant (p = 0.21).
 - **Replaying the actor** saves 5,854 episodes (p = 0.029) and 4,134 on write (p = 0.002), but
@@ -465,6 +469,94 @@ All learning rates, costs and sizes in `GAINS` are game gains: tuning knobs, not
 claims the page marks as established are that dopamine signals reward prediction error, that
 plasticity needs a trace plus a neuromodulator, and that replay protects old memories. That this stack
 is enough for a real brain's version of these skills is a hypothesis.
+
+## Reversal: does surprise find a hidden context? (#65, #106)
+
+`node game/world/reversal.mjs [seeds] --arms off,surprise,surprise+replay,off+replay,surprise+slots3 --out run.json`.
+A brain learns walk, grasp and listen, then plays eight blocks of 300 episodes that alternate
+"listen, reversed" (same scene, each tone names the next colour) and listen, reversed first.
+Arms: surprise switching (`GAINS.surprise` 3) on or off, 30% rehearsal of earlier skills during the
+blocks or none, and 8 context slots or 3 (`slots3`: walk, grasp and listen fill them, so the
+reversed rule finds none free). Metrics were fixed before the run: success per block; success over
+the first 50 episodes of blocks 3-8 (a rule seen before: savings); retention (that, for listen
+only); episodes until the last 20 reach the pass mark 0.7 (capped at 300); a slot change after
+episode 50 of a block (a false switch, the rule has not changed there); and detection (a slot
+change in a block after a rule change). Seeds 1-10, 2026-10-24, all 50 runs learned listen. Paired
+sign-flip p against `off`, n 10. Full per-seed file:
+[research/results/reversal-2026-10-24.json](../../research/results/reversal-2026-10-24.json).
+
+| Arm | Reverse blocks reaching 0.7 | Success reverse / listen | Return first-50 | Listen retention | Detection | False switches per block | Slots used |
+|---|---|---|---|---|---|---|---|
+| off | 0/40 | 0.16 / 0.53 | 0.28 | 0.40 | 0.07 | 0.15 | 3.4 |
+| surprise | 3/40 | 0.22 / 0.40 | 0.29 (p 0.72) | 0.38 (p 0.27) | 0.30 (p 0.06) | 2.3 (p 0.13) | 4.8 |
+| surprise + replay | 0/40 | 0.16 / 0.54 | 0.33 (p 0.053) | 0.49 (p 0.012) | 0.76 (p 0.002) | 3.9 (p 0.002) | 7.5 |
+| off + replay | 0/40 | 0.15 / 0.57 | 0.32 (p 0.11) | 0.50 (p 0.016) | 0.10 (p 0.50) | 0.5 (p 0.50) | 5.7 |
+| surprise, 3 slots | 0/40 | 0.09 / 0.59 | 0.31 (p 0.46) | 0.51 (p 0.043) | 0.01 (p 1.0) | 0 | 3.0 |
+
+- **No savings.** No arm does better on its first 50 episodes back in a rule it has seen than the
+  off arm (0.28-0.33, all p > 0.05). The reversed rule almost never reaches the pass mark within a
+  block (3 of 200 blocks over all arms).
+- **Surprise alone hurts listen**: it adapts on fewer blocks (0.29 vs 0.48 of all blocks, p 0.016)
+  and takes 34 more episodes to adapt on return blocks (p 0.025). It moves the reversed rule to a
+  new slot, but that slot then also wins some listen episodes.
+- **With replay, surprise detects the change** (0.76 of blocks, p 0.002) but also switches when
+  nothing changed (3.9 false switches per block, p 0.002), and fills 7.5 of 8 slots.
+- **The retention gain is replay's, not surprise's**: off + replay keeps listen as well (0.50) as
+  surprise + replay (0.49).
+- **Exhausted slots** (3 slots) turn surprise off in effect: no switches, and listen is kept best
+  because nothing competes with its slot; the reversed rule is learned worst (0.09).
+
+Limits: replay arms play extra rehearsal episodes on top of the 300 scored per block, so they get
+more total training; during reversed blocks rehearsal may also play listen. One surprise threshold
+(3). The 0.7 pass mark is listen's.
+
+**Noisy cues (#135).** `GAINS.toneNoise` replaces the tone with a random one in 10% or 20% of
+episodes, in the blocks only, so each seed's arms start the blocks from the same brain. The
+prediction fixed before the run was that noise would raise surprise's false switches. Seeds 1-10,
+same metrics, paired against `off` (no noise):
+[research/results/reversal-noise-2026-10-24.json](../../research/results/reversal-noise-2026-10-24.json).
+
+| Arm | Success reverse / listen | Return first-50 | Listen retention | Blocks adapted | Detection | False switches per block |
+|---|---|---|---|---|---|---|
+| off, no noise | 0.16 / 0.53 | 0.28 | 0.40 | 0.48 | 0.07 | 0.15 |
+| off, noise 10% | 0.15 / 0.52 | 0.30 | 0.42 | 0.46 | 0.10 | 0.33 |
+| off, noise 20% | 0.14 / 0.48 | 0.27 | 0.39 | 0.46 | 0.09 | 0.57 |
+| surprise, no noise (above) | 0.22 / 0.40 | 0.29 | 0.38 | 0.29 | 0.30 | 2.3 |
+| surprise, noise 10% | 0.23 / 0.38 | 0.29 | 0.36 | 0.19 (p 0.008) | 0.27 | 2.6 (p 0.031) |
+| surprise, noise 20% | 0.20 / 0.34 | 0.24 (p 0.086) | 0.29 (p 0.012) | 0.15 (p 0.004) | 0.34 (p 0.008) | 1.9 (p 0.031) |
+
+- **The prediction failed**: surprise's false switches did not rise with noise (2.3, 2.6, 1.9).
+  They are high with or without noise; noise only adds its own cost.
+- **Noise hurts surprise more than it hurts the plain learner.** Without surprise, 20% noise lowers
+  overall success a little (0.31 vs 0.35, p 0.002) and leaves retention alone (0.39). With
+  surprise it cuts listen retention to 0.29 (p 0.012 against `off`) and the share of blocks that
+  reach the pass mark to 0.15.
+
+## Baselines: what does learning add? (#118)
+
+`node game/world/baselines.mjs [seeds] [--creature] [--out run.json]`. `env.mjs` is a common
+interface to the World: an agent gets the creature's observations (`World.sense()`), may only
+choose actions its body allows, and gets the World's rewards and time limits, nothing else
+(`test_env.mjs` checks this in CI). Every arm is scored in perform mode with the gait reflex on,
+300 episodes per skill. The heuristic reads only the observation: it turns toward what stands out
+on the retina, grasps when an object fills the centre, and draws two different strokes at the
+board. It was tuned on seeds 101-103. Seeds 1-5, 2026-10-24:
+[research/results/baselines-2026-10-24.json](../../research/results/baselines-2026-10-24.json).
+
+| Arm | walk | grasp | listen | read | write | Training steps |
+|---|---|---|---|---|---|---|
+| random | 0.99 | 0.18 | 0.15 | 0.15 | 0.06 | 0 |
+| heuristic (engineered) | 1.00 | 1.00 | 0.32 | 0.32 | 0.07 | 0 |
+| creature (learned) | 1.00 | 0.88 | 0.65 | 0.57 | 0.94 | 637,000 (466,000-885,000) |
+
+- **Walk is solved by the reflex**, not by learning: random actions walk 99% of episodes once the
+  gait reflex is on. Walk measures only the first stage's learning, when the reflex is off.
+- **Grasp: a ten-line heuristic beats the creature** (1.00 vs 0.88 on every seed).
+- **Listen, read and write are where learning shows**: the heuristic grasps the nearest object
+  (about 1/3) and draws a right letter 1 time in 15; the creature roughly doubles the first two and
+  writes 94% right. With 5 seeds the smallest possible sign-flip p is 0.062, so none of these
+  differences reaches p < 0.05 on its own.
+- No conventional (backprop) RL learner yet; it should plug into `env.mjs`.
 
 ## The science behind it
 

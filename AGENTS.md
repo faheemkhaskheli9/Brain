@@ -27,7 +27,8 @@ build digital simulations and brain-inspired learning systems.
    of the values below, `last_verified` a YYYY-MM-DD date, `tags`, `use_cases` and
    `sources` non-empty), a broken `[[link]]`, or a relative Markdown link in any `.md`
    file whose file or `#anchor` does not exist. It warns on an orphan topic (no other
-   topic links to it) and on a topic outside `guides/` missing a `_template.md` section.
+   topic links to it), on a topic outside `guides/` missing a `_template.md` section, and on
+   a topic whose `last_verified` is over 183 days old (`--max-age DAYS`).
    `python run_code_blocks.py <topic.md>` runs the code of just the files you changed.
 6. Use LF line endings and UTF-8.
 

@@ -7,11 +7,13 @@ Stdlib only. Exits 1 on:
   - a broken [[link]] in a topic,
   - a relative Markdown link ([text](../path.md#anchor)) in any .md file whose file or
     heading anchor does not exist.
-Warns (exit 0) on an orphan topic (no other topic [[links]] to it) and on a topic outside
-guides/ that lacks a _template.md section.
+Warns (exit 0) on an orphan topic (no other topic [[links]] to it), on a topic outside
+guides/ that lacks a _template.md section, and on a topic whose last_verified is more than
+MAX_AGE days old (--max-age DAYS to change it).
 """
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).parent
@@ -25,6 +27,7 @@ SECTIONS = ("Summary", "How it works", "Relevance to building brain-like AI",
             "Open questions", "Related", "References")
 # Relative links into these folders point at files that scripts download and git ignores.
 GENERATED = ("research/pdfs/",)
+MAX_AGE = 183   # days; a topic not re-verified for about six months gets a warning
 
 
 def frontmatter(text):
@@ -56,6 +59,15 @@ def check_meta(rel, meta):
         errors.append(f"last_verified {meta.get('last_verified')!r} is not YYYY-MM-DD: {rel}")
     errors += [f"empty {k}: {rel}" for k in REQUIRED_LISTS if not isinstance(meta.get(k), list) or not meta[k]]
     return errors
+
+
+def stale(rel, meta, today, max_age=MAX_AGE):
+    """A warning if the topic's last_verified is more than max_age days before today, else None."""
+    try:
+        age = (today - date.fromisoformat(str(meta.get("last_verified")))).days
+    except ValueError:
+        return None   # check_meta reports the bad date
+    return f"stale: last verified {age} days ago (over {max_age}), re-check its facts: {rel}" if age > max_age else None
 
 
 def strip_fences(text):
@@ -107,8 +119,10 @@ def check_relative_links(path, text, cache):
     return errors
 
 
-def main():
-    topics, errors, warnings = {}, [], []
+def main(argv=()):
+    argv = list(argv)
+    max_age = int(argv[argv.index("--max-age") + 1]) if "--max-age" in argv else MAX_AGE
+    topics, errors, warnings, today = {}, [], [], date.today()
     for path in sorted(ROOT.rglob("*.md")):
         rel = path.relative_to(ROOT).as_posix()
         if rel.startswith("."):
@@ -122,6 +136,8 @@ def main():
             errors.append(f"missing frontmatter: {rel}")
             continue
         errors += check_meta(rel, meta)
+        if (w := stale(rel, meta, today, max_age)):
+            warnings.append(w)
         prose = strip_code(text)
         if path.stem in topics:  # [[links]] resolve by filename, so stems must be unique
             errors.append(f"duplicate topic name {path.stem}: {topics[path.stem][0]} and {rel}")
@@ -161,4 +177,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
