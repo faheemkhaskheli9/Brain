@@ -10,7 +10,8 @@ build digital simulations and brain-inspired learning systems.
 2. Read the **full** matched file(s) and follow `[[links]]` in `## Related`.
 3. Every claim in a topic file is either **established** (textbook neuroscience,
    with a source) or marked as a **hypothesis/open question**. Keep that line
-   visible when you reuse the content.
+   visible when you reuse the content. Major claims are registered with their evidence in
+   `research/claims.tsv`; when you change one, update its row and run `python research/check_claims.py`.
 
 ## Adding or editing a topic
 

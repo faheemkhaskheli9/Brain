@@ -17,6 +17,7 @@ node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
 node game/world/baselines.mjs --creature  # random and heuristic baselines vs the creature (see "Baselines")
+node game/world/rl.mjs                    # actor-critic (backprop) baseline per skill, about 4 min (see "Baselines")
 node game/world/reversal.mjs --arms off,surprise   # hidden rule changes (see "Reversal")
 node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,rehearse10+sleepActor,rehearse0+sleepActor --jobs 2   # rehearsal vs sleep replay, seeds 1-10 (see "Sleep")
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
@@ -548,6 +549,8 @@ board. It was tuned on seeds 101-103. Seeds 1-5, 2026-10-24:
 | random | 0.99 | 0.18 | 0.15 | 0.15 | 0.06 | 0 |
 | heuristic (engineered) | 1.00 | 1.00 | 0.32 | 0.32 | 0.07 | 0 |
 | creature (learned) | 1.00 | 0.88 | 0.65 | 0.57 | 0.94 | 637,000 (466,000-885,000) |
+| actor-critic, backprop (learned) | 1.00 | 0.72 | 0.30 | 0.26 | 1.00 | 625,000 (125,000 per skill) |
+| actor-critic, 4x budget | 1.00 | 0.82 | 0.62 | 0.70 | 1.00 | 2,500,000 (500,000 per skill) |
 
 - **Walk is solved by the reflex**, not by learning: random actions walk 99% of episodes once the
   gait reflex is on. Walk measures only the first stage's learning, when the reflex is off.
@@ -556,7 +559,21 @@ board. It was tuned on seeds 101-103. Seeds 1-5, 2026-10-24:
   (about 1/3) and draws a right letter 1 time in 15; the creature roughly doubles the first two and
   writes 94% right. With 5 seeds the smallest possible sign-flip p is 0.062, so none of these
   differences reaches p < 0.05 on its own.
-- No conventional (backprop) RL learner yet; it should plug into `env.mjs`.
+- **A conventional deep-RL learner** (`node game/world/rl.mjs [seeds] [--budget STEPS] [--out run.json]`):
+  an actor-critic MLP (107 inputs, 64 tanh units, a softmax over the allowed actions and a value),
+  trained by backprop and Adam after every episode on Monte Carlo returns, through `env.mjs` like
+  the other arms. It gets a fresh network per skill, which is easier than the creature's task (one
+  brain, never told the skill). Learning rate 0.003 and entropy bonus 0.03 were picked from
+  {0.0003, 0.001, 0.003} x {0.01, 0.03} by mean success over grasp, listen, read and write on
+  seeds 101-103 at 125,000 steps; scored on separately seeded rooms with learning off.
+  [research/results/rl-baseline-2026-10-24.json](../../research/results/rl-baseline-2026-10-24.json),
+  [4x budget](../../research/results/rl-baseline-500k-2026-10-24.json).
+- **At the creature's step budget the backprop learner is behind on the tone tasks**: listen 0.30
+  and read 0.26 vs the creature's 0.65 and 0.57 (creature ahead on 5 of 5 seeds, sign-flip p 0.062
+  each, the smallest possible with 5 seeds), no better than the heuristic. It writes perfectly.
+- **With four times the steps it catches up**: listen 0.62, read 0.70, grasp 0.82. So the
+  creature's lead is sample efficiency at this budget, not something backprop cannot learn here;
+  neither arm reaches the heuristic's grasp.
 
 ## The science behind it
 
