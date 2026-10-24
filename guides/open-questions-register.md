@@ -47,7 +47,7 @@ payoff for brain-like AI. Within a tier, earlier rows come first.
 | # | Question | Raised in | Data | Issue | Status |
 |---|---|---|---|---|---|
 | 10 | Spike timing vs count, per mouse visual area | [[neural-coding-and-computation]] | Allen Neuropixels | #86 | answered (32 sessions, linear decoder): 10 ms timing adds +19 points only in LGN with gratings; in cortex and for natural scenes binned codes do slightly worse than counts |
-| 11 | Do co-tuned inputs cluster on the same dendritic branch? | [[dendritic-computation]] | MICrONS | #87 | open |
+| 11 | Do co-tuned inputs cluster on the same dendritic branch? | [[dendritic-computation]] | MICrONS | #87 | answered weakly (148 tuned inputs, 1,740 neurons): inputs within 10 µm are slightly more correlated than shuffle (p = 0.018, 35 pairs); receptive-field position does not cluster |
 | 12 | Has the accuracy-to-Brain-Score link saturated? | [[sensory-systems-and-vision]], [[evaluating-brain-models]] | Brain-Score leaderboard | #88 | answered (snapshot 2026-10-12): not saturated, the slope above 70% top-1 is steeper (mostly behaviour); parameter count does not predict neural match; accuracy and pretraining-data scale cannot be separated |
 | 13 | LLM-brain match: shared computation or word statistics? | [[language-and-llms]] | Narratives (OpenNeuro) | #89 | open |
 | 14 | Working-memory capacity: slots or resource? | [[attention-and-working-memory]] | public delayed-estimation sets | #90 | answered (3 open sets, 39 subjects): a variable-precision resource model beats slot models in every subject; item-limited resource and swaps not tested |
