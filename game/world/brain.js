@@ -111,7 +111,10 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // mean of its episodes' mean squared TD error. When a slot used surpriseMin times or more has
   // fast > surprise x max(slow, 0.005), the scene may look the same but the rules have changed: the
   // brain switches to another slot that fits the scene, or founds one. 0 = off (only tracks).
-  surprise: 0, surpriseMin: 100 };
+  surprise: 0, surpriseMin: 100,
+  // Noisy cues (issue #135): the chance that an episode's tone is replaced by a random one (it may
+  // pick the right tone). 0 = off, and then no random number is drawn, so runs are unchanged.
+  toneNoise: 0 };
 export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
 // The scene code each of the five v3 stages produces (walk, grasp, listen, read, write), for World.migrate.
 const V3_CODES = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 1, 0], [0, 0, 1, 0, 1]];
@@ -527,6 +530,7 @@ export class World {
     }
     this.target = m === "grasp" ? 0 : Math.floor(R() * 3);
     this.tone = m === "listen" || m === "read" || m === "write" ? this.target : m === "reverse" ? (this.target + 2) % 3 : -1;
+    if (GAINS.toneNoise && this.tone >= 0 && R() < GAINS.toneNoise) this.tone = Math.floor(R() * 3);
     this.shown = m === "copy" ? this.target : m === "newletters" ? 3 + this.target : -1;   // the letter held up at the board
     if (this.lesson) {   // teach mode: the viewer's room and tone; the tone names the first object that matches it
       const L = this.lesson, near = () => this.objects.some(o => Math.hypot(o.pos[0] - this.pos[0], o.pos[1] - this.pos[1]) < 1);
