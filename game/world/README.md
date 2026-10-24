@@ -506,7 +506,29 @@ sign-flip p against `off`, n 10. Full per-seed file:
 
 Limits: replay arms play extra rehearsal episodes on top of the 300 scored per block, so they get
 more total training; during reversed blocks rehearsal may also play listen. One surprise threshold
-(3); no noisy cues yet (#135). The 0.7 pass mark is listen's.
+(3). The 0.7 pass mark is listen's.
+
+**Noisy cues (#135).** `GAINS.toneNoise` replaces the tone with a random one in 10% or 20% of
+episodes, in the blocks only, so each seed's arms start the blocks from the same brain. The
+prediction fixed before the run was that noise would raise surprise's false switches. Seeds 1-10,
+same metrics, paired against `off` (no noise):
+[research/results/reversal-noise-2026-10-24.json](../../research/results/reversal-noise-2026-10-24.json).
+
+| Arm | Success reverse / listen | Return first-50 | Listen retention | Blocks adapted | Detection | False switches per block |
+|---|---|---|---|---|---|---|
+| off, no noise | 0.16 / 0.53 | 0.28 | 0.40 | 0.48 | 0.07 | 0.15 |
+| off, noise 10% | 0.15 / 0.52 | 0.30 | 0.42 | 0.46 | 0.10 | 0.33 |
+| off, noise 20% | 0.14 / 0.48 | 0.27 | 0.39 | 0.46 | 0.09 | 0.57 |
+| surprise, no noise (above) | 0.22 / 0.40 | 0.29 | 0.38 | 0.29 | 0.30 | 2.3 |
+| surprise, noise 10% | 0.23 / 0.38 | 0.29 | 0.36 | 0.19 (p 0.008) | 0.27 | 2.6 (p 0.031) |
+| surprise, noise 20% | 0.20 / 0.34 | 0.24 (p 0.086) | 0.29 (p 0.012) | 0.15 (p 0.004) | 0.34 (p 0.008) | 1.9 (p 0.031) |
+
+- **The prediction failed**: surprise's false switches did not rise with noise (2.3, 2.6, 1.9).
+  They are high with or without noise; noise only adds its own cost.
+- **Noise hurts surprise more than it hurts the plain learner.** Without surprise, 20% noise lowers
+  overall success a little (0.31 vs 0.35, p 0.002) and leaves retention alone (0.39). With
+  surprise it cuts listen retention to 0.29 (p 0.012 against `off`) and the share of blocks that
+  reach the pass mark to 0.15.
 
 ## The science behind it
 
