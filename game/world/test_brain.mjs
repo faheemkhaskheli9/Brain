@@ -142,6 +142,14 @@ for (const seed of seeds.length ? seeds : [1]) {
   GAINS.joints = false;
   console.log(`  Jointed legs: walk ${jw.stage > 0 ? "learned" : "NOT learned"} after ${jw.episode} episodes`);
   assert.ok(jw.stage > 0, `seed ${seed}: walk with jointed legs not learned within ${LIMIT} episodes`);
+
+  // CPG legs (#38): an oscillator swings the hips and the actor only sets amplitudes; walking is still learned.
+  GAINS.cpg = true;
+  const cw = new World(seed);
+  while (cw.stage === 0 && cw.episode < LIMIT) cw.step();
+  GAINS.cpg = false;
+  console.log(`  CPG legs: walk ${cw.stage > 0 ? "learned" : "NOT learned"} after ${cw.episode} episodes`);
+  assert.ok(cw.stage > 0, `seed ${seed}: walk with CPG legs not learned within ${LIMIT} episodes`);
 }
 
 // Perform mid-training leaves the curriculum alone, and a save made while performing resumes training.
@@ -355,4 +363,31 @@ jl.limbs(-1);
 assert.ok(Math.abs(jl.heading) < 1e-9, "joints: both legs together must walk straight");
 GAINS.joints = false;
 console.log("  Jointed legs: push moves and turns, coasts, lift moves nothing, two legs walk straight");
+
+// CPG legs (#38): at rest nothing moves, a driven side swings and turns the body, the hips stay in
+// antiphase, an undriven side dies away, and both sides driven alike walk straight.
+GAINS.cpg = true;
+const cl = new World(1);
+Object.assign(cl, { pos: [4, 4], heading: 0, objects: [] });
+assert.equal(cl.cpgStep(-1), 0, "cpg: moved at rest");
+assert.ok(cl.cpgStep(0) > 0 && cl.heading > 0 && cl.hip[1] === 0, "cpg: drive left");
+Object.assign(cl, { amp: [1, 1] });
+cl.cpgStep(-1);
+assert.ok(Math.abs(cl.hip[0] + cl.hip[1]) < 1e-9, "cpg: hips not in antiphase");
+for (let k = 0; k < 8; k++) cl.cpgStep(-1);
+assert.ok(cl.amp.every(x => x < 0.01) && cl.legs.every(l => l > 0.49 && l < 0.51), "cpg: an undriven side keeps swinging");
+Object.assign(cl, { amp: [1, 1], phase: 0, hip: [1, -1], heading: 0 });
+for (let k = 0; k < 8; k++) cl.cpgStep(-1), cl.amp = [1, 1];
+assert.ok(Math.abs(cl.heading) < 1e-9, "cpg: both sides driven must walk straight");
+// The rhythm must not walk by itself: uniform random actions pass walk in none of 200 episodes.
+const cr = rng(9);
+let randomWalks = 0;
+for (let e = 0; e < 200; e++) {
+  const rw = new World(e);
+  for (let t = 0; t < 60; t++) { const a = Math.floor(cr() * 5); rw.cpgStep(a < 4 ? a : -1); }
+  if (rw.dist / 60 > 0.08) randomWalks++;
+}
+assert.equal(randomWalks, 0, "cpg: random actions walk");
+GAINS.cpg = false;
+console.log("  CPG legs: rest still, one side turns, antiphase, undriven side stops, both sides walk straight");
 console.log("ok");

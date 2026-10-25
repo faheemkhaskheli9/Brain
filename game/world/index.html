@@ -189,9 +189,10 @@ const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const C = { glass: css("--glass"), lilac: css("--lilac"), muted: css("--muted"), violet: css("--violet"), pink: css("--pink"), ink: css("--ink") };
 
-// Jointed legs (#38): ?legs=joints gives each hip an angle, a velocity and torque-driven dynamics.
-const JOINTS = new URLSearchParams(location.search).get("legs") === "joints";
-GAINS.joints = JOINTS;
+// Jointed legs (#38): ?legs=joints gives each hip an angle, a velocity and torque-driven dynamics;
+// ?legs=cpg swings the hips from a central pattern generator whose amplitudes the brain sets.
+const LEGS = new URLSearchParams(location.search).get("legs"), JOINTS = LEGS === "joints", CPG = LEGS === "cpg";
+GAINS.joints = JOINTS; GAINS.cpg = CPG;
 
 // ---------- simulation state ----------
 let world, speed = "watch", paused = false, sound = true, lastStep = 0, freezeUntil = 0, frozen = null;
@@ -200,7 +201,8 @@ function newBrain(seed) {
   world = new World(seed);
   daTrace = []; curve = []; bucket = []; stageStarts = [0]; stageDone = []; $("skill").value = ""; $("teach").hidden = true; clearCheckpoints();
   $("banner").textContent = "A new brain. It starts by flailing its legs at random."
-    + (JOINTS ? " Its legs are jointed here: each push or lift is a torque on a hip, and a leg keeps swinging a little after it." : "");
+    + (JOINTS ? " Its legs are jointed here: each push or lift is a torque on a hip, and a leg keeps swinging a little after it." : "")
+    + (CPG ? " Its legs swing from a rhythm generator here, as a spinal cord's does: the brain only turns each side's swing up or down." : "");
   buildStages();
 }
 

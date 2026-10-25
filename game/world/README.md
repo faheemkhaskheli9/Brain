@@ -23,6 +23,7 @@ node game/world/sweep.mjs --arms rehearse30,rehearse10+sleep,rehearse0+sleep,reh
 node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-WTA sparsity (see "Sparsity")
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
+node game/world/sweep.mjs 1 2 3 4 5 --arms rehearse30,joints,cpg --jobs 4   # torque and pattern-generator legs (see "Jointed legs")
 node game/world/transfer.mjs              # new letters from known strokes, seeds 1-10, about 1 min (see "New letters")
 node game/world/heldout.mjs               # held-out rooms, tone mapping and letters, seeds 1-10 (see "Held-out")
 node game/test_browser.mjs                # both demos in headless Chromium: save/load, teach, mobile (#109)
@@ -640,6 +641,40 @@ more, net) and collisions per step (a push that moved less than half a stride). 
 Neither change helps reliably; the orienting reflex fails training, as in "Innate prior". Each run
 lists its rooms with no success at all (`failingRooms`) as regression scenarios.
 
+## Jointed legs: torque and a pattern generator (#38)
+
+Two optional bodies replace the two discrete leg states (forward or back); the discrete body stays
+the default and the CI body.
+
+- **Torque** (`GAINS.joints`, `?legs=joints`, `World.limbs`): each hip has an angle and a velocity
+  with damped dynamics. A push or a lift is a torque on one hip; a hip swinging back propels the body.
+- **Pattern generator** (`GAINS.cpg`, `?legs=cpg`, `World.cpgStep`): one phase oscillator drives
+  both hips in antiphase, hip i = amp i × cos(phase + iπ), advancing 0.75π per step. The actor
+  never sets a joint: a push drives one side (amp 1), a lift stops it (amp 0), and amplitudes halve
+  every step, so a side swings only while it is driven. That rhythm generators in the spinal cord
+  make the gait and the brain modulates it is established (Ijspeert 2008); this two-oscillator
+  version is a sketch of the idea, not a model of a spinal circuit.
+
+At the rate used, uniform random actions walk fast enough in none of 200 walk episodes
+(`test_brain.mjs` checks it). A full half cycle per step (π) was tried first and dropped: random
+actions walked often enough there that walk passed with little to learn. Seeds 1-5, 2026-10-25, `sweep.mjs 1 2 3 4 5 --arms rehearse30,joints,cpg`:
+[research/results/legs-2026-10-25.json](../../research/results/legs-2026-10-25.json).
+
+| Body | Walk episodes, seeds 1-5 | All five passed | All episodes (passed) | Kept read |
+|---|---|---|---|---|
+| Discrete (default) | 99, 125, 91, 103, 151 | 5/5 | 16,249 | 0.60 |
+| Torque | 864, 727, 605, 660, 690 | 4/5 | 20,365 | 0.43 |
+| Pattern generator | 50, 50, 56, 52, 50 | 4/5 | 22,082 | 0.47 |
+
+- **Walk is easiest with the pattern generator**: 50 episodes is the shortest a stage can pass, so
+  it learns in the first window. The rhythm is given; only "keep both sides driven, turn off a
+  wall" is learned. Paired against the discrete body: -59 episodes, p 0.125 with n 4 (the
+  smallest p a 4-seed sign-flip test can give).
+- **The later stages do not get easier.** Both jointed bodies failed read on seed 2 within 20,000
+  episodes, and on the seeds that passed took more episodes overall than the discrete body
+  (+4,245 torque, +5,961 pattern generator, p 0.375 and 0.250, n 4). Five seeds cannot tell those
+  costs from noise. Why later stages are slower is #95.
+
 ## The science behind it
 
 | Mechanism here | Topic file |
@@ -656,7 +691,8 @@ lists its rooms with no success at all (`failingRooms`) as regression scenarios.
 - Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
 - Speech or spoken words instead of pure tones. Multi-letter words. (New letters made of known
   strokes exist as an optional stage, #37; they showed no transfer.)
-- Physics-based limbs (joint torques) instead of discrete leg states.
+- Limbs in a physics engine (for example Rapier). The torque and pattern-generator legs (#38) are
+  hand-written dynamics, not physics, and the discrete legs stay the default.
 
 ## References
 
@@ -679,3 +715,5 @@ lists its rooms with no success at all (`failingRooms`) as regression scenarios.
   doi:10.1038/385533a0
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.
+- Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a
+  review", *Neural Netw* 21:642. https://pubmed.ncbi.nlm.nih.gov/18555958/
