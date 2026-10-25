@@ -168,6 +168,14 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: llm_brain_match (GPT-2 vs word statistics on story fMRI, #89)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/llm_brain_match.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",

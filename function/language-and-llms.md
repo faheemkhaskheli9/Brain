@@ -9,13 +9,14 @@ use_cases:
   - how are LLM activations compared with fMRI or ECoG recordings
   - is language the same thing as thought
 status: draft
-last_verified: 2026-10-11
+last_verified: 2026-10-25
 sources:
   - https://doi.org/10.1038/nrn2113
   - https://doi.org/10.1073/pnas.1112937108
   - https://doi.org/10.1073/pnas.2105646118
   - https://doi.org/10.1038/s41593-022-01026-4
   - https://doi.org/10.1038/s41586-024-07522-w
+  - https://doi.org/10.1038/s41597-023-02437-z
 ---
 
 # Language in the brain, and how it compares to LLMs
@@ -82,6 +83,38 @@ the prediction on held-out text ([[evaluating-brain-models]]).
 | A decoder built on an LLM recovers the gist of heard or imagined stories from fMRI, but only for a person who trained it and only with their cooperation (Tang et al. 2023) | established |
 | "The brain is a next-word predictor like an LLM" | **hypothesis**, not shown |
 
+**Does GPT-2 explain story fMRI beyond word statistics? (#89, measured here,
+2026-10-25.)** [`research/llm_brain_match.py`](../research/llm_brain_match.py)
+(method pre-registered in its docstring) fits leave-one-story-out ridge encoding
+models to 5 subjects listening to 25 stories (LeBel et al. 2023), on the 2,000
+voxels per subject with the highest repeat reliability on a sixth story heard five
+times. Word statistics (W) are word rate plus unigram and trigram surprisal from
+the other 83 transcripts. GPT-2 (small, 124M) features are layer-9 states. Unique
+variance = held-out r² of base + block minus r² of base, per story averaged over
+subjects; 95% CI from story bootstraps, sign-flip p over the 25 stories.
+
+| Added block over base | Unique r² | 95% CI | Stories > 0 | Subjects > 0 | p |
+|---|---|---|---|---|---|
+| **GPT-2 over W (primary)** | **+0.029** | [+0.026, +0.033] | 25/25 | 5/5 | < 0.0001 |
+| GPT-2 over W + static embeddings | +0.021 | [+0.018, +0.024] | 25/25 | 5/5 | < 0.0001 |
+| GPT-2 over W + GPT-2 surprisal | +0.029 | [+0.026, +0.032] | 25/25 | 5/5 | < 0.0001 |
+| Untrained GPT-2 over W | +0.006 | [+0.005, +0.009] | 24/25 | 5/5 | < 0.0001 |
+| GPT-2 shifted by half a story over W | -0.0003 | [-0.0004, -0.0002] | 4/25 | 0/5 | 1.0 |
+
+- **GPT-2 explains variance word statistics cannot.** W alone reaches r² 0.018,
+  W + GPT-2 0.047 (mean voxel r 0.086 vs 0.180; repeat-reliability ceiling r 0.244).
+  The gain survives static word embeddings and GPT-2's own surprisal, so it is not
+  only word identity or predictability.
+- **The controls stay small.** An untrained GPT-2 adds a fifth as much (its
+  architecture alone mixes neighbouring words), and the same GPT-2 features shifted
+  out of alignment add nothing, so the gain needs trained, time-locked context.
+- **What it does not show.** Context features predicting the brain is not proof the
+  brain computes like GPT-2: richer phrase-level statistics than trigrams, which
+  were not tested, could carry the same signal. One model, one layer, one dataset;
+  the TR alignment offset (5 TR) was picked by the word-statistics fit before any
+  GPT-2 model was fitted. The unique r² +0.042 in the #89 issue comment (Narratives
+  data, never pushed) is not reproduced.
+
 ### Where brains and LLMs differ (established)
 - **Data.** Children reach fluent language from tens of millions of words;
   current LLMs train on trillions, several orders of magnitude more (Frank 2023).
@@ -133,7 +166,9 @@ assert misfit > fit + 1.5                            # the odd word is far more 
 
 ## Open questions
 - Whether brain-LLM similarity comes from shared computation or just from both
-  predicting the same text statistics.
+  predicting the same text statistics. On story fMRI, GPT-2 beats unigram and
+  trigram statistics and its controls (#89, above); richer statistics and other
+  models are untested.
 - How children learn so much from so little data, and which ingredient
   (grounding, social feedback, innate bias, curriculum) matters most.
 - How syntax is built in neural tissue, and whether it needs a dedicated
@@ -161,6 +196,7 @@ assert misfit > fit + 1.5                            # the odd word is far more 
 - Goldstein et al. (2022) "Shared computational principles for language processing in humans and deep language models", *Nat Neurosci* 25:369. doi:10.1038/s41593-022-01026-4
 - Caucheteux & King (2022) "Brains and algorithms partially converge in natural language processing", *Commun Biol* 5:134. doi:10.1038/s42003-022-03036-1
 - Caucheteux, Gramfort & King (2023) "Evidence of a predictive coding hierarchy in the human brain listening to speech", *Nat Hum Behav* 7:430. doi:10.1038/s41562-022-01516-2
+- LeBel et al. (2023) "A natural language fMRI dataset for voxelwise encoding models", *Sci Data* 10:555. doi:10.1038/s41597-023-02437-z
 - Tang, LeBel, Jain & Huth (2023) "Semantic reconstruction of continuous language from non-invasive brain recordings", *Nat Neurosci* 26:858. doi:10.1038/s41593-023-01304-9
 - Frank (2023) "Bridging the data gap between children and large language models", *Trends Cogn Sci* 27:990. doi:10.1016/j.tics.2023.08.007
 - Mahowald, Ivanova, Blank, Kanwisher, Tenenbaum & Fedorenko (2024) "Dissociating language and thought in large language models", *Trends Cogn Sci* 28:517. doi:10.1016/j.tics.2024.01.011
