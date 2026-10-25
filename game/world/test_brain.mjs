@@ -379,6 +379,15 @@ assert.ok(cl.amp.every(x => x < 0.01) && cl.legs.every(l => l > 0.49 && l < 0.51
 Object.assign(cl, { amp: [1, 1], phase: 0, hip: [1, -1], heading: 0 });
 for (let k = 0; k < 8; k++) cl.cpgStep(-1), cl.amp = [1, 1];
 assert.ok(Math.abs(cl.heading) < 1e-9, "cpg: both sides driven must walk straight");
+// The rhythm must not walk by itself: uniform random actions pass walk in none of 200 episodes.
+const cr = rng(9);
+let randomWalks = 0;
+for (let e = 0; e < 200; e++) {
+  const rw = new World(e);
+  for (let t = 0; t < 60; t++) { const a = Math.floor(cr() * 5); rw.cpgStep(a < 4 ? a : -1); }
+  if (rw.dist / 60 > 0.08) randomWalks++;
+}
+assert.equal(randomWalks, 0, "cpg: random actions walk");
 GAINS.cpg = false;
 console.log("  CPG legs: rest still, one side turns, antiphase, undriven side stops, both sides walk straight");
 console.log("ok");
