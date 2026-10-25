@@ -39,6 +39,8 @@ export const ARMS = {
   "copy15+si": { replay: 0.15, sleepEvery: 0, si: 1e-4, copy: true },
   // Issue #38: torque-driven jointed legs (World.limbs) instead of discrete leg states.
   joints: { replay: 0.3, sleepEvery: 0, joints: true },
+  // Issue #38: central pattern generator legs (World.cpgStep); the actor sets swing amplitudes only.
+  cpg: { replay: 0.3, sleepEvery: 0, cpg: true },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs

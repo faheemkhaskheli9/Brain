@@ -107,6 +107,11 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // Jointed legs (issue #38): torque-driven hips with damped dynamics instead of two discrete leg
   // states (see World.limbs). Off by default; the page turns it on with ?legs=joints.
   joints: false, torque: 6, damping: 3,
+  // Central pattern generator legs (issue #38, Ijspeert 2008): two phase oscillators locked in
+  // antiphase swing the hips; actions only set each side's swing amplitude (see World.cpgStep).
+  // Off by default; the page turns it on with ?legs=cpg. cpgRate is the phase advance per step
+  // (rad), cpgDecay the share of a side's amplitude kept from one step to the next.
+  cpg: false, cpgRate: 0.75 * Math.PI, cpgDecay: 0.5,
   // Surprise (issue #65, item 1): every slot keeps a fast (rate 0.2) and a slow (rate 0.01) running
   // mean of its episodes' mean squared TD error. When a slot used surpriseMin times or more has
   // fast > surprise x max(slow, 0.005), the scene may look the same but the rules have changed: the
@@ -518,6 +523,8 @@ export class World {
       this.heading = R() * 2 * Math.PI;
       this.legs = [1, 1];   // 1 = forward (ready to push), 0 = back
       this.hip = [1, 1]; this.omega = [0, 0];   // jointed legs only (GAINS.joints): hip angles and velocities
+      this.phase = 0; this.amp = [0, 0];        // CPG legs only (GAINS.cpg): oscillator phase, swing amplitudes
+      if (GAINS.cpg) { this.hip = [0, 0]; this.legs = [0.5, 0.5]; }   // at rest, both hips upright
       this.t = 0; this.dist = 0; this.held = -1; this.pad = []; this.ret = 0; this.memory = new Float32Array(25);
       this.z = new Float32Array(SCENE);   // the scene summary so far: running max of scene(x), see sense
       this.objects = [];
@@ -640,6 +647,29 @@ export class World {
     return sweep[0] + sweep[1] > 0 ? this.advance(0.15 * (sweep[0] - sweep[1]), 0.11 * (sweep[0] + sweep[1])) : 0;
   }
 
+  // CPG legs (#38, GAINS.cpg): a spinal-like central pattern generator, not the actor, makes the
+  // rhythm. One phase drives both hips in antiphase: hip i = amp i x cos(phase + i pi). Action a < 2
+  // drives side a (amp 1), 2-3 stops side a - 2 (amp 0), -1 neither; then every amplitude decays by
+  // cpgDecay, so a side keeps swinging only while it is driven. As in limbs, a hip swinging back is
+  // on the ground and propels the body: both sides driven walk straight, one side turns. The senses
+  // get each hip as (angle + 1) / 2. Returns the distance moved.
+  cpgStep(a) {
+    if (a >= 0 && a < 4) this.amp[a % 2] = a < 2 ? 1 : 0;
+    const sweep = [0, 0], dt = GAINS.cpgRate / 10;
+    for (let k = 0; k < 10; k++) {
+      this.phase += dt;
+      for (let i = 0; i < 2; i++) {
+        const th = this.amp[i] * Math.cos(this.phase + i * Math.PI);
+        if (th < this.hip[i]) sweep[i] += this.hip[i] - th;
+        this.hip[i] = th;
+      }
+    }
+    this.phase %= 2 * Math.PI;
+    this.amp = this.amp.map(x => x * GAINS.cpgDecay);
+    this.legs = this.hip.map(h => (h + 1) / 2);
+    return sweep[0] + sweep[1] > 0 ? this.advance(0.15 * (sweep[0] - sweep[1]), 0.11 * (sweep[0] + sweep[1])) : 0;
+  }
+
   step() {
     const b = this.brain, m = this.mode;
     // Once walking is learned the gait is automatic (a practised skill runs as a habit, as spinal
@@ -647,7 +677,7 @@ export class World {
     // and later stages only choose which leg to push, or to grasp. The habit comes from the
     // brain's development and the action set from the body's situation, not from the task (#61).
     const habit = this.stage > 0 || this.graduated;
-    if (habit) { this.legs = [1, 1]; this.hip = [1, 1]; this.omega = [0, 0]; }   // jointed: the reflex brings both hips forward, at rest
+    if (habit && !GAINS.cpg) { this.legs = [1, 1]; this.hip = [1, 1]; this.omega = [0, 0]; }   // the CPG keeps its own rhythm   // jointed: the reflex brings both hips forward, at rest
     if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
     const set = this.board ? 2 : habit ? 1 : 0;
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
@@ -661,6 +691,9 @@ export class World {
         success = this.pad.every(s => want.includes(s)) && this.pad[0] !== this.pad[1];
         r = success ? 1 : 0; done = true;
       }
+    } else if (GAINS.cpg && a < 4) {   // CPG legs (#38): drive or stop one side's oscillator
+      if (m === "walk") r += 2 * this.cpgStep(a);
+      else this.cpgStep(a);
     } else if (GAINS.joints && a < 4) {   // jointed legs (#38): a push or a lift is a torque on one hip
       if (m === "walk") r += 2 * this.limbs(a);
       else this.limbs(a);
@@ -673,7 +706,8 @@ export class World {
     } else if (a < 4) {
       this.legs[a - 2] = 1;
     } else {   // grasp: whatever is in reach and roughly ahead
-      if (GAINS.joints) this.limbs(-1);   // the legs still coast while the arm grasps
+      if (GAINS.cpg) this.cpgStep(-1);
+      else if (GAINS.joints) this.limbs(-1);   // the legs still coast while the arm grasps
       let got = -1;
       this.objects.forEach((o, i) => {
         const dx = o.pos[0] - this.pos[0], dy = o.pos[1] - this.pos[1];
