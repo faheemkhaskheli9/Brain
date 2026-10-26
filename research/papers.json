@@ -1054,6 +1054,14 @@
   "title": "Synaptic Energy Use and Supply",
   "year": 2012
  },
+ "doi:10.1016/j.neuron.2012.10.038": {
+  "doi": "https://doi.org/10.1016/j.neuron.2012.10.038",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [],
+  "title": "Canonical Microcircuits for Predictive Coding",
+  "year": 2012
+ },
  "doi:10.1016/j.neuron.2013.03.006": {
   "doi": "https://doi.org/10.1016/j.neuron.2013.03.006",
   "found": true,
@@ -1621,6 +1629,14 @@
   "title": "Incorporating rapid neocortical learning of new schema-consistent information into complementary learning systems theory.",
   "year": 2013
  },
+ "doi:10.1037/a0035234": {
+  "doi": "https://doi.org/10.1037/a0035234",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Factorial comparison of working memory models.",
+  "year": 2014
+ },
  "doi:10.1037/a0037665": {
   "doi": "https://doi.org/10.1037/a0037665",
   "found": true,
@@ -1660,6 +1676,14 @@
   "pdf_urls": [],
   "title": "A place theory of sound localization.",
   "year": 1948
+ },
+ "doi:10.1037/rev0000044": {
+  "doi": "https://doi.org/10.1037/rev0000044",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "An interference model of visual working memory.",
+  "year": 2016
  },
  "doi:10.1038/14819": {
   "doi": "https://doi.org/10.1038/14819",
@@ -1823,6 +1847,14 @@
   "title": "Neurons in medial prefrontal cortex signal memory for fear extinction",
   "year": 2002
  },
+ "doi:10.1038/nature03274": {
+  "doi": "https://doi.org/10.1038/nature03274",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Functional imaging with cellular resolution reveals precise micro-architecture in visual cortex",
+  "year": 2005
+ },
  "doi:10.1038/nature03721": {
   "doi": "https://doi.org/10.1038/nature03721",
   "found": true,
@@ -1889,6 +1921,16 @@
   "title": "An SCN9A channelopathy causes congenital inability to experience pain",
   "year": 2006
  },
+ "doi:10.1038/nature06860": {
+  "doi": "https://doi.org/10.1038/nature06860",
+  "found": true,
+  "oa_status": "bronze",
+  "pdf_urls": [
+   "https://www.nature.com/articles/nature06860.pdf"
+  ],
+  "title": "Discrete fixed-resolution representations in visual working memory",
+  "year": 2008
+ },
  "doi:10.1038/nature06976": {
   "doi": "https://doi.org/10.1038/nature06976",
   "found": true,
@@ -1920,6 +1962,16 @@
   "pdf_urls": [],
   "title": "Driving fast-spiking cells induces gamma rhythm and controls sensory responses",
   "year": 2009
+ },
+ "doi:10.1038/nature08947": {
+  "doi": "https://doi.org/10.1038/nature08947",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [
+   "https://www.degruyter.com/document/doi/10.1515/nf-2010-0307/pdf"
+  ],
+  "title": "Dendritic organization of sensory input to cortical neurons in vivo",
+  "year": 2010
  },
  "doi:10.1038/nature09159": {
   "doi": "https://doi.org/10.1038/nature09159",
@@ -2039,6 +2091,14 @@
   "title": "Dissociated functional significance of decision-related activity in the primate dorsal stream",
   "year": 2016
  },
+ "doi:10.1038/nature23019": {
+  "doi": "https://doi.org/10.1038/nature23019",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Synaptic organization of visual space in primary visual cortex",
+  "year": 2017
+ },
  "doi:10.1038/nature24636": {
   "doi": "https://doi.org/10.1038/nature24636",
   "found": true,
@@ -2132,6 +2192,14 @@
   "pdf_urls": [],
   "title": "Putting big data to good use in neuroscience",
   "year": 2014
+ },
+ "doi:10.1038/nn.3917": {
+  "doi": "https://doi.org/10.1038/nn.3917",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The neocortical circuit: themes and variations",
+  "year": 2015
  },
  "doi:10.1038/nn.3947": {
   "doi": "https://doi.org/10.1038/nn.3947",
@@ -2404,6 +2472,17 @@
   "title": "A critique of pure learning and what artificial neural networks can learn from animal brains",
   "year": 2019
  },
+ "doi:10.1038/s41467-020-17236-y": {
+  "doi": "https://doi.org/10.1038/s41467-020-17236-y",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41467-020-17236-y.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2020/04/16/738385.full.pdf"
+  ],
+  "title": "A solution to the learning dilemma for recurrent networks of spiking neurons",
+  "year": 2020
+ },
  "doi:10.1038/s41467-020-17866-2": {
   "doi": "https://doi.org/10.1038/s41467-020-17866-2",
   "found": true,
@@ -2452,6 +2531,16 @@
   ],
   "title": "The neurobench framework for benchmarking neuromorphic computing algorithms and systems",
   "year": 2025
+ },
+ "doi:10.1038/s41562-020-00938-0": {
+  "doi": "https://doi.org/10.1038/s41562-020-00938-0",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2020/09/07/325472.full.pdf"
+  ],
+  "title": "Psychophysical scaling reveals a unified theory of visual memory strength",
+  "year": 2020
  },
  "doi:10.1038/s41562-022-01394-8": {
   "doi": "https://doi.org/10.1038/s41562-022-01394-8",
@@ -2653,6 +2742,16 @@
   "title": "Functional connectomics spanning multiple areas of mouse visual cortex",
   "year": 2025
  },
+ "doi:10.1038/s41586-025-08840-3": {
+  "doi": "https://doi.org/10.1038/s41586-025-08840-3",
+  "found": true,
+  "oa_status": "hybrid",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2023/03/30/2023.03.13.531369.full.pdf"
+  ],
+  "title": "Functional connectomics reveals general wiring rule in mouse visual cortex",
+  "year": 2025
+ },
  "doi:10.1038/s41586-025-08888-1": {
   "doi": "https://doi.org/10.1038/s41586-025-08888-1",
   "found": true,
@@ -2784,6 +2883,18 @@
   "title": "Flexible multitask computation in recurrent networks utilizes shared dynamical motifs",
   "year": 2024
  },
+ "doi:10.1038/s41597-023-02437-z": {
+  "doi": "https://doi.org/10.1038/s41597-023-02437-z",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.nature.com/articles/s41597-023-02437-z.pdf",
+   "https://www.biorxiv.org/content/biorxiv/early/2022/09/23/2022.09.22.509104.full.pdf",
+   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10447563/pdf/41597_2023_Article_2437.pdf"
+  ],
+  "title": "A natural language fMRI dataset for voxelwise encoding models",
+  "year": 2023
+ },
  "doi:10.1038/s41598-023-41032-5": {
   "doi": "https://doi.org/10.1038/s41598-023-41032-5",
   "found": true,
@@ -2907,6 +3018,14 @@
   "pdf_urls": [],
   "title": "Functional specificity for high-level linguistic processing in the human brain",
   "year": 2011
+ },
+ "doi:10.1073/pnas.1117465109": {
+  "doi": "https://doi.org/10.1073/pnas.1117465109",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "Variability in encoding precision accounts for visual short-term memory limitations",
+  "year": 2012
  },
  "doi:10.1073/pnas.1201895109": {
   "doi": "https://doi.org/10.1073/pnas.1201895109",
@@ -3078,6 +3197,14 @@
   "title": "Action recognition in the premotor cortex",
   "year": 1996
  },
+ "doi:10.1093/brain/120.4.701": {
+  "doi": "https://doi.org/10.1093/brain/120.4.701",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "The columnar organization of the neocortex",
+  "year": 1997
+ },
  "doi:10.1093/brain/40.4.461": {
   "doi": "https://doi.org/10.1093/brain/40.4.461",
   "found": true,
@@ -3111,6 +3238,14 @@
   ],
   "title": "Paul Broca's historic cases: high resolution MR imaging of the brains of Leborgne and Lelong",
   "year": 2007
+ },
+ "doi:10.1093/cercor/1.1.1": {
+  "doi": "https://doi.org/10.1093/cercor/1.1.1",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Distributed Hierarchical Processing in the Primate Cerebral Cortex",
+  "year": 1991
  },
  "doi:10.1093/cercor/1.1.1-a": {
   "doi": "https://doi.org/10.1093/cercor/1.1.1-a",
@@ -3165,6 +3300,14 @@
   "pdf_urls": [],
   "title": "The role of the thalamus in the flow of information to the cortex",
   "year": 2002
+ },
+ "doi:10.1098/rstb.2005.1623": {
+  "doi": "https://doi.org/10.1098/rstb.2005.1623",
+  "found": true,
+  "oa_status": "green",
+  "pdf_urls": [],
+  "title": "The cortical column: a structure without a function",
+  "year": 2005
  },
  "doi:10.1098/rstb.2011.0417": {
   "doi": "https://doi.org/10.1098/rstb.2011.0417",
@@ -3642,6 +3785,14 @@
   "title": "Reading Senseless Sentences: Brain Potentials Reflect Semantic Incongruity",
   "year": 1980
  },
+ "doi:10.1126/science.7638624": {
+  "doi": "https://doi.org/10.1126/science.7638624",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "Recurrent Excitation in Neocortical Circuits",
+  "year": 1995
+ },
  "doi:10.1126/science.7652558": {
   "doi": "https://doi.org/10.1126/science.7652558",
   "found": true,
@@ -3906,6 +4057,14 @@
   "title": "An Integrative Theory of Prefrontal Cortex Function",
   "year": 2001
  },
+ "doi:10.1146/annurev.neuro.27.070203.144152": {
+  "doi": "https://doi.org/10.1146/annurev.neuro.27.070203.144152",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "NEURONAL CIRCUITS OF THE NEOCORTEX",
+  "year": 2004
+ },
  "doi:10.1146/annurev.neuro.27.070203.144230": {
   "doi": "https://doi.org/10.1146/annurev.neuro.27.070203.144230",
   "found": true,
@@ -3953,6 +4112,14 @@
   "pdf_urls": [],
   "title": "The Adaptive Brain: Aging and Neurocognitive Scaffolding",
   "year": 2008
+ },
+ "doi:10.1152/jn.1957.20.4.408": {
+  "doi": "https://doi.org/10.1152/jn.1957.20.4.408",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "MODALITY AND TOPOGRAPHIC PROPERTIES OF SINGLE NEURONS OF CAT'S SOMATIC SENSORY CORTEX",
+  "year": 1957
  },
  "doi:10.1152/jn.1963.26.6.1003": {
   "doi": "https://doi.org/10.1152/jn.1963.26.6.1003",
@@ -4072,6 +4239,14 @@
   "title": "Eight Problems for the Mirror Neuron Theory of Action Understanding in Monkeys and Humans",
   "year": 2009
  },
+ "doi:10.1162/neco.1989.1.4.480": {
+  "doi": "https://doi.org/10.1162/neco.1989.1.4.480",
+  "found": true,
+  "oa_status": "closed",
+  "pdf_urls": [],
+  "title": "A Canonical Microcircuit for Neocortex",
+  "year": 1989
+ },
  "doi:10.1162/neco.1996.8.3.531": {
   "doi": "https://doi.org/10.1162/neco.1996.8.3.531",
   "found": true,
@@ -4113,6 +4288,14 @@
   ],
   "title": "An Approximation of the Error Backpropagation Algorithm in a Predictive Coding Network with Local Hebbian Synaptic Plasticity",
   "year": 2017
+ },
+ "doi:10.1167/9.10.7": {
+  "doi": "https://doi.org/10.1167/9.10.7",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [],
+  "title": "The precision of visual working memory is set by allocation of a shared resource",
+  "year": 2009
  },
  "doi:10.1176/appi.ajp.160.1.13": {
   "doi": "https://doi.org/10.1176/appi.ajp.160.1.13",
@@ -4560,6 +4743,17 @@
   ],
   "title": "Homeostatic reinforcement learning for integrating reward collection and physiological stability",
   "year": 2014
+ },
+ "doi:10.7554/elife.10778": {
+  "doi": "https://doi.org/10.7554/elife.10778",
+  "found": true,
+  "oa_status": "gold",
+  "pdf_urls": [
+   "https://www.biorxiv.org/content/biorxiv/early/2015/03/11/016329.full.pdf",
+   "https://escholarship.org/content/qt2k97d7pw/qt2k97d7pw.pdf"
+  ],
+  "title": "Nanoconnectomic upper bound on the variability of synaptic plasticity",
+  "year": 2015
  },
  "doi:10.7554/elife.11305": {
   "doi": "https://doi.org/10.7554/elife.11305",
