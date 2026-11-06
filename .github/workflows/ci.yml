@@ -45,6 +45,8 @@ jobs:
         run: python research/test_result_schema.py
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
+      - name: LLM verified mistake-learning memory and no-leakage regression tests
+        run: python research/test_llm_mistake_learning.py
       - name: Claims match their evidence (#117)
         run: python research/test_check_claims.py
       - name: Brain World creature learns every stage and keeps them

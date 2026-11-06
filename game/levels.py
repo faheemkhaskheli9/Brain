@@ -10,7 +10,6 @@ import numpy as np
 
 import level_engine as engine
 import sim
-from level_engine import TICK_MS
 
 W, H = 660, 440
 
