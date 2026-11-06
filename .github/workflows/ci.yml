@@ -56,7 +56,10 @@ jobs:
       - name: Baselines see what the creature sees, the RL baseline learns (#118)
         run: node game/world/test_env.mjs
       - name: Shared multi-task backprop comparator stays masked and deterministic (#153)
-        run: node game/world/test_rl_multitask.mjs
+        run: |
+          node game/world/test_rl_multitask.mjs
+          node game/world/rl_multitask.mjs 1 --budget 20 --episodes 2 --no-controls --out /tmp/rl-multitask-smoke.json
+          python research/result_schema.py --check /tmp/rl-multitask-smoke.json
       - name: Held-out splits are disjoint and frozen scoring learns nothing (#105)
         run: node game/world/test_heldout.mjs
       - name: Navigation suite is frozen and its splits are disjoint (#108)
