@@ -48,6 +48,7 @@ function fingerprint(w) {
 export function frozen(w, key, episodes, split = "train") {
   const before = fingerprint(w), keep = w.roomFilter;
   w.roomFilter = split && inSplit(split);
+  let score;
   try {
     w.perform(key);
     let n = -1;
@@ -58,11 +59,14 @@ export function frozen(w, key, episodes, split = "train") {
       }
       w.step();
     }
-    const score = w.perf.ok / w.perf.n;
-    w.perform(null);
-    if (fingerprint(w) !== before) throw new Error(`frozen ${key} changed the brain`);
-    return score;
-  } finally { w.roomFilter = keep; }
+    score = w.perf.ok / w.perf.n;
+  } finally {
+    // A scoring error must not leave the world in perform mode, or accidentally
+    // make the caller continue training on an evaluation split.
+    try { w.perform(null); } finally { w.roomFilter = keep; }
+  }
+  if (fingerprint(w) !== before) throw new Error(`frozen ${key} changed the brain`);
+  return score;
 }
 
 // Train stage index s until it passes (null if not within LIMIT) or, with pass 2, for exactly n episodes.

@@ -23,4 +23,13 @@ w.brain.learning = true;   // and the check catches a brain that does learn: per
 const perform = w.perform.bind(w);
 w.perform = key => { perform(key); w.brain.learning = true; };
 assert.throws(() => frozen(w, "listen", 50, "train"), /changed the brain/);
+
+// An exception while frozen scoring is in progress must not strand the caller
+// in evaluation mode or leak the temporary held-out layout filter.
+const interrupted = new World(11);
+interrupted.step = () => { throw new Error("synthetic scoring failure"); };
+assert.throws(() => frozen(interrupted, "listen", 3, "eval"), /synthetic scoring failure/);
+assert.equal(interrupted.task, -1);
+assert.equal(interrupted.brain.learning, true);
+assert.equal(interrupted.roomFilter, undefined);
 console.log("ok");
