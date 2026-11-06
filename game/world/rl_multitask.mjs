@@ -10,7 +10,7 @@
 // node game/world/rl_multitask.mjs 1 2 --budget 125000 --episodes 300 \
 //      --schedule interleaved --creature --match-creature --out result.json
 import { pathToFileURL } from "node:url";
-import { STAGES, GAINS, World } from "./brain.js";
+import { STAGES, GAINS, World, rng } from "./brain.js";
 import { Env } from "./env.mjs";
 import { ActorCritic, HP, trainAndScore } from "./rl.mjs";
 import { evaluate, POLICIES } from "./baselines.mjs";
@@ -90,8 +90,12 @@ export function trainCreature(seed, episodes) {
     }
   }
   const trainSteps = world.log.reduce((total, e) => total + e.steps, 0);
-  const test = World.fromJSON(JSON.parse(JSON.stringify(world))), scores = {};
+  const checkpoint = JSON.parse(JSON.stringify(world)), scores = {};
   for (const { key } of STAGES) {
+    // Keep each frozen skill score independent of the training RNG and of
+    // previously scored skills. As for other arms, use a held-out eval seed.
+    const test = World.fromJSON(checkpoint);
+    test.rand = rng(seed + 100000);
     test.perform(key);
     let steps = 0;
     while (test.perf.n < episodes) { test.step(); steps++; }
