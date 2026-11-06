@@ -94,6 +94,17 @@ with per-file diffs. It listens on 127.0.0.1 only and writes straight to your wo
 
 Full guide with screenshots: [docs/webapp-guide.md](docs/webapp-guide.md)
 
+## LLM learning from mistakes
+
+[Verified-feedback mistake learning](research/llm-mistake-learning.md) is a runnable, provider-neutral
+prototype: check an LLM's answer with an external verifier, save vetted corrections in
+scoped episodic memory, retrieve lessons on later tasks and re-check the result.
+It changes inference context, **not model weights**. A future SFT/DPO experiment
+would test parameter updates on independent held-out tasks.
+
+Run `python research/test_llm_mistake_learning.py` and
+`python research/llm_mistake_learning.py` (deterministic demonstration, not an LLM benchmark).
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is

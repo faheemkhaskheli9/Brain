@@ -10,3 +10,6 @@ research/data/microns_cotuned_inputs_*.npz
 *.egg-info/
 
 .arena
+
+# Private correction-memory snapshots (may contain user-provided text)
+*.mistakes.json
