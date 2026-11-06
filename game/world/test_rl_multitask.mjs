@@ -8,10 +8,11 @@ import { trainShared } from "./rl_multitask.mjs";
 const hp = { ...HP, HID: 8 };
 const budgetPerSkill = 30, episodes = 2;
 const originalAct = ActorCritic.prototype.act;
+const expectedObsLength = new Env(0, "walk").obs.length;
 let actions = 0;
 ActorCritic.prototype.act = function (obs, allowed, greedy) {
   assert.equal(arguments.length, 3, "an extra task ID reached the network");
-  assert.equal(obs.length, new Env(0, "walk").obs.length);
+  assert.equal(obs.length, expectedObsLength);
   assert.ok(allowed.every(Number.isInteger) && allowed.length > 0);
   const decision = originalAct.call(this, obs, allowed, greedy);
   assert.ok(Number.isInteger(decision.k) && decision.k >= 0 && decision.k < allowed.length);
