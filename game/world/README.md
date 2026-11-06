@@ -180,6 +180,13 @@ is open, issue #84.
 
 ### Prioritized, failure-aware offline replay (experimental #152)
 
+**Prior work:** Schaul, Quan, Antonoglou and Silver (2016),
+[Prioritized Experience Replay](https://arxiv.org/abs/1511.05952),
+tested TD-error-based prioritization and importance correction in deep Q-learning.
+This implementation adapts the *sampling idea* to Brain World's local,
+backprop-free critic/actor updates; results in DQN do **not** establish
+benefits here or validate a biological replay mechanism.
+
 `GAINS.sleepSampler` defaults to `"uniform"`; this preserves the old rejection
 sampler and its RNG sequence. Opt-in `"td"` samples by observed absolute TD
 error to power `sleepPriorityAlpha` (0.6). `"td-mix"` reserves
