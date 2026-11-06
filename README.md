@@ -112,6 +112,10 @@ prototype with a scoped skill router, versioned knowledge retrieval, bounded plu
 researcher/critic subagents and review-gated proposals to improve skills and knowledge.
 No model weights are changed; skill and knowledge promotions require independent approval.
 
+**Getting started with popular agents:** [Practical guide for Claude Code, ChatGPT/Codex, Copilot, Cursor, Gemini CLI and OpenCode](research/agent-learning-user-guide.md).
+The repo includes harness-specific entry points and verified-agent-learning skill copies.
+All examples require an independent verifier; this is not LLM weight training.
+
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 

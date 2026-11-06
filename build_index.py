@@ -18,8 +18,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 ORDER = ("guides", "anatomy", "function", "learning", "simulation")
-SKIP = {"README.md", "AGENTS.md", "INDEX.md", "_template.md", "LICENSE-CONTENT.md",
-        "CONTRIBUTING.md", "SECURITY.md"}
+# Agent harness entrypoints are instructions, not neuroscience topic articles.
+SKIP = {"README.md", "AGENTS.md", "CLAUDE.md", "GEMINI.md", "INDEX.md",
+        "_template.md", "LICENSE-CONTENT.md", "CONTRIBUTING.md", "SECURITY.md"}
 STATUSES = {"draft", "stable", "needs-review"}
 REQUIRED_LISTS = ("tags", "use_cases", "sources")
 # Sections every topic outside guides/ has (from _template.md). "Code" is optional.

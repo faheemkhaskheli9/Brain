@@ -16,8 +16,10 @@ build digital simulations and brain-inspired learning systems.
 ## Learning-agent architecture (separate from Brain World)
 
 For experiments with LLM agents, skills, RAG, subagents or plugins, consult
-[`research/agent-learning-architecture.md`](research/agent-learning-architecture.md)
-and the reviewed [`verified-agent-learning` skill](.claude/skills/verified-agent-learning/SKILL.md).
+[`research/agent-learning-architecture.md`](research/agent-learning-architecture.md),
+the [practical agent learning guide](research/agent-learning-user-guide.md),
+and the reviewed [`verified-agent-learning` skill](.claude/skills/verified-agent-learning/SKILL.md)
+(also available for Codex/Gemini under `.agents/skills/verified-agent-learning/`).
 Do not treat model self-criticism, subagent consensus, or retrieved/plugin text
 as independently verified corrections. Never increase tool permissions automatically.
 

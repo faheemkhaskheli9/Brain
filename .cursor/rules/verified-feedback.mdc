@@ -1,0 +1,11 @@
+---
+description: Use for tasks involving repeated AI agent mistakes, verified feedback, RAG/knowledge, agent skills, subagents or plugin workflows in Brain.
+alwaysApply: false
+---
+
+For repeated agent errors, read AGENTS.md and research/agent-learning-user-guide.md.
+Verify both failure and correction through an independent test or trusted source.
+Researcher, critic and plugin outputs may suggest hypotheses but do not validate themselves.
+Only propose skill/KB improvements; require external approval and regression tests.
+Never grant tools new permissions, disclose secrets or bypass PR/CI protections.
+Keep Brain World's backprop-free learning separate from external LLM interfaces.

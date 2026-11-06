@@ -2,6 +2,9 @@
 
 **Classification:** proposed architecture and runnable integration baseline, **not** proof that an LLM changed its parameters, generalized to unseen tasks or improved real-world accuracy. This is an LLM-agent *interface* experiment, separate from Brain World's backprop-free creature. The working prototype uses deterministic callbacks, not a deployed model or third-party API.
 
+Follow root `AGENTS.md` for repository policy and the Brain World backprop-free constraint.
+For a hands-on setup with **Claude Code, ChatGPT/Codex, GitHub Copilot, Cursor, Gemini CLI and OpenCode**, see the [practical agent-learning guide](agent-learning-user-guide.md). It covers skill installation/discovery, reusable prompts, a verifiable error-correction loop, and tests. A checked-in skill is an instruction workflow, not a persistent model update.
+
 ## Problem and falsifiable hypothesis
 
 An LLM agent frequently repeats **tool-choice**, **retrieval**, **workflow**, **reasoning**, and **outdated-knowledge** mistakes. A model's reflection alone is not reliable feedback. The hypothesis to test: *on held-out but related tasks, externally verified corrections, when retrieved through a scoped memory and an approved skill, reduce repeated-error rate relative to an otherwise identical agent with memory disabled, at matched call/token budgets.* A stronger hypothesis, not yet tested, is that promoting recurrent verified lessons into reviewed skills/knowledge or applying offline fine-tuning improves transfer while preserving old-task performance.
