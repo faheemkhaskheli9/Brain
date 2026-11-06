@@ -38,7 +38,7 @@ jobs:
         run: python game/test_levels.py
       - name: Game level views build and play (Tk)
         run: xvfb-run python game/test_levels_ui.py
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"   # 22+ loads ES-module syntax from brain.js without a package.json
       - name: Experiment result files validate and keep failed runs (#104)
