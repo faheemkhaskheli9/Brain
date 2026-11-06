@@ -8,7 +8,9 @@ permissions:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    # Playwright 1.56.1 does not support Ubuntu 26.04, now used by ubuntu-latest.
+    # Keep a supported runner until browser test dependencies are upgraded.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
