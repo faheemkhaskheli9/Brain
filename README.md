@@ -105,6 +105,20 @@ would test parameter updates on independent held-out tasks.
 Run `python research/test_llm_mistake_learning.py` and
 `python research/llm_mistake_learning.py` (deterministic demonstration, not an LLM benchmark).
 
+### Agent learning with skills, RAG, subagents and plugins
+
+[Agent mistake-learning architecture](research/agent-learning-architecture.md) extends the verified memory
+prototype with a scoped skill router, versioned knowledge retrieval, bounded plugin gateway,
+researcher/critic subagents and review-gated proposals to improve skills and knowledge.
+No model weights are changed; skill and knowledge promotions require independent approval.
+
+**Getting started with popular agents:** [Practical guide for Claude Code, ChatGPT/Codex, Copilot, Cursor, Gemini CLI and OpenCode](research/agent-learning-user-guide.md).
+The repo includes harness-specific entry points and verified-agent-learning skill copies.
+All examples require an independent verifier; this is not LLM weight training.
+
+Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
+(offline deterministic integration demo, **not** a real-LLM accuracy result).
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is

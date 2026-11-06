@@ -56,6 +56,10 @@ jobs:
         run: python research/test_continual_guard.py
       - name: LLM verified mistake-learning memory and no-leakage regression tests
         run: python research/test_llm_mistake_learning.py
+      - name: Agent mistake-learning stack (skills, RAG, subagents, plugins)
+        run: python research/test_agent_learning.py
+      - name: Agent learning guide and cross-agent skill parity
+        run: python research/test_agent_learning_guides.py
       - name: Claims match their evidence (#117)
         run: python research/test_check_claims.py
       - name: Brain World creature learns every stage and keeps them

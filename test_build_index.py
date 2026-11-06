@@ -62,6 +62,10 @@ def test_downloaded_pdfs_are_not_required():
     assert not any("pdfs/" in e for e in b.check_relative_links(page, "[p](pdfs/x.pdf)", {}))
 
 
+def test_agent_harness_instructions_are_not_indexed_as_topics():
+    assert {"AGENTS.md", "CLAUDE.md", "GEMINI.md"} <= b.SKIP
+
+
 def test_repo_builds_without_errors():
     r = subprocess.run([sys.executable, str(ROOT / "build_index.py")], capture_output=True, text=True)
     assert r.returncode == 0, r.stdout + r.stderr

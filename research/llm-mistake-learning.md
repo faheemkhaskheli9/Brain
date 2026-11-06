@@ -36,6 +36,16 @@ Call `solve_with_feedback(question, model, verifier, memory, scope="tenant-or-pr
 - A stored correction may contain personal data, secrets or prompt injection. Do not ingest private conversations by default. Encrypt at rest, add access control, retention/deletion and tenant isolation before production. The module uses file permissions and scope filters but **does not** provide secure multi-tenant storage.
 - Self-grading can lead to false improvement or reward hacking. A critical [2024 survey](https://aclanthology.org/2024.tacl-1.78/) emphasizes the value of reliable external feedback; [Pan et al. 2024](https://proceedings.mlr.press/v235/pan24d.html) documents feedback-loop reward hacking.
 
+## Skills, RAG, subagents, knowledge and plugins
+
+The [agent-learning architecture](agent-learning-architecture.md) extends the external-verifier
+memory baseline into a multi-component workflow. It implements reviewed skill-change
+proposals, cited versioned retrieval, independent review before knowledge promotion,
+specialist researcher/critic callbacks, and a least-privilege plugin gateway.
+These components propose *how to solve future problems*; they do **not**
+automatically rewrite trusted instructions, alter model parameters, or certify
+themselves as correct. Run `python research/test_agent_learning.py` for the offline tests.
+
 ## Next implementation milestones
 
 - **M1:** Add a real LLM adapter and executable verifier (e.g., unit-tested code generation). Persist only opt-in and independently checked errors; add adversarial/injection regression tests.
