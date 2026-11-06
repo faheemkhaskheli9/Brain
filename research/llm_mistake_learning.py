@@ -185,7 +185,14 @@ def solve_with_feedback(question: str, model: Model,
     if verdict.passed:
         return SolveResult(first, True, 1, False)
     if verdict.corrected_answer is None or verdict.guidance is None:
-        return SolveResult(first, False, 1, False)  # no validated target: do not learn
+        return SolveResult(first, False, 1, False)  # no target: do not learn
+    # A verifier's proposed correction is still only a claim. Check that it
+    # actually passes before allowing it to influence future questions.
+    checked_correction = verifier(question, verdict.corrected_answer)
+    if not isinstance(checked_correction, Verification) or type(checked_correction.passed) is not bool:
+        raise TypeError("verifier must return Verification with a boolean passed")
+    if not checked_correction.passed:
+        return SolveResult(first, False, 1, False)
     learned = memory.record(scope=scope, question=question, wrong_answer=first,
                             corrected_answer=verdict.corrected_answer,
                             guidance=verdict.guidance, source=verdict.source, verified=True)
