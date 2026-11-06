@@ -38,8 +38,29 @@ class ReplayAnalysisTest(unittest.TestCase):
         self.assertAlmostEqual(row["mean_paired_retention_gain"], 0.06)
         self.assertGreater(row["paired_ci95"][0], 0)
         self.assertAlmostEqual(row["paired_wall_time_ratio"], 1.05)
-        self.assertTrue(row["passes_preregistered_rule"])
+        self.assertFalse(row["passes_preregistered_rule"],
+                         "only four paired seeds are not sufficient for promotion")
         self.assertFalse(out["by_arm"]["sleep-no-replay"]["passes_preregistered_rule"])
+
+    def test_exploratory_arm_cannot_be_promoted_by_look_elsewhere(self):
+        data = experiment()
+        # An exploratory arm can look equally promising but must not be
+        # declared a confirmatory win without a separate registration.
+        data["config"]["arms"]["sleep-td"] = {"replay": 0.1, "sleepEvery": 20}
+        for seed in data["config"]["seeds"]:
+            data["runs"].append({"arm": "sleep-td", "seed": seed, "split": None,
+                                 "status": "ok", "reason": None, "seconds": 105,
+                                 "scores": {"total": 12000,
+                                            "kept": {k: 0.6 for k in SKILLS}}})
+        out = analyze(data)
+        self.assertFalse(out["by_arm"]["sleep-td"]["passes_preregistered_rule"])
+
+    def test_insufficient_paired_seeds_cannot_be_promoted(self):
+        data = experiment()
+        data["config"]["seeds"] = [1, 2, 3, 4]
+        # Even four perfectly consistent seeds are a pilot, not the
+        # preregistered ten-seed confirmatory experiment.
+        self.assertFalse(analyze(data)["by_arm"]["sleep-td-mix"]["passes_preregistered_rule"])
 
     def test_failure_not_dropped_or_called_success(self):
         data = experiment()

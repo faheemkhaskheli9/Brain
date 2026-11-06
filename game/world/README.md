@@ -216,9 +216,12 @@ scoring episodes, `memCap=2048`, 10% live rehearsal, 200 critic-only
 sleep updates every 20 episodes, and a fixed 0.6 priority exponent with
 0.2 uniform mixture. Include *every* attempted arm and seed, even if a stage
 times out; report graduation fraction as well as conditional retention scores.
-Primary hypothesis: `sleep-td-mix` improves the paired mean of
-grasp/listen/read/write retention over `sleep-uniform`. Evidence strong
-enough to consider enabling it requires a mean gain of at least 0.03,
+Primary hypothesis (the **only** confirmatory contrast): `sleep-td-mix`
+improves the paired mean of grasp/listen/read/write retention over
+`sleep-uniform`. Other sampler arms are exploratory controls and do not
+qualify as independent positive discoveries. Evidence strong enough to
+consider enabling the mixture requires at least 8 paired graduating seeds,
+a mean gain of at least 0.03,
 a paired 95% bootstrap interval with lower bound above zero, **no fewer**
 completed curricula, no old-skill mean decrease greater than 0.03,
 and replay-training runtime below 1.25 times uniform. Report the result

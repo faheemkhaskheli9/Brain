@@ -97,7 +97,10 @@ def analyze(record: dict) -> dict:
         skills = {k: sum(ds) / len(ds) if ds else None for k, ds in skill_deltas.items()}
         wall_ratio = (sum(pair[1] for pair in times) / sum(pair[0] for pair in times)) if times else None
         baseline_complete = sum(row["status"] == "ok" for row in base.values())
-        success = (arm != BASELINE and len(paired) >= 2 and completed >= baseline_complete
+        # Only the single preregistered target is confirmatory. Comparing
+        # multiple exploratory arms at the same threshold would inflate
+        # false-positive claims; they remain descriptive controls.
+        success = (arm == "sleep-td-mix" and len(paired) >= 8 and completed >= baseline_complete
                    and mean is not None and mean >= MIN_GAIN
                    and ci is not None and ci[0] > 0
                    and all(x is not None and x >= MAX_SKILL_DROP for x in skills.values())
