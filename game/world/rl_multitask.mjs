@@ -106,10 +106,14 @@ export function compare(seed, {
   withControls = true,
 } = {}) {
   if (matchCreature && !withCreature) throw new Error("matching creature budget requires --creature");
-  const t0 = Date.now(), rows = [], costs = {};
+  const rows = [], costs = {};
+  const creatureT0 = Date.now();
   const creature = withCreature ? trainCreature(seed, episodes) : null;
+  if (creature) costs.creature = { wallSecondsIncludingEval: (Date.now() - creatureT0) / 1000,
+    trainSteps: creature.trainSteps };
   if (matchCreature && creature.failed) throw new Error("creature failed: cannot match training budget");
   const budget = matchCreature ? Math.ceil(creature.trainSteps / STAGES.length) : budgetPerSkill;
+  const t0 = Date.now();
   const shared = trainShared(seed, { budgetPerSkill: budget, episodes, hp, schedule });
   const sharedSeconds = (Date.now() - t0) / 1000;
   costs.shared = { totalTrainSteps: shared.totalTrainSteps,
