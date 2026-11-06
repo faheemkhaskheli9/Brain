@@ -13,6 +13,14 @@ build digital simulations and brain-inspired learning systems.
    visible when you reuse the content. Major claims are registered with their evidence in
    `research/claims.tsv`; when you change one, update its row and run `python research/check_claims.py`.
 
+## Learning-agent architecture (separate from Brain World)
+
+For experiments with LLM agents, skills, RAG, subagents or plugins, consult
+[`research/agent-learning-architecture.md`](research/agent-learning-architecture.md)
+and the reviewed [`verified-agent-learning` skill](.claude/skills/verified-agent-learning/SKILL.md).
+Do not treat model self-criticism, subagent consensus, or retrieved/plugin text
+as independently verified corrections. Never increase tool permissions automatically.
+
 ## Adding or editing a topic
 
 1. Copy `_template.md` into the right folder (`anatomy`, `function`, `learning`,
