@@ -2,6 +2,11 @@ name: CI
 
 on: [push, pull_request]
 
+# Cancel superseded branch/PR builds; never cancel an in-flight main build.
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 # CI runs contributor code (topic code blocks), so the token stays read-only.
 permissions:
   contents: read

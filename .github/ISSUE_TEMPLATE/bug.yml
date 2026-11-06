@@ -1,0 +1,30 @@
+name: Bug report
+description: Report a reproducible defect in code, data, claims, or tooling
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: Include the failure message and affected file or feature.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Provide a minimal command, fixed seed, input or environment.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and proposed fix
+      description: Include file:line, CI run, commit or artifacts when available.
