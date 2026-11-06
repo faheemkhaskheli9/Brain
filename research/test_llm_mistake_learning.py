@@ -77,10 +77,13 @@ class MistakeLearningTests(unittest.TestCase):
                              scope="coding", use_memory=True)
 
     def test_trusted_verifier_loop_and_recheck(self):
+        checks = []
+
         def model(question, lessons):
             return "fixed" if lessons else "broken"
 
         def verifier(question, response):
+            checks.append(response)
             if response == "fixed":
                 return Verification(passed=True)
             return Verification(passed=False, corrected_answer="fixed", guidance="Repair the response", source="test")
@@ -90,6 +93,43 @@ class MistakeLearningTests(unittest.TestCase):
         self.assertEqual(result.attempts, 2)
         self.assertTrue(result.recorded_lesson)
         self.assertEqual(len(self.memory.lessons), 1)
+        self.assertEqual(checks, ["broken", "fixed", "fixed"])
+
+    def test_rejected_correction_does_not_poison_memory_or_trigger_retry(self):
+        model_calls, checks = [], []
+
+        def model(question, lessons):
+            model_calls.append(len(lessons))
+            return "broken"
+
+        def verifier(question, response):
+            checks.append(response)
+            return Verification(passed=False, corrected_answer="also broken",
+                                guidance="Try again", source="test")
+
+        result = solve_with_feedback("Python list add item", model, verifier, self.memory, scope="coding")
+        self.assertFalse(result.passed)
+        self.assertFalse(result.recorded_lesson)
+        self.assertEqual(result.attempts, 1)
+        self.assertEqual(checks, ["broken", "also broken"])
+        self.assertEqual(model_calls, [0])
+        self.assertEqual(self.memory.lessons, [])
+
+    def test_invalid_correction_verdict_cannot_enter_memory(self):
+        calls = []
+
+        def verifier(question, response):
+            calls.append(response)
+            if response == "broken":
+                return Verification(passed=False, corrected_answer="fixed",
+                                    guidance="Use fixed", source="test")
+            return None
+
+        with self.assertRaisesRegex(TypeError, "verifier must return"):
+            solve_with_feedback("Python list add item", lambda q, lessons: "broken",
+                                verifier, self.memory, scope="coding")
+        self.assertEqual(calls, ["broken", "fixed"])
+        self.assertEqual(self.memory.lessons, [])
 
     def test_no_learning_when_correction_unavailable(self):
         result = solve_with_feedback("fail", lambda question, lessons: "wrong",
