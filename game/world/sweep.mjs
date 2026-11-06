@@ -24,6 +24,7 @@ export const ARMS = {
   "sleep-no-replay": { replay: 0.1, sleepEvery: 0, sleepActor: false },
   "sleep-uniform": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "uniform" },
   "sleep-td": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "td" },
+  "sleep-td-shuffle": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "td-shuffle" },
   "sleep-td-mix": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "td-mix" },
   "sleep-failure": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "failure" },
   // Issue #82: k-winners-take-all on the 1,000 hidden units, on top of the baseline.

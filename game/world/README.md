@@ -184,7 +184,9 @@ is open, issue #84.
 sampler and its RNG sequence. Opt-in `"td"` samples by observed absolute TD
 error to power `sleepPriorityAlpha` (0.6). `"td-mix"` reserves
 `sleepUniformMix` (0.2) probability for uniform coverage, which helps prevent
-over-replaying stale high-error memories. `"failure"` allocates half the
+over-replaying stale high-error memories. `"td-shuffle"` keeps the same TD
+error distribution but assigns priorities to other transitions via a fixed
+permutation, as a negative control for chance correlations. `"failure"` allocates half the
 sampling probability to observed terminal failures and half to other valid
 transitions when both groups exist; it does **not** infer hidden causes.
 Only terminal outcomes actually observed by the environment populate this flag.
@@ -203,14 +205,14 @@ budget, sleep count, capacity and memory, all timeouts retained in the result):
 
 ```bash
 node game/world/test_prioritized_replay.mjs
-node game/world/sweep.mjs 1 2 3 4 5 6 7 8 9 10 --jobs 2 --arms sleep-no-replay,sleep-uniform,sleep-td,sleep-td-mix,sleep-failure --out research/results/replay-local.json
+node game/world/sweep.mjs 1 2 3 4 5 6 7 8 9 10 --jobs 2 --arms sleep-no-replay,sleep-uniform,sleep-td,sleep-td-shuffle,sleep-td-mix,sleep-failure --out research/results/replay-local.json
 python research/result_schema.py --check research/results/replay-local.json
 ```
 
 These selectors have **no measured superiority** in the repo yet. The weighted
 sampler scans up to `memCap` slots per draw and may increase CPU cost.
 The first experiment covers the original five skills and retention; full
-reversal, unseen-letter, misleading-surprise, shuffled-priority, and compute
+reversal, unseen-letter, misleading-surprise, and compute
 controls remain required to resolve #152. Do not enable by default without
 multi-seed evidence that old skills are preserved.
 

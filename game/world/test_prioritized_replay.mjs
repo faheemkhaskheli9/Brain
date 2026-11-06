@@ -27,6 +27,12 @@ try {
   d = m.sampleWeighted(() => 0.04, "td-mix", { alpha: 1, mix: 0.2, beta: 1 });
   assert.equal(d.index, 0);
   assert.ok(Math.abs(d.probability - 0.13) < 1e-12);
+  // A fixed permutation breaks the link between a transition and its error
+  // without changing the priority histogram; save/load must reproduce it.
+  const shuffled = m.sampleWeighted(() => 0.05, "td-shuffle", { alpha: 1 });
+  assert.equal(shuffled.index, 0);
+  assert.ok(Math.abs(shuffled.probability - 0.2) < 1e-12);
+  assert.notEqual(shuffled.probability, m.sampleWeighted(() => 0.05, "td", { alpha: 1 }).probability);
   d = m.sampleWeighted(() => 0.25, "failure", { beta: 1 });
   assert.equal(d.index, 0);
   assert.ok(Math.abs(d.probability - 0.5) < 1e-12);
@@ -61,6 +67,7 @@ try {
   assert.deepEqual(Array.from(restored.priority), Array.from(m.priority));
   assert.deepEqual(Array.from(restored.failed), Array.from(m.failed));
   assert.deepEqual(m.sampleWeighted(rng(7), "failure"), restored.sampleWeighted(rng(7), "failure"));
+  assert.deepEqual(m.sampleWeighted(rng(7), "td-shuffle"), restored.sampleWeighted(rng(7), "td-shuffle"));
   // Old checkpoint lacks priority/failure arrays; they are unknown, not guessed.
   const legacy = { ...saved }; delete legacy.priority; delete legacy.failed;
   const old = Hippocampus.fromJSON(legacy);

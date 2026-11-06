@@ -443,7 +443,7 @@ export class Hippocampus {
   sampleWeighted(rand, mode = GAINS.sleepSampler, {
     alpha = GAINS.sleepPriorityAlpha, mix = GAINS.sleepUniformMix, beta = GAINS.sleepImportanceBeta,
   } = {}) {
-    if (!["uniform", "td", "td-mix", "failure"].includes(mode)
+    if (!["uniform", "td", "td-mix", "td-shuffle", "failure"].includes(mode)
       || !Number.isFinite(alpha) || alpha < 0 || alpha > 1
       || !Number.isFinite(mix) || mix < 0 || mix > 1
       || !Number.isFinite(beta) || beta < 0 || beta > 1) {
@@ -456,10 +456,23 @@ export class Hippocampus {
     const n = eligible.length;
     if (!n) return { index: -1, probability: 0, importance: 0, eligible: 0 };
     const probs = new Float64Array(n);
-    if (mode === "td" || mode === "td-mix") {
+    if (mode === "td" || mode === "td-mix" || mode === "td-shuffle") {
       let total = 0;
+      // Fixed, seeded Fisher-Yates permutation of eligible *indices*, independent
+      // of the environment RNG. This is a priority-label negative control, not
+      // a new replay learning strategy. Reconstruct identically after save/load.
+      if (mode === "td-shuffle" && (!this._shuffle || this._shuffle.length !== n)) {
+        this._shuffle = Array.from({ length: n }, (_, i) => i);
+        let state = (0x9e3779b9 ^ n) >>> 0;
+        for (let i = n - 1; i > 0; i--) {
+          state = Math.imul(state ^ (state >>> 16), 0x45d9f3b) >>> 0;
+          const j = state % (i + 1);
+          [this._shuffle[i], this._shuffle[j]] = [this._shuffle[j], this._shuffle[i]];
+        }
+      }
       for (let i = 0; i < n; i++) {
-        probs[i] = Math.pow(Math.max(0.001, this.priority[eligible[i]]), alpha);
+        const source = mode === "td-shuffle" ? eligible[this._shuffle[i]] : eligible[i];
+        probs[i] = Math.pow(Math.max(0.001, this.priority[source]), alpha);
         total += probs[i];
       }
       const uniform = mode === "td-mix" ? mix : 0;
