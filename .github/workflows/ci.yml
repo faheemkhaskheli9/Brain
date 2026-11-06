@@ -55,6 +55,8 @@ jobs:
         run: node game/world/test_brain.mjs 1 2 3   # several seeds, so tuning that only helps seed 1 fails
       - name: Baselines see what the creature sees, the RL baseline learns (#118)
         run: node game/world/test_env.mjs
+      - name: Shared multi-task backprop comparator stays masked and deterministic (#153)
+        run: node game/world/test_rl_multitask.mjs
       - name: Held-out splits are disjoint and frozen scoring learns nothing (#105)
         run: node game/world/test_heldout.mjs
       - name: Navigation suite is frozen and its splits are disjoint (#108)

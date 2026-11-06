@@ -583,6 +583,29 @@ board. It was tuned on seeds 101-103. Seeds 1-5, 2026-10-24:
   creature's lead is sample efficiency at this budget, not something backprop cannot learn here;
   neither arm reaches the heuristic's grasp.
 
+### Shared-network conventional RL comparator (partial #153)
+
+`node game/world/rl_multitask.mjs 1 2 --budget 125000 --episodes 300 --schedule interleaved --out run.json`
+uses **one** backprop-trained actor-critic across walk, grasp, listen, read and write,
+reusing exactly the same `ActorCritic` implementation as the per-skill baseline.
+The agent receives only the sensed observation and legal actions (not the task index,
+reward rule or any privileged context). Training is round-robin by episode (or blocked
+with `--schedule blocked`), with at least `--budget` environment steps for
+each skill; terminal episodes may overshoot. Other arms in the runner are the existing
+five separate networks, random, heuristic and optional `--creature`.
+`--match-creature` (with `--creature`) uses the creature's measured training
+step count divided by five as the budget for each conventional skill.
+
+The shared arm has roughly one-fifth of the separate arm's parameter and optimizer
+storage, but comparisons remain non-identical: conventional backprop, single
+feedforward hidden layer with no recurrent memory, distinct learning schedules and
+different training/adaptation objectives. Do not treat this as evidence of transfer
+or of human-level learning. Frozen scoring uses a different environment seed;
+**no held-out layout, reversal, or new-letter tests have been implemented for
+this baseline yet**. Those controls and full multi-seed result files are still
+required by #153 before claims. `node game/world/test_rl_multitask.mjs` is only
+a cheap deterministic integration test.
+
 ## Held-out: what carries over to rooms, rules and letters it has not seen? (#105)
 
 `node game/world/heldout.mjs [seeds] [--adapt N] [--out run.json]`. Splits were fixed in the
