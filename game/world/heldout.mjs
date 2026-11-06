@@ -63,7 +63,10 @@ export function frozen(w, key, episodes, split = "train") {
   } finally {
     // A scoring error must not leave the world in perform mode, or accidentally
     // make the caller continue training on an evaluation split.
-    try { w.perform(null); } finally { w.roomFilter = keep; }
+    // Restore the training-room filter before perform(null) resets the world:
+    // otherwise training resumes in a held-out evaluation room.
+    w.roomFilter = keep;
+    w.perform(null);
   }
   if (fingerprint(w) !== before) throw new Error(`frozen ${key} changed the brain`);
   return score;
