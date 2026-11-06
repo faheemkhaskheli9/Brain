@@ -1,0 +1,55 @@
+name: Experiment proposal
+description: Pre-register a falsifiable Brain learning or neuroscience experiment before running it
+title: "[Experiment] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search open issues and review #120 and #136 first. Use the existing
+        hypothesis register and brain-result/1 reporting format. Record negative
+        results as well as positive results.
+  - type: input
+    id: related
+    attributes:
+      label: Related issue or hypothesis ID
+      placeholder: "#120 / H001"
+  - type: textarea
+    id: gap
+    attributes:
+      label: Research gap and prior evidence
+      description: Identify existing implementations, primary sources and the precise open question.
+    validations:
+      required: true
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Falsifiable hypothesis and failure criteria
+      description: State the predicted effect and what result would disconfirm it.
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Baselines, controls and ablations
+      description: Include strong conventional baselines and matched observation/action access.
+    validations:
+      required: true
+  - type: textarea
+    id: evaluation
+    attributes:
+      label: Seeds, splits, budgets and leakage controls
+      description: Pre-register seeds, compute or environment steps, and frozen held-out tests.
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Metrics and reporting plan
+      description: Include learning speed, transfer, retention, failures, uncertainty and cost where relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Reproduction command and result artifacts
+      description: Fill in once implemented; link brain-result/1 files and the exact commit.

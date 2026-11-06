@@ -1,6 +1,15 @@
 version: 2
 updates:
   - package-ecosystem: github-actions
-    directory: /
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # Track Python dependencies declared in pyproject.toml. Unbounded version
+  # constraints may not produce version-update PRs; CI still protects changes.
+  - package-ecosystem: pip
+    directory: "/"
     schedule:
       interval: monthly
+    open-pull-requests-limit: 3
