@@ -207,6 +207,7 @@ budget, sleep count, capacity and memory, all timeouts retained in the result):
 node game/world/test_prioritized_replay.mjs
 node game/world/sweep.mjs 1 2 3 4 5 6 7 8 9 10 --jobs 2 --arms sleep-no-replay,sleep-uniform,sleep-td,sleep-td-shuffle,sleep-td-mix,sleep-failure --out research/results/replay-local.json
 python research/result_schema.py --check research/results/replay-local.json
+python research/analyze_replay.py research/results/replay-local.json
 ```
 
 **Preregistered comparison (before the first multi-seed result, 2026-11-06):**
