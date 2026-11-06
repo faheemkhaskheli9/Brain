@@ -73,6 +73,8 @@ jobs:
           python research/result_schema.py --check /tmp/rl-multitask-smoke.json
       - name: Held-out splits are disjoint and frozen scoring learns nothing (#105)
         run: node game/world/test_heldout.mjs
+      - name: Live frozen-checkpoint behavior and mutation smoke test (#154)
+        run: node game/world/test_continual_live.mjs
       - name: Navigation suite is frozen and its splits are disjoint (#108)
         run: node game/world/test_navigation.mjs
       - name: Every species in Brain Ecosystem learns

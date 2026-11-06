@@ -612,6 +612,13 @@ a cheap deterministic integration test.
 script before any run and nothing was tuned on them; `test_heldout.mjs` (CI) asserts that they are
 disjoint, that every room stays in its split, and that frozen scoring changes nothing in the brain.
 
+`node game/world/test_continual_live.mjs` is an additional cheap live checkpoint regression:
+it pins the archived v3 checkpoint identity and its deterministic 80/100 read score,
+checks frozen evaluation on disjoint train/eval layouts without learning, verifies
+save/load behavior, and intentionally injects an evaluation-time weight-update error
+to ensure the check fails. This catches some unexpected model drift, **not** transfer
+improvement. The full multi-seed experiments below remain necessary.
+
 - **Layout**: the quadrant the target object stands in. Training uses train rooms only (quadrants
   0 and 1); dev is quadrant 2, eval quadrant 3.
 - **Tone mapping**: trained on listen (tone t names colour t), evaluated on "listen, reversed"
