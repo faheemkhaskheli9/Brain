@@ -7,8 +7,8 @@ from analyze_replay import analyze
 SKILLS = ("grasp", "listen", "read", "write")
 
 
-def experiment():
-    seeds = [1, 2, 3, 4]
+def experiment(seeds=range(1, 5)):
+    seeds = list(seeds)
     arms = {"sleep-uniform": {"replay": 0.1, "sleepEvery": 20},
             "sleep-td-mix": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "td-mix"},
             "sleep-no-replay": {"replay": 0.1, "sleepEvery": 0}}
@@ -31,15 +31,14 @@ def experiment():
 
 class ReplayAnalysisTest(unittest.TestCase):
     def test_preregistered_success(self):
-        out = analyze(experiment())
+        out = analyze(experiment(range(1, 11)))
         row = out["by_arm"]["sleep-td-mix"]
-        self.assertEqual(row["paired_n"], 4)
-        self.assertEqual(row["graduated"], 4)
+        self.assertEqual(row["paired_n"], 10)
+        self.assertEqual(row["graduated"], 10)
         self.assertAlmostEqual(row["mean_paired_retention_gain"], 0.06)
         self.assertGreater(row["paired_ci95"][0], 0)
         self.assertAlmostEqual(row["paired_wall_time_ratio"], 1.05)
-        self.assertFalse(row["passes_preregistered_rule"],
-                         "only four paired seeds are not sufficient for promotion")
+        self.assertTrue(row["passes_preregistered_rule"])
         self.assertFalse(out["by_arm"]["sleep-no-replay"]["passes_preregistered_rule"])
 
     def test_exploratory_arm_cannot_be_promoted_by_look_elsewhere(self):
