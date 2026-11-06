@@ -209,6 +209,24 @@ node game/world/sweep.mjs 1 2 3 4 5 6 7 8 9 10 --jobs 2 --arms sleep-no-replay,s
 python research/result_schema.py --check research/results/replay-local.json
 ```
 
+**Preregistered comparison (before the first multi-seed result, 2026-11-06):**
+use seeds 1-10, 20,000 episodes per curriculum stage, 4,000 graduated
+scoring episodes, `memCap=2048`, 10% live rehearsal, 200 critic-only
+sleep updates every 20 episodes, and a fixed 0.6 priority exponent with
+0.2 uniform mixture. Include *every* attempted arm and seed, even if a stage
+times out; report graduation fraction as well as conditional retention scores.
+Primary hypothesis: `sleep-td-mix` improves the paired mean of
+grasp/listen/read/write retention over `sleep-uniform`. Evidence strong
+enough to consider enabling it requires a mean gain of at least 0.03,
+a paired 95% bootstrap interval with lower bound above zero, **no fewer**
+completed curricula, no old-skill mean decrease greater than 0.03,
+and replay-training runtime below 1.25 times uniform. Report the result
+even if these conditions fail. Seed-level scores, per-stage episodes, timeout
+rows, wall-clock seconds, memory capacity and replay settings remain visible
+in the result. If nonuniform selection produces worse old-skill retention or
+more failed graduations, leave uniform as the default. These thresholds do
+not license tuning on held-out layouts or reverse rules.
+
 These selectors have **no measured superiority** in the repo yet. The weighted
 sampler scans up to `memCap` slots per draw and may increase CPU cost.
 The first experiment covers the original five skills and retention; full
