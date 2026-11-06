@@ -29,7 +29,7 @@ jobs:
       - name: Look up new references and rebuild the catalog
         run: python research/fetch_papers.py --enrich ${{ inputs.refresh && '--refresh' || '' }}
       - name: Open a pull request if it changed
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: bot/paper-catalog
           commit-message: "research/papers.json, papers.md: look up new references"
