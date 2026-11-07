@@ -9,9 +9,14 @@ SKILLS = ("grasp", "listen", "read", "write")
 
 def experiment(seeds=range(1, 5)):
     seeds = list(seeds)
-    arms = {"sleep-uniform": {"replay": 0.1, "sleepEvery": 20},
-            "sleep-td-mix": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "td-mix"},
-            "sleep-no-replay": {"replay": 0.1, "sleepEvery": 0}}
+    arms = {
+        "sleep-no-replay": {"replay": 0.1, "sleepEvery": 0},
+        "sleep-uniform": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "uniform"},
+        "sleep-td": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "td"},
+        "sleep-td-shuffle": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "td-shuffle"},
+        "sleep-td-mix": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "td-mix"},
+        "sleep-failure": {"replay": 0.1, "sleepEvery": 20, "sleepSampler": "failure"},
+    }
     runs = []
     for arm in arms:
         for seed in seeds:
@@ -45,21 +50,40 @@ class ReplayAnalysisTest(unittest.TestCase):
         data = experiment()
         # An exploratory arm can look equally promising but must not be
         # declared a confirmatory win without a separate registration.
-        data["config"]["arms"]["sleep-td"] = {"replay": 0.1, "sleepEvery": 20}
-        for seed in data["config"]["seeds"]:
-            data["runs"].append({"arm": "sleep-td", "seed": seed, "split": None,
-                                 "status": "ok", "reason": None, "seconds": 105,
-                                 "scores": {"total": 12000,
-                                            "kept": {k: 0.6 for k in SKILLS}}})
+        for row in data["runs"]:
+            if row["arm"] == "sleep-td":
+                row["scores"]["kept"] = {k: 0.8 for k in SKILLS}
         out = analyze(data)
         self.assertFalse(out["by_arm"]["sleep-td"]["passes_preregistered_rule"])
 
     def test_insufficient_paired_seeds_cannot_be_promoted(self):
         data = experiment()
-        data["config"]["seeds"] = [1, 2, 3, 4]
         # Even four perfectly consistent seeds are a pilot, not the
         # preregistered ten-seed confirmatory experiment.
         self.assertFalse(analyze(data)["by_arm"]["sleep-td-mix"]["passes_preregistered_rule"])
+
+    def test_cherry_picked_seeds_cannot_be_promoted(self):
+        data = experiment(range(2, 12))
+        self.assertFalse(analyze(data)["by_arm"]["sleep-td-mix"]["passes_preregistered_rule"])
+
+    def test_missing_preregistered_control_rejected(self):
+        data = experiment()
+        data["config"]["arms"].pop("sleep-td-shuffle")
+        data["runs"] = [row for row in data["runs"] if row["arm"] != "sleep-td-shuffle"]
+        with self.assertRaisesRegex(ValueError, "missing required replay control"):
+            analyze(data)
+
+    def test_mislabeled_sampler_rejected(self):
+        data = experiment()
+        data["config"]["arms"]["sleep-td-mix"]["sleepSampler"] = "uniform"
+        with self.assertRaisesRegex(ValueError, "sampler does not match"):
+            analyze(data)
+
+    def test_per_arm_capacity_override_rejected(self):
+        data = experiment()
+        data["config"]["arms"]["sleep-td-mix"]["memCap"] = 8192
+        with self.assertRaisesRegex(ValueError, "unexpected per-arm gain"):
+            analyze(data)
 
     def test_failure_not_dropped_or_called_success(self):
         data = experiment()

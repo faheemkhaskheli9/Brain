@@ -18,6 +18,17 @@ SKILLS = ("grasp", "listen", "read", "write")
 BASELINE = "sleep-uniform"
 ARMS = ("sleep-no-replay", BASELINE, "sleep-td", "sleep-td-shuffle",
         "sleep-td-mix", "sleep-failure")
+# Require the declared sampler, not merely the right arm name in a result.
+SAMPLER_BY_ARM = {
+    "sleep-no-replay": "uniform",
+    "sleep-uniform": "uniform",
+    "sleep-td": "td",
+    "sleep-td-shuffle": "td-shuffle",
+    "sleep-td-mix": "td-mix",
+    "sleep-failure": "failure",
+}
+ALLOWED_ARM_GAINS = frozenset({"replay", "sleepEvery", "sleepActor", "sleepSampler"})
+PREREGISTERED_SEEDS = frozenset(range(1, 11))
 MIN_GAIN = 0.03
 MAX_SKILL_DROP = -0.03
 MAX_TIME_RATIO = 1.25
@@ -48,6 +59,10 @@ def analyze(record: dict) -> dict:
             or not isinstance(arms, dict) or BASELINE not in arms
             or any(a not in ARMS for a in arms)):
         raise ValueError("invalid or mixed replay arms/seeds")
+    # The confirmatory record must include all preregistered controls. Partial
+    # pilot runs can be inspected separately, but must not pass this analyzer.
+    if set(arms) != set(ARMS):
+        raise ValueError("missing required replay control arms")
     if budget.get("episodes_per_stage") != 20000 or budget.get("scored_episodes") != 4000:
         raise ValueError("training/scoring budget differs from preregistration")
     gains = config.get("gains", {})
@@ -57,6 +72,12 @@ def analyze(record: dict) -> dict:
     if any(gains.get(k) != v for k, v in expected.items()):
         raise ValueError("replay settings differ from preregistration")
     for arm, settings in arms.items():
+        if not isinstance(settings, dict):
+            raise ValueError("invalid replay arm configuration")
+        if set(settings) - ALLOWED_ARM_GAINS:
+            raise ValueError("unexpected per-arm gain override")
+        if settings.get("sleepSampler", "uniform") != SAMPLER_BY_ARM[arm]:
+            raise ValueError("sampler does not match arm label")
         if settings.get("replay") != 0.1 or settings.get("sleepActor", False):
             raise ValueError("unequal online rehearsal or replaying actor")
         if settings.get("sleepEvery") != (0 if arm == "sleep-no-replay" else 20):
@@ -100,7 +121,8 @@ def analyze(record: dict) -> dict:
         # Only the single preregistered target is confirmatory. Comparing
         # multiple exploratory arms at the same threshold would inflate
         # false-positive claims; they remain descriptive controls.
-        success = (arm == "sleep-td-mix" and len(paired) >= 8 and completed >= baseline_complete
+        success = (arm == "sleep-td-mix" and frozenset(seeds) == PREREGISTERED_SEEDS
+                   and len(paired) >= 8 and completed >= baseline_complete
                    and mean is not None and mean >= MIN_GAIN
                    and ci is not None and ci[0] > 0
                    and all(x is not None and x >= MAX_SKILL_DROP for x in skills.values())
