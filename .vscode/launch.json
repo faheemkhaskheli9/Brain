@@ -210,6 +210,23 @@
       "console": "integratedTerminal"
     },
     {
+      "name": "Research: brainscore_saturation (ImageNet vs Brain-Score, saved snapshot, #88)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/brainscore_saturation.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Research: fetch_papers (catalog cited papers, no PDFs)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/research/fetch_papers.py",
+      "args": ["--no-pdf"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Python: current file",
       "type": "debugpy",
       "request": "launch",

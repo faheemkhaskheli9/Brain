@@ -185,6 +185,11 @@ Slopes are score per unit of top-1. The rho columns use 154-156 models at or abo
   more brain-like, each measurable on Brain-Score-style benchmarks.
 - Self-supervised learning from video is closer to how infants learn to see than
   labelled ImageNet; see [[predictive-processing]] and [[build-a-brain-like-learner]].
+- A richer eye can speed a reward-trained learner, but measure it at matched step
+  sizes. In this repo's Brain World (`game/world/`, issue #94, seeds 1-10), a 15 × 5
+  ray grid instead of 15 rays graduated its five skills in 3,893 fewer episodes
+  (p = 0.008, n = 9). It also changed the step-size normaliser by up to 30% per stage,
+  so how much of the gain is the extra vision is not settled.
 
 ## Code
 A V1 simple cell as a rectified Gabor filter, and a complex cell as the
