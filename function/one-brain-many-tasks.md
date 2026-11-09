@@ -8,7 +8,7 @@ use_cases:
   - how can an agent tell which task it is in without being told
   - why does training a network on a new task wipe out the old ones
   - what does Brain World do to keep five skills in one brain
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/s41593-018-0310-2

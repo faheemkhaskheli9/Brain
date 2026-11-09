@@ -9,7 +9,7 @@ use_cases:
   - how does the fly olfactory circuit work and what is FlyHash
   - use a brain-inspired hash for nearest-neighbour similarity search
   - how does the brain modulate pain (gate control, placebo)
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://www.nobelprize.org/prizes/medicine/1961/summary/

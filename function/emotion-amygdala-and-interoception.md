@@ -8,7 +8,7 @@ use_cases:
   - what is interoception and what does the insula do
   - could emotions be predictions of body state
   - give an AI agent drives or emotions grounded in homeostasis
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1146/annurev.neuro.23.1.155

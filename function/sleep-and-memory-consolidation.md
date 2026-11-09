@@ -6,7 +6,7 @@ use_cases:
   - what happens to memories during sleep
   - why does the brain replay experiences during sleep
   - add an offline replay or sleep phase to a continual-learning system
-status: draft
+status: stable
 last_verified: 2026-10-12
 sources:
   - https://doi.org/10.1152/physrev.00032.2012

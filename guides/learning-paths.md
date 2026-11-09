@@ -7,7 +7,7 @@ use_cases:
   - I study neuroscience and want the computational side
   - I came from Brain Lab or Brain World and want the science behind it
   - give me an ordered reading list for this knowledge base
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://neuronaldynamics.epfl.ch/

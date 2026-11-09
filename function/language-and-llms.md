@@ -8,7 +8,7 @@ use_cases:
   - do large language models process language like the brain
   - how are LLM activations compared with fMRI or ECoG recordings
   - is language the same thing as thought
-status: draft
+status: stable
 last_verified: 2026-10-25
 sources:
   - https://doi.org/10.1038/nrn2113

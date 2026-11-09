@@ -8,7 +8,7 @@ use_cases:
   - how does the brain know how confident it is in a choice
   - where is value computed for economic choices
   - make an AI think longer when it is unsure, like the brain does
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1162/neco.2008.12-06-420

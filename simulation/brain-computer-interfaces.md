@@ -8,7 +8,7 @@ use_cases:
   - which BCI recording method should I use, EEG, ECoG or implanted arrays
   - what is the state of brain implant companies like Neuralink and Synchron
   - what do BCIs teach about brain plasticity
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - doi:10.1038/nature04970

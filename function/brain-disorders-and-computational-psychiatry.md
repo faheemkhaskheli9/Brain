@@ -8,7 +8,7 @@ use_cases:
   - what is computational psychiatry
   - are schizophrenia and autism explained by altered prediction or precision
   - model depression or addiction as a reinforcement learning problem
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1016/S0896-6273(03)00568-3

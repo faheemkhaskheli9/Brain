@@ -8,7 +8,7 @@ use_cases:
   - how do I choose the spectral radius of a reservoir
   - is a cortical circuit a reservoir
   - can a physical system such as a photonic or memristor device compute as a reservoir
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://www.ai.rug.nl/minds/uploads/EchoStatesTechRep.pdf

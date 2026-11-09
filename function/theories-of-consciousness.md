@@ -8,7 +8,7 @@ use_cases:
   - what did the adversarial collaboration between GNWT and IIT find
   - how do doctors measure consciousness in unresponsive patients
   - could an AI system be conscious
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/s41583-022-00587-4

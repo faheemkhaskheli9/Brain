@@ -8,7 +8,7 @@ use_cases:
   - do adults grow new neurons
   - can a critical period be reopened in an adult brain
   - why do neural networks lose the ability to learn in continual training and how to fix it
-status: draft
+status: stable
 last_verified: 2026-10-12
 sources:
   - https://doi.org/10.1038/nrn1809

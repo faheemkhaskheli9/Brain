@@ -7,7 +7,7 @@ use_cases:
   - why does my brain-inspired learner waste compute on inactive units
   - make an actor-critic with eligibility traces update only active synapses
   - my agent needs thousands of episodes where a person needs a few, what can I borrow from the brain
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - doi:10.1016/S0960-9822(03)00135-0

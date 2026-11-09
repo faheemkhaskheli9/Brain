@@ -8,7 +8,7 @@ use_cases:
   - why does a loaded agent not act like the one I saved
   - is it safe to load someone else's model file
   - how does a brain keep what it learned, and how can a model learn more after loading
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/385533a0

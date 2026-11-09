@@ -9,7 +9,7 @@ use_cases:
   - why do new facts that fit what I already know get learned faster
   - how does the brain generalise and abstract, and what is still unknown
   - give my learner a representation that supports both flexible rules and transfer
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1146/annurev.neuro.24.1.167

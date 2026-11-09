@@ -8,7 +8,7 @@ use_cases:
   - why do children learn languages more easily than adults
   - what can AI learn from overproducing and pruning connections
   - how much of the brain is innate versus learned
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1038/nrn1787

@@ -7,7 +7,7 @@ use_cases:
   - turn an open question from this knowledge base into an experiment I can run on a computer
   - check whether my simulation result is real or just one lucky seed
   - which research gaps can be closed with open data or simulation and which need a lab
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1073/pnas.1708274114
