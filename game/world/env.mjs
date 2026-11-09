@@ -8,7 +8,7 @@
 // ends, the returned obs is already the first of the next episode (auto-reset).
 // Rooms are drawn from the same seeded RNG the agent samples from, so two agents on one seed see
 // the same distribution of rooms, not the same sequence.
-import { World, STAGES, ACT_SETS, BODY, PEN } from "./brain.js";
+import { World, STAGES, ACT_SETS, BODY, PEN, N_IN } from "./brain.js";
 
 const N_ACTIONS = BODY.length + PEN.length;
 
@@ -18,6 +18,7 @@ export class PolicyBrain {
   constructor() {
     this.next = -1; this.pi = new Float32Array(N_ACTIONS); this.ev = new Float32Array(1); this.eP = new Float32Array(1);
     this.learning = true; this.greedy = false;
+    this.rows = 1; this.nIn = N_IN;   // the 15-ray retina's shape: World.sense sizes the senses by the brain
   }
   encode(x) { return x; }
   act(h, allowed) {
@@ -36,7 +37,7 @@ export class Env {
   // skill: a STAGES key, evaluated as the graduated creature is (perform mode: the gait reflex on,
   // no curriculum, no episodic store). seed: the World seed.
   constructor(seed, skill) {
-    this.world = new World(seed);
+    this.world = new World(seed, "rays");   // PolicyBrain reads the 107-input rays retina
     this.world.brain = new PolicyBrain();
     this.world.graduated = true; this.world.stage = STAGES.length - 1;
     this.world.perform(skill, false);

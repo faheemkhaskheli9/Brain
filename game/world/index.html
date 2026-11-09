@@ -136,7 +136,7 @@
       <section>
         <h2 title="Its senses this step, as the brain receives them, and the action it chose. Nothing else reaches it: no map, no task label.">What it senses and does</h2>
         <div class="senses">
-          <span title="15 rays fanned across its field of view. Each square is the colour it sees in that direction; brighter means nearer.">Retina</span><div id="retina"></div>
+          <span id="retinaLabel" title="15 rays fanned across its field of view. Each square is the colour it sees in that direction; brighter means nearer.">Retina</span><div id="retina"></div>
           <span title="A 5×5 patch at the centre of its gaze, sharp enough to make out the letter on a cube straight ahead. A letter it has just seen fades out slowly: a short memory of it. In the room, the narrow cone turns dark violet while a letter is in it.">Fovea</span><div id="fovea"></div>
           <span title="Three frequency bands, like places along the inner ear. The band that lights up is the tone it hears.">Cochlea</span><div id="cochlea"></div>
           <span title="The action it just chose.">Doing</span><strong id="doing">–</strong>
@@ -183,7 +183,7 @@
 <script type="module">
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { World, STAGES, GAINS, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, glyph, stageHistory, learnedText } from "./brain.js";
+import { World, STAGES, GAINS, ARENA, BODY, PEN, LETTERS, TONES_HZ, FOV, FOVEA, OBJ_R, RAYS, glyph, stageHistory, learnedText } from "./brain.js";
 
 const $ = id => document.getElementById(id);
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -193,6 +193,9 @@ const C = { glass: css("--glass"), lilac: css("--lilac"), muted: css("--muted"),
 // ?legs=cpg swings the hips from a central pattern generator whose amplitudes the brain sets.
 const LEGS = new URLSearchParams(location.search).get("legs"), JOINTS = LEGS === "joints", CPG = LEGS === "cpg";
 GAINS.joints = JOINTS; GAINS.cpg = CPG;
+// ?retina=grid: new brains get a 15 x 5 ray grid instead of 15 rays (#94). A loaded save keeps its own retina.
+const RETINA = new URLSearchParams(location.search).get("retina");
+if (RETINA === "grid" || RETINA === "rays") GAINS.retina = RETINA;
 
 // ---------- simulation state ----------
 let world, speed = "watch", paused = false, sound = true, lastStep = 0, freezeUntil = 0, frozen = null;
@@ -203,7 +206,7 @@ function newBrain(seed) {
   $("banner").textContent = "A new brain. It starts by flailing its legs at random."
     + (JOINTS ? " Its legs are jointed here: each push or lift is a torque on a hip, and a leg keeps swinging a little after it." : "")
     + (CPG ? " Its legs swing from a rhythm generator here, as a spinal cord's does: the brain only turns each side's swing up or down." : "");
-  buildStages();
+  buildStages(); buildRetina();
 }
 
 // ---------- audio: the tone the creature hears, you hear too ----------
@@ -313,7 +316,17 @@ function drawBoard(pad, ok) {
 }
 
 // ---------- side panel ----------
-const retinaEls = Array.from({ length: 15 }, () => $("retina").appendChild(document.createElement("span")));
+// One square per ray: a row of 15, or 5 rows of 15 on the grid retina (top row = looking up). Rebuilt per brain.
+let retinaEls = [];
+function buildRetina() {
+  const rows = world.brain.rows;
+  $("retina").style.height = `${rows > 1 ? rows * 11 : 22}px`;
+  retinaEls = Array.from({ length: RAYS * rows }, () => document.createElement("span"));
+  $("retina").replaceChildren(...retinaEls);
+  $("retinaLabel").title = rows > 1
+    ? `${RAYS} × ${rows} rays: ${RAYS} across its field of view at each of ${rows} heights, looking up at the top row and down at the bottom one. Each square is the colour it sees there, brighter when nearer. Near objects fill more rows; the floor is the dim bottom rows, and nothing (black) above the walls.`
+    : `${RAYS} rays fanned across its field of view. Each square is the colour it sees in that direction; brighter means nearer.`;
+}
 const foveaEls = Array.from({ length: 25 }, () => $("fovea").appendChild(document.createElement("span")));
 const cochEls = ["low", "middle", "high"].map(t => { const s = document.createElement("span"); s.textContent = t; return $("cochlea").appendChild(s); });
 function buildStages() {
@@ -578,7 +591,7 @@ $("loadFile").onchange = async e => {
   if (!file) return;
   try {
     const o = JSON.parse(await file.text()), next = World.fromJSON(o), p = o.page || {};
-    world = next; frozen = null; freezeUntil = 0; buildStages(); $("skill").value = ""; $("teach").hidden = true; clearCheckpoints();
+    world = next; frozen = null; freezeUntil = 0; buildStages(); buildRetina(); $("skill").value = ""; $("teach").hidden = true; clearCheckpoints();
     const list = v => Array.isArray(v) ? v.filter(Number.isFinite) : [];
     daTrace = list(p.daTrace); curve = list(p.curve); bucket = list(p.bucket); marks = list(p.marks);
     // Episodes per learned skill: from the page state, else the world's pass episodes; an old save
