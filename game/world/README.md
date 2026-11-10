@@ -382,8 +382,10 @@ and capture, Frey and Morris 1997). That real synapses keep an SI-like importanc
 L and X already use. If the brain had learned strokes as parts, a brain that can copy T, L and X
 should copy the new letters sooner than a naive one. `node game/world/transfer.mjs` trains two
 brains per seed, at the board only and with no rehearsal: one learns copy (T, L, X) and then copy
-new letters; the naive one learns copy new letters from scratch. Seeds 1-10, 2026-10-15, episodes
-to 80% of 50:
+new letters; the naive one learns copy new letters from scratch. Seeds 1-10, first run 2026-10-15,
+re-run 2026-11-10 with the same numbers
+([research/results/transfer-2026-11-10.json](../../research/results/transfer-2026-11-10.json)),
+episodes to 80% of 50:
 
 | | Copy T, L, X (first letters) | New letters after them | New letters, naive | Success in the first 100 episodes, after / naive |
 |---|---|---|---|---|
