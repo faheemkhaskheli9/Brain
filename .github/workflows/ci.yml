@@ -62,8 +62,6 @@ jobs:
         run: python research/test_agent_learning_guides.py
       - name: Claims match their evidence (#117)
         run: python research/test_check_claims.py
-      - name: Brain World creature learns every stage and keeps them
-        run: node game/world/test_brain.mjs 1 2 3   # several seeds, so tuning that only helps seed 1 fails
       - name: Baselines see what the creature sees, the RL baseline learns (#118)
         run: node game/world/test_env.mjs
       - name: Shared multi-task backprop comparator stays masked and deterministic (#153)
@@ -75,6 +73,8 @@ jobs:
         run: node game/world/test_heldout.mjs
       - name: Live frozen-checkpoint behavior and mutation smoke test (#154)
         run: node game/world/test_continual_live.mjs
+      - name: Brain World creature learns every stage and keeps them
+        run: node game/world/test_brain.mjs 1 2 3   # several seeds, so tuning that only helps seed 1 fails
       - name: Navigation suite is frozen and its splits are disjoint (#108)
         run: node game/world/test_navigation.mjs
       - name: Every species in Brain Ecosystem learns
