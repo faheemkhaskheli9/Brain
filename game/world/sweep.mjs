@@ -18,6 +18,15 @@ export const ARMS = {
   "rehearse0+sleep": { replay: 0, sleepEvery: 20 },
   "rehearse10+sleepActor": { replay: 0.1, sleepEvery: 20, sleepActor: true },
   "rehearse0+sleepActor": { replay: 0, sleepEvery: 20, sleepActor: true },
+  // #152: fixed 10% online rehearsal and 200 critic replay updates every 20
+  // episodes; only offline sampling changes. Negative controls: no sleep,
+  // uniform replay, and failure stratification independent of TD priorities.
+  "sleep-no-replay": { replay: 0.1, sleepEvery: 0, sleepActor: false },
+  "sleep-uniform": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "uniform" },
+  "sleep-td": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "td" },
+  "sleep-td-shuffle": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "td-shuffle" },
+  "sleep-td-mix": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "td-mix" },
+  "sleep-failure": { replay: 0.1, sleepEvery: 20, sleepActor: false, sleepSampler: "failure" },
   // Issue #82: k-winners-take-all on the 1,000 hidden units, on top of the baseline.
   kwta20: { replay: 0.3, sleepEvery: 0, kwta: 20 },
   kwta35: { replay: 0.3, sleepEvery: 0, kwta: 35 },
