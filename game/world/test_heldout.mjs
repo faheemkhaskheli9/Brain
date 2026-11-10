@@ -27,9 +27,27 @@ assert.throws(() => frozen(w, "listen", 50, "train"), /changed the brain/);
 // An exception while frozen scoring is in progress must not strand the caller
 // in evaluation mode or leak the temporary held-out layout filter.
 const interrupted = new World(11);
+const trainRoom = p => SPLITS.train.includes(QUADRANT(p));
+interrupted.roomFilter = trainRoom;
+interrupted.setStage(2);
 interrupted.step = () => { throw new Error("synthetic scoring failure"); };
 assert.throws(() => frozen(interrupted, "listen", 3, "eval"), /synthetic scoring failure/);
 assert.equal(interrupted.task, -1);
 assert.equal(interrupted.brain.learning, true);
-assert.equal(interrupted.roomFilter, undefined);
+assert.equal(interrupted.roomFilter, trainRoom);
+assert.ok(trainRoom(interrupted.objects[interrupted.target].pos),
+  "restoring train mode must reset into a training room, not an eval room");
+
+// A successful frozen score must also restore the prior training filter and scene.
+const resumed = new World(12);
+resumed.roomFilter = trainRoom;
+resumed.setStage(2);
+frozen(resumed, "listen", 3, "eval");
+assert.equal(resumed.roomFilter, trainRoom);
+assert.equal(resumed.task, -1);
+assert.ok(trainRoom(resumed.objects[resumed.target].pos),
+  "the next training episode must not use a held-out layout");
+const plain = new World(13);
+frozen(plain, "listen", 2, "eval");
+assert.equal(plain.roomFilter, null, "default room filter is null, not undefined");
 console.log("ok");
