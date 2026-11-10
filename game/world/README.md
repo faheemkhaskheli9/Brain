@@ -182,6 +182,73 @@ That a brain replays during sleep is established (Wilson and McNaughton 1994). T
 buffer works the way the hippocampus selects what to replay is not claimed. Which steps to replay
 is open, issue #84.
 
+### Prioritized, failure-aware offline replay (experimental #152)
+
+**Prior work:** Schaul, Quan, Antonoglou and Silver (2016),
+[Prioritized Experience Replay](https://arxiv.org/abs/1511.05952),
+tested TD-error-based prioritization and importance correction in deep Q-learning.
+This implementation adapts the *sampling idea* to Brain World's local,
+backprop-free critic/actor updates; results in DQN do **not** establish
+benefits here or validate a biological replay mechanism.
+
+`GAINS.sleepSampler` defaults to `"uniform"`; this preserves the old rejection
+sampler and its RNG sequence. Opt-in `"td"` samples by observed absolute TD
+error to power `sleepPriorityAlpha` (0.6). `"td-mix"` reserves
+`sleepUniformMix` (0.2) probability for uniform coverage, which helps prevent
+over-replaying stale high-error memories. `"td-shuffle"` keeps the same TD
+error distribution but assigns priorities to other transitions via a fixed
+permutation, as a negative control for chance correlations. `"failure"` allocates half the
+sampling probability to observed terminal failures and half to other valid
+transitions when both groups exist; it does **not** infer hidden causes.
+Only terminal outcomes actually observed by the environment populate this flag.
+
+Samples are drawn *only* when a true successor exists or when terminal, never
+from a timeout cut. The sampled TD error refreshes the stored priority.
+`sleepImportanceBeta` (1) applies normalized inverse sampling-probability
+weights to both critic and opt-in actor updates. This corrects the sampling
+distribution in expectation up to a common learning-rate factor; actor
+off-policy clipping is still separate. Stored priorities/failures survive
+save/load; historical checkpoints without these fields initialize unknown
+priorities to 1 and known failures to 0, without inventing outcomes.
+
+Run the paired-seed initial curriculum/retention experiment (same environment
+budget, sleep count, capacity and memory, all timeouts retained in the result):
+
+```bash
+node game/world/test_prioritized_replay.mjs
+node game/world/sweep.mjs 1 2 3 4 5 6 7 8 9 10 --jobs 2 --arms sleep-no-replay,sleep-uniform,sleep-td,sleep-td-shuffle,sleep-td-mix,sleep-failure --out research/results/replay-local.json
+python research/result_schema.py --check research/results/replay-local.json
+python research/analyze_replay.py research/results/replay-local.json
+```
+
+**Preregistered comparison (before the first multi-seed result, 2026-11-06):**
+use seeds 1-10, 20,000 episodes per curriculum stage, 4,000 graduated
+scoring episodes, `memCap=2048`, 10% live rehearsal, 200 critic-only
+sleep updates every 20 episodes, and a fixed 0.6 priority exponent with
+0.2 uniform mixture. Include *every* attempted arm and seed, even if a stage
+times out; report graduation fraction as well as conditional retention scores.
+Primary hypothesis (the **only** confirmatory contrast): `sleep-td-mix`
+improves the paired mean of grasp/listen/read/write retention over
+`sleep-uniform`. Other sampler arms are exploratory controls and do not
+qualify as independent positive discoveries. Evidence strong enough to
+consider enabling the mixture requires at least 8 paired graduating seeds,
+a mean gain of at least 0.03,
+a paired 95% bootstrap interval with lower bound above zero, **no fewer**
+completed curricula, no old-skill mean decrease greater than 0.03,
+and replay-training runtime below 1.25 times uniform. Report the result
+even if these conditions fail. Seed-level scores, per-stage episodes, timeout
+rows, wall-clock seconds, memory capacity and replay settings remain visible
+in the result. If nonuniform selection produces worse old-skill retention or
+more failed graduations, leave uniform as the default. These thresholds do
+not license tuning on held-out layouts or reverse rules.
+
+These selectors have **no measured superiority** in the repo yet. The weighted
+sampler scans up to `memCap` slots per draw and may increase CPU cost.
+The first experiment covers the original five skills and retention; full
+reversal, unseen-letter, misleading-surprise, and compute
+controls remain required to resolve #152. Do not enable by default without
+multi-seed evidence that old skills are preserved.
+
 ## Sparsity: k-winners-take-all (#82)
 
 `GAINS.kwta = k` keeps only the k strongest hidden units each step (0, the default, keeps

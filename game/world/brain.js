@@ -89,6 +89,10 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   // seeds, but greedy write in perform mode drops from 1.00 to about 0.65 (README "Sleep").
   // sleepActor also replays the actor: much faster, but it forgets more.
   memCap: 2048, sleepEvery: 0, sleepSize: 200, sleepActor: false,
+  // Offline replay selector (#152). Uniform keeps the original RNG and behavior.
+  // Other modes use observed TD-error priorities or terminal failure outcomes,
+  // with inverse-probability correction. These are opt-in experimental arms.
+  sleepSampler: "uniform", sleepPriorityAlpha: 0.6, sleepUniformMix: 0.2, sleepImportanceBeta: 1,
   // k-winners-take-all on the hidden units (issue #82): keep only the kwta strongest, 0 = off.
   kwta: 0,
   // Timeouts of grasp, listen and read (issue #54, Pardo et al. 2018): 0 = treat as the task's end,
@@ -425,15 +429,22 @@ export class Brain {
     const norm = 1 + (this.hh || 0), av = GAINS.lrV / norm, ap = GAINS.lrP / norm;
     const pi = new Float32Array(N_ACT);
     for (let k = 0; k < n; k++) {
-      const e = mem.sample(rand);
+      const draw = GAINS.sleepSampler === "uniform" ? { index: mem.sample(rand), importance: 1 }
+        : mem.sampleWeighted(rand, GAINS.sleepSampler);
+      const e = draw.index;
       if (e < 0) return;
       const h = this.encode(mem.sense(e), mem.slot[e]), nx = mem.next(e);
       const delta = mem.r[e] + (nx >= 0 ? GAINS.gamma * this.value(this.encode(mem.sense(nx), mem.slot[nx])) : 0) - this.value(h);
-      for (let i = 0; i < this.nH; i++) this.v[i] += av * delta * h[i];
+      // Refresh stale TD priorities after sampling. Inverse-probability
+      // weighting corrects replay selection bias; actor off-policy correction
+      // below handles a separate issue (behavior vs current action policy).
+      mem.setPriority(e, delta);
+      const corrected = delta * draw.importance;
+      for (let i = 0; i < this.nH; i++) this.v[i] += av * corrected * h[i];
       if (!GAINS.sleepActor) continue;
       const allowed = ACT_SETS[mem.set[e]], a = mem.a[e];
       this.policy(h, allowed, pi);
-      const g = ap * delta * (pi[a] < mem.mu[e] ? pi[a] / mem.mu[e] : 1);   // mu can underflow to 0
+      const g = ap * corrected * (pi[a] < mem.mu[e] ? pi[a] / mem.mu[e] : 1);   // mu can underflow to 0
       for (const b of allowed) {
         const gb = g * ((b === a) - pi[b]), row = b * this.nH;
         for (let i = 0; i < this.nH; i++) this.P[row + i] += gb * h[i];
@@ -456,14 +467,24 @@ export class Hippocampus {
     this.slot = new Uint8Array(cap); this.a = new Uint8Array(cap); this.set = new Uint8Array(cap);
     this.end = new Uint8Array(cap); this.r = new Float32Array(cap); this.mu = new Float32Array(cap);
     this.ep = new Int32Array(cap);
+    this.priority = new Float32Array(cap); // |live or replay TD error|, refreshed on sampled steps
+    this.failed = new Uint8Array(cap);     // observed terminal failure, not a hidden goal label
   }
 
-  store(x, slot, a, set, r, mu, end) {
+  store(x, slot, a, set, r, mu, end, failed = false) {
     const e = this.head, o = e * this.nIn;
     for (let k = 0; k < this.nIn; k++) this.x[o + k] = (x[k] + 0.05) * 200;   // Uint8ClampedArray rounds and clamps
     this.slot[e] = slot; this.a[e] = a; this.set[e] = set; this.r[e] = r; this.mu[e] = mu; this.end[e] = end;
     this.ep[e] = this.epId;
+    this.priority[e] = Math.max(0.001, Math.min(10000, Math.abs(r)));
+    this.failed[e] = end === 1 && failed ? 1 : 0;
     this.head = (e + 1) % this.cap; this.n = Math.min(this.n + 1, this.cap);
+  }
+
+  setPriority(e, delta) {
+    // Clip outliers; a newly observed transition is never unsampleable.
+    this.priority[e] = Number.isFinite(delta)
+      ? Math.max(0.001, Math.min(10000, Math.abs(delta))) : 1;
   }
 
   sense(e) {
@@ -486,10 +507,75 @@ export class Hippocampus {
     return -1;
   }
 
+  // Exact normalized sampling distribution over *eligible* stored transitions.
+  // Terminal steps or steps whose true successor remains are eligible; timeout
+  // cuts and wrapped-away successors are never eligible. Default uniform replay
+  // above deliberately keeps its historical rejection-sampling RNG behavior.
+  // Importance = (p_min / p_drawn)^beta: proportional to 1/p^beta,
+  // normalized so the largest weight is 1 (a global learning-rate factor).
+  sampleWeighted(rand, mode = GAINS.sleepSampler, {
+    alpha = GAINS.sleepPriorityAlpha, mix = GAINS.sleepUniformMix, beta = GAINS.sleepImportanceBeta,
+  } = {}) {
+    if (!["uniform", "td", "td-mix", "td-shuffle", "failure"].includes(mode)
+      || !Number.isFinite(alpha) || alpha < 0 || alpha > 1
+      || !Number.isFinite(mix) || mix < 0 || mix > 1
+      || !Number.isFinite(beta) || beta < 0 || beta > 1) {
+      throw new Error("invalid sleep replay sampler or hyperparameters");
+    }
+    const eligible = [];
+    for (let e = 0; e < this.n; e++) {
+      if (this.end[e] === 1 || this.next(e) >= 0) eligible.push(e);
+    }
+    const n = eligible.length;
+    if (!n) return { index: -1, probability: 0, importance: 0, eligible: 0 };
+    const probs = new Float64Array(n);
+    if (mode === "td" || mode === "td-mix" || mode === "td-shuffle") {
+      let total = 0;
+      // Fixed, seeded Fisher-Yates permutation of eligible *indices*, independent
+      // of the environment RNG. This is a priority-label negative control, not
+      // a new replay learning strategy. Reconstruct identically after save/load.
+      if (mode === "td-shuffle" && (!this._shuffle || this._shuffle.length !== n)) {
+        this._shuffle = Array.from({ length: n }, (_, i) => i);
+        let state = (0x9e3779b9 ^ n) >>> 0;
+        for (let i = n - 1; i > 0; i--) {
+          state = Math.imul(state ^ (state >>> 16), 0x45d9f3b) >>> 0;
+          const j = state % (i + 1);
+          [this._shuffle[i], this._shuffle[j]] = [this._shuffle[j], this._shuffle[i]];
+        }
+      }
+      for (let i = 0; i < n; i++) {
+        const source = mode === "td-shuffle" ? eligible[this._shuffle[i]] : eligible[i];
+        probs[i] = Math.pow(Math.max(0.001, this.priority[source]), alpha);
+        total += probs[i];
+      }
+      const uniform = mode === "td-mix" ? mix : 0;
+      for (let i = 0; i < n; i++) probs[i] = (1 - uniform) * probs[i] / total + uniform / n;
+    } else if (mode === "failure") {
+      const nf = eligible.reduce((count, e) => count + this.failed[e], 0);
+      for (let i = 0; i < n; i++) {
+        probs[i] = !nf || nf === n ? 1 / n
+          : this.failed[eligible[i]] ? 0.5 / nf : 0.5 / (n - nf);
+      }
+    } else {
+      probs.fill(1 / n);
+    }
+    let minimum = Infinity, cumulative = 0, chosen = n - 1;
+    const draw = rand();
+    for (let i = 0; i < n; i++) {
+      minimum = Math.min(minimum, probs[i]);
+      cumulative += probs[i];
+      if (draw < cumulative && chosen === n - 1) chosen = i;
+    }
+    // If rounding leaves draw just above the total, use the last eligible row.
+    const probability = probs[chosen];
+    return { index: eligible[chosen], probability,
+      importance: Math.pow(minimum / probability, beta), eligible: n };
+  }
+
   // Saved as it was at `at` = {head, n, epId}, the start of the current episode: a loaded world
   // plays that episode again and stores its steps again.
   toJSON(at) {
-    const KEYS = ["x", "slot", "a", "set", "end", "r", "mu", "ep"], o = { cap: this.cap, ...at };
+    const KEYS = ["x", "slot", "a", "set", "end", "r", "mu", "ep", "priority", "failed"], o = { cap: this.cap, ...at };
     for (const k of KEYS) o[k] = toB64(this[k]);
     return o;
   }
@@ -504,9 +590,22 @@ export class Hippocampus {
       if (arr.length !== m[k].length) return null;
       m[k] = arr;
     }
+    // v3-v5 archives have no replay priorities or terminal outcome flags.
+    // Initialize unknown old priorities uniformly and do not invent failures.
+    m.priority.fill(1);
+    for (const key of ["priority", "failed"]) {
+      if (o[key] === undefined) continue;
+      try {
+        const array = fromB64(o[key], m[key].constructor);
+        if (array.length !== m[key].length) return null;
+        m[key] = array;
+      } catch { return null; }
+    }
     for (let e = 0; e < o.n; e++)
       if (m.slot[e] >= GAINS.slots || m.set[e] >= ACT_SETS.length || !ACT_SETS[m.set[e]].includes(m.a[e]) || m.end[e] > 2
-        || !Number.isFinite(m.r[e]) || !(m.mu[e] >= 0 && m.mu[e] <= 1)) return null;
+        || !Number.isFinite(m.r[e]) || !(m.mu[e] >= 0 && m.mu[e] <= 1)
+        || !Number.isFinite(m.priority[e]) || m.priority[e] <= 0 || m.failed[e] > 1
+        || (m.failed[e] && m.end[e] !== 1)) return null;
     Object.assign(m, { head: o.head, n: o.n, epId: o.epId });
     return m;
   }
@@ -816,19 +915,21 @@ export class World {
       if (m === "walk") success = this.dist / this.t > 0.08;
     }
     this.ret += r;
-    if (this.task < 0) this.hippo.store(this.x, this.slot, a, set, r, mu, terminal ? 1 : done ? 2 : 0);   // perform mode stores nothing
+    const stored = this.task < 0 ? this.hippo.head : -1;
+    if (stored >= 0) this.hippo.store(this.x, this.slot, a, set, r, mu,
+      terminal ? 1 : done ? 2 : 0, terminal && !success);  // perform mode stores nothing
     if (done && !terminal && m !== "walk" && GAINS.timeoutBootstrap) {
       const x = this.sense();
       b.learn(r, GAINS.timeoutBootstrap === 2 ? b.encode(x, this.context()) : null, true);
-      this.finish(success);
     } else if (done) {
       b.learn(r, null);
-      this.finish(success);
     } else {
       this.x = this.sense();
       this.h = b.encode(this.x, this.slot = this.context());
       b.learn(r, this.h);
     }
+    if (stored >= 0) this.hippo.setPriority(stored, b.dopamine);
+    if (done) this.finish(success);
     return { action: a, reward: r, done, success };
   }
 
