@@ -1,0 +1,388 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/transfer",
+ "commit": "c2b5a8d",
+ "created": "2026-11-10T09:25:31Z",
+ "command": "node game/world/transfer.mjs 1 2 3 4 5 6 7 8 9 10 --out research/results/transfer-2026-11-10.json",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "replay": 0,
+  "pretrain": "copy",
+  "target": "newletters",
+  "gains": {
+   "gamma": 0.96,
+   "lambda": 0.85,
+   "lrV": 0.05,
+   "lrP": 0.05,
+   "stepCost": 0.005,
+   "wrongCost": 0.6,
+   "hidden": 1000,
+   "maxSteps": 150,
+   "replay": 0.3,
+   "gate": 0.5,
+   "memory": 0.9,
+   "memCap": 2048,
+   "sleepEvery": 0,
+   "sleepSize": 200,
+   "sleepActor": false,
+   "sleepSampler": "uniform",
+   "sleepPriorityAlpha": 0.6,
+   "sleepUniformMix": 0.2,
+   "sleepImportanceBeta": 1,
+   "kwta": 0,
+   "timeoutBootstrap": 0,
+   "orient": 0,
+   "performGreedy": [
+    "walk",
+    "write",
+    "copy",
+    "newletters"
+   ],
+   "si": 0,
+   "slots": 8,
+   "vigilance": 0.35,
+   "minUses": 20,
+   "joints": false,
+   "torque": 6,
+   "damping": 3,
+   "cpg": false,
+   "cpgRate": 2.356194490192345,
+   "cpgDecay": 0.5,
+   "surprise": 0,
+   "surpriseMin": 100,
+   "toneNoise": 0,
+   "retina": "rays",
+   "hebb": 0,
+   "hebbShare": 0.5,
+   "hebbDelta": 0.4,
+   "hebbOnline": false
+  }
+ },
+ "budgets": {
+  "episodes_per_stage": 20000,
+  "early_window": 100
+ },
+ "metrics": {
+  "newLetters": "lower",
+  "early": "higher",
+  "total": "lower"
+ },
+ "baseline": "naive",
+ "runs": [
+  {
+   "arm": "naive",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.256,
+   "scores": {
+    "newLetters": 6258,
+    "early": 0.08,
+    "pretrain": 0,
+    "total": 6258
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.256,
+   "scores": {
+    "newLetters": 6870,
+    "early": 0.07,
+    "pretrain": 6591,
+    "total": 13461
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.827,
+   "scores": {
+    "newLetters": 5534,
+    "early": 0.06,
+    "pretrain": 0,
+    "total": 5534
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.827,
+   "scores": {
+    "newLetters": 3880,
+    "early": 0.1,
+    "pretrain": 7407,
+    "total": 11287
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.202,
+   "scores": {
+    "newLetters": 5714,
+    "early": 0.06,
+    "pretrain": 0,
+    "total": 5714
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.202,
+   "scores": {
+    "newLetters": 13837,
+    "early": 0.02,
+    "pretrain": 5714,
+    "total": 19551
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.915,
+   "scores": {
+    "newLetters": 6874,
+    "early": 0.05,
+    "pretrain": 0,
+    "total": 6874
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.915,
+   "scores": {
+    "newLetters": 5469,
+    "early": 0.17,
+    "pretrain": 5768,
+    "total": 11237
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 5,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.896,
+   "scores": {
+    "newLetters": 6741,
+    "early": 0.05,
+    "pretrain": 0,
+    "total": 6741
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 5,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.896,
+   "scores": {
+    "newLetters": 4729,
+    "early": 0.08,
+    "pretrain": 6584,
+    "total": 11313
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.966,
+   "scores": {
+    "newLetters": 5268,
+    "early": 0.05,
+    "pretrain": 0,
+    "total": 5268
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.966,
+   "scores": {
+    "newLetters": 12096,
+    "early": 0.09,
+    "pretrain": 6823,
+    "total": 18919
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.742,
+   "scores": {
+    "newLetters": 5587,
+    "early": 0.13,
+    "pretrain": 0,
+    "total": 5587
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 2.742,
+   "scores": {
+    "newLetters": 3744,
+    "early": 0.09,
+    "pretrain": 6601,
+    "total": 10345
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.302,
+   "scores": {
+    "newLetters": 4410,
+    "early": 0.04,
+    "pretrain": 0,
+    "total": 4410
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.302,
+   "scores": {
+    "newLetters": 7844,
+    "early": 0.07,
+    "pretrain": 6614,
+    "total": 14458
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.438,
+   "scores": {
+    "newLetters": 6459,
+    "early": 0.11,
+    "pretrain": 0,
+    "total": 6459
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.438,
+   "scores": {
+    "newLetters": 6182,
+    "early": 0.06,
+    "pretrain": 7225,
+    "total": 13407
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "naive",
+   "seed": 10,
+   "split": null,
+   "status": "timeout",
+   "reason": "new letters not learned within 20000 episodes",
+   "seconds": 7.063,
+   "scores": {
+    "newLetters": null,
+    "early": 0.09,
+    "pretrain": 0,
+    "total": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "experienced",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.063,
+   "scores": {
+    "newLetters": 16515,
+    "early": 0.02,
+    "pretrain": 6602,
+    "total": 23117
+   },
+   "checkpoint": null
+  }
+ ]
+}

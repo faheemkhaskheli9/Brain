@@ -1,0 +1,1872 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/sweep",
+ "commit": "c2b5a8d",
+ "created": "2026-11-10T09:59:32Z",
+ "command": "node game/world/sweep.mjs 1 2 3 4 5 6 7 8 9 10 --arms rehearse30,grid,hebb,hebbAll,hebbOnline,grid+hebb --jobs 3 --out research/results/features-2026-11-10.json",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "arms": {
+   "rehearse30": {
+    "replay": 0.3,
+    "sleepEvery": 0
+   },
+   "grid": {
+    "replay": 0.3,
+    "sleepEvery": 0,
+    "retina": "grid"
+   },
+   "hebb": {
+    "replay": 0.3,
+    "sleepEvery": 0,
+    "hebb": 0.1,
+    "develop": 20000
+   },
+   "hebbAll": {
+    "replay": 0.3,
+    "sleepEvery": 0,
+    "hebb": 0.1,
+    "hebbShare": 1,
+    "develop": 20000
+   },
+   "hebbOnline": {
+    "replay": 0.3,
+    "sleepEvery": 0,
+    "hebb": 0.1,
+    "hebbOnline": true,
+    "develop": 20000
+   },
+   "grid+hebb": {
+    "replay": 0.3,
+    "sleepEvery": 0,
+    "retina": "grid",
+    "hebb": 0.1,
+    "develop": 20000
+   }
+  },
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "gains": {
+   "gamma": 0.96,
+   "lambda": 0.85,
+   "lrV": 0.05,
+   "lrP": 0.05,
+   "stepCost": 0.005,
+   "wrongCost": 0.6,
+   "hidden": 1000,
+   "maxSteps": 150,
+   "replay": 0.3,
+   "gate": 0.5,
+   "memory": 0.9,
+   "memCap": 2048,
+   "sleepEvery": 0,
+   "sleepSize": 200,
+   "sleepActor": false,
+   "sleepSampler": "uniform",
+   "sleepPriorityAlpha": 0.6,
+   "sleepUniformMix": 0.2,
+   "sleepImportanceBeta": 1,
+   "kwta": 0,
+   "timeoutBootstrap": 0,
+   "orient": 0,
+   "performGreedy": [
+    "walk",
+    "write",
+    "copy",
+    "newletters"
+   ],
+   "si": 0,
+   "slots": 8,
+   "vigilance": 0.35,
+   "minUses": 20,
+   "joints": false,
+   "torque": 6,
+   "damping": 3,
+   "cpg": false,
+   "cpgRate": 2.356194490192345,
+   "cpgDecay": 0.5,
+   "surprise": 0,
+   "surpriseMin": 100,
+   "toneNoise": 0,
+   "retina": "rays",
+   "hebb": 0,
+   "hebbShare": 0.5,
+   "hebbDelta": 0.4,
+   "hebbOnline": false
+  },
+  "keep": {
+   "grasp": 0.7,
+   "listen": 0.5,
+   "read": 0.4,
+   "write": 0.5
+  }
+ },
+ "budgets": {
+  "episodes_per_stage": 20000,
+  "scored_episodes": 4000
+ },
+ "metrics": {
+  "total": "lower",
+  "episodes.walk": "lower",
+  "episodes.grasp": "lower",
+  "episodes.listen": "lower",
+  "episodes.read": "lower",
+  "episodes.write": "lower",
+  "kept.grasp": "higher",
+  "kept.listen": "higher",
+  "kept.read": "higher",
+  "kept.write": "higher"
+ },
+ "baseline": "rehearse30",
+ "runs": [
+  {
+   "arm": "rehearse30",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 53.043,
+   "scores": {
+    "episodes": {
+     "walk": 99,
+     "grasp": 437,
+     "listen": 1561,
+     "read": 1883,
+     "write": 10703
+    },
+    "total": 14683,
+    "kept": {
+     "grasp": 0.872,
+     "listen": 0.635,
+     "read": 0.557,
+     "write": 0.673
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.91,
+     "listen": 0.72,
+     "read": 0.52,
+     "write": 1
+    },
+    "active": 72.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 59.519,
+   "scores": {
+    "episodes": {
+     "walk": 125,
+     "grasp": 423,
+     "listen": 2217,
+     "read": 1697,
+     "write": 12300
+    },
+    "total": 16762,
+    "kept": {
+     "grasp": 0.857,
+     "listen": 0.766,
+     "read": 0.787,
+     "write": 0.698
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.87,
+     "listen": 0.71,
+     "read": 0.83,
+     "write": 1
+    },
+    "active": 68.6
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 70.91,
+   "scores": {
+    "episodes": {
+     "walk": 91,
+     "grasp": 533,
+     "listen": 3943,
+     "read": 1746,
+     "write": 7945
+    },
+    "total": 14258,
+    "kept": {
+     "grasp": 0.839,
+     "listen": 0.586,
+     "read": 0.52,
+     "write": 0.691
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.88,
+     "listen": 0.58,
+     "read": 0.51,
+     "write": 1
+    },
+    "active": 80
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 5,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 62.252,
+   "scores": {
+    "episodes": {
+     "walk": 151,
+     "grasp": 398,
+     "listen": 2249,
+     "read": 2012,
+     "write": 12140
+    },
+    "total": 16950,
+    "kept": {
+     "grasp": 0.887,
+     "listen": 0.715,
+     "read": 0.734,
+     "write": 0.608
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.89,
+     "listen": 0.72,
+     "read": 0.75,
+     "write": 0.69
+    },
+    "active": 64.7
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 64.531,
+   "scores": {
+    "episodes": {
+     "walk": 95,
+     "grasp": 1118,
+     "listen": 1642,
+     "read": 3182,
+     "write": 6887
+    },
+    "total": 12924,
+    "kept": {
+     "grasp": 0.867,
+     "listen": 0.712,
+     "read": 0.542,
+     "write": 0.619
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.89,
+     "listen": 0.73,
+     "read": 0.56,
+     "write": 0.72
+    },
+    "active": 82
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 89.663,
+   "scores": {
+    "episodes": {
+     "walk": 103,
+     "grasp": 277,
+     "listen": 1136,
+     "read": 6703,
+     "write": 10373
+    },
+    "total": 18592,
+    "kept": {
+     "grasp": 0.88,
+     "listen": 0.687,
+     "read": 0.404,
+     "write": 0.699
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.91,
+     "listen": 0.75,
+     "read": 0.37,
+     "write": 1
+    },
+    "active": 85.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 59.42,
+   "scores": {
+    "episodes": {
+     "walk": 106,
+     "grasp": 385,
+     "listen": 2846,
+     "read": 2897,
+     "write": 6258
+    },
+    "total": 12492,
+    "kept": {
+     "grasp": 0.83,
+     "listen": 0.65,
+     "read": 0.592,
+     "write": 0.607
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.91,
+     "listen": 0.67,
+     "read": 0.62,
+     "write": 0.67
+    },
+    "active": 65.6
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 62.542,
+   "scores": {
+    "episodes": {
+     "walk": 127,
+     "grasp": 927,
+     "listen": 2377,
+     "read": 2588,
+     "write": 17482
+    },
+    "total": 23501,
+    "kept": {
+     "grasp": 0.873,
+     "listen": 0.776,
+     "read": 0.748,
+     "write": 0.626
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.94,
+     "listen": 0.8,
+     "read": 0.72,
+     "write": 0.67
+    },
+    "active": 68.3
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 110.15,
+   "scores": {
+    "episodes": {
+     "walk": 103,
+     "grasp": 1063,
+     "listen": 4480,
+     "read": 6109,
+     "write": 6715
+    },
+    "total": 18470,
+    "kept": {
+     "grasp": 0.894,
+     "listen": 0.771,
+     "read": 0.412,
+     "write": 0.661
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.9,
+     "listen": 0.81,
+     "read": 0.48,
+     "write": 1
+    },
+    "active": 68.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "rehearse30",
+   "seed": 8,
+   "split": null,
+   "status": "timeout",
+   "reason": "read not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 98,
+     "grasp": 459,
+     "listen": 2596,
+     "read": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 63.992,
+   "scores": {
+    "episodes": {
+     "walk": 110,
+     "grasp": 610,
+     "listen": 1655,
+     "read": 3194,
+     "write": 5653
+    },
+    "total": 11222,
+    "kept": {
+     "grasp": 0.893,
+     "listen": 0.657,
+     "read": 0.458,
+     "write": 0.749
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.84,
+     "listen": 0.66,
+     "read": 0.49,
+     "write": 1
+    },
+    "active": 66.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 62.104,
+   "scores": {
+    "episodes": {
+     "walk": 154,
+     "grasp": 479,
+     "listen": 2230,
+     "read": 3238,
+     "write": 4177
+    },
+    "total": 10278,
+    "kept": {
+     "grasp": 0.844,
+     "listen": 0.692,
+     "read": 0.679,
+     "write": 0.598
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.8,
+     "listen": 0.7,
+     "read": 0.69,
+     "write": 0.77
+    },
+    "active": 61
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 54.291,
+   "scores": {
+    "episodes": {
+     "walk": 130,
+     "grasp": 435,
+     "listen": 2143,
+     "read": 1502,
+     "write": 6360
+    },
+    "total": 10570,
+    "kept": {
+     "grasp": 0.898,
+     "listen": 0.76,
+     "read": 0.596,
+     "write": 0.714
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.94,
+     "listen": 0.77,
+     "read": 0.86,
+     "write": 1
+    },
+    "active": 57.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 59.06,
+   "scores": {
+    "episodes": {
+     "walk": 109,
+     "grasp": 718,
+     "listen": 1974,
+     "read": 1596,
+     "write": 10655
+    },
+    "total": 15052,
+    "kept": {
+     "grasp": 0.869,
+     "listen": 0.691,
+     "read": 0.676,
+     "write": 0.719
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.91,
+     "listen": 0.73,
+     "read": 0.8,
+     "write": 1
+    },
+    "active": 67.2
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 46.922,
+   "scores": {
+    "episodes": {
+     "walk": 305,
+     "grasp": 467,
+     "listen": 1764,
+     "read": 816,
+     "write": 5023
+    },
+    "total": 8375,
+    "kept": {
+     "grasp": 0.887,
+     "listen": 0.825,
+     "read": 0.662,
+     "write": 0.774
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.91,
+     "listen": 0.83,
+     "read": 0.7,
+     "write": 1
+    },
+    "active": 63.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 5,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 99.068,
+   "scores": {
+    "episodes": {
+     "walk": 92,
+     "grasp": 514,
+     "listen": 4926,
+     "read": 2398,
+     "write": 6901
+    },
+    "total": 14831,
+    "kept": {
+     "grasp": 0.906,
+     "listen": 0.541,
+     "read": 0.642,
+     "write": 0.689
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.89,
+     "listen": 0.49,
+     "read": 0.71,
+     "write": 1
+    },
+    "active": 61.7
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 55.453,
+   "scores": {
+    "episodes": {
+     "walk": 106,
+     "grasp": 297,
+     "listen": 2565,
+     "read": 984,
+     "write": 9348
+    },
+    "total": 13300,
+    "kept": {
+     "grasp": 0.886,
+     "listen": 0.748,
+     "read": 0.533,
+     "write": 0.71
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.9,
+     "listen": 0.81,
+     "read": 0.54,
+     "write": 1
+    },
+    "active": 55.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 64.134,
+   "scores": {
+    "episodes": {
+     "walk": 124,
+     "grasp": 729,
+     "listen": 1566,
+     "read": 2017,
+     "write": 5429
+    },
+    "total": 9865,
+    "kept": {
+     "grasp": 0.88,
+     "listen": 0.57,
+     "read": 0.441,
+     "write": 0.633
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.89,
+     "listen": 0.58,
+     "read": 0.47,
+     "write": 0.69
+    },
+    "active": 53.7
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 71.599,
+   "scores": {
+    "episodes": {
+     "walk": 144,
+     "grasp": 835,
+     "listen": 2669,
+     "read": 4318,
+     "write": 6293
+    },
+    "total": 14259,
+    "kept": {
+     "grasp": 0.919,
+     "listen": 0.677,
+     "read": 0.473,
+     "write": 0.729
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.93,
+     "listen": 0.67,
+     "read": 0.54,
+     "write": 1
+    },
+    "active": 64.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 79.539,
+   "scores": {
+    "episodes": {
+     "walk": 111,
+     "grasp": 566,
+     "listen": 3815,
+     "read": 3825,
+     "write": 7388
+    },
+    "total": 15705,
+    "kept": {
+     "grasp": 0.874,
+     "listen": 0.62,
+     "read": 0.551,
+     "write": 0.706
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.93,
+     "listen": 0.66,
+     "read": 0.55,
+     "write": 1
+    },
+    "active": 66.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 102.408,
+   "scores": {
+    "episodes": {
+     "walk": 96,
+     "grasp": 393,
+     "listen": 3170,
+     "read": 4213,
+     "write": 17992
+    },
+    "total": 25864,
+    "kept": {
+     "grasp": 0.862,
+     "listen": 0.665,
+     "read": 0.57,
+     "write": 0.624
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.83,
+     "listen": 0.67,
+     "read": 0.47,
+     "write": 0.7
+    },
+    "active": 50.6
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 57.517,
+   "scores": {
+    "episodes": {
+     "walk": 125,
+     "grasp": 525,
+     "listen": 2333,
+     "read": 1738,
+     "write": 8690
+    },
+    "total": 13411,
+    "kept": {
+     "grasp": 0.835,
+     "listen": 0.623,
+     "read": 0.706,
+     "write": 0.68
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.83,
+     "listen": 0.7,
+     "read": 0.77,
+     "write": 1
+    },
+    "active": 54.2
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 5,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 74.514,
+   "scores": {
+    "episodes": {
+     "walk": 193,
+     "grasp": 609,
+     "listen": 3027,
+     "read": 5201,
+     "write": 7691
+    },
+    "total": 16721,
+    "kept": {
+     "grasp": 0.746,
+     "listen": 0.468,
+     "read": 0.441,
+     "write": 0.715
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.76,
+     "listen": 0.5,
+     "read": 0.52,
+     "write": 1
+    },
+    "active": 55.3
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 120.612,
+   "scores": {
+    "episodes": {
+     "walk": 101,
+     "grasp": 1122,
+     "listen": 8202,
+     "read": 4816,
+     "write": 10405
+    },
+    "total": 24646,
+    "kept": {
+     "grasp": 0.833,
+     "listen": 0.549,
+     "read": 0.495,
+     "write": 0.724
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.86,
+     "listen": 0.57,
+     "read": 0.42,
+     "write": 1
+    },
+    "active": 63.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 119.66,
+   "scores": {
+    "episodes": {
+     "walk": 100,
+     "grasp": 410,
+     "listen": 2434,
+     "read": 8837,
+     "write": 11680
+    },
+    "total": 23461,
+    "kept": {
+     "grasp": 0.885,
+     "listen": 0.648,
+     "read": 0.428,
+     "write": 0.656
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.85,
+     "listen": 0.66,
+     "read": 0.44,
+     "write": 1
+    },
+    "active": 65.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 113.943,
+   "scores": {
+    "episodes": {
+     "walk": 102,
+     "grasp": 1199,
+     "listen": 2713,
+     "read": 13655,
+     "write": 10531
+    },
+    "total": 28200,
+    "kept": {
+     "grasp": 0.757,
+     "listen": 0.741,
+     "read": 0.474,
+     "write": 0.663
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.75,
+     "listen": 0.74,
+     "read": 0.5,
+     "write": 1
+    },
+    "active": 63.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 170.695,
+   "scores": {
+    "episodes": {
+     "walk": 109,
+     "grasp": 430,
+     "listen": 16339,
+     "read": 3255,
+     "write": 14252
+    },
+    "total": 34385,
+    "kept": {
+     "grasp": 0.893,
+     "listen": 0.52,
+     "read": 0.629,
+     "write": 0.611
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.9,
+     "listen": 0.51,
+     "read": 0.57,
+     "write": 0.62
+    },
+    "active": 44.2
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 8,
+   "split": null,
+   "status": "timeout",
+   "reason": "write not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 113,
+     "grasp": 526,
+     "listen": 3401,
+     "read": 16551,
+     "write": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 108.197,
+   "scores": {
+    "episodes": {
+     "walk": 87,
+     "grasp": 920,
+     "listen": 7311,
+     "read": 5522,
+     "write": 8644
+    },
+    "total": 22484,
+    "kept": {
+     "grasp": 0.818,
+     "listen": 0.528,
+     "read": 0.425,
+     "write": 0.564
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.94,
+     "listen": 0.64,
+     "read": 0.47,
+     "write": 0.68
+    },
+    "active": 53.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebb",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 60.237,
+   "scores": {
+    "episodes": {
+     "walk": 137,
+     "grasp": 1534,
+     "listen": 2900,
+     "read": 1534,
+     "write": 6347
+    },
+    "total": 12452,
+    "kept": {
+     "grasp": 0.823,
+     "listen": 0.7,
+     "read": 0.657,
+     "write": 0.669
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.88,
+     "listen": 0.78,
+     "read": 0.63,
+     "write": 1
+    },
+    "active": 55.4
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 1,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 101,
+     "grasp": 716,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 119.56,
+   "scores": {
+    "episodes": {
+     "walk": 135,
+     "grasp": 925,
+     "listen": 12458,
+     "read": 3318,
+     "write": 6042
+    },
+    "total": 22878,
+    "kept": {
+     "grasp": 0.843,
+     "listen": 0.442,
+     "read": 0.439,
+     "write": 0.666
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.85,
+     "listen": 0.36,
+     "read": 0.38,
+     "write": 0.72
+    },
+    "active": 32.2
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 163.662,
+   "scores": {
+    "episodes": {
+     "walk": 94,
+     "grasp": 1793,
+     "listen": 14959,
+     "read": 6761,
+     "write": 3542
+    },
+    "total": 27149,
+    "kept": {
+     "grasp": 0.582,
+     "listen": 0.554,
+     "read": 0.441,
+     "write": 0.709
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.58,
+     "listen": 0.61,
+     "read": 0.43,
+     "write": 1
+    },
+    "active": 39.8
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 4,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 94,
+     "grasp": 489,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 82.737,
+   "scores": {
+    "episodes": {
+     "walk": 94,
+     "grasp": 2157,
+     "listen": 5606,
+     "read": 2102,
+     "write": 9436
+    },
+    "total": 19395,
+    "kept": {
+     "grasp": 0.703,
+     "listen": 0.514,
+     "read": 0.539,
+     "write": 0.73
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.71,
+     "listen": 0.52,
+     "read": 0.62,
+     "write": 1
+    },
+    "active": 34.6
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 5,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 130,
+     "grasp": 2595,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 95.459,
+   "scores": {
+    "episodes": {
+     "walk": 94,
+     "grasp": 1384,
+     "listen": 6622,
+     "read": 3855,
+     "write": 7399
+    },
+    "total": 19354,
+    "kept": {
+     "grasp": 0.737,
+     "listen": 0.541,
+     "read": 0.473,
+     "write": 0.752
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.73,
+     "listen": 0.6,
+     "read": 0.52,
+     "write": 1
+    },
+    "active": 39.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 7,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 107,
+     "grasp": 1234,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 9,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 85,
+     "grasp": 2092,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 63.489,
+   "scores": {
+    "episodes": {
+     "walk": 96,
+     "grasp": 498,
+     "listen": 1727,
+     "read": 1915,
+     "write": 11809
+    },
+    "total": 16045,
+    "kept": {
+     "grasp": 0.862,
+     "listen": 0.726,
+     "read": 0.625,
+     "write": 0.619
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.91,
+     "listen": 0.7,
+     "read": 0.54,
+     "write": 0.63
+    },
+    "active": 45.2
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbAll",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 118.13,
+   "scores": {
+    "episodes": {
+     "walk": 129,
+     "grasp": 1334,
+     "listen": 16980,
+     "read": 1265,
+     "write": 9043
+    },
+    "total": 28751,
+    "kept": {
+     "grasp": 0.828,
+     "listen": 0.501,
+     "read": 0.639,
+     "write": 0.683
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.83,
+     "listen": 0.44,
+     "read": 0.67,
+     "write": 1
+    },
+    "active": 34.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 2,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 112.141,
+   "scores": {
+    "episodes": {
+     "walk": 125,
+     "grasp": 399,
+     "listen": 6451,
+     "read": 2161,
+     "write": 9383
+    },
+    "total": 18519,
+    "kept": {
+     "grasp": 0.87,
+     "listen": 0.539,
+     "read": 0.508,
+     "write": 0.647
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.84,
+     "listen": 0.51,
+     "read": 0.53,
+     "write": 1
+    },
+    "active": 48
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 104.49,
+   "scores": {
+    "episodes": {
+     "walk": 96,
+     "grasp": 924,
+     "listen": 4640,
+     "read": 5675,
+     "write": 5793
+    },
+    "total": 17128,
+    "kept": {
+     "grasp": 0.903,
+     "listen": 0.624,
+     "read": 0.472,
+     "write": 0.713
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.93,
+     "listen": 0.67,
+     "read": 0.55,
+     "write": 1
+    },
+    "active": 58.7
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 4,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 79.108,
+   "scores": {
+    "episodes": {
+     "walk": 100,
+     "grasp": 427,
+     "listen": 2148,
+     "read": 1718,
+     "write": 15323
+    },
+    "total": 19716,
+    "kept": {
+     "grasp": 0.881,
+     "listen": 0.606,
+     "read": 0.536,
+     "write": 0.707
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.92,
+     "listen": 0.67,
+     "read": 0.5,
+     "write": 1
+    },
+    "active": 52.3
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 5,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 206,
+     "grasp": 302,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 6,
+   "split": null,
+   "status": "timeout",
+   "reason": "read not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 102,
+     "grasp": 901,
+     "listen": 2907,
+     "read": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 7,
+   "split": null,
+   "status": "timeout",
+   "reason": "read not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 110,
+     "grasp": 212,
+     "listen": 5556,
+     "read": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 9,
+   "split": null,
+   "status": "timeout",
+   "reason": "listen not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 87,
+     "grasp": 733,
+     "listen": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 8,
+   "split": null,
+   "status": "timeout",
+   "reason": "read not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 113,
+     "grasp": 760,
+     "listen": 4353,
+     "read": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "hebbOnline",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 101.585,
+   "scores": {
+    "episodes": {
+     "walk": 137,
+     "grasp": 1344,
+     "listen": 3223,
+     "read": 2695,
+     "write": 18385
+    },
+    "total": 25784,
+    "kept": {
+     "grasp": 0.832,
+     "listen": 0.711,
+     "read": 0.59,
+     "write": 0.647
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.82,
+     "listen": 0.7,
+     "read": 0.6,
+     "write": 0.7
+    },
+    "active": 53.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 2,
+   "split": null,
+   "status": "timeout",
+   "reason": "write not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 157,
+     "grasp": 395,
+     "listen": 5145,
+     "read": 950,
+     "write": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 3,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 63.039,
+   "scores": {
+    "episodes": {
+     "walk": 137,
+     "grasp": 382,
+     "listen": 2626,
+     "read": 992,
+     "write": 9997
+    },
+    "total": 14134,
+    "kept": {
+     "grasp": 0.851,
+     "listen": 0.788,
+     "read": 0.753,
+     "write": 0.699
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.85,
+     "listen": 0.81,
+     "read": 0.77,
+     "write": 1
+    },
+    "active": 57.7
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 1,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 170.934,
+   "scores": {
+    "episodes": {
+     "walk": 116,
+     "grasp": 386,
+     "listen": 5188,
+     "read": 8418,
+     "write": 13583
+    },
+    "total": 27691,
+    "kept": {
+     "grasp": 0.906,
+     "listen": 0.608,
+     "read": 0.384,
+     "write": 0.638
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.92,
+     "listen": 0.56,
+     "read": 0.39,
+     "write": 1
+    },
+    "active": 68.1
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 4,
+   "split": null,
+   "status": "timeout",
+   "reason": "write not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 109,
+     "grasp": 752,
+     "listen": 3605,
+     "read": 4667,
+     "write": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 6,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 89.324,
+   "scores": {
+    "episodes": {
+     "walk": 316,
+     "grasp": 488,
+     "listen": 3584,
+     "read": 4832,
+     "write": 6371
+    },
+    "total": 15591,
+    "kept": {
+     "grasp": 0.895,
+     "listen": 0.658,
+     "read": 0.424,
+     "write": 0.7
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.95,
+     "listen": 0.59,
+     "read": 0.44,
+     "write": 1
+    },
+    "active": 62.3
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 7,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 75.808,
+   "scores": {
+    "episodes": {
+     "walk": 101,
+     "grasp": 438,
+     "listen": 1895,
+     "read": 3233,
+     "write": 13622
+    },
+    "total": 19289,
+    "kept": {
+     "grasp": 0.843,
+     "listen": 0.642,
+     "read": 0.562,
+     "write": 0.595
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.86,
+     "listen": 0.71,
+     "read": 0.6,
+     "write": 0.64
+    },
+    "active": 57.7
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 9,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 57.374,
+   "scores": {
+    "episodes": {
+     "walk": 123,
+     "grasp": 1264,
+     "listen": 3006,
+     "read": 1755,
+     "write": 4907
+    },
+    "total": 11055,
+    "kept": {
+     "grasp": 0.88,
+     "listen": 0.607,
+     "read": 0.528,
+     "write": 0.8
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.82,
+     "listen": 0.64,
+     "read": 0.59,
+     "write": 1
+    },
+    "active": 68.6
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 8,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 73.494,
+   "scores": {
+    "episodes": {
+     "walk": 142,
+     "grasp": 1009,
+     "listen": 2512,
+     "read": 2744,
+     "write": 5345
+    },
+    "total": 11752,
+    "kept": {
+     "grasp": 0.871,
+     "listen": 0.566,
+     "read": 0.553,
+     "write": 0.668
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.9,
+     "listen": 0.59,
+     "read": 0.67,
+     "write": 1
+    },
+    "active": 50.4
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 5,
+   "split": null,
+   "status": "timeout",
+   "reason": "read not learned within 20000 episodes",
+   "seconds": null,
+   "scores": {
+    "episodes": {
+     "walk": 100,
+     "grasp": 623,
+     "listen": 9517,
+     "read": 20000
+    }
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "grid+hebb",
+   "seed": 10,
+   "split": null,
+   "status": "ok",
+   "reason": null,
+   "seconds": 78.763,
+   "scores": {
+    "episodes": {
+     "walk": 133,
+     "grasp": 381,
+     "listen": 7088,
+     "read": 1783,
+     "write": 7516
+    },
+    "total": 16901,
+    "kept": {
+     "grasp": 0.893,
+     "listen": 0.531,
+     "read": 0.54,
+     "write": 0.756
+    },
+    "perform": {
+     "walk": 1,
+     "grasp": 0.94,
+     "listen": 0.52,
+     "read": 0.59,
+     "write": 1
+    },
+    "active": 63.1
+   },
+   "checkpoint": null
+  }
+ ]
+}
