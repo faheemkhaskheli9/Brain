@@ -810,12 +810,14 @@ hash, apart from the model card and the new `retina` field) as before the change
   and nothing above a far wall. A grid save must reload and act the same for 300 steps, the v3 fixture
   must load as rays, and a save cannot claim the other retina.
 
-**Results.** The sweep arm is `grid` (`sweep.mjs --arms rehearse30,grid`). The numbers below were
-measured on the older line this feature was ported from (commit f8fb4ab, seeds 1-10, 2026-10-16), not
-re-run on this code, where the contexts, surprise and other defaults differ. Treat them as a pointer for
-a re-run, not as a result of this code. There, with the 15 rays 9/10 seeds learned every stage (mean
-16,515 episodes to graduate) and with the grid 10/10 (12,346); paired over the 9 seeds both graduated
-the grid needed 3,893 fewer episodes (p = 0.008), most of it in write. The step size
+**Results.** The sweep arm is `grid` (`sweep.mjs --arms rehearse30,grid`). Seeds 1-10, re-run on this
+code 2026-11-10 (commit c2b5a8d,
+[research/results/features-2026-11-10.json](../../research/results/features-2026-11-10.json)); the
+numbers match the run on the older line this feature was ported from (f8fb4ab, 2026-10-16). With the
+15 rays 9/10 seeds learned every stage (mean 16,515 episodes to graduate; seed 8 did not learn read)
+and with the grid 10/10 (12,346); paired over the 9 seeds both graduated the grid needed 3,893 fewer
+episodes (p = 0.008), most of it in write (−3,223, p = 0.055). No kept skill was lower (grasp +0.02,
+p = 0.051; write +0.06, p = 0.055). The step size
 1 / (1 + mean |h|²) moved too (×0.70 on walk to ×1.20 on listen), so the speed-up is confounded with it
 (#37); a run at matched step sizes would tell them apart (not done).
 
@@ -872,8 +874,10 @@ Krotov and Hopfield's (2019) competing hidden units.
   toward it (cosine above 0.99), an online save reloads and acts the same for 300 steps, and perform
   mode changes no feature.
 
-**Results.** Measured on the older line this was ported from (commit f8fb4ab, seeds 1-10, 2026-10-16),
-not re-run on this code; treat them as a pointer for a re-run.
+**Results.** The sweep (seeds 1-10) was re-run on this code 2026-11-10 (commit c2b5a8d,
+[research/results/features-2026-11-10.json](../../research/results/features-2026-11-10.json)) and
+matches the run on the older line this was ported from (f8fb4ab, 2026-10-16). The pilot and the
+colour-unit diagnostic below are from the older line only and were not re-run.
 - Pilot (seeds 1-2, feature statistics only): of about 450 learning units in 17 groups only 31-49 ever
   won, about 300 moved as winner or runner-up, and the fovea group's wins went to three units, about one
   per letter. A retina window sees grey walls on most steps, so one unit per window learns "wall" and
@@ -881,8 +885,9 @@ not re-run on this code; treat them as a pointer for a re-run.
 - Sweep, pre-registered with the decision rule "learned features go on by default only if an arm
   graduates at least as many seeds, needs fewer episodes (p < 0.05) and lowers no kept skill by more
   than 0.05": random features graduated 9/10 seeds in 16,515 episodes, `hebb` 9/10 in 22,403 (listen
-  +2,886 episodes, p = 0.004, kept listen −0.095), `hebbAll` 5/10, `hebbOnline` 5/10, grid + `hebb` 7/10
-  against 10/10 for the grid alone. The rule was not met, so `GAINS.hebb` stays 0.
+  +2,886 episodes, p = 0.004, kept listen −0.095, p = 0.023), `hebbAll` 5/10 (the five failures all at
+  listen), `hebbOnline` 5/10, grid + `hebb` 7/10 against 10/10 for the grid alone. The rule was not
+  met, so `GAINS.hebb` stays 0.
 - Why listen: a one-off diagnostic found the retina units driven by a red, green or blue ball fell from
   86-103 to 51-64 after the critical period. The competition silenced colour units, which listen needs.
 - The step size moved too (listen ×1.12, grasp ×0.93), so part of some slowdowns may be the step size
@@ -920,7 +925,7 @@ kept them.
   runs headless and fast. WebGL does not exist in Node, so a pixel retina would have to keep the ray-cast
   path for CI and for the save and load check.
 - Learned sensory features that help. Competing hidden units (#65 item 4) silenced colour units and
-  slowed listening on the older line; a rule that keeps them is untested (see "Learned features").
+  slowed listening; a rule that keeps them is untested (see "Learned features").
 - Speech or spoken words instead of pure tones. Multi-letter words. (New letters made of known
   strokes exist as an optional stage, #37; they showed no transfer.)
 - Limbs in a physics engine (for example Rapier). The torque and pattern-generator legs (#38) are
