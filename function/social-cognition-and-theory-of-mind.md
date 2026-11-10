@@ -9,7 +9,7 @@ use_cases:
   - how do people and animals learn by watching others
   - infer an agent's goal from its behaviour (inverse planning)
   - do large language models have theory of mind
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1016/0010-0277(83)90004-5

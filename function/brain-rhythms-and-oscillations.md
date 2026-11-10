@@ -7,7 +7,7 @@ use_cases:
   - what is theta phase precession
   - does gamma synchrony bind features together
   - make a spiking network oscillate in the gamma band
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1126/science.1099745

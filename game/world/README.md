@@ -13,6 +13,7 @@ A user guide with a screenshot of every feature is in [docs/app-guide.md](../../
 ```
 python -m http.server 8000        # from the repo root
 # open http://localhost:8000/game/world/
+# open http://localhost:8000/game/world/?retina=grid   # a 15 x 5 ray grid retina (see "Grid retina")
 node game/world/test_brain.mjs    # headless check, seed 1, about 90 s
 node game/world/test_brain.mjs 1 2 3   # several seeds, as CI runs it
 node game/world/perform.mjs brain.json # score a saved brain per skill, learning off
@@ -24,6 +25,8 @@ node game/world/sweep.mjs --arms rehearse30,kwta20,kwta35,kwta50 --jobs 2   # k-
 node game/world/sweep.mjs --arms rehearse30,timeoutSense,timeoutBootstrap --jobs 2   # time-limit bootstrapping (see "Timeouts")
 node game/world/sweep.mjs --arms copy,copy+si,copy15,copy15+si --jobs 2   # synaptic intelligence and a sixth skill (see "Synaptic intelligence")
 node game/world/sweep.mjs 1 2 3 4 5 --arms rehearse30,joints,cpg --jobs 4   # torque and pattern-generator legs (see "Jointed legs")
+node game/world/sweep.mjs --arms rehearse30,grid --jobs 3   # the grid retina (see "Grid retina")
+node game/world/sweep.mjs --arms hebb,hebbAll,hebbOnline,grid+hebb --jobs 3   # learned features (see "Learned features")
 node game/world/transfer.mjs              # new letters from known strokes, seeds 1-10, about 1 min (see "New letters")
 node game/world/heldout.mjs               # held-out rooms, tone mapping and letters, seeds 1-10 (see "Held-out")
 node game/test_browser.mjs                # both demos in headless Chromium: save/load, teach, mobile (#109)
@@ -70,7 +73,8 @@ stages are not in the page's curriculum; `sweep.mjs` (copy) and `transfer.mjs` (
 
 ## The brain
 
-- **Senses:** a 15-ray retina (RGB times nearness), a 5×5 fovea that resolves the letter on the
+- **Senses:** a 15-ray retina (RGB times nearness; `GAINS.retina = "grid"`, page `?retina=grid`, makes it
+  5 rows of 15, see "Grid retina"), a 5×5 fovea that resolves the letter on the
   object in a ±0.2 rad central cone, three cochlea bands, leg position and the pen pad. On the page,
   that cone turns dark violet while a letter is in it.
 - **Fovea memory:** a decaying trace of the fovea (×0.9 per step), so the last letter seen stays
@@ -772,6 +776,129 @@ actions walked often enough there that walk passed with little to learn. Seeds 1
   (+4,245 torque, +5,961 pattern generator, p 0.375 and 0.250, n 4). Five seeds cannot tell those
   costs from noise. Why later stages are slower is #95.
 
+## Grid retina: rays in two dimensions (#94)
+
+Issue #94 asked for a richer visual input than 15 rays, while the test stays headless and
+deterministic. `GAINS.retina = "grid"` (page `?retina=grid`) gives a new brain 5 rows of 15 rays. The
+default stays `"rays"` and draws nothing new: a 20,000-step run of seed 1 saves the same brain (same
+hash, apart from the model card and the new `retina` field) as before the change.
+
+**How it works.**
+- **Rays in elevation.** The rows tilt the 15 rays by +0.35, +0.175, 0, −0.175 and −0.35 rad. The room
+  gets heights (`GRID`): the eye at 0.45, walls 1.0 tall, objects as upright cylinders 0.75 tall. A
+  tilted ray sees the nearest object if it meets it within its height, else the floor if it comes down
+  first, else the wall if it is below the top, else nothing. The floor reads 0.1 grey (walls 0.2), and
+  nothing reads 0. Brightness falls with horizontal distance, as on the 15-ray retina. So an object
+  straight ahead fills all five rows when near, and only the middle row when far. The bottom rows show
+  the floor, and the top rows go black away from the walls.
+- **The middle row is the old retina,** in the same place in the input vector. The 180 new inputs come
+  after the fovea memory (`retinaIndex`). So the scene summary that picks the context slot and the
+  orienting reflex read the same numbers with either retina.
+- **2-D patches.** A retina unit reads one 2 × 2 window of neighbouring rays, in all three colours,
+  instead of two neighbouring rays. The window's row is drawn only on the grid, so the 15-ray brain
+  draws exactly what it always drew.
+- **Saves.** The grid brain has 287 inputs instead of 107, so it is a different brain, not a migration.
+  A save records `retina`. A save without it (from before #94, the v3 fixture too) loads as `"rays"`,
+  and `fromJSON` builds the brain the save names; the episodic store is sized to match. A save that
+  names the wrong retina for its weights, or an unknown one, is rejected. On the page, the retina panel
+  shows the 5 rows.
+- **Test.** `test_brain.mjs` checks the shapes. In three rooms the middle row must equal the 15-ray
+  retina. Every retina unit must read one 2 × 2 window, and the windows must cover the grid. A near
+  object must fill all five rows of the centre ray and a far one only the middle, with the floor below
+  and nothing above a far wall. A grid save must reload and act the same for 300 steps, the v3 fixture
+  must load as rays, and a save cannot claim the other retina.
+
+**Results.** The sweep arm is `grid` (`sweep.mjs --arms rehearse30,grid`). The numbers below were
+measured on the older line this feature was ported from (commit f8fb4ab, seeds 1-10, 2026-10-16), not
+re-run on this code, where the contexts, surprise and other defaults differ. Treat them as a pointer for
+a re-run, not as a result of this code. There, with the 15 rays 9/10 seeds learned every stage (mean
+16,515 episodes to graduate) and with the grid 10/10 (12,346); paired over the 9 seeds both graduated
+the grid needed 3,893 fewer episodes (p = 0.008), most of it in write. The step size
+1 / (1 + mean |h|²) moved too (×0.70 on walk to ×1.20 on listen), so the speed-up is confounded with it
+(#37); a run at matched step sizes would tell them apart (not done).
+
+Limits:
+- One grid shape (5 rows, ±0.35 rad), untuned. The heights are game choices. The page draws its walls
+  0.35 tall, lower than the eye, as it always has.
+- Read still depends on the fovea, which is unchanged.
+- Rendered pixels are still not done: WebGL does not exist in Node, so CI and the save and load check
+  would need the ray-cast path anyway.
+
+That a retina samples the image in two dimensions is established. That this ray grid resembles a
+retina's sampling is not claimed.
+
+## Learned features: competing hidden units (#65 item 4)
+
+Issue #65 item 4 asked whether sensory features learned by a local competitive Hebbian rule beat the
+fixed random expansion: the backprop-free route to learned vision named in #38 and #94. The rule is
+Krotov and Hopfield's (2019) competing hidden units.
+
+**How it works.** `GAINS.hebb` is the learning rate. 0, the default, draws nothing and changes nothing
+(and `World.develop` returns at once).
+- **The rule.** Units that read the same window rank by their input current w·v, over their five
+  drive weights w and inputs v. The top one moves toward the input, w += hebb (v − (w·v) w / |w|²),
+  and the second moves away with −`hebbDelta` (0.4, their MNIST value) times that. This is their rule
+  with p = 2 (they used p = 4). Their weights converge to a sphere; here each unit is put back on the
+  sphere of its birth norm after every step. So drive stays at the random weights' scale, and a unit
+  that never learns stays exactly as born. A window learns on a step only if its winner's current is
+  positive. Like theirs, the rank uses the current, not the unit's final activity (which here also has
+  a bias and a sound gain).
+- **Which units.** Half the visual units (`hebbShare` 0.5): units reading a retina window, the fovea
+  or the fovea memory, picked by a private random stream. The other half keep their random weights,
+  so the layer keeps what random sparse wiring is good for (a high dimension for a linear readout:
+  Litwin-Kumar et al. 2017). The sound gains and the body units (legs, pen pad) stay random: the gains
+  are what pair tones with colours, and the body inputs are a few binary values.
+- **Groups.** A unit competes with the others that read the same window: one group per retina window
+  (keyed by its top-left ray), one for the fovea, one for its memory. That is 17 groups on 15 rays.
+- **When: a critical period.** `World.develop(steps)` runs free play before the curriculum (the sweep
+  uses 20,000 steps, about 1.5 s), with reward learning off, in which only the features learn. Then
+  they stay fixed. It runs on its own random stream and then replays the first episode, so the
+  curriculum draws exactly what it would without it; only the features differ. Fixed features avoid a
+  moving target: the actor reads h, and if its units change meaning, every skill's policy changes with
+  them. This is Krotov and Hopfield's protocol too (learn the features without labels, freeze them,
+  then train a readout). It echoes the critical periods of visual cortex, which are established (Hubel
+  and Wiesel 1970); that this period works like those is not claimed. `GAINS.hebbOnline` keeps the
+  features learning all through training (not in perform mode), to measure the drift.
+- **Saves.** Nothing new: `wIn` was always saved. Which units learn comes from `idx` and a fixed
+  stream, and the norms are held, so a loaded brain with `hebbOnline` learns as the saved one would.
+- **Sweep arms.** `hebb` (half, critical period), `hebbAll` (every visual unit), `hebbOnline` (half,
+  learning throughout) and `grid+hebb`; a row also reports how many learning units moved and their
+  mean cosine to birth.
+- **Test.** `test_brain.mjs` checks that with `hebb` 0 `develop` changes nothing (the next 2,000
+  steps match a fresh world), and with it on that only learning units' drive weights change, each
+  keeps its norm, the curriculum's first episode is unchanged, a repeated letter turns a fovea winner
+  toward it (cosine above 0.99), an online save reloads and acts the same for 300 steps, and perform
+  mode changes no feature.
+
+**Results.** Measured on the older line this was ported from (commit f8fb4ab, seeds 1-10, 2026-10-16),
+not re-run on this code; treat them as a pointer for a re-run.
+- Pilot (seeds 1-2, feature statistics only): of about 450 learning units in 17 groups only 31-49 ever
+  won, about 300 moved as winner or runner-up, and the fovea group's wins went to three units, about one
+  per letter. A retina window sees grey walls on most steps, so one unit per window learns "wall" and
+  keeps winning, while the runner-ups are pushed off the wall direction and fall silent.
+- Sweep, pre-registered with the decision rule "learned features go on by default only if an arm
+  graduates at least as many seeds, needs fewer episodes (p < 0.05) and lowers no kept skill by more
+  than 0.05": random features graduated 9/10 seeds in 16,515 episodes, `hebb` 9/10 in 22,403 (listen
+  +2,886 episodes, p = 0.004, kept listen −0.095), `hebbAll` 5/10, `hebbOnline` 5/10, grid + `hebb` 7/10
+  against 10/10 for the grid alone. The rule was not met, so `GAINS.hebb` stays 0.
+- Why listen: a one-off diagnostic found the retina units driven by a red, green or blue ball fell from
+  86-103 to 51-64 after the critical period. The competition silenced colour units, which listen needs.
+- The step size moved too (listen ×1.12, grasp ×0.93), so part of some slowdowns may be the step size
+  (#37). Matched-step runs were not done.
+
+Limits:
+- One rule (p = 2, the top unit Hebbian, the second anti-Hebbian at 0.4), one learning rate, one
+  period (20,000 steps). The rule ranks by input current. Krotov and Hopfield's full model ranks final
+  activities after lateral inhibition, and they used p = 4 on varied images (MNIST, CIFAR-10). This
+  world shows mostly walls, three colours and three letters. A rule that does not push runner-ups off
+  the commonest input, or a homeostatic threshold, might keep the colour units. Untested.
+
+That visual cortex tunes its early features to experience in a critical period is established (Hubel
+and Wiesel 1970). This run says nothing about whether cortex's rule is like this one. It shows that
+this rule, on this world's statistics, removed units the reward-trained readout needed, where a fixed
+random sparse expansion, which theory says already suits a linear readout (Litwin-Kumar et al. 2017),
+kept them.
+
 ## The science behind it
 
 | Mechanism here | Topic file |
@@ -782,10 +909,16 @@ actions walked often enough there that walk passed with little to learn. Seeds 1
 | Task-context gating, fovea memory as working memory | [attention-and-working-memory](../../function/attention-and-working-memory.md) |
 | Actor-critic plus replay as one learner | [build-a-brain-like-learner](../../guides/build-a-brain-like-learner.md) |
 | Save brain and Load brain: what the file holds and why | [saving-and-reusing-a-trained-brain](../../simulation/saving-and-reusing-a-trained-brain.md) |
+| Grid retina: a richer visual input | [sensory-systems-and-vision](../../function/sensory-systems-and-vision.md) |
+| Learned features: competing hidden units in a critical period | [brain-inspired-learning-algorithms](../../learning/brain-inspired-learning-algorithms.md), [efficient-brain-like-learning](../../learning/efficient-brain-like-learning.md) |
 
 ## Not done yet
 
-- Real vision from rendered pixels. The retina is ray-cast, so it runs headless and fast.
+- Real vision from rendered pixels. The retina is ray-cast (15 rays, or a 15 × 5 grid since #94), so it
+  runs headless and fast. WebGL does not exist in Node, so a pixel retina would have to keep the ray-cast
+  path for CI and for the save and load check.
+- Learned sensory features that help. Competing hidden units (#65 item 4) silenced colour units and
+  slowed listening on the older line; a rule that keeps them is untested (see "Learned features").
 - Speech or spoken words instead of pure tones. Multi-letter words. (New letters made of known
   strokes exist as an optional stage, #37; they showed no transfer.)
 - Limbs in a physics engine (for example Rapier). The torque and pattern-generator legs (#38) are
@@ -812,5 +945,11 @@ actions walked often enough there that walk passed with little to learn. Seeds 1
   doi:10.1038/385533a0
 - Singh, Jaakkola and Jordan (1994) "Learning without state-estimation in partially observable
   Markovian decision processes", *Proceedings of ICML 1994*, 284-292.
+- Krotov and Hopfield (2019) "Unsupervised learning by competing hidden units", *PNAS* 116:7723.
+  doi:10.1073/pnas.1820458116
+- Litwin-Kumar, Harris, Axel, Sompolinsky and Abbott (2017) "Optimal degrees of synaptic
+  connectivity", *Neuron* 93:1153. doi:10.1016/j.neuron.2017.01.030
+- Hubel and Wiesel (1970) "The period of susceptibility to the physiological effects of unilateral eye
+  closure in kittens", *J Physiol* 206:419. doi:10.1113/jphysiol.1970.sp009022
 - Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a
   review", *Neural Netw* 21:642. https://pubmed.ncbi.nlm.nih.gov/18555958/

@@ -9,7 +9,7 @@ use_cases:
   - can a task-trained RNN be used as a model of cortex
   - what is representational drift and how can behaviour stay stable through it
   - build a continuous attractor network in numpy
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1146/annurev-neuro-092619-094115

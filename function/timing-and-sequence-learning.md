@@ -9,7 +9,7 @@ use_cases:
   - how are motor sequences learned and chunked
   - compare transformer positional encodings with how brains represent time
   - build a population clock that decodes elapsed time in numpy
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1037/0033-295X.84.3.279

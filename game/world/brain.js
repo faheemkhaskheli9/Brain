@@ -69,8 +69,17 @@ export const NEW_LETTERS = { key: "newletters", name: "Copy new letters", pass: 
 export const REVERSE = { key: "reverse", name: "Listen, reversed", pass: 0.7,
   about: "Three coloured objects, as in listen, but the rule changed: low = green, middle = blue, high = red." };
 
-// Inputs: retina, legs, cochlea, fovea, pen pad, at-board flag, then the fovea memory.
-const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, N_IN = MEM0 + 25, FAN_IN = 8;
+// Inputs: retina, legs, cochlea, fovea, pen pad, at-board flag, then the fovea memory. The grid retina's
+// extra rows (#94) come after that, so the first N_IN inputs mean the same with either retina.
+const BOARD_IN = RAYS * 3 + 2 + 3 + 25 + 6, MEM0 = BOARD_IN + 1, FAN_IN = 8;
+export const N_IN = MEM0 + 25;
+// Grid retina (#94): rows of rays at these elevations (rad, top to bottom; the middle one is the 15-ray
+// retina). Heights in arena units: the eye, the top of the walls and of the objects (as upright cylinders).
+// The floor reads 0.1 grey, darker than the walls' 0.2; above the walls a ray sees nothing (0).
+export const GRID = { rows: 5, elev: [0.35, 0.175, 0, -0.175, -0.35], eye: 0.45, wall: 1, obj: 0.75, floor: [0.1, 0.1, 0.1] };
+// Where retina row r (0 = top), ray i, colour c sits in x: the eye-level row where the 15-ray retina always
+// was, the grid's other rows after the fovea memory. rows = 1 is the 15-ray retina.
+export function retinaIndex(rows, r, i, c) { const M = rows >> 1; return r === M ? i * 3 + c : N_IN + ((r < M ? r : r - 1) * RAYS + i) * 3 + c; }
 // Game gains: tuning knobs so each stage learns in minutes, not measurements. A wrong grasp must
 // cost more than a whole episode of step costs, or grabbing anything beats searching.
 export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost: 0.005, wrongCost: 0.6,
@@ -123,7 +132,15 @@ export const GAINS = { gamma: 0.96, lambda: 0.85, lrV: 0.05, lrP: 0.05, stepCost
   surprise: 0, surpriseMin: 100,
   // Noisy cues (issue #135): the chance that an episode's tone is replaced by a random one (it may
   // pick the right tone). 0 = off, and then no random number is drawn, so runs are unchanged.
-  toneNoise: 0 };
+  toneNoise: 0,
+  // The retina a new World is born with (issue #94): "rays", 15 rays at eye level (the CI retina), or "grid",
+  // GRID.rows rows of them fanned in elevation too. It changes the brain's size, so a save keeps its own.
+  retina: "rays",
+  // Learned sensory features (issue #65 item 4): Krotov and Hopfield's (2019) competing hidden units on the
+  // drive weights of a share hebbShare of the visual units (see Brain.hebbian). hebb is the learning rate,
+  // 0 = off (nothing is drawn or changes); hebbDelta pushes the runner-up away. Features learn during
+  // World.develop (a critical period before the curriculum) and, with hebbOnline, all through training.
+  hebb: 0, hebbShare: 0.5, hebbDelta: 0.4, hebbOnline: false };
 export const SCENE = 5;   // scene-summary channels: luminance, chroma, sound, fovea letter, at the board
 // The scene code each of the five v3 stages produces (walk, grasp, listen, read, write), for World.migrate.
 const V3_CODES = [[0, 0, 0, 0, 0], [0, 1, 0, 0, 0], [0, 1, 1, 0, 0], [1, 0, 1, 1, 0], [0, 0, 1, 0, 1]];
@@ -132,12 +149,14 @@ const BODY_ACTS = [0, 1, 2, 3, 4], HABIT_ACTS = [0, 1, 4], PEN_ACTS = PEN.map((_
 export const ACT_SETS = [BODY_ACTS, HABIT_ACTS, PEN_ACTS];
 
 export class Brain {
-  constructor(rand) {
+  constructor(rand, retina = GAINS.retina) {
     this.rand = rand;
-    const HIDDEN = this.hidden = GAINS.hidden;
-    this.nH = N_IN + HIDDEN;
+    const HIDDEN = this.hidden = GAINS.hidden, ROWS = this.rows = retina === "grid" ? GRID.rows : 1;
+    this.nIn = N_IN + (ROWS - 1) * RAYS * 3;
+    this.nH = this.nIn + HIDDEN;
     // Sparse random wiring, fixed and never learned. Each hidden unit is driven by one local patch
-    // of a sense (a two-ray window of the retina, part of the fovea, or the body: legs, pen pad),
+    // of a sense (a two-ray window of the retina, two by two rays on the grid retina, part of the fovea,
+    // or the body: legs, pen pad),
     // and sound scales that drive up or down: gain modulation, as attention scales V4 responses and
     // eye position scales parietal ones. Gains are random, so which tone goes with which colour or
     // letter is left for learning to find. (An additive mix learned the tone task far too slowly.)
@@ -149,8 +168,10 @@ export class Brain {
     this.bias = new Float32Array(HIDDEN);
     const pick = list => list[Math.floor(rand() * list.length)];
     for (let j = 0; j < HIDDEN; j++) {
-      const u = rand(), s = Math.floor(rand() * (RAYS - 1)) * 3;
-      const patch = u < 0.5 ? [0, 1, 2, 3, 4, 5].map(k => s + k)
+      // The row draw happens only on the grid, so the 15-ray brain draws exactly what it always drew.
+      const u = rand(), s = Math.floor(rand() * (RAYS - 1)), t = ROWS > 1 ? Math.floor(rand() * (ROWS - 1)) : 0, win = [];
+      for (let r = t; r < t + Math.min(ROWS, 2); r++) for (const i of [s, s + 1]) for (let c = 0; c < 3; c++) win.push(retinaIndex(ROWS, r, i, c));
+      const patch = u < 0.5 ? win
         : u < 0.72 ? FOVEA_IN : u < 0.85 ? MEM_IN : BODY_IN;
       for (let k = 0; k < FAN_IN; k++) {
         this.idx[j * FAN_IN + k] = k < 3 ? COCH[k] : pick(patch);
@@ -184,7 +205,7 @@ export class Brain {
   }
 
   encode(x, slot) {
-    const h = new Float32Array(this.nH), gate = slot * this.hidden;
+    const h = new Float32Array(this.nH), gate = slot * this.hidden, nIn = this.nIn;
     h.set(x);
     let on = 0;
     for (let j = 0; j < this.hidden; j++) {
@@ -194,10 +215,10 @@ export class Brain {
         const v = this.wIn[j * FAN_IN + k] * x[this.idx[j * FAN_IN + k]];
         if (k < 3) gain += v; else drive += v;
       }
-      if (drive > 0 && gain > 0) { h[N_IN + j] = drive * gain; on++; }
+      if (drive > 0 && gain > 0) { h[nIn + j] = drive * gain; on++; }
     }
     if (GAINS.kwta && on > GAINS.kwta) {
-      const hid = h.subarray(N_IN), cut = hid.filter(v => v > 0).sort()[on - GAINS.kwta];   // typed-array sort is numeric
+      const hid = h.subarray(nIn), cut = hid.filter(v => v > 0).sort()[on - GAINS.kwta];   // typed-array sort is numeric
       for (let j = 0; j < this.hidden; j++) if (hid[j] < cut) hid[j] = 0;
       on = GAINS.kwta;
     }
@@ -271,6 +292,58 @@ export class Brain {
     }
     this.fast[next] = this.slow[next];   // a fresh start for the slot it moves to
     this.active = next;
+  }
+
+  // Learned features (#65 item 4): competing hidden units (Krotov and Hopfield 2019) with p = 2, a local,
+  // backprop-free rule, on the drive weights w (the five non-cochlea inputs) of the learning units. Units
+  // that read the same window compete: the one with the largest input current w.v moves toward its input v,
+  // w += hebb (v - (w.v) w / |w|^2), and the runner-up moves away by -hebbDelta times that. Then |w| goes
+  // back to its value at birth, the sphere the rule converges to, so drive keeps the random weights' scale.
+  // A group learns only when its winner is driven (current > 0). The cochlea's gain weights never change.
+  hebbian(x) {
+    for (const pool of this.pools ??= this.hebbPools()) {
+      let a = -1, b = -1, ia = -Infinity, ib = -Infinity;
+      for (const j of pool) {
+        let I = 0;
+        for (let k = 3; k < FAN_IN; k++) I += this.wIn[j * FAN_IN + k] * x[this.idx[j * FAN_IN + k]];
+        if (I > ia) { b = a; ib = ia; a = j; ia = I; } else if (I > ib) { b = j; ib = I; }
+      }
+      if (!(ia > 0)) continue;
+      this.compete(a, 1, x);
+      if (b >= 0) this.compete(b, -GAINS.hebbDelta, x);
+    }
+  }
+
+  compete(j, g, x) {   // one step of the rule for unit j with activation g, then back onto its sphere
+    const w = this.wIn, o = j * FAN_IN, v = k => x[this.idx[o + k]];
+    let r2 = 0, wv = 0, n2 = 0;
+    for (let k = 3; k < FAN_IN; k++) { r2 += w[o + k] * w[o + k]; wv += w[o + k] * v(k); }
+    for (let k = 3; k < FAN_IN; k++) { w[o + k] += GAINS.hebb * g * (v(k) - wv * w[o + k] / r2); n2 += w[o + k] * w[o + k]; }
+    const s = Math.sqrt(r2 / n2);
+    for (let k = 3; k < FAN_IN; k++) w[o + k] *= s;
+  }
+
+  // The learning units, grouped by what they read: the fovea, the fovea memory, or one retina window (keyed
+  // by its top-left ray). A private stream picks them, a share hebbShare of the units, and the groups come
+  // from idx, so a loaded brain learns the same units and the brain's own random draws are untouched.
+  hebbPools() {
+    const pick = rng(0x4EBB), groups = new Map(), F = RAYS * 3 + 5, M = this.rows >> 1;
+    const where = i => {   // [row, ray] of a retina input (the inverse of retinaIndex), null for any other input
+      if (i < RAYS * 3) return [M, i / 3 | 0];
+      if (i < N_IN) return null;
+      const r = (i - N_IN) / (RAYS * 3) | 0;
+      return [r < M ? r : r + 1, (i - N_IN) % (RAYS * 3) / 3 | 0];
+    };
+    for (let j = 0; j < this.hidden; j++) {
+      if (pick() >= GAINS.hebbShare) continue;   // drawn for every unit, so a share picks the same units in any brain
+      const ins = Array.from(this.idx.subarray(j * FAN_IN + 3, (j + 1) * FAN_IN)), at = ins.map(where);
+      const key = ins.every(i => i >= F && i < F + 25) ? "fovea" : ins.every(i => i >= MEM0 && i < MEM0 + 25) ? "memory"
+        : at.every(Boolean) ? `${Math.min(...at.map(p => p[0]))},${Math.min(...at.map(p => p[1]))}` : null;
+      if (key === null) continue;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(j);
+    }
+    return [...groups.values()];
   }
 
   value(h) { let s = 0; for (let i = 0; i < this.nH; i++) s += this.v[i] * h[i]; return s; }
@@ -388,9 +461,9 @@ export class Brain {
 // target is ambiguous, #54). A transition is replayed only if it is terminal or its true successor
 // (same episode, already stored) is still in the buffer.
 export class Hippocampus {
-  constructor(cap = GAINS.memCap) {
-    this.cap = cap; this.n = 0; this.head = 0; this.epId = 0;
-    this.x = new Uint8ClampedArray(cap * N_IN);   // clamps to [-0.05, 1.225]; senses stay in [-0.025, 1.025]
+  constructor(cap = GAINS.memCap, nIn = N_IN) {   // nIn: the brain's number of inputs (more on the grid retina)
+    this.cap = cap; this.nIn = nIn; this.n = 0; this.head = 0; this.epId = 0;
+    this.x = new Uint8ClampedArray(cap * nIn);   // clamps to [-0.05, 1.225]; senses stay in [-0.025, 1.025]
     this.slot = new Uint8Array(cap); this.a = new Uint8Array(cap); this.set = new Uint8Array(cap);
     this.end = new Uint8Array(cap); this.r = new Float32Array(cap); this.mu = new Float32Array(cap);
     this.ep = new Int32Array(cap);
@@ -399,8 +472,8 @@ export class Hippocampus {
   }
 
   store(x, slot, a, set, r, mu, end, failed = false) {
-    const e = this.head, o = e * N_IN;
-    for (let k = 0; k < N_IN; k++) this.x[o + k] = (x[k] + 0.05) * 200;   // Uint8ClampedArray rounds and clamps
+    const e = this.head, o = e * this.nIn;
+    for (let k = 0; k < this.nIn; k++) this.x[o + k] = (x[k] + 0.05) * 200;   // Uint8ClampedArray rounds and clamps
     this.slot[e] = slot; this.a[e] = a; this.set[e] = set; this.r[e] = r; this.mu[e] = mu; this.end[e] = end;
     this.ep[e] = this.epId;
     this.priority[e] = Math.max(0.001, Math.min(10000, Math.abs(r)));
@@ -415,8 +488,8 @@ export class Hippocampus {
   }
 
   sense(e) {
-    const x = new Float32Array(N_IN), o = e * N_IN;
-    for (let k = 0; k < N_IN; k++) x[k] = this.x[o + k] / 200 - 0.05;
+    const x = new Float32Array(this.nIn), o = e * this.nIn;
+    for (let k = 0; k < this.nIn; k++) x[k] = this.x[o + k] / 200 - 0.05;
     return x;
   }
 
@@ -507,8 +580,8 @@ export class Hippocampus {
     return o;
   }
 
-  static fromJSON(o) {   // null if o is not a valid store of this brain's shape
-    const m = new Hippocampus();
+  static fromJSON(o, nIn = N_IN) {   // null if o is not a valid store of this brain's shape
+    const m = new Hippocampus(GAINS.memCap, nIn);
     if (!o || o.cap !== m.cap || ![o.head, o.n, o.epId].every(Number.isInteger) || o.n < 0 || o.n > m.cap
       || o.head < 0 || o.head >= m.cap || (o.n < m.cap && o.head !== o.n)) return null;
     for (const k of ["x", "slot", "a", "set", "end", "r", "mu", "ep"]) {
@@ -583,10 +656,11 @@ const mapSyn = (s, f) => ({ P: Object.fromEntries(SYN.map(k => [k, f(s.P[k])])),
 function gauss(rand) { return Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand()); }
 
 export class World {
-  constructor(seed = 1) {
+  constructor(seed = 1, retina = GAINS.retina) {
+    if (retina !== "rays" && retina !== "grid") throw new Error(`unknown retina "${retina}": use "rays" or "grid"`);
     this.rand = rng(seed);
-    this.brain = new Brain(this.rand);
-    this.hippo = new Hippocampus();
+    this.brain = new Brain(this.rand, retina);
+    this.hippo = new Hippocampus(GAINS.memCap, this.brain.nIn);
     this.stage = 0; this.playing = 0; this.episode = 0; this.log = []; this.graduated = false;
     this.windows = STAGES.map(() => []);   // last 50 outcomes per stage
     this.passedAt = [];   // the episode count at which each stage passed (#98); a hole where unknown
@@ -659,18 +733,30 @@ export class World {
   context() { return this.brain.infer(this.z); }
 
   sense() {
-    const x = new Float32Array(N_IN), R = this.rand;
-    this.retina = new Float32Array(RAYS * 3); this.fovea = new Float32Array(25);
+    const x = new Float32Array(this.brain.nIn), R = this.rand, rows = this.brain.rows, M = rows >> 1, ROW = RAYS * 3;
+    this.retina = new Float32Array(rows * ROW); this.fovea = new Float32Array(25);   // row by row, top first
     if (!this.board) {
       for (let i = 0; i < RAYS; i++) {
         const a = this.heading + FOV * (i / (RAYS - 1) - 0.5), dx = Math.cos(a), dy = Math.sin(a);
-        let best = this.wallDist(dx, dy), hit = null;
+        const wall = this.wallDist(dx, dy);
+        let best = wall, hit = null;
         for (const o of this.objects) {
           const t = rayCircle(this.pos, dx, dy, o.pos, OBJ_R);
           if (t !== null && t < best) { best = t; hit = o; }
         }
         const near = 1 / (1 + 0.35 * best), col = hit ? hit.color : [0.2, 0.2, 0.2];
-        for (let c = 0; c < 3; c++) this.retina[i * 3 + c] = col[c] * near;
+        for (let c = 0; c < 3; c++) this.retina[M * ROW + i * 3 + c] = col[c] * near;
+        // Grid retina (#94): the same ray tilted by elev[r] is at height eye + d tan(elev) after d. It sees the
+        // nearest object if that height is within it, else the floor if it comes down first, else the wall if
+        // below its top, else nothing. Only the nearest object can be hit: the eye is below every object's top,
+        // so a ray that passes over or under (into the floor before) the nearest one does so for the rest too.
+        for (let r = 0; r < rows; r++) {
+          if (r === M) continue;
+          const s = Math.tan(GRID.elev[r]), z = d => GRID.eye + s * d, floor = s < 0 ? -GRID.eye / s : Infinity;
+          const [d, see] = hit && z(best) >= 0 && z(best) <= GRID.obj ? [best, hit.color]
+            : floor < wall ? [floor, GRID.floor] : z(wall) <= GRID.wall ? [wall, [0.2, 0.2, 0.2]] : [0, [0, 0, 0]];
+          for (let c = 0; c < 3; c++) this.retina[r * ROW + i * 3 + c] = see[c] / (1 + 0.35 * d);
+        }
       }
       // Fovea: the sharp centre of the eye resolves the letter on the nearest object in a
       // narrow central cone; the coarse retina above cannot.
@@ -690,7 +776,8 @@ export class World {
     // Each leg push turns 0.3 rad, wider than the fovea, so a letter is in view only for a step or
     // two. (A "look" saccade action was tried too: it made reading less reliable across seeds.)
     for (let k = 0; k < 25; k++) this.memory[k] = Math.max(GAINS.memory * this.memory[k], this.fovea[k]);
-    x.set(this.retina, 0);
+    x.set(this.retina.subarray(M * ROW, M * ROW + ROW), 0);   // eye level, where the 15-ray retina always was
+    if (rows > 1) { x.set(this.retina.subarray(0, M * ROW), N_IN); x.set(this.retina.subarray(M * ROW + ROW), N_IN + M * ROW); }   // see retinaIndex
     x[RAYS * 3] = this.legs[0]; x[RAYS * 3 + 1] = this.legs[1];
     if (this.tone >= 0) x[RAYS * 3 + 2 + this.tone] = 1;                 // cochlea: one band per tone
     for (let k = 0; k < 3; k++) x[RAYS * 3 + 2 + k] += 0.05 * (R() - 0.5);
@@ -779,6 +866,7 @@ export class World {
     if (habit && !GAINS.cpg) { this.legs = [1, 1]; this.hip = [1, 1]; this.omega = [0, 0]; }   // the CPG keeps its own rhythm   // jointed: the reflex brings both hips forward, at rest
     if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
     const set = this.board ? 2 : habit ? 1 : 0;
+    if (GAINS.hebb && (this.developing || GAINS.hebbOnline && b.learning)) b.hebbian(this.x);   // learned features (#65 item 4)
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
     let r = m === "walk" ? 0 : -GAINS.stepCost, done = false, success = false;
@@ -885,6 +973,21 @@ export class World {
 
   setStage(s) { this.stage = this.playing = s; this.windows[s] = []; this.reset(); }
 
+  // A critical period for the learned features (#65 item 4): before any reward learning, `steps` steps of
+  // free play with learning off, in which only the Hebbian features learn; with hebbOnline off they stay
+  // fixed after it. It runs on its own random stream and then replays the first episode, so the curriculum
+  // that follows draws exactly what it would have without it: only the features differ.
+  develop(steps) {
+    if (!GAINS.hebb) return;   // nothing to learn: leave the world exactly as it is
+    const R = this.rand, start = this.episodeRand, b = this.brain;
+    R.state = (start ^ 0x9E3779B9) >>> 0;
+    this.perform("any", false); this.developing = true;
+    for (let i = 0; i < steps; i++) this.step();
+    this.developing = false; this.perform(null);
+    R.state = start; this.reset();
+    this.events = []; this.perf = { n: 0, ok: 0, scene: {} }; b.nActive = b.nEncode = 0;
+  }
+
   // Perform mode: use the brain with learning off, every episode on one skill, or on a random scene
   // with "any" (free play). No weight, window, log or stage changes, so a saved brain can be used or
   // checked without training it further. perf.scene[key] = {n, ok, slots: steps per context slot}.
@@ -932,7 +1035,7 @@ export class World {
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
     // A save made while performing resumes training on its own stage.
-    return { version: 5, rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
+    return { version: 5, retina: b.rows > 1 ? "grid" : "rays", rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       passedAt: Array.from(this.passedAt, x => x ?? null),
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
@@ -963,6 +1066,7 @@ export class World {
   static migrate(o) {
     if (!o || !o.brain || !Array.isArray(o.brain.gate) || !Array.isArray(o.windows)) return o;
     o = { ...o, brain: { ...o.brain } };
+    o.retina ??= "rays";   // saves from before #94 had only the 15-ray retina
     const b = o.brain, H = GAINS.hidden, spare = rng(0x5107);
     // upgradeV3: the told gate had one row per stage, in STAGES order. Each becomes a slot whose
     // prototype is the scene code that stage produces (measured), with enough uses to keep it.
@@ -996,21 +1100,22 @@ export class World {
 
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
     o = World.migrate(o);   // first: ob below must point at the migrated brain
-    const w = new World(1), b = w.brain, ob = o && o.brain;
+    const retinaOk = o && ["rays", "grid"].includes(o.retina);   // the retina sets the brain's shape, so build that one
+    const w = new World(1, retinaOk ? o.retina : "rays"), b = w.brain, ob = o && o.brain;
     const KEYS = ["idx", "wIn", "bias", "gate", "v", "P", "proto", "uses"];
     let sy = null;   // the SI record: three Float32Arrays per weight array, each its shape, Omega and omega >= 0
     try { sy = mapSyn(ob.syn, s => fromB64(s, Float32Array)); } catch {}
     const synOk = sy && ["P", "v"].every(k => SYN.every(f => sy[k][f].length === b[k].length && sy[k][f].every(Number.isFinite))
       && sy[k].omega.every(x => x >= 0) && sy[k].Omega.every(x => x >= 0));
-    const ok = o && o.version === 5 && ob && synOk && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
+    const ok = o && o.version === 5 && ob && synOk && retinaOk && Array.isArray(o.windows) && o.windows.length === STAGES.length && o.windows.every(Array.isArray)
       && Number.isInteger(o.stage) && o.stage >= 0 && o.stage < STAGES.length
       && Number.isInteger(o.playing) && o.playing >= 0 && o.playing < STAGES.length
       && KEYS.every(k => Array.isArray(ob[k]) && ob[k].length === b[k].length && ob[k].every(Number.isFinite))
-      && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < N_IN) && ob.gate.every(g => g === 0 || g === 1)
+      && ob.idx.every(i => Number.isInteger(i) && i >= 0 && i < b.nIn) && ob.gate.every(g => g === 0 || g === 1)
       && ob.proto.every(p => p >= 0 && p <= 1) && ob.uses.every(u => Number.isInteger(u) && u >= 0)
       && (ob.hh === undefined || Number.isFinite(ob.hh));
     // An older save without an episodic store loads with an empty one.
-    const hippo = o && o.hippo === undefined ? new Hippocampus() : Hippocampus.fromJSON(o && o.hippo);
+    const hippo = o && o.hippo === undefined ? new Hippocampus(GAINS.memCap, b.nIn) : Hippocampus.fromJSON(o && o.hippo, b.nIn);
     if (!ok || !hippo) throw new Error("not a Brain World save, or saved by an older version or with a different brain size");
     w.hippo = hippo;
     for (const k of KEYS) b[k].set(ob[k]);

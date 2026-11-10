@@ -7,7 +7,7 @@ use_cases:
   - what is an NMDA spike or a dendritic plateau potential
   - how could dendrites carry error signals for credit assignment
   - model a neuron with nonlinear dendritic branches
-status: draft
+status: stable
 last_verified: 2026-10-24
 sources:
   - https://doi.org/10.1146/annurev.neuro.28.061604.135703

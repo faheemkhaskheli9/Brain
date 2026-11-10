@@ -8,7 +8,7 @@ use_cases:
   - who owns neural data from a headset or brain-computer interface
   - what are neurorights and which laws protect brain data
   - what ethical risks come with building brain-like AI
-status: draft
+status: stable
 last_verified: 2026-10-12
 sources:
   - https://doi.org/10.1038/551159a

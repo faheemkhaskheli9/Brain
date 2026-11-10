@@ -50,14 +50,26 @@ export const ARMS = {
   joints: { replay: 0.3, sleepEvery: 0, joints: true },
   // Issue #38: central pattern generator legs (World.cpgStep); the actor sets swing amplitudes only.
   cpg: { replay: 0.3, sleepEvery: 0, cpg: true },
+  // Issue #94: the 15 x 5 ray grid retina instead of 15 rays.
+  grid: { replay: 0.3, sleepEvery: 0, retina: "grid" },
+  // Issue #65 item 4: features learned by competing hidden units (Krotov and Hopfield 2019) in a critical period
+  // of `develop` free-play steps before the curriculum, then fixed: half the visual units (hebb), all of them
+  // (hebbAll), half that keep learning all through training (hebbOnline), and half on the grid retina.
+  // The pilot (seeds 1-2, feature statistics only) picked hebb 0.1 and 20,000 steps (README "Learned features").
+  hebb: { replay: 0.3, sleepEvery: 0, hebb: 0.1, develop: 20000 },
+  hebbAll: { replay: 0.3, sleepEvery: 0, hebb: 0.1, hebbShare: 1, develop: 20000 },
+  hebbOnline: { replay: 0.3, sleepEvery: 0, hebb: 0.1, hebbOnline: true, develop: 20000 },
+  "grid+hebb": { replay: 0.3, sleepEvery: 0, retina: "grid", hebb: 0.1, develop: 20000 },
 };
 const FACTORIAL = ["rehearse30", "orient", "sleepActor30", "orient+sleepActor30"];   // none, prior, rule, both
 const LIMIT = 20000, KEEP = { grasp: 0.7, listen: 0.5, read: 0.4, write: 0.5 };   // as in test_brain.mjs
 
 function trial(arm, seed) {
-  const { copy, ...gains } = ARMS[arm];
+  const { copy, develop, ...gains } = ARMS[arm];
   Object.assign(GAINS, gains);
   const w = new World(seed), episodes = [], t0 = Date.now(), b = w.brain, commit = b.commit.bind(b), store = { reclaims: 0, merges: 0 };
+  const birth = Float32Array.from(b.wIn);   // #65 item 4: how far the learned features end up from the random ones
+  if (develop) w.develop(develop);
   // A commit with no matching and no free slot reclaims a rarely used one, or else merges into the nearest.
   b.commit = (z, slot) => { const m = b.match(z); if (b.learning && m.best < 0 && m.free < 0) store[m.rare >= 0 ? "reclaims" : "merges"]++; commit(z, slot); };
   for (let s = 0; s < STAGES.length; s++) {
@@ -86,7 +98,15 @@ function trial(arm, seed) {
   try { w.meta.commit = execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch {}
   const json = w.save(), card = World.fromJSON(JSON.parse(json)).meta;
   return { arm, seed, passed: true, episodes, total: episodes.reduce((a, b) => a + b), kept, perform: card.saves[0].scores, commit: card.commit,
-    active, slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), seconds: (Date.now() - t0) / 1000 };
+    active, ...(b.pools && { features: features(b, birth) }), slots, uses: Array.from(w.brain.uses), ...store, ...(copy && { copy: sixth(json) }), seconds: (Date.now() - t0) / 1000 };
+}
+
+// Issue #65 item 4: the learning units, how many moved from their random birth weights, and the mean cosine
+// between their drive weights at birth and at graduation.
+function features(b, birth) {
+  const units = b.pools.flat(), drive = (w, j) => Array.from(w.subarray(j * 8 + 3, j * 8 + 8));
+  const cos = units.map(j => { const a = drive(birth, j), c = drive(b.wIn, j); return a.reduce((s, x, k) => s + x * c[k], 0) / Math.hypot(...a) / Math.hypot(...c); });
+  return { units: units.length, changed: cos.filter(x => x < 0.999).length, cos: +(cos.reduce((s, x) => s + x, 0) / cos.length).toFixed(3) };
 }
 
 // Issue #56, phase B: load the graduated save into six-stage code (growStages resumes it at copy),
@@ -150,6 +170,8 @@ function summarise(results, arms) {
     let line = `${arm.padEnd(24)}${`${ok.length}/${rs.length}`.padStart(6)}  ${`${bars}/${rs.length}`.padStart(9)}  ${f(mean(ok.map(r => r.episodes[4])), 9)}  ${f(mean(ok.map(r => r.total)), 7)}  `
       + Object.keys(KEEP).map(k => mean(ok.map(r => r.kept[k])).toFixed(2).padStart(6)).join(" ")
       + `  active ${mean(ok.map(r => r.active)).toFixed(0)}`;
+    const ft = ok.filter(r => r.features);
+    if (ft.length) line += `  features moved ${mean(ft.map(r => r.features.changed)).toFixed(0)}/${mean(ft.map(r => r.features.units)).toFixed(0)}, cos to birth ${mean(ft.map(r => r.features.cos)).toFixed(2)}`;
     const pf = ok.filter(r => r.perform);
     if (pf.length) line += `  perform ${STAGES.map(s => mean(pf.map(r => r.perform[s.key])).toFixed(2)).join("/")}`;
     const pairs = ok.filter(r => base[r.seed]);

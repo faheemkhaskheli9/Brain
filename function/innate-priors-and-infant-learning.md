@@ -9,7 +9,7 @@ use_cases:
   - how do infants find words in continuous speech
   - how much of human sample efficiency comes from priors versus the learning algorithm
   - which inductive biases should I build into a learner instead of learning them
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1111/j.1467-7687.2007.00569.x

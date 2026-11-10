@@ -8,7 +8,7 @@ use_cases:
   - which brain features does a brain-like AI actually need to copy
   - can intelligence evolve without a neocortex
   - what do insect mushroom bodies and the cerebellum have in common
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1073/pnas.0604911103

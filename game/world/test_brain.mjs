@@ -3,7 +3,7 @@
 // Run: node game/world/test_brain.mjs [seed ...]   (default seed 1; several minutes per seed)
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW_LETTERS, LETTERS, BODY, rng, orient, glyph, stageHistory, learnedText } from "./brain.js";
+import { World, Brain, STAGES, GAINS, ACT_SETS, COPY, NEW_LETTERS, LETTERS, BODY, RAYS, GRID, rng, orient, glyph, stageHistory, learnedText, retinaIndex } from "./brain.js";
 import { transfer } from "./transfer.mjs";
 
 // One model, no task index (#60): nothing in the brain is sized or indexed by task, and the world
@@ -390,4 +390,94 @@ for (let e = 0; e < 200; e++) {
 assert.equal(randomWalks, 0, "cpg: random actions walk");
 GAINS.cpg = false;
 console.log("  CPG legs: rest still, one side turns, antiphase, undriven side stops, both sides walk straight");
+
+// Grid retina (#94): 15 x 5 rays. Its eye-level row is exactly the 15-ray retina, the other rows sit after the
+// fovea memory, every retina unit reads one 2 x 2 window of rays and the windows cover the grid, a near object
+// fills more rows than a far one, the floor shows below and nothing above the walls. The retina travels with the
+// save, a save from before it (the v3 fixture) loads with 15 rays, and a save cannot claim the other retina.
+GAINS.retina = "grid";
+const gw = new World(1), rw = new World(1, "rays");
+GAINS.retina = "rays";
+const nIn = rw.brain.nIn + (GRID.rows - 1) * RAYS * 3, M = GRID.rows >> 1, cell = new Map();
+assert.deepEqual([gw.brain.rows, gw.brain.nIn, gw.x.length, gw.retina.length, gw.brain.nH, gw.hippo.x.length],
+  [GRID.rows, nIn, nIn, GRID.rows * RAYS * 3, nIn + GAINS.hidden, GAINS.memCap * nIn]);
+for (let r = 0; r < GRID.rows; r++) for (let i = 0; i < RAYS; i++) for (let c = 0; c < 3; c++) cell.set(retinaIndex(GRID.rows, r, i, c), [r, i]);
+assert.equal(cell.size, GRID.rows * RAYS * 3, "grid: two retina cells share an input");
+const seen = new Set();
+for (let j = 0; j < GAINS.hidden; j++) {
+  const at = Array.from(gw.brain.idx.subarray(j * 8 + 3, j * 8 + 8), i => cell.get(i));
+  if (!at[0]) { assert.ok(at.every(a => !a), "grid: a unit mixes the retina with another sense"); continue; }
+  const span = k => Math.max(...at.map(a => a[k])) - Math.min(...at.map(a => a[k]));
+  assert.ok(at.every(Boolean) && span(0) <= 1 && span(1) <= 1, `grid: unit ${j} reads more than a 2 x 2 window`);
+  for (const a of at) seen.add(a.join());
+}
+assert.ok(seen.size > 0.9 * GRID.rows * RAYS, `grid: retina units read only ${seen.size} of ${GRID.rows * RAYS} rays`);
+const look = (w, objects) => { Object.assign(w, { pos: [2, 4], heading: 0, objects, board: false }); w.x = w.sense(); return w; };
+for (const objects of [[], [{ pos: [3.5, 4.5], color: [1, 0.15, 0.15], letter: -1 }], [{ pos: [5, 3.8], color: [1, 1, 1], letter: 0 }]]) {
+  look(gw, objects); look(rw, objects);
+  assert.deepEqual(gw.retina.subarray(M * RAYS * 3, (M + 1) * RAYS * 3), rw.retina, "grid: the eye-level row is not the 15-ray retina");
+  assert.deepEqual(gw.x.subarray(0, 45), rw.x.subarray(0, 45));
+}
+const rowsOn = d => { look(gw, [{ pos: [2 + d, 4], color: [0.25, 0.35, 1], letter: -1 }]); return Array.from({ length: GRID.rows }, (_, r) => gw.retina[(r * RAYS + 7) * 3 + 2] > gw.retina[(r * RAYS + 7) * 3]).filter(Boolean).length; };
+assert.deepEqual([rowsOn(1), rowsOn(4)], [GRID.rows, 1], "grid: a near object must fill every row of the middle ray, a far one only eye level");
+look(gw, []);
+assert.ok(gw.retina[7 * 3] === 0 && gw.retina[((GRID.rows - 1) * RAYS + 7) * 3] > 0, "grid: nothing above the far wall, floor below");
+while (gw.episode < 30) gw.step();
+while (!gw.step().done);
+const gback = World.fromJSON(JSON.parse(JSON.stringify(gw)));
+assert.deepEqual([JSON.parse(JSON.stringify(gw)).retina, gback.brain.rows, gback.hippo.nIn], ["grid", GRID.rows, nIn]);
+for (let i = 0; i < 300; i++) assert.deepEqual(gback.step(), gw.step(), `grid: loaded brain diverged at step ${i}`);
+GAINS.retina = "grid";
+assert.equal(World.fromJSON(v3).brain.rows, 1, "a save from before #94 must load with 15 rays");
+GAINS.retina = "rays";
+assert.throws(() => World.fromJSON({ ...JSON.parse(JSON.stringify(gw)), retina: "rays" }), /not a Brain World save/);
+assert.throws(() => World.fromJSON({ ...JSON.parse(JSON.stringify(gw)), retina: "eyes" }), /not a Brain World save/);
+console.log(`  Grid retina: ${GRID.rows} x ${RAYS} rays, ${nIn} inputs; eye row = 15-ray retina; 2 x 2 patches cover ${seen.size} rays; saved; old saves load with 15 rays`);
+
+// Learned features (#65 item 4). Off, develop() is a no-op: the world after it acts exactly as a fresh one. On,
+// only learning units' drive weights change, each keeps its norm, a repeated input turns a winner toward it,
+// develop() leaves the curriculum's first episode as it was, and with hebbOnline a save reloads and goes on
+// learning the same way, while perform mode changes no feature.
+const plain = new World(1), dev0 = new World(1);
+dev0.develop(500);
+assert.equal(dev0.brain.pools, undefined, "hebb off: develop grouped features");
+for (let i = 0; i < 2000; i++) assert.deepEqual(dev0.step(), plain.step(), `hebb off: develop changed step ${i}`);
+GAINS.hebb = 0.1;
+const hebbW = new World(1), hBirth = Float32Array.from(hebbW.brain.wIn), drive = (w, j) => Array.from(w.subarray(j * 8 + 3, j * 8 + 8));
+hebbW.develop(5000);
+const learners = new Set(hebbW.brain.pools.flat());
+let moved = 0;
+for (let j = 0; j < GAINS.hidden; j++) {
+  const a = drive(hBirth, j), c = drive(hebbW.brain.wIn, j);
+  assert.deepEqual(Array.from(hebbW.brain.wIn.subarray(j * 8, j * 8 + 3)), Array.from(hBirth.subarray(j * 8, j * 8 + 3)), "hebb: a cochlea gain changed");
+  if (!learners.has(j)) { assert.deepEqual(c, a, `hebb: unit ${j} does not learn but changed`); continue; }
+  assert.ok(Math.abs(Math.hypot(...c) / Math.hypot(...a) - 1) < 1e-3, `hebb: unit ${j} left its sphere`);
+  if (c.some((x, k) => x !== a[k])) moved++;
+}
+assert.ok(learners.size > 300 && moved > 50, `hebb: ${learners.size} learning units, ${moved} moved`);   // half of ~850 visual units
+const fresh = new World(1);
+assert.deepEqual([hebbW.pos, hebbW.heading, hebbW.episodeRand, hebbW.episode, hebbW.brain.hh], [fresh.pos, fresh.heading, fresh.episodeRand, 0, undefined], "develop moved the curriculum's random stream or trained the actor-critic");
+const kb = new Brain(rng(5)), kx = new Float32Array(kb.nIn), F0 = RAYS * 3 + 5;
+kx.set(glyph(LETTERS[0][1]), F0);
+const fovea = kb.hebbPools().find(p => p.every(j => kb.idx[j * 8 + 3] >= F0 && kb.idx[j * 8 + 3] < F0 + 25));
+for (let i = 0; i < 200; i++) kb.hebbian(kx);
+const align = j => { const w = drive(kb.wIn, j), v = Array.from(kb.idx.subarray(j * 8 + 3, j * 8 + 8), i => kx[i]); return w.reduce((s, x, k) => s + x * v[k], 0) / Math.hypot(...w) / (Math.hypot(...v) || 1); };
+const best = Math.max(...fovea.map(align));
+assert.ok(best > 0.99, `hebb: the winner did not turn toward the letter (cos ${best})`);
+assert.ok(new Brain(rng(1), "grid").hebbPools().length > 40, "hebb: grid windows not grouped");
+GAINS.hebbOnline = true;
+const ow = new World(3);
+ow.setStage(1);
+while (ow.episode < 20) ow.step();
+while (!ow.step().done);
+const ow0 = Float32Array.from(ow.brain.wIn), oback = World.fromJSON(JSON.parse(JSON.stringify(ow)));
+for (let i = 0; i < 300; i++) assert.deepEqual(oback.step(), ow.step(), `hebbOnline: loaded brain diverged at step ${i}`);
+assert.deepEqual(oback.brain.wIn, ow.brain.wIn);
+assert.notDeepEqual(Array.from(ow.brain.wIn), Array.from(ow0), "hebbOnline: no feature learned in training");
+ow.perform("grasp");
+const owP = Float32Array.from(ow.brain.wIn);
+while (ow.perf.n < 20) ow.step();
+assert.deepEqual(ow.brain.wIn, owP, "perform mode changed a feature");
+Object.assign(GAINS, { hebb: 0, hebbOnline: false });
+console.log(`  Learned features: off, develop changes nothing; on, ${moved} of ${learners.size} learning units moved, norms kept, a winner turns to its input (cos ${best.toFixed(3)}); online learning saves and reloads`);
 console.log("ok");

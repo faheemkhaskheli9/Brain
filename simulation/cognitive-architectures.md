@@ -8,7 +8,7 @@ use_cases:
   - what is Spaun and what can it do
   - is the Thousand Brains theory established neuroscience
   - how do LLM agent designs compare with brain-inspired architectures
-status: draft
+status: stable
 last_verified: 2026-10-11
 sources:
   - https://doi.org/10.1037/0033-295X.111.4.1036
