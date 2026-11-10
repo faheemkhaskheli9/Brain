@@ -94,6 +94,12 @@ with per-file diffs. It listens on 127.0.0.1 only and writes straight to your wo
 
 Full guide with screenshots: [docs/webapp-guide.md](docs/webapp-guide.md)
 
+## Recent AI architecture research (2025–2026)
+
+[Research review: Google Hope/Nested Learning, Blankline Hope-1, Titans/MIRAS, Sleep, PC-ALM, TTT, SEAL and agent skills](research/new-ai-architectures-2026.md)
+maps verified primary sources to existing Brain experiments and issues. **Literature only**:
+not a model implementation, benchmark reproduction or claim of human-level intelligence.
+
 ## LLM learning from mistakes
 
 [Verified-feedback mistake learning](research/llm-mistake-learning.md) is a runnable, provider-neutral

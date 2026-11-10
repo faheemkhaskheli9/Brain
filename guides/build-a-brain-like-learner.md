@@ -142,6 +142,10 @@ Benchmarks that test brain-like *learning*, not just accuracy:
 - **Compute**: a human-scale spiking simulation is a supercomputer-class problem
   ([[levels-of-brain-modeling]]). Prototype small; the principles transfer.
 
+## Recent architecture research (2025–2026)
+
+[Google Hope/Nested Learning, Titans/MIRAS, Sleep, PC-ALM, SEAL, skill retrieval and the unrelated Hope-1](../research/new-ai-architectures-2026.md) are **research candidates**, not implemented or validated brain-like learning mechanisms. Reuse the mapped existing issues and run held-out ablations before promoting any claims. Gradient-trained architectures must stay separate from Brain World's backprop-free learner.
+
 ## Related
 - [[start-here]] - map of the whole KB.
 - [[brain-vs-deep-learning]] - why these stages target what deep learning lacks.

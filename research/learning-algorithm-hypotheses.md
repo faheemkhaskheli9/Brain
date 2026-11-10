@@ -55,6 +55,10 @@ workflow of how it would work in the brain and how to test it, in
 To resume in Claude from anywhere, say: "continue the learning-algorithm research, read
 research/learning-algorithm-hypotheses.md".
 
+## 2025–2026 architecture research mapping (literature, not new findings)
+
+See [recent AI learning architectures](new-ai-architectures-2026.md) for primary-source review of Google's **Hope/Nested Learning** (distinct from Blankline **Hope-1**), Titans/MIRAS, Sleep, PC-ALM, TTT, SEAL, Skill-Pro and ProactAgent. Reuse **H001** (local predictive coding), **H104** (schema replay), **H163** (fast/slow weights) and **H168** (sleep consolidation). These papers motivate controlled tests, not status changes or new claims of Brain reproduction; link results to existing issues #65, #150, #152 and #156. No new hypothesis IDs added solely for analogous concepts.
+
 ## Next up (cheapest T1 rows with the biggest payoff)
 1. **H103, second prior**: the colour-blind pathway (#125) removed colour from units the
    task needs. Try a prior that adds structure without taking any away, for example
