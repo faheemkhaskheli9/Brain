@@ -202,9 +202,13 @@ and `node game/test_browser.mjs`.
 - **First code change in this plan:** a new fairness-controlled novelty benchmark
   and regression tests; keep the legacy artifact for audit, but do not compare its
   invalid-random baseline as if search had matched information.
-- **Not yet implemented:** learned construction/composition by the creature,
-  genuine rule-generalizing error memory, learned world-model planning, real-LLM
-  benchmark and independent replication. These remain under existing issues.
+- **Now prototyped (pilot, not confirmed):** a goal-conditioned backprop-free
+  construction policy using the existing Brain actor/critic, with goal-mask,
+  learning-off and valid-random controls plus frozen held-out evaluation (#112).
+  No measured advantage is claimed; no transferable option/skill hierarchy yet.
+- **Not yet implemented:** learned reusable skill compositions by the creature,
+  generalizing error memory, learned world-model planning, real-LLM benchmark or
+  independent replication. These remain under existing issues.
 
 Update this state only after code and results are verified, not from an issue
 closure or a proposed design.
