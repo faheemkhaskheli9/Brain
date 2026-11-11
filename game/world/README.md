@@ -765,6 +765,32 @@ over 8 seeds. Paired sign-flip p against scratch:
   and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
   matches "New letters" above.
 
+## Backprop-free construction policy pilot (#112, research baseline)
+
+`construct_learner.mjs` reuses the *actual Brain World local three-factor actor-critic*
+as a goal-conditioned pen policy. A supplied sensor map shows required 5x5
+cells, symmetry, stroke budget and marks already drawn; the policy chooses
+between the six supplied strokes and a supplied **submit** action (using
+the grasp action index). The verifier supplies only terminal success/failure
+reward. This is a separate experimental task interface; it does not modify
+Brain World's main curriculum or provide the creature with an oracle solution.
+
+```bash
+node game/world/test_construct_learner.mjs
+node game/world/construct_learner.mjs 1 2 3 --train-steps 10000 --train-tasks 64 --eval-tasks 30 --repeats 5 --out /tmp/construction-learner.json
+python research/result_schema.py --check /tmp/construction-learner.json
+```
+
+The arms are an unchanged `learning-off` network, a `goal-masked` learner,
+a goal-conditioned `learner`, and a `random-valid` syntactic control.
+The three network arms are compared at approximately matched total training
+decisions (episode-boundary overshoot is reported); `random-valid` requires
+no training. Frozen, disjoint training and evaluation task families are both
+scored; the script hashes the actor/critic before and after frozen evaluation.
+This is a **pilot, not a confirmed transfer result**. The learned policy has
+no compositional skill hierarchy, mistake-memory retrieval, planning or
+creativity claim. Do not tune it on the frozen evaluation tasks.
+
 ## Construction tasks (#110)
 
 `construct.mjs` is a task suite, not a trained arm: draw with the six pen strokes under constraints
