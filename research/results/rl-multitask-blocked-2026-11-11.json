@@ -1,0 +1,2231 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/rl-multitask",
+ "commit": "4eba435",
+ "created": "2026-11-11T08:54:29Z",
+ "command": "node game/world/rl_multitask.mjs 1 2 3 4 5 --episodes 300 --schedule blocked --creature --match-creature --out /tmp/claude-0/-home-user-Brain/f48c2145-5984-5d35-8b54-7a819c3978a5/scratchpad/mt-blocked.json",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "schedule": "blocked",
+  "architecture": "one 64-hidden-unit tanh actor-critic with Adam",
+  "taskInput": "observation plus legal-action mask only; no task ID",
+  "separateNetworks": 5,
+  "hidden": 64,
+  "lr": 0.003,
+  "entropy": 0.03,
+  "evalSeeds": "seed+100000",
+  "greedy": [
+   "walk",
+   "write",
+   "copy",
+   "newletters"
+  ],
+  "constraints": "no fixed held-out/reversal splits in this initial comparison"
+ },
+ "budgets": {
+  "requestedTrainStepsPerSkill": 125000,
+  "effectivePerSeed": {
+   "1": 93162,
+   "2": 112211,
+   "3": 134919,
+   "4": 177001,
+   "5": 119364
+  },
+  "evalEpisodesPerSkill": 300,
+  "matchCreature": true
+ },
+ "metrics": {
+  "success": "higher",
+  "trainSteps": "lower",
+  "evalSteps": "lower",
+  "parameters": "lower"
+ },
+ "baseline": "separate",
+ "runs": [
+  {
+   "arm": "shared-blocked",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 10.7996,
+   "scores": {
+    "success": 0,
+    "evalSteps": 18000,
+    "trainSteps": 93180,
+    "trainSuccess": 0.9980682549903412,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 466079
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 10.7996,
+   "scores": {
+    "success": 0.53,
+    "evalSteps": 31199,
+    "trainSteps": 93275,
+    "trainSuccess": 0.46936656282450673,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 466079
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 10.7996,
+   "scores": {
+    "success": 0.26,
+    "evalSteps": 20282,
+    "trainSteps": 93213,
+    "trainSuccess": 0.2607449856733524,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 466079
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 10.7996,
+   "scores": {
+    "success": 0.38333333333333336,
+    "evalSteps": 12029,
+    "trainSteps": 93249,
+    "trainSuccess": 0.1955420466058764,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 466079
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 10.7996,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 93162,
+    "trainSuccess": 0.9898241772396471,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 466079
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.508,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 93180,
+    "trainSuccess": 0.9980682549903412,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.503,
+   "scores": {
+    "success": 0.4033333333333333,
+    "evalSteps": 30362,
+    "trainSteps": 93311,
+    "trainSuccess": 0.5106382978723404,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 3.848,
+   "scores": {
+    "success": 0.43333333333333335,
+    "evalSteps": 19762,
+    "trainSteps": 93193,
+    "trainSuccess": 0.26819296811120197,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.344,
+   "scores": {
+    "success": 0.08333333333333333,
+    "evalSteps": 37395,
+    "trainSteps": 93180,
+    "trainSuccess": 0.16363636363636364,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.424,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 93162,
+    "trainSuccess": 0.9865395762220648,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.151,
+   "scores": {
+    "success": 0.99,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.291,
+   "scores": {
+    "success": 0.17666666666666667,
+    "trainSteps": 0,
+    "evalSteps": 39534,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.229,
+   "scores": {
+    "success": 0.16333333333333333,
+    "trainSteps": 0,
+    "evalSteps": 31523,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.23,
+   "scores": {
+    "success": 0.16333333333333333,
+    "trainSteps": 0,
+    "evalSteps": 31523,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.006,
+   "scores": {
+    "success": 0.07,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.124,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.052,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 5169,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.024,
+   "scores": {
+    "success": 0.3566666666666667,
+    "trainSteps": 0,
+    "evalSteps": 3343,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.023,
+   "scores": {
+    "success": 0.3566666666666667,
+    "trainSteps": 0,
+    "evalSteps": 3343,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.005,
+   "scores": {
+    "success": 0.06333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 465806,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.8633333333333333,
+    "evalSteps": 14956,
+    "trainSteps": 465806,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.63,
+    "evalSteps": 18656,
+    "trainSteps": 465806,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.59,
+    "evalSteps": 21890,
+    "trainSteps": 465806,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 1,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 465806,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 465806
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.4738,
+   "scores": {
+    "success": 0,
+    "evalSteps": 18000,
+    "trainSteps": 112260,
+    "trainSuccess": 1,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 561386
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.4738,
+   "scores": {
+    "success": 0.18333333333333332,
+    "evalSteps": 39570,
+    "trainSteps": 112246,
+    "trainSuccess": 0.29082774049217003,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 561386
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.4738,
+   "scores": {
+    "success": 0.20666666666666667,
+    "evalSteps": 28332,
+    "trainSteps": 112348,
+    "trainSuccess": 0.20496397117694154,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 561386
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.4738,
+   "scores": {
+    "success": 0.14,
+    "evalSteps": 28416,
+    "trainSteps": 112320,
+    "trainSuccess": 0.16140667267808836,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 561386
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.4738,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 112212,
+    "trainSuccess": 0.9837272305992228,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 561386
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.162,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 112260,
+    "trainSuccess": 1,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.642,
+   "scores": {
+    "success": 0.6766666666666666,
+    "evalSteps": 23293,
+    "trainSteps": 112229,
+    "trainSuccess": 0.5686900958466453,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.88,
+   "scores": {
+    "success": 0.19666666666666666,
+    "evalSteps": 29584,
+    "trainSteps": 112216,
+    "trainSuccess": 0.1774058577405858,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.857,
+   "scores": {
+    "success": 0.11333333333333333,
+    "evalSteps": 30580,
+    "trainSteps": 112213,
+    "trainSuccess": 0.19542109566639412,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.497,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 112212,
+    "trainSuccess": 0.9903218907068763,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.086,
+   "scores": {
+    "success": 0.9933333333333333,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.22,
+   "scores": {
+    "success": 0.18666666666666668,
+    "trainSteps": 0,
+    "evalSteps": 40572,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.195,
+   "scores": {
+    "success": 0.13666666666666666,
+    "trainSteps": 0,
+    "evalSteps": 31814,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.191,
+   "scores": {
+    "success": 0.13666666666666666,
+    "trainSteps": 0,
+    "evalSteps": 31814,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.003,
+   "scores": {
+    "success": 0.06666666666666667,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.099,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.029,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 5225,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.021,
+   "scores": {
+    "success": 0.31,
+    "trainSteps": 0,
+    "evalSteps": 3021,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.022,
+   "scores": {
+    "success": 0.31,
+    "trainSteps": 0,
+    "evalSteps": 3021,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.005,
+   "scores": {
+    "success": 0.06,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 561054,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.8466666666666667,
+    "evalSteps": 16504,
+    "trainSteps": 561054,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.75,
+    "evalSteps": 18929,
+    "trainSteps": 561054,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.75,
+    "evalSteps": 17681,
+    "trainSteps": 561054,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 2,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 561054,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 561054
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 16.4224,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 134940,
+    "trainSuccess": 1,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 674673
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 16.4224,
+   "scores": {
+    "success": 0.38666666666666666,
+    "evalSteps": 33649,
+    "trainSteps": 134946,
+    "trainSuccess": 0.49776785714285715,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 674673
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 16.4224,
+   "scores": {
+    "success": 0.2,
+    "evalSteps": 27694,
+    "trainSteps": 134947,
+    "trainSuccess": 0.27848101265822783,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 674673
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 16.4224,
+   "scores": {
+    "success": 0.36333333333333334,
+    "evalSteps": 17719,
+    "trainSteps": 134920,
+    "trainSuccess": 0.24553314121037464,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 674673
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 16.4224,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 134920,
+    "trainSuccess": 0.9925733768158909,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 674673
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.969,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 134940,
+    "trainSuccess": 1,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.349,
+   "scores": {
+    "success": 0.44666666666666666,
+    "evalSteps": 27626,
+    "trainSteps": 134936,
+    "trainSuccess": 0.5961661341853035,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.476,
+   "scores": {
+    "success": 0.18,
+    "evalSteps": 28528,
+    "trainSteps": 135013,
+    "trainSuccess": 0.22162162162162163,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 5.503,
+   "scores": {
+    "success": 0.22666666666666666,
+    "evalSteps": 24803,
+    "trainSteps": 134969,
+    "trainSuccess": 0.22548365577051369,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.272,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 134920,
+    "trainSuccess": 0.9912985472872814,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.085,
+   "scores": {
+    "success": 0.9933333333333333,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.208,
+   "scores": {
+    "success": 0.17333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 40083,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.229,
+   "scores": {
+    "success": 0.12333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 30508,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.23,
+   "scores": {
+    "success": 0.12333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 30508,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.004,
+   "scores": {
+    "success": 0.05333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.078,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.032,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 5421,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.023,
+   "scores": {
+    "success": 0.35,
+    "trainSteps": 0,
+    "evalSteps": 3054,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.019,
+   "scores": {
+    "success": 0.35,
+    "trainSteps": 0,
+    "evalSteps": 3054,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.004,
+   "scores": {
+    "success": 0.07666666666666666,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 674592,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.7833333333333333,
+    "evalSteps": 17985,
+    "trainSteps": 674592,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.6066666666666667,
+    "evalSteps": 23500,
+    "trainSteps": 674592,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.48,
+    "evalSteps": 19441,
+    "trainSteps": 674592,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 3,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 674592,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 674592
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.3178,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 177060,
+    "trainSuccess": 1,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 885235
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.3178,
+   "scores": {
+    "success": 0.24333333333333335,
+    "evalSteps": 38551,
+    "trainSteps": 177089,
+    "trainSuccess": 0.25320970042796004,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 885235
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.3178,
+   "scores": {
+    "success": 0.17666666666666667,
+    "evalSteps": 27594,
+    "trainSteps": 177031,
+    "trainSuccess": 0.21360680340170085,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 885235
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.3178,
+   "scores": {
+    "success": 0.12666666666666668,
+    "evalSteps": 26641,
+    "trainSteps": 177053,
+    "trainSuccess": 0.19949238578680203,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 885235
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 21.3178,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 177002,
+    "trainSuccess": 0.9919096959356392,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 885235
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.387,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 177060,
+    "trainSuccess": 1,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.749,
+   "scores": {
+    "success": 0.89,
+    "evalSteps": 14789,
+    "trainSteps": 177037,
+    "trainSuccess": 0.6448979591836734,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.323,
+   "scores": {
+    "success": 0.2633333333333333,
+    "evalSteps": 21627,
+    "trainSteps": 177078,
+    "trainSuccess": 0.21749876421156697,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 7.247,
+   "scores": {
+    "success": 0.39666666666666667,
+    "evalSteps": 22165,
+    "trainSteps": 177026,
+    "trainSuccess": 0.22693920335429768,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 9.706,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 177002,
+    "trainSuccess": 0.9937740816487949,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.161,
+   "scores": {
+    "success": 0.99,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.388,
+   "scores": {
+    "success": 0.18333333333333332,
+    "trainSteps": 0,
+    "evalSteps": 39365,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.324,
+   "scores": {
+    "success": 0.14333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 32028,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.287,
+   "scores": {
+    "success": 0.14333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 32028,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.005,
+   "scores": {
+    "success": 0.056666666666666664,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.16,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.049,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 5199,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.032,
+   "scores": {
+    "success": 0.33,
+    "trainSteps": 0,
+    "evalSteps": 3181,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.036,
+   "scores": {
+    "success": 0.33,
+    "trainSteps": 0,
+    "evalSteps": 3181,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.005,
+   "scores": {
+    "success": 0.07666666666666666,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 885004,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.8666666666666667,
+    "evalSteps": 14771,
+    "trainSteps": 885004,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.6933333333333334,
+    "evalSteps": 20777,
+    "trainSteps": 885004,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.4166666666666667,
+    "evalSteps": 25065,
+    "trainSteps": 885004,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 4,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 885004,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 885004
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.7778,
+   "scores": {
+    "success": 0.01,
+    "evalSteps": 18000,
+    "trainSteps": 119400,
+    "trainSuccess": 0.9994974874371859,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 596940
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.7778,
+   "scores": {
+    "success": 0.20333333333333334,
+    "evalSteps": 38329,
+    "trainSteps": 119424,
+    "trainSuccess": 0.4928027095681626,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 596940
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.7778,
+   "scores": {
+    "success": 0.22666666666666666,
+    "evalSteps": 26729,
+    "trainSteps": 119372,
+    "trainSuccess": 0.2521150592216582,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 596940
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.7778,
+   "scores": {
+    "success": 0.5533333333333333,
+    "evalSteps": 14197,
+    "trainSteps": 119380,
+    "trainSuccess": 0.41706539074960125,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 596940
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "shared-blocked",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 13.7778,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 119364,
+    "trainSuccess": 0.995392245568178,
+    "parameters": 7692,
+    "optimizerBytes": 246144,
+    "totalTrainSteps": 596940
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.537,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 119400,
+    "trainSuccess": 0.9994974874371859,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.82,
+   "scores": {
+    "success": 0.52,
+    "evalSteps": 27153,
+    "trainSteps": 119407,
+    "trainSuccess": 0.5960813865862848,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.891,
+   "scores": {
+    "success": 0.31666666666666665,
+    "evalSteps": 22152,
+    "trainSteps": 119445,
+    "trainSuccess": 0.27291666666666664,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 4.769,
+   "scores": {
+    "success": 0.24333333333333335,
+    "evalSteps": 30171,
+    "trainSteps": 119476,
+    "trainSuccess": 0.21388216303470542,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "separate",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 6.338,
+   "scores": {
+    "success": 1,
+    "evalSteps": 600,
+    "trainSteps": 119364,
+    "trainSuccess": 0.9802117891491572,
+    "parameters": 38460,
+    "optimizerBytes": 1230720,
+    "totalTrainSteps": null
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.201,
+   "scores": {
+    "success": 0.9933333333333333,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.364,
+   "scores": {
+    "success": 0.16666666666666666,
+    "trainSteps": 0,
+    "evalSteps": 39647,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.293,
+   "scores": {
+    "success": 0.15333333333333332,
+    "trainSteps": 0,
+    "evalSteps": 32172,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.29,
+   "scores": {
+    "success": 0.15333333333333332,
+    "trainSteps": 0,
+    "evalSteps": 32172,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "random",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.005,
+   "scores": {
+    "success": 0.05333333333333334,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.143,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 18000,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.048,
+   "scores": {
+    "success": 1,
+    "trainSteps": 0,
+    "evalSteps": 5245,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.032,
+   "scores": {
+    "success": 0.32,
+    "trainSteps": 0,
+    "evalSteps": 3193,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.032,
+   "scores": {
+    "success": 0.32,
+    "trainSteps": 0,
+    "evalSteps": 3193,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "heuristic",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.006,
+   "scores": {
+    "success": 0.06666666666666667,
+    "trainSteps": 0,
+    "evalSteps": 600,
+    "parameters": 0,
+    "optimizerBytes": 0,
+    "totalTrainSteps": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "walk",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 1,
+    "evalSteps": 18000,
+    "trainSteps": 596820,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "grasp",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.8533333333333334,
+    "evalSteps": 15547,
+    "trainSteps": 596820,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "listen",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.6566666666666666,
+    "evalSteps": 22546,
+    "trainSteps": 596820,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "read",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.6233333333333333,
+    "evalSteps": 19578,
+    "trainSteps": 596820,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 596820
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "creature",
+   "seed": 5,
+   "split": "write",
+   "status": "ok",
+   "reason": null,
+   "seconds": null,
+   "scores": {
+    "success": 0.6866666666666666,
+    "evalSteps": 600,
+    "trainSteps": 596820,
+    "parameters": null,
+    "optimizerBytes": null,
+    "totalTrainSteps": 596820
+   },
+   "checkpoint": null
+  }
+ ]
+}

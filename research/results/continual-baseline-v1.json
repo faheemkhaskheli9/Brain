@@ -61,6 +61,96 @@
         10
       ],
       "statuses": {}
+    },
+    {
+      "kind": "replay",
+      "path": "research/results/replay-2026-11-11.json",
+      "git_blob_sha": "b4ffc37403e125566a92083fd56307f8249fbed1",
+      "experiment": "brain-world/sweep",
+      "baseline": "sleep-no-replay",
+      "arms": [
+        "sleep-no-replay",
+        "sleep-uniform",
+        "sleep-td",
+        "sleep-td-shuffle",
+        "sleep-td-mix",
+        "sleep-failure"
+      ],
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "statuses": {
+        "sleep-no-replay/9": "timeout",
+        "sleep-td/8": "timeout",
+        "sleep-failure/5": "timeout"
+      }
+    },
+    {
+      "kind": "rl-multitask",
+      "path": "research/results/rl-multitask-interleaved-2026-11-11.json",
+      "git_blob_sha": "ad764f5397bbf355a1ffef6d842464fe1074b30e",
+      "experiment": "brain-world/rl-multitask",
+      "baseline": "separate",
+      "arms": [
+        "shared-interleaved",
+        "separate",
+        "random",
+        "heuristic",
+        "creature"
+      ],
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "statuses": {},
+      "splits": [
+        "walk",
+        "grasp",
+        "listen",
+        "read",
+        "write"
+      ]
+    },
+    {
+      "kind": "rl-multitask",
+      "path": "research/results/rl-multitask-blocked-2026-11-11.json",
+      "git_blob_sha": "db2926679863c4926ddfd4442b08fe46769d62df",
+      "experiment": "brain-world/rl-multitask",
+      "baseline": "separate",
+      "arms": [
+        "shared-blocked",
+        "separate",
+        "random",
+        "heuristic",
+        "creature"
+      ],
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "statuses": {},
+      "splits": [
+        "walk",
+        "grasp",
+        "listen",
+        "read",
+        "write"
+      ]
     }
   ]
 }

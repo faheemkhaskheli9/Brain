@@ -139,6 +139,46 @@ def check_record(record: dict, spec: dict) -> list[str]:
                 errors.append(f"{r['arm']}/{r['seed']}: missing retention")
             elif abs(sum(listen_returns) / 3 - scores["retention"]) > 0.001:
                 errors.append(f"{r['arm']}/{r['seed']}: retention disagrees with per-block data")
+    elif kind == "replay":
+        # 10-seed sampler comparison (#152): every control arm, equal budgets, timeouts kept.
+        if budgets.get("episodes_per_stage") != 20000 or budgets.get("scored_episodes") != 4000:
+            errors.append("replay training/scoring budget changed")
+        for arm, settings in config.get("arms", {}).items():
+            if settings.get("replay") != 0.1 or settings.get("sleepActor", False):
+                errors.append(f"{arm}: unequal online rehearsal or replaying actor")
+        for r in record["runs"]:
+            if r["status"] != "ok":
+                continue
+            kept = r["scores"].get("kept")
+            if not isinstance(kept, dict):
+                errors.append(f"{r['arm']}/{r['seed']}: missing retention")
+                continue
+            for skill in ("grasp", "listen", "read", "write"):
+                _score_error(f"{r['arm']}/{r['seed']} kept.{skill}", kept.get(skill), errors)
+    elif kind == "rl-multitask":
+        # Shared-network comparator (#153): no task ID, creature-matched budget, all skills scored.
+        if "no task ID" not in str(config.get("taskInput", "")):
+            errors.append("shared learner input no longer excludes the task ID")
+        if budgets.get("matchCreature") is not True or budgets.get("evalEpisodesPerSkill") != 300:
+            errors.append("multi-task budget matching or evaluation size changed")
+        skills = spec["splits"]
+        seen = {}
+        for r in record["runs"]:
+            seen.setdefault((r["arm"], r["seed"]), []).append(r.get("split"))
+            if r["status"] == "ok":
+                _score_error(f"{r['arm']}/{r['seed']} {r.get('split')} success",
+                             r["scores"].get("success"), errors)
+        for key, splits in seen.items():
+            if sorted(splits) != sorted(skills):
+                errors.append(f"{key[0]}/{key[1]}: skill coverage changed")
+        effective = budgets.get("effectivePerSeed", {})
+        for r in record["runs"]:
+            if r["arm"].startswith("shared-") or r["arm"] == "separate":
+                want = effective.get(str(r["seed"]))
+                got = r["scores"].get("trainSteps")
+                # An episode may overshoot the budget, never undershoot it.
+                if not isinstance(want, int) or not isinstance(got, int) or got < want:
+                    errors.append(f"{r['arm']}/{r['seed']} {r.get('split')}: trained under the matched budget")
     else:
         errors.append(f"unsupported experiment kind {kind}")
     return errors
