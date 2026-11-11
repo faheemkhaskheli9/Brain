@@ -100,6 +100,11 @@ jobs:
         run: node game/world/test_construct.mjs
       - name: Novelty scoring rejects invalid, duplicate and mirrored candidates (#111)
         run: node game/world/test_novelty.mjs
+      - name: Fair novelty feedback queries are audited (#111)
+        run: |
+          node game/world/test_novelty_fair.mjs
+          node game/world/novelty_fair.mjs 1 --tasks 3 --budget 8 --out /tmp/novelty-fair-smoke.json
+          python research/result_schema.py --check /tmp/novelty-fair-smoke.json
       - name: Every species in Brain Ecosystem learns
         run: node game/ecosystem/test_ecosystem.mjs 1 2 3
 

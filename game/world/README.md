@@ -788,7 +788,33 @@ result yet: scoring the backprop-free creature on these tasks is the next step.
 | retrieval (library replay) | 1.72 | 0.00 |
 | search (mutate retrieved) | 1.77 | 0.49 |
 
-Search finds about twice the novel drawings of random generation (+0.22, p 0.004) and no more valid ones than plain retrieval, whose gain over random is the library itself. The candidate log and rejection reasons per seed are in `research/results/novelty-2026-11-11.json`. With only 63 possible drawings, budgets of 63 or more enumerate everything, so the gap closes as the budget grows.
+**Adversarial finding (2026-11-12): these legacy figures are NOT a fair-search result.**
+The random arm samples illegal stroke IDs, repeats and over-budget drawings, while
+the search arm uses additional graded constraint-penalty queries without charging them
+to its eight validator calls. Retain the historic artifact for audit, not as proof
+of a novelty gain over a valid or equal-information baseline.
+
+A corrected, separate **matched-candidate benchmark** is available:
+
+```bash
+node game/world/test_novelty_fair.mjs
+node game/world/novelty_fair.mjs --tasks 30 --budget 8 --out /tmp/novelty-fair.json
+python research/result_schema.py --check /tmp/novelty-fair.json
+```
+
+Every arm uses exactly eight validator evaluations per task. `random-valid`
+samples legal unique stroke sets within the budget; `retrieval` replays the
+same training-solution library; `mutate-blind` mutates its examples without
+using feedback; `search-binary` adapts to the charged yes/no verifier; and
+`search-graded` additionally receives a numerical constraint penalty for
+those same eight candidates. **Graded feedback calls are reported separately
+and cannot be credited as a fair information-equivalent advantage**.
+The runner records per-candidate audit traces and exports `brain-result/1`.
+This is still engineered search, not a learned creature. The 63-drawing search
+space remains a regression toy rather than an open-ended creativity test.
+
+The implementation and adversarial research gates are documented in
+[the implementation plan](../../research/adversarial-implementation-plan.md).
 
 ## Navigation: hard rooms (#108)
 
