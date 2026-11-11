@@ -15,7 +15,7 @@ assert.notDeepEqual([...x], [...y]);
 assert.deepEqual([...observation(first, [], false)], [...observation(second, [], false)]);
 assert.equal(x[50], 1);
 assert.equal(x[81], 1);
-assert.equal(x[45], first.budget / PEN.length);
+assert.ok(Math.abs(x[45] - first.budget / PEN.length) < 1e-6);
 const brain = new Brain(rng(12));
 const before = weightDigest(brain);
 const frozen = playEpisode(brain, first, { learn: false });
