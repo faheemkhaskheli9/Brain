@@ -28,6 +28,7 @@ for (const arm of ARMS) {
   assert.equal(res.validatorCalls, 8);
   assert.equal(res.gradedCalls, grades);
   assert.equal(res.trace.length, 8);
+  assert.ok(res.trace.every(x => x.candidate.length <= task.budget), arm);
   const expected = score(task, res.trace.map(x => x.candidate), known);
   assert.equal(res.valid, expected.valid);
   assert.equal(res.novel, expected.novel);

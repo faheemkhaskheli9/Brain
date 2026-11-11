@@ -96,7 +96,11 @@ export function runTask(task, budget, R, known, arm, {
     return graded ? { passed, distance } : { passed };
   }
   // All methods see an oracle-built training library, not a learned creature memory.
-  const order = [...known];
+  // A known drawing whose length exceeds the public budget is not a legal
+  // retrieval candidate. Apply this *goal-agnostic* syntactic filter to every
+  // library-seeded arm without looking at the task's points or symmetry.
+  const order = known.filter(d => d.length <= task.budget);
+  if (!order.length) throw new Error("no budget-compatible library drawings");
   for (let i = order.length - 1; i > 0; i--) {
     const j = Math.floor(R() * (i + 1));
     [order[i], order[j]] = [order[j], order[i]];
