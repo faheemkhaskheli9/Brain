@@ -778,6 +778,18 @@ generator and solution oracle are engineered; nothing is learned here (`PROVENAN
 drawings (empty, repeated, over budget, unknown) and a vertical-flip equivariance check. No creature
 result yet: scoring the backprop-free creature on these tasks is the next step.
 
+## Candidate recombination and novelty (#111)
+
+`novelty.mjs` scores engineered arms on the held-out #110 tasks at a matched budget of 8 validator calls per task (10 seeds, 30 tasks each, budget fixed before the run). Novelty counts only candidates that pass the validator, are a new picture up to pad symmetry, and are not in the library of prior solutions, so noise, repeated strokes, reorderings and mirrored copies score zero (`test_novelty.mjs`). **No creature is scored yet**; the search arm is engineered (graded penalty, one-stroke mutation) and sets the bar a learned one must clear.
+
+| arm | valid per task | novel per task |
+|---|---|---|
+| random | 1.03 | 0.27 |
+| retrieval (library replay) | 1.72 | 0.00 |
+| search (mutate retrieved) | 1.77 | 0.49 |
+
+Search finds about twice the novel drawings of random generation (+0.22, p 0.004) and no more valid ones than plain retrieval, whose gain over random is the library itself. The candidate log and rejection reasons per seed are in `research/results/novelty-2026-11-11.json`. With only 63 possible drawings, budgets of 63 or more enumerate everything, so the gap closes as the budget grows.
+
 ## Navigation: hard rooms (#108)
 
 `node game/world/navigation.mjs [seeds] [--arms a,b] [--out run.json]`. A frozen suite of 40 hard
