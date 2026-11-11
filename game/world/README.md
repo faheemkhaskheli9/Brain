@@ -765,6 +765,19 @@ over 8 seeds. Paired sign-flip p against scratch:
   and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
   matches "New letters" above.
 
+## Construction tasks (#110)
+
+`construct.mjs` is a task suite, not a trained arm: draw with the six pen strokes under constraints
+(cover listed pad cells, keep a left-right / up-down / half-turn symmetry, stay inside a stroke
+budget) instead of copying one letter. Generation is seeded and deterministic; every task is
+solvable by construction, many have several valid drawings (`distinct`), and impossible budgets are
+dropped, never repaired. Train and eval use disjoint constraint combinations (eval holds out half-turn
+symmetry and the covers-plus-symmetry pairings). The pen strokes and pad are supplied; the validator,
+generator and solution oracle are engineered; nothing is learned here (`PROVENANCE`).
+`test_construct.mjs` covers determinism, split disjointness, impossible constraints, degenerate
+drawings (empty, repeated, over budget, unknown) and a vertical-flip equivariance check. No creature
+result yet: scoring the backprop-free creature on these tasks is the next step.
+
 ## Navigation: hard rooms (#108)
 
 `node game/world/navigation.mjs [seeds] [--arms a,b] [--out run.json]`. A frozen suite of 40 hard
