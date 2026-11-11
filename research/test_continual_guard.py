@@ -42,6 +42,30 @@ class ContinualGuardTests(unittest.TestCase):
         record["runs"][0]["scores"]["retention"] = 0.99
         self.assertTrue(any("retention" in x for x in check_record(record, self.by_kind["reversal"])))
 
+    def test_replay_timeout_and_budget_mutations(self):
+        record = copy.deepcopy(self.records["replay"])
+        next(r for r in record["runs"] if r["status"] == "timeout")["status"] = "ok"
+        self.assertTrue(check_record(record, self.by_kind["replay"]))
+        record = copy.deepcopy(self.records["replay"])
+        record["budgets"]["episodes_per_stage"] = 40000
+        self.assertTrue(any("budget" in x for x in check_record(record, self.by_kind["replay"])))
+        record = copy.deepcopy(self.records["replay"])
+        next(r for r in record["runs"] if r["status"] == "ok")["scores"]["kept"]["read"] = 1.2
+        self.assertTrue(any("kept.read" in x for x in check_record(record, self.by_kind["replay"])))
+
+    def test_multitask_leak_budget_and_coverage_mutations(self):
+        spec = self.by_kind["rl-multitask"]
+        record = copy.deepcopy(self.records["rl-multitask"])
+        record["config"]["taskInput"] = "observation plus task index"
+        self.assertTrue(any("task ID" in x for x in check_record(record, spec)))
+        record = copy.deepcopy(self.records["rl-multitask"])
+        next(r for r in record["runs"] if r["arm"] == "separate")["scores"]["trainSteps"] = 10
+        self.assertTrue(any("matched budget" in x for x in check_record(record, spec)))
+        record = copy.deepcopy(self.records["rl-multitask"])
+        record["runs"] = [r for r in record["runs"]
+                          if not (r["arm"] == "creature" and r["seed"] == 1 and r["split"] == "read")]
+        self.assertTrue(any("skill coverage" in x for x in check_record(record, spec)))
+
     def test_incorrect_schema(self):
         record = copy.deepcopy(self.records["reversal"])
         record["schema"] = "brain-result/0"

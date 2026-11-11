@@ -242,12 +242,31 @@ in the result. If nonuniform selection produces worse old-skill retention or
 more failed graduations, leave uniform as the default. These thresholds do
 not license tuning on held-out layouts or reverse rules.
 
-These selectors have **no measured superiority** in the repo yet. The weighted
-sampler scans up to `memCap` slots per draw and may increase CPU cost.
-The first experiment covers the original five skills and retention; full
-reversal, unseen-letter, misleading-surprise, and compute
-controls remain required to resolve #152. Do not enable by default without
-multi-seed evidence that old skills are preserved.
+**Result (seeds 1-10, 2026-11-11, commit 4eba435): the preregistered rule fails, so uniform stays the default.**
+[research/results/replay-2026-11-11.json](../../research/results/replay-2026-11-11.json),
+analysed with `python research/analyze_replay.py`. Retention is the frozen
+score on each old skill after graduation; gains are paired against
+`sleep-uniform` on seeds that graduated in both arms.
+
+| arm | graduated | grasp | listen | read | write | paired gain [95% CI] | p | wall time vs uniform |
+|---|---|---|---|---|---|---|---|---|
+| `sleep-uniform` | 10/10 | 0.78 | 0.62 | 0.48 | 0.64 | baseline | | 1.00 |
+| `sleep-td-mix` (confirmatory) | 10/10 | 0.80 | 0.62 | 0.51 | 0.64 | +0.013 [-0.006, +0.032] | 0.27 | 1.70 |
+| `sleep-td` | 9/10 | 0.79 | 0.62 | 0.51 | 0.64 | +0.012 [-0.017, +0.038] | 0.47 | 1.63 |
+| `sleep-td-shuffle` | 10/10 | 0.80 | 0.61 | 0.48 | 0.66 | +0.008 [-0.004, +0.021] | 0.28 | 1.32 |
+| `sleep-failure` | 9/10 | 0.80 | 0.59 | 0.49 | 0.65 | -0.002 [-0.034, +0.028] | 0.91 | 1.12 |
+| `sleep-no-replay` | 9/10 | 0.78 | 0.60 | 0.51 | 0.67 | +0.008 [-0.021, +0.037] | 0.59 | 0.93 |
+
+- **The TD-error mixture gains 0.013 in retention, under the 0.03 required**, its interval
+  includes zero, and it takes 1.70 times the wall time (limit 1.25). It fails three of the
+  six conditions.
+- **No sampler differs measurably from uniform, and neither does no sleep replay at all**:
+  every interval includes zero. Shuffled priorities do about as well as real ones, so the
+  small differences are not evidence that TD error picks useful memories here.
+- Timeouts (kept in the file): `sleep-no-replay` seed 9, `sleep-td` seed 8, `sleep-failure` seed 5.
+
+Still not measured for #152: reversal and unseen-letter tests under each sampler, and a
+condition where surprise is misleading.
 
 ## Sparsity: k-winners-take-all (#82)
 
@@ -675,9 +694,34 @@ feedforward hidden layer with no recurrent memory, distinct learning schedules a
 different training/adaptation objectives. Do not treat this as evidence of transfer
 or of human-level learning. Frozen scoring uses a different environment seed;
 **no held-out layout, reversal, or new-letter tests have been implemented for
-this baseline yet**. Those controls and full multi-seed result files are still
-required by #153 before claims. `node game/world/test_rl_multitask.mjs` is only
+this baseline yet** (still open in #153). `node game/world/test_rl_multitask.mjs` is only
 a cheap deterministic integration test.
+
+**Result (seeds 1-5, 2026-11-11, commit 4eba435), each conventional skill given one fifth of
+that seed's creature training steps** (93,162 to 177,001 per skill; `--creature --match-creature`):
+[interleaved](../../research/results/rl-multitask-interleaved-2026-11-11.json),
+[blocked](../../research/results/rl-multitask-blocked-2026-11-11.json). Frozen success over
+300 episodes per skill, mean of 5 seeds:
+
+| arm | walk | grasp | listen | read | write |
+|---|---|---|---|---|---|
+| creature (one brain, no backprop) | 1.00 | 0.84 | 0.67 | 0.57 | 0.94 |
+| five separate networks | 1.00 | 0.59 | 0.28 | 0.21 | 1.00 |
+| one shared network, interleaved | 1.00 | 0.03 | 0.09 | 0.13 | 1.00 |
+| one shared network, blocked | 0.40 | 0.31 | 0.21 | 0.31 | 1.00 |
+| heuristic | 1.00 | 1.00 | 0.33 | 0.33 | 0.07 |
+| random | 0.99 | 0.18 | 0.14 | 0.14 | 0.06 |
+
+- **One shared backprop network does worse than five separate ones at this budget.** Interleaved
+  it falls below random on grasp, listen and read (0.03, 0.09, 0.13); the separate networks beat
+  it on grasp and listen on 5 of 5 seeds (sign-flip p 0.062, the smallest possible with 5 seeds).
+- **Trained in blocks it forgets the first skill**: walk drops to 0.40 (it is 1.00 in every other
+  trained arm), the usual catastrophic forgetting of a network trained on one task after another.
+- **The creature is ahead of both shared arms on grasp, listen and read on 5 of 5 seeds**
+  (p 0.062 each). The shared network writes at 1.00, the creature at 0.94.
+- Limits: 5 seeds, one architecture (64 tanh units, no memory) with hyperparameters tuned for
+  the per-skill arm, and in-distribution scoring only. This is a baseline at one budget, not
+  evidence that backprop cannot learn the shared task.
 
 ## Held-out: what carries over to rooms, rules and letters it has not seen? (#105)
 
