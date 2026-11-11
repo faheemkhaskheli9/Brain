@@ -4,8 +4,8 @@
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { Brain, N_IN, PEN, ACT_SETS } from "./brain.js";
-import { assertDisjoint, generate, valid } from "./construct.mjs";
-import { library, pictureClass } from "./novelty.mjs";
+import { assertDisjoint, generate, valid, solutions } from "./construct.mjs";
+import { pictureClass } from "./novelty.mjs";
 import { randomLegal, rng } from "./novelty_fair.mjs";
 import { resultRecord, run, writeResult } from "./result.mjs";
 
@@ -65,14 +65,15 @@ export function weightDigest(brain) {
 export function frozenScore(brain, tasks, repeats, { revealGoal = true, seen = new Set() } = {}) {
   if (!Number.isInteger(repeats) || repeats < 1 || !tasks.length)
     throw new Error("positive evaluation workload required");
-  const before = weightDigest(brain);
+  const before = weightDigest(brain), observed = new Set(seen);
   let success = 0, novel = 0, decisions = 0;
   for (const task of tasks) for (let i = 0; i < repeats; i++) {
     const episode = playEpisode(brain, task, { learn: false, revealGoal });
     decisions += episode.decisions;
     if (episode.success) {
       success++;
-      if (!seen.has(pictureClass(episode.strokes))) novel++;
+      const cls = pictureClass(episode.strokes);
+      if (!observed.has(cls)) { observed.add(cls); novel++; }
     }
   }
   if (weightDigest(brain) !== before) throw new Error("frozen evaluation changed weights");
@@ -89,17 +90,21 @@ export function runSeed(seed, { trainSteps = 10000, trainTasks = 64, evalTasks =
   const eval_ = generate(seed, "eval", evalTasks).tasks;
   if (train.length !== trainTasks || eval_.length !== evalTasks)
     throw new Error("incomplete task generation");
-  const known = new Set(library(seed).map(pictureClass)), rows = [];
+  // Novelty excludes every solution of every train task, not a sampled memory subset.
+  // This deliberately makes the tiny 63-drawing task a strict novelty test.
+  const known = new Set(train.flatMap(task => solutions(task)).map(pictureClass)), rows = [];
   for (const arm of ARMS) {
     const started = Date.now();
     if (arm === "random-valid") {
       const R = rng(seed * 101 + 13);
       let wins = 0, novel = 0;
+      const observed = new Set(known);
       for (const task of eval_) for (let i = 0; i < repeats; i++) {
         const strokes = randomLegal(R, task.budget);
         if (valid(task, strokes)) {
           wins++;
-          if (!known.has(pictureClass(strokes))) novel++;
+          const cls = pictureClass(strokes);
+          if (!observed.has(cls)) { observed.add(cls); novel++; }
         }
       }
       rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - started) / 1000,

@@ -25,6 +25,12 @@ const tasks = generate(1, "eval", 3).tasks;
 const score = frozenScore(brain, tasks, 2);
 assert.ok(score.success >= 0 && score.success <= 1);
 assert.equal(weightDigest(brain), before);
+// Repeated copies of one valid drawing count as one novel picture, not three.
+const stub = { learning: false, greedy: false, P: new Float32Array(1), v: new Float32Array(1),
+  encode(x) { return x; }, act() { return 5; }, learn() {} };
+const repeat = frozenScore(stub, [{ ...first, budget: 1 }], 3, { seen: new Set() });
+assert.equal(repeat.success, 1);
+assert.equal(repeat.novel, 1 / 3);
 const cheap = { trainSteps: 15, trainTasks: 3, evalTasks: 3, repeats: 2 };
 const rows = runSeed(1, cheap);
 assert.deepEqual(rows.map(r => r.arm), ARMS);
