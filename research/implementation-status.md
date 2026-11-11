@@ -1,6 +1,6 @@
 # Implementation status vs. the issue backlog (#103)
 
-Checked 2026-10-20 against `main` at b37dd33; re-checked 2026-11-10 at c2b5a8d. Each row compares what the issue (and its comments)
+Checked 2026-10-20 against `main` at b37dd33; re-checked 2026-11-10 at c2b5a8d; adversarial evidence update 2026-11-12 at c85c393. Each row compares what the issue (and its comments)
 says with what is in the repository: code, tests and a recorded result. "In repo" means a file on
 `main`; a result counts only if the numbers are written in a topic file or a README.
 
@@ -39,7 +39,10 @@ repository**: do not cite them. #65 item 3 is withdrawn.
 | #106 reversal benchmark | `reversal.mjs` measures adaptation, retention, false switches, detection; arms ablate surprise, replay, free slots; 10-seed results with and without tone noise (#135) in `game/world/README.md` "Reversal" and `research/results/reversal-*.json` | One surprise threshold only |
 | #105 held-out transfer | `heldout.mjs`: disjoint layout (target quadrant), tone-mapping and glyph splits, asserted; frozen (zero-shot), bounded adaptation and forgetting reported separately; pretrained vs scratch at disclosed budgets; frozen scoring checked to change nothing (`test_heldout.mjs`, CI); 10-seed result in README "Held-out" | Dev split exists for layouts only |
 | #108 navigation | `navigation.mjs`: a frozen hard-room suite (hash pinned in `test_navigation.mjs`), tune and eval layouts disjoint; success, wrong grasps, timeouts, loops, collisions; three arms at matched budgets, failing rooms saved per run | No new mechanism proposed yet beyond the arms tested |
-| #110-#116 | Nothing specific | All |
+| #110 compositional construction tasks | `game/world/construct.mjs`, deterministic train/eval grammar, validity/symmetry tests (#172) | Task suite is *engineered*; no creature trained on it by this issue |
+| #111 novelty benchmark | `game/world/novelty.mjs` and historical `research/results/novelty-2026-11-11.json`; **legacy result is confounded** because random emitted illegal/repeated strokes while search used uncharged graded penalty. Fair arms `novelty_fair.mjs` and `test_novelty_fair.mjs` merged (#173): legal random, retrieval, blind mutation, binary search, privileged graded search, per-candidate feedback audit and CI smoke. | No preregistered full 10-seed `novelty_fair` artifact or trained creature result. Do not cite historical +0.22 as a fair search advantage |
+| #112 reusable skill composition | `game/world/construct_learner.mjs` pilot (#174) reuses the existing backprop-free Brain actor/critic with explicit goal encoding, supplied submit action and terminal verifier reward; goal-masked, learning-off and random-valid controls; frozen-scoring and duplicate-novelty regression tests in CI. | No learned options, no demonstrated unseen-composition gain, no 10-seed confirmatory result, no carry/place action hierarchy |
+| #113-#116 | Existing research tasks and ecosystem baseline (#116) | No integrated learned world-model planner, verified goal-conditioned retrieval, uncertainty-driven policy or positive changing-resource communication result |
 | #132 draft topics | 29 of 30 moved to `stable` (#168) | `anatomy/cortical-layers-and-columns.md` is still `draft` |
 | #149 real-LLM mistake-learning benchmark | `research/llm_mistake_learning.py` and its test (CI): verified-feedback memory with an external verifier, deterministic demonstration | No real LLM run, no frozen held-out tasks: no accuracy result |
 | #150 persistent failure cases | The episodic store records observed terminal failures and can replay them stratified (`GAINS.sleepSampler = "failure"`, #152) | Verified corrective experience, retrieval (#114), any result |
