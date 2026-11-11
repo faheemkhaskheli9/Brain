@@ -96,6 +96,8 @@ jobs:
         run: node game/world/test_prioritized_replay.mjs
       - name: Navigation suite is frozen and its splits are disjoint (#108)
         run: node game/world/test_navigation.mjs
+      - name: Construction tasks are deterministic, valid and held out (#110)
+        run: node game/world/test_construct.mjs
       - name: Every species in Brain Ecosystem learns
         run: node game/ecosystem/test_ecosystem.mjs 1 2 3
 
