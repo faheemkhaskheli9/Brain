@@ -28,13 +28,15 @@ export function evaluateCheckpoint(checkpoint, scaffold, seed, episodes = 30, sk
   if (!Number.isSafeInteger(seed) || seed < 0 || !Number.isInteger(episodes) || episodes < 1
     || !skills.length || skills.some(k => !SKILLS.includes(k)) || new Set(skills).size !== skills.length)
     throw new Error("invalid paired-scene evaluation settings");
-  const w = World.fromJSON(checkpoint);
-  w.scaffold = scaffold;  // the sole intervention; same trained parameters in both arms
-  const weights = digest(w.brain);
   const scenes = createHash("sha256");
   const scores = {};
   let decisions = 0;
   for (const skill of skills) {
+    // A fresh copy per skill prevents earlier evaluation trajectories from changing
+    // stateful context inference, even while policy weights remain frozen.
+    const w = World.fromJSON(checkpoint);
+    w.scaffold = scaffold;  // the only intervention across paired arms
+    const weights = digest(w.brain);
     w.perform(skill); // disables learning; does not change the trained policy weights
     let wins = 0;
     const skillIndex = SKILLS.indexOf(skill);
@@ -52,8 +54,8 @@ export function evaluateCheckpoint(checkpoint, scaffold, seed, episodes = 30, sk
       wins += Number(outcome.success);
     }
     scores[skill] = wins / episodes;
+    if (digest(w.brain) !== weights) throw new Error("frozen evaluation modified policy weights");
   }
-  if (digest(w.brain) !== weights) throw new Error("frozen evaluation modified policy weights");
   const mean = skills.reduce((sum, k) => sum + scores[k], 0) / skills.length;
   return { scores: { ...scores, mean }, decisions, episodes: skills.length * episodes,
     sceneHash: scenes.digest("hex") };
