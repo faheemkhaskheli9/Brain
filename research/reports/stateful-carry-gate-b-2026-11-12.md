@@ -16,15 +16,17 @@ Status: **code committed; empirical Gate B not yet confirmed**. This is a resear
 
 Arms: flat backprop-free Brain actor-critic, Brain with goal withheld, public-observation tabular Q-learning, stepwise legal random, observation-independent fixed script and hand-coded BFS navigation.
 
-Each trained arm receives **exactly 10,000 primitive environment decisions** by default, including unfinished last episodes; untuned nonlearning baselines use zero training steps and must be labeled separately. Eval consists of 30 frozen tasks × 2 repeats per seed. Individual attempts are nested within the seed, not independent samples. Both Q and Brain are deep-copied for scoring. No training updates or test-set tuning may occur during eval.
+Each trained arm receives **exactly 10,000 primitive environment decisions** by default, including unfinished last episodes; untuned nonlearning baselines use zero training steps and must be labeled separately. Eval consists of 30 frozen tasks × 2 repeats per seed. Development uses 12 separately generated tasks per seed; comparator selection is made on development scores only, not frozen evaluation. The paired-seed analyzer reports bootstrap 95% intervals and exact sign-flip tests. Individual attempts are nested within the seed, not independent samples. Both Q and Brain are deep-copied for scoring. No training updates or test-set tuning may occur during eval.
 
 **Run after code checks:**
 
 ```bash
 node game/world/test_stateful_carry.mjs
 node game/world/test_stateful_baselines.mjs
-node game/world/stateful_baselines.mjs 1 2 3 4 5 6 7 8 9 10 --train-steps 10000 --train-tasks 40 --eval-tasks 30 --repeats 2 --out /tmp/carry-gate-b.json
+python research/test_analyze_stateful_carry.py
+node game/world/stateful_baselines.mjs 1 2 3 4 5 6 7 8 9 10 --train-steps 10000 --train-tasks 40 --dev-tasks 12 --eval-tasks 30 --repeats 2 --out /tmp/carry-gate-b.json
 python research/result_schema.py --check /tmp/carry-gate-b.json
+python research/analyze_stateful_carry.py /tmp/carry-gate-b.json
 ```
 
 Archive the per-seed JSON, split hashes, commit, environment and all failure cases. Publish zero-shot success, infeasible-goal errors, invalid action rate, forced drops, recovery events, source-task retention, decisions and wall time. The hand-coded heuristic is an engineered control, not an independent learning achievement.
