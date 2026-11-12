@@ -8,6 +8,13 @@
 - [Continuous motor and delayed-reward pilot](continuous-motor-pilot.md) ([frozen 10-seed results and objective-mismatch finding](continuous-motor-results-2026-11-12.md)) — one persistent physical joint across target and motor-rule changes, three-action reward latency and eight matched policy-selection arms. This is a preregistered toy experiment, not a biologically accurate brain.
 # research/
 
+## Executing the Brain research program
+
+- [Versioned AGI research execution blueprint (v1.0)](agi-execution-blueprint-2026-11-12.md): integration architecture, M0-M8 dependency graph, first PR implementation handoff, controls, budgets, falsification and evidence gates. This is a roadmap, not an achieved capability.
+- [Append-only adversarial review ledger](agi-review-ledger.md): four review rounds, rejected shortcuts, changed decisions, and a repeatable process to preserve subsequent review history in Git.
+- [Existing adversarial implementation plan](adversarial-implementation-plan.md) and [sparse brain experiment plan](sparse-brain-next-implementation-plan.md) remain detailed source plans; issue #120 owns goals and #136 owns ordering.
+
+
 - [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).
 
 | Path | What |
