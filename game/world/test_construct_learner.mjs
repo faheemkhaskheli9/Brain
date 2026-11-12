@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { Brain, N_IN, PEN } from "./brain.js";
 import { assertDisjoint, generate } from "./construct.mjs";
-import { observation, playEpisode, frozenScore, runSeed, weightDigest, ALLOWED, SUBMIT, ARMS, legalActions, evaluationCopy, randomEpisode, randomStepScore, randomCandidateScore } from "./construct_learner.mjs";
+import { observation, playEpisode, frozenScore, runSeed, weightDigest, ALLOWED, SUBMIT, ARMS, legalActions, evaluationCopy, randomEpisode, randomStepScore, randomCandidateScore, trialSeed } from "./construct_learner.mjs";
 import { rng } from "./novelty_fair.mjs";
 
 assertDisjoint();
@@ -75,4 +75,21 @@ const testB = frozenScore(brain, tasks, 2, { evalSeed: 17 });
 const trainAgain = frozenScore(brain, generate(7, "train", 2).tasks, 2, { evalSeed: 18 });
 assert.deepEqual(trainScore, trainAgain);
 assert.deepEqual(testA, testB);
+// Frozen trials must have per-task RNG; evaluation order cannot alter actions.
+const evalA = frozenScore(brain, tasks, 3, { evalSeed: 23 });
+const evalB = frozenScore(brain, [...tasks].reverse(), 3, { evalSeed: 23 });
+const ordered = x => [...x.audit].map(a => ({
+  key: `${a.task}/${a.repeat}`, actions: a.actions, success: a.success,
+})).sort((a, b) => a.key.localeCompare(b.key));
+assert.deepEqual(ordered(evalA), ordered(evalB));
+assert.notEqual(trialSeed(23, tasks[0], 0), trialSeed(23, tasks[0], 1));
+assert.deepEqual(
+  randomStepScore(tasks, 2, { evalSeed: 23 }).audit.map(a => a.actions),
+  randomStepScore(tasks, 2, { evalSeed: 23 }).audit.map(a => a.actions),
+);
+const beforeGate = weightDigest(brain);
+brain.gate[0] ^= 1;
+assert.notEqual(weightDigest(brain), beforeGate);
+brain.gate[0] ^= 1;
+assert.equal(weightDigest(brain), beforeGate);
 console.log("construction learner: ok");

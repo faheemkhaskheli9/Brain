@@ -97,9 +97,15 @@ export function randomEpisode(R, task, { maskHistory = false } = {}) {
 }
 
 export function weightDigest(brain) {
-  return createHash("sha256")
-    .update(Buffer.from(brain.P.buffer, brain.P.byteOffset, brain.P.byteLength))
-    .update(Buffer.from(brain.v.buffer, brain.v.byteOffset, brain.v.byteLength)).digest("hex");
+  // Cover all observable typed-array state, not just actor and critic weights.
+  const hash = createHash("sha256");
+  for (const key of ["P", "v", "ev", "eP", "wIn", "bias", "gate", "proto", "uses",
+    "fast", "slow"]) {
+    const a = brain[key];
+    if (a && ArrayBuffer.isView(a))
+      hash.update(Buffer.from(a.buffer, a.byteOffset, a.byteLength));
+  }
+  return hash.digest("hex");
 }
 
 /** Evaluation copies every mutable field, including traces, policy and metrics, not only weights. */
@@ -146,12 +152,24 @@ function summarize(tasks, repeats, seen, next) {
     audit };
 }
 
+// Independent evaluation stream per task and repeat. Preserves actions when
+// task order changes and prevents one frozen trial contaminating another.
+export function trialSeed(seed, task, repeat) {
+  if (!Number.isInteger(seed) || !Number.isInteger(repeat) || repeat < 0)
+    throw new Error("evaluation seed and repeat must be valid integers");
+  const key = `${seed}/${JSON.stringify(task)}/${repeat}`;
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
 export function frozenScore(brain, tasks, repeats, {
   revealGoal = true, seen = new Set(), evalSeed = 1, greedy = false, maskHistory = false,
 } = {}) {
-  const sourceDigest = weightDigest(brain), detached = evaluationCopy(brain, evalSeed);
-  const result = summarize(tasks, repeats, seen, task =>
-    playEpisode(detached, task, { learn: false, revealGoal, greedy, maskHistory }));
+  const sourceDigest = weightDigest(brain);
+  const result = summarize(tasks, repeats, seen, (task, repeat) =>
+    playEpisode(evaluationCopy(brain, trialSeed(evalSeed, task, repeat)), task,
+      { learn: false, revealGoal, greedy, maskHistory }));
   if (weightDigest(brain) !== sourceDigest)
     throw new Error("source checkpoint was mutated during frozen evaluation");
   return result;
@@ -159,15 +177,14 @@ export function frozenScore(brain, tasks, repeats, {
 
 export function randomStepScore(tasks, repeats, { seen = new Set(), evalSeed = 1,
   maskHistory = false } = {}) {
-  const R = rng(evalSeed);
-  return summarize(tasks, repeats, seen, task => randomEpisode(R, task, { maskHistory }));
+  return summarize(tasks, repeats, seen, (task, repeat) =>
+    randomEpisode(rng(trialSeed(evalSeed, task, repeat)), task, { maskHistory }));
 }
 
 /** Separate candidate-search upper bound: NOT a stepwise agent. */
 export function randomCandidateScore(tasks, repeats, { seen = new Set(), evalSeed = 1 } = {}) {
-  const R = rng(evalSeed);
-  return summarize(tasks, repeats, seen, task => {
-    const strokes = randomLegal(R, task.budget);
+  return summarize(tasks, repeats, seen, (task, repeat) => {
+    const strokes = randomLegal(rng(trialSeed(evalSeed, task, repeat)), task.budget);
     return { success: valid(task, strokes), strokes, actions: [], decisions: 0,
       duplicateActions: 0, emptySubmit: false, validatorCalls: 1, truncated: false };
   });
