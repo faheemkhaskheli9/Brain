@@ -79,6 +79,9 @@ must_fail(underbudget, "unmatched")
 overbudget = fixture()
 overbudget["runs"][0]["scores"]["training"]["decisions"] = 10001
 must_fail(overbudget, "unmatched")
+invalid_type = fixture()
+invalid_type["runs"][0]["scores"]["training"]["decisions"] = "10000"
+must_fail(invalid_type, "unmatched")
 unknown_mode = fixture()
 unknown_mode["budgets"]["trainingOvershoot"] = "unlimited"
 must_fail(unknown_mode, "unknown budget protocol")

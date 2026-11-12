@@ -89,8 +89,10 @@ def audit(record: dict) -> dict:
                                    ("adaptation", "adaptationDecisionsPerArm")):
                     spent = scores[phase]["decisions"]
                     limit = budget[key]
+                    if not isinstance(spent, int):
+                        raise ValueError(f"unmatched decision budget {seed}/{arm}/{phase}")
                     allowed = spent == limit if exact_budget else limit <= spent < limit + 81
-                    if not isinstance(spent, int) or not allowed:
+                    if not allowed:
                         raise ValueError(f"unmatched decision budget {seed}/{arm}/{phase}")
     difference = [
         indexed[seed, TREATMENT]["scores"]["heldout"]["success"]
