@@ -125,6 +125,24 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Closed-loop learned motor commands (research-only)
+
+[Opt-in sparse reaching experiment](research/closed-loop-reaching-pilot.md):
+the reward-modulated sparse microcircuit now receives **signed visual target
+error and S1 proprioception**, selects L-hip motor commands through the
+existing MotorDecoder and SimpleJointBody, and observes **post-action**
+reward. It supports learned connection growth/pruning under four edges,
+a two-step delayed-feedback control, frozen retention tests and motor
+reversal. The sensory representation is engineered; natural image/audio/text
+understanding and macro-brain learning are NOT implemented.
+
+```bash
+python research/test_closed_loop_reach.py
+python research/test_learn_reach.py
+python research/learn_reach.py --seeds 1 2 --train-episodes 4 --eval-episodes 3 --reverse-episodes 2 --out /tmp/reach-smoke.json
+python research/result_schema.py --check /tmp/reach-smoke.json
+```
+
 ## Local learning and activity-dependent connection growth (research-only)
 
 [Structural-plasticity diagnostic](research/sparse-plasticity-pilot.md)
