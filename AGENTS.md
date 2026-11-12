@@ -57,3 +57,33 @@ them, or to update and check all the bases together, use the `update-knowledge-b
 When you find a bug (in code, tooling, CI or a wrong fact) that you do not fix in the same change,
 open a GitHub issue for it right away, labelled `bug`. First search open issues for a duplicate. Give the
 symptom, steps to reproduce, the cause with `file:line` when known, and a suggested fix.
+
+## Durable research knowledge and reviewed plan history
+
+For every substantive research, experiment or implementation task, preserve important
+findings (including null/negative results), sources, assumptions, open questions,
+decisions and failure criteria in the matched knowledge-base topic or a dated
+research note. Distinguish peer-reviewed evidence, repository-reproduced
+measurements, unverified external claims and hypotheses. Prefer primary papers
+with DOI/URL; record exact versions and limits. Update relevant backlinks /
+research/README.md; do not duplicate existing work.
+
+Before proposing a new Brain mechanism, consult
+[the latest evidence-gated execution blueprint](research/agi-execution-blueprint-v1.1-2026-11-12.md),
+[the append-only adversarial review ledger](research/agi-review-ledger.md),
+the current issues #120/#136, and [implementation status](research/implementation-status.md).
+After each material decision or code result, append the review outcome (baseline
+commit, adversarial attack, tests and evidence) to that ledger. Preserve
+unsuccessful experiments and raw brain-result/1 artifacts; update claims.tsv
+only when supported. Use normal Git commits and PRs as a permanent history;
+avoid force-push or erasing earlier review decisions. Never claim AGI achieved
+from these prototypes, or tests run when not executed.
+
+Every task's knowledge capture must cite the **exact inspected source commit/path**,
+separate code-observed facts from hypotheses and measurements, and give the
+source URL/DOI, date, review status, failure/null findings and next falsification
+test. Use a dated research note when the matched topic cannot hold the detail.
+Do not silently replace old plans, ledger entries, raw result files or negative
+claims. The [M0 audit knowledge note](research/agi-audit-knowledge-2026-11-12.md)
+shows the required standard. Treat unmerged PR documents as proposed until
+merged, and never confuse a green documentation CI check with a scientific run.

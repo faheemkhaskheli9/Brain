@@ -1,0 +1,142 @@
+# Brain adversarial plan review ledger (append-only)
+
+Date opened: 2026-11-12. Linked plan: [AGI execution blueprint](agi-execution-blueprint-2026-11-12.md).
+This ledger preserves review decisions and corrections. It is an engineering/scientific audit, not an account of independently run experiments. Future entries must include exact source commit, change, rationale, adversarial counterexample and verification status. Keep old entries visible; Git adds chronological provenance.
+
+## Round 0 — inventory and claim separation (2026-11-12)
+Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, implementation-status.md, current adversarial and sparse-brain plans, Brain World stateful options, research sensorimotor bridge, sparse reaching, source docs and primary literature.
+- Challenge: the project has multiple sophisticated components but **no integrated general learner**; a 78-region structural graph and media encoders could falsely be presented as a working brain.
+- Evidence: structural-connectome.md explicitly says weights start unassigned; sensorimotor_bridge.py requires external motor activation; audio-io.md/multimodal-io.md describe caller-supplied codecs.
+- Resolution: explicitly split architectural interfaces, local learned control, agent/tool baselines and speculative future capabilities. Document input/output and checkpoint contracts, M0-to-M8 dependencies.
+- Verification: source audit only; no algorithmic run made in this review. Re-check live main before each code PR.
+
+## Round 1 — scientific adversary: 'Are we measuring intelligence or scaffolding?'
+- Attack A: current creature's prior curriculum automates parts of body control; a success can be a fixed gait or authored feature. A constructed goal can be solved by an invariant macro script or an oracle that uses simulator transitions.
+- Attack B: pretraining, memory lookup and two engineered option banks can look like transfer/learning even when no new reusable policy is acquired.
+- Attack C: reward increases in delayed-feedback body experiments need not correspond to goal-contact increases; a positive mean can coexist with worse retention.
+- Correction: primary endpoints use **actual held-out goal success** and old-skill retention; count trained weights vs retrieval vs externally supplied knowledge; test unscaffolded evaluation, fixed macros, observable-only state, goal masks and independent task generators. Require real errors to be corrected under frozen tests.
+- Rejection test: if a no-observation script, oracle-assisted verifier, lookup-only, or stage-specific body rule explains the effect, withdraw the intelligence/transfer interpretation.
+
+## Round 2 — experimental adversary: 'Could the effect be data leakage or a weak control?'
+- Attack A: frozen evaluation can change RNG, temporary activations, eligibility or policy state even when weight hashes stay identical.
+- Attack B: counting episodes instead of primitive actions masks longer option searches; hardcoded search may use free verifier calls.
+- Attack C: a five-seed weak multi-task RL implementation or a legal random that does not interact with the environment is not a meaningful comparator.
+- Attack D: repeated tuning on the same sealed 'held-out' task set turns it into development data; nested task repeats are not independent seed pairs.
+- Correction: M0 first; full clone tests; one precise decision cap; budget wall time, model calls and verifier; legal stepwise random, small-state tabular learning, tuned shared RL; independent development and genuinely new sealed seeds/generators; seed-paired uncertainty and documented power limits.
+- Rejection test: perturb each leak, checkpoint or budget invariant; fail CI on mutation. After any sealed feedback used for tuning, mint a new sealed suite and call the previous result exploratory.
+
+## Round 3 — architectural adversary: 'Can the proposed brain learn without a hidden shortcut?'
+- Attack A: a scalar/signed-insensitive sparse router loses spatial/time information needed for image, sound, text and video, so many 'multimodal' successes would be codec demonstrations.
+- Attack B: candidate growth could scan every possible dense edge off the books and claim sparse efficiency; global hidden-label rewards could be mistaken for local plasticity.
+- Attack C: a bank of pretrained checkpoint controllers plus reward switch is retrieval, not online discovery and re-learning under a continuous body.
+- Attack D: a learned world model can be exploited for high imagined reward while making real actions worse.
+- Correction: typed signed/time-preserving population contracts; full operation accounting; explicit provenance; separate closed-loop one-body test with post-action feedback; freeze model-call budgets; compare live environment outcomes and planning-off controls.
+- Rejection test: shuffled modality/time, no sensory channels, fixed controls, motor reversal, model-shuffled planning, and growing candidate-budget profiling must eliminate unexplained success.
+
+## Round 4 — project and safety adversary: 'Will this produce evidence or an endless AGI feature backlog?'
+- Attack A: adding memory, curiosity, connectivity, media and language at once cannot attribute causality, and 10-seed toy gains can disappear in new environments.
+- Attack B: architecture may become dependent on pre-trained LLM assistance while still being advertised as from-scratch learning.
+- Attack C: no cost/stop rule can burn compute while returning impressive demos and little durable information.
+- Attack D: research claims, citations and negative results can be lost between chats or replaced by unverified paraphrases.
+- Correction: gated one-mechanism PRs, no AGI guarantee, opt-in flags, matched cumulative budgets, explicit non-goals, provenance, independent evaluation, claim-to-result linkage, immutable run artifacts, append-only ledger and required KB maintenance in AGENTS.md.
+- Rejection test: no mechanism promoted without independent held-out benefit and valid integrity gates; when evidence is null, preserve the negative and pivot to a smaller falsifiable hypothesis.
+
+## Final adversarial verdict (2026-11-12)
+
+**Ready for implementation:** M0 evaluation/measurement repairs. **Not yet validated:** M1-M8. The program is research-ready, not AGI-ready. The dominant early uncertainty is whether the local learner can discover transferable action structure under fair stateful tasks. The next code PR must address frozen-state equivalence and fair budget/controls; this review made no experimental performance claim.
+
+
+## Round 5 — implementation adversary: a budget that is not actually bounded (2026-11-12)
+
+- Baseline: main 49e2c6f1; PR #194 eefd33e3, unmerged. Inspected stateful_options.mjs, stateful_construct.mjs, brain.js, tests; no test run or code change.
+- Attack: trainPhase can overshoot its declared training decision cap because it scores an entire episode then increments decisions. The BFS oracle claims success without taking the same actual environment actions; EXIT is a decision but not a transition.
+- Decision: split M0 into M0a–M0d. Enforce exact remaining-budget caps inside episode; classify oracle as privileged ceiling; report decisions, transitions and all optional calls separately.
+- Falsification: budgets 1/39/80/81/137, EXIT bursts, timeouts, failure paths and replay must never overshoot. Until tested, this is a code-backed risk, not a verified regression fix.
+- Claim status: source-observed behavior and proposed correction; untested.
+
+## Round 6 — representation adversary: can source state survive an evaluation exactly?
+
+- Baseline: same. Model digest hashes selected arrays, frozenEpisode explicitly restores a subset, whereas Brain has nested syn, RNG closure and further state. World.toJSON intentionally resumes by replay.
+- Attack: a previously passed weight-only freeze assertion might miss a future change in synaptic importance, RNG, surprise, hidden eligibility or learned features. A shallow clone would alias typed-array memory.
+- Decision: add complete-state inventory and isolated actor snapshot protocol; do not reuse arbitrary World save as a mid-episode snapshot. Inspect the next training action trace, not just the immediate weight hash.
+- Falsification: train/eval/train equals train/train in full state and future action trace, across greedy/stochastic/surprise/SI cases; intentional alias mutation is detected.
+- Claim status: potential evaluation integrity risk, not an observed changed training trace; untested.
+
+## Round 7 — generalization adversary: a new seed is not a new environment
+
+- Baseline: same. Four item-goal relations × four obstacle templates per split, fixed start and horizon; there are at most 16 structural patterns/split.
+- Attack: random new IDs and seeds produce repeated task structures; a significant 20-seed improvement can still be overfitting to tiny same-family layouts. A full-map baseline would be privileged over observe().
+- Decision: retain tiny split as regression, add nonisomorphic structural generators, history-aware controls, family-level split fingerprint, and family-stratified independent confirmation. Strongest tuned non-oracle control fixed before sealed scoring; retention must pass confidence-bound non-inferiority, not only a point estimate.
+- Falsification: unseen families, new starts/obstacles/interruptions, masked-sensor tests and independent evaluator should preserve the claimed benefit. Otherwise remove the transfer/generalization interpretation.
+- Claim status: source-backed narrow task breadth; proposed new evaluation untested.
+
+## Round 8 — scientific governance adversary: does the roadmap permit a false AGI declaration?
+
+- Baseline: v1.0 and this inspection; primary options formalism checked against Sutton et al. 1999; ARC-AGI-2 primary benchmark documentation checked for independent evaluation practice.
+- Attack: a single shaped reward or tiny controlled benchmark can be promoted as AGI; new knowledge can be filed as established without a run; document edits could erase earlier failed decisions.
+- Decision: publish v1.1 **as a new file** leaving v1.0 and all old ledger entries in place. Link a separate source-grounded knowledge note; gate M1 on M0 and prohibit model/AGI claims without independent replication. Add capture rules to AGENTS.md.
+- Falsification: any missing failure, changed sealed suite, hidden oracle, unverified source or erased negative invalidates promotion; create a new version rather than rewriting history.
+- Claim status: implementation-ready M0 specification; no experiment, AGI outcome or independent validation claim.
+
+## Entry template for subsequent reviews (append; do not overwrite)
+
+- Date and baseline commit:
+- Hypothesis/feature and owning issue:
+- Sources checked (DOI/URL; primary vs secondary):
+- Strongest falsification attack:
+- Existing and new baselines:
+- Change in decision and its cost:
+- Tests run, failed/skipped and raw result links:
+- Claim status (confirmed / weakened / refuted / inconclusive / untested):
+- Next minimal experiment:
+
+## Round 9 — isolated-evaluation intervention (2026-11-12)
+
+- Baseline main `49e2c6f1`, preceding v1.1 `b74396f6`. [PR #195](https://github.com/faheemkhaskheli9/Brain/pull/195): code `98544659` and source-grounded KB note `0be775b6`.
+- Attack: frozen scoring temporarily used the live learner and restored selected fields; future new state could bypass a parameter-only digest. RNG closures also cannot be deep-cloned as ordinary data.
+- Change: evaluate on an independently seeded deep copy of every owned Brain field, preserving methods but not data aliases. Fail closed for unknown noncloneable fields; test training before/after scoring, greedy performance and invalid tasks.
+- Verification: PR #195 CI and separate 10-seed stateful option workflow **passed**. They test integrity and historical pilot behavior, not new learning or AGI.
+- Counterattack: global/module state, task-object side effects, arbitrary mid-episode RNG restoration and independent test-generator leakage remain open.
+
+## Round 10 — exact interaction budget intervention (2026-11-12)
+
+- [PR #196](https://github.com/faheemkhaskheli9/Brain/pull/196), stacked on #195: code `aab50b1d`, KB `c44cd932`; both full CI and 10-seed stateful option workflow **passed**.
+- Attack: trainPhase's whole episodes could overshoot the declared budget, with EXIT counted as a decision but not a physical action. Requested steps were not necessarily actual steps.
+- Change: cap exact primitive decisions, use remaining allowance in every trainPhase episode, reject cap errors, record truncated episodes and distinguish experiment cutoff from natural timeout.
+- Counterattack: the cutoff's TD bootstrap and partial-episode schedule can still change outcomes; compare boundary policies on development tasks and disclose truncation fraction. No performance advantage claimed.
+- Next: M0c fair public-observation controls and genuinely different structural task families. Do not reuse historical budget-confounded rows as confirmatory evidence.
+
+## Round 11 — external benchmark skepticism (2026-11-12)
+
+- Sources: [ARC Prize ARC-AGI-3 competition](https://arcprize.org/competitions/2026/arc-agi-3) and [official testing policy](https://arcprize.org/policy), contrasted with independent [Epoch AI ARC-AGI-3 review](https://epoch.ai/benchmarks/arc-agi-3/review) (review date 2026-10-30; verdict **Flawed**).
+- Attack: high scores on a named AGI benchmark could mask differences in action-efficiency incentives, harness elicitation, versioning or evaluation setup. A publicly available test manifest is not secret from an agent that can read it.
+- Decision: ARC-AGI-3 is a useful **optional interactive generalization stress test**, not the sole AGI gate. Report real completion separately from action efficiency, harness/version, learning interactions, planning calls, hidden information and test contamination. Independent benchmark critique is an external report, not a result reproduced by Brain.
+- Falsification: claimed transfer must survive a second unexposed task generator and matched evaluation protocol. [Execution addendum](agi-execution-addendum-2026-11-12.md) contains the M0c implementation sequence.
+
+## Round 12 — can a 'strict' science gate still pass over-budget trials? (2026-11-12)
+
+- Baseline: M0b [PR #196](https://github.com/faheemkhaskheli9/Brain/pull/196), before analyzer commits `01c95ff2` and `bda1db3d`; historical `research/analyze_stateful_options.py` accepted `limit <= spent < limit + 81`.
+- Attack: even after an exact-limit implementation, its science checker could have accepted an 80-decision overrun and declared the run comparable. A source-model fix without validating the downstream verifier is insufficient.
+- Decision: identify versioned protocols in the result metadata. Explicit `trainingOvershoot: "none (exact cap)"` requires `spent == requested`; historical missing/episode-boundary metadata may still be analysed for reproducibility but is labelled `legacy-overshoot` and cannot produce a new confirmatory pass.
+- Synthetic counterexamples: one extra training decision, malformed string count, unknown protocol, and an apparently high-performing legacy run must be rejected or receive a nonconfirmatory verdict. Check both status and actual per-run spent counts.
+- Verification at entry: code/test commits pushed; updated GitHub Actions checks for `bda1db3d` in progress. Earlier M0b code `c44cd932` had passed CI and 10-seed workflows; **do not conflate that earlier pass with this later gate change**.
+- Claim status: method-level bug found by source inspection, corrective test patch awaiting CI. No result establishes AGI, transfer or memory performance.
+
+## Round 13 — failed learning gate after fixing measurement integrity (2026-11-12)
+
+- Baseline: actual GitHub Actions run [43250847229](https://github.com/faheemkhaskheli9/Brain/actions/runs/43250847229), head `bda1db3d8dbeac4167be6f69c3310d0e0decf19a`, Node 22.23.4, PR [#196](https://github.com/faheemkhaskheli9/Brain/pull/196). The 10-seed workflow and CI completed successfully; test success **is not** hypothesis success.
+- Attack: a code-only improvement could be falsely called transfer if the stronger benchmark produces zero goal completions but reduced invalid actions or apparently positive shaped reward. The archived pilot includes four-goal-pair/obstacle templates and an engineered manager, so generalization claims also risk template confounding.
+- New reproducible evidence: 70 arm×seed `brain-result/1` rows, all executable runs `status=ok`; exactly 10,000 training and 2,000 adaptation decisions for each learned arm. All six non-oracle policies had **0.000 mean frozen held-out goal completion**. Privileged BFS feasibility oracle 1.000, explicitly not a comparable policy. `options-flat` paired delta 0.000 (95% CI [0,0], p=1), source-retention delta −0.003125 (CI [−0.009375,0]). Preregistered advancement gate **FAIL**.
+- Full source-grounded [negative report](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/stateful-options-exact-negative-2026-11-12.md) and lossless [raw archive](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/results/stateful-options-exact-2026-11-12.tar.br), archive Git blob `6405e123e2cba7d46077656ec587a0c075ff1d69`, are permanently committed on the code branch. The original CI artifact is also linked in that note; Git is the durable copy.
+- Decision: **HOLD** M1–M8 capability promotions. M0c begins by testing basic task learnability using an observation-parity tabular/history policy and legal stepwise heuristic under exact budgets. If no public-observation control learns, fix task observability, reward and horizon before attempting a more elaborate neural architecture. Then introduce independent structural families and stronger RL baselines.
+- Evidence status: repo-reproduced negative result for this toy protocol; no proof that brain-inspired learning is impossible generally, nor that engineered options can transfer. These are scientific failure findings, not permission to tune against the frozen test.
+
+## Round 14 — failed option policy is trapped by a non-switching EXIT (2026-11-12)
+
+- Baseline: [exact-budget raw experiment](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/results/stateful-options-exact-2026-11-12.tar.br) and [negative report](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/stateful-options-exact-negative-2026-11-12.md), generated in 10-seed workflow run 43250847229; existing `stateful_options.mjs` and original [negative pilot](stateful-options-negative-2026-11-12.md) inspected.
+- Attack: "learned two options" are assumed to perform useful temporal abstraction, but the engineered manager reselects the **same** option after voluntary EXIT if `carrying` did not change. EXIT permits spending evaluation decisions without physical action; the two-option arm is allocated more total evaluation decisions than a flat actor that reaches the environment step limit.
+- Evidence: exact-budget options arm averaged **2,079.4 exits / 2,559.6 decisions** (81.24%) and only **480.2 physical transitions** per 32 frozen evaluation episodes, compared to flat's 1,280 decisions/transitions. Yet disabling EXIT also did not solve a single held-out task. Original older pilot already showed a similar ~81% EXIT collapse: this confirms a known negative limitation rather than discovering new compositional competence.
+- Decision: next M0c diagnostic must report equal *training* budgets and evaluation primitive/environment-action accounting; add exit-disabled and matched-eval-boundary controls, and reject any interpretation based on invalid-action reductions alone.
+- Reuse audit: a tested tabular-Q/legal-random/heuristic public-observation comparator already exists in [stateful_baselines.mjs](../game/world/stateful_baselines.mjs), but it operates over [stateful_carry.mjs](../game/world/stateful_carry.mjs), **not** this `stateful_construct.mjs` task. Port/reuse appropriate logic against identical observations rather than counting performance from different simulators as matched controls.
+- Falsifier: with EXIT suppressed and a learnable public-observation baseline, does any learned policy achieve new-goal completion under comparable real actions? If not, do not build larger options, world models or multimodal interfaces to evade a failed elementary control.
+- Claim status: measured no-op EXIT problem and continued held-out failure in this toy; AGI/general transfer unestablished.
