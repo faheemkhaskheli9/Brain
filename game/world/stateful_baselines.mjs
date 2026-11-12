@@ -133,15 +133,16 @@ function score(model, arm, tasks, repeats, seed, greedy = false) {
     forcedDrops, recoveries, pickupFailures, timeouts: timeouts / n, impossibleWins,
     decisions, episodes: n, audit };
 }
-export function runSeed(seed, { trainSteps = 10000, trainTasks = 40, evalTasks = 30,
+export function runSeed(seed, { trainSteps = 10000, trainTasks = 40, devTasks = 12, evalTasks = 30,
   repeats = 2 } = {}) {
-  if (![seed, trainSteps, trainTasks, evalTasks, repeats].every(Number.isInteger) ||
-      seed < 0 || Math.min(trainSteps, trainTasks, evalTasks, repeats) < 1)
+  if (![seed, trainSteps, trainTasks, devTasks, evalTasks, repeats].every(Number.isInteger) ||
+      seed < 0 || Math.min(trainSteps, trainTasks, devTasks, evalTasks, repeats) < 1)
     throw Error("invalid experiment budget");
   const train = generateTasks(seed, "train", trainTasks),
+    development = generateTasks(seed, "dev", devTasks),
     evaluation = generateTasks(seed, "eval", evalTasks), rows = [];
   const splitHash = createHash("sha256").update(JSON.stringify({
-    train: train.map(signature), eval: evaluation.map(signature) })).digest("hex");
+    train: train.map(signature), dev: development.map(signature), eval: evaluation.map(signature) })).digest("hex");
   for (const arm of ARMS) {
     const began = Date.now();
     try {
@@ -159,12 +160,13 @@ export function runSeed(seed, { trainSteps = 10000, trainTasks = 40, evalTasks =
       }
       const old = score(model, arm, train.slice(0, Math.min(evalTasks, train.length)),
         repeats, seed * 101 + 7);
+      const dev = score(model, arm, development, repeats, seed * 103 + 17);
       const heldout = score(model, arm, evaluation, repeats, seed * 103 + 11);
       const greedy = arm.startsWith("flat-")
         ? score(model, arm, evaluation, repeats, seed * 103 + 11, true).success : null;
       rows.push(run({ arm, seed, split: "heldout-transition", status: "ok",
         seconds: (Date.now() - began) / 1000,
-        scores: { heldout, oldSuccess: old.success, greedySuccess: greedy,
+        scores: { heldout, development: dev, oldSuccess: old.success, greedySuccess: greedy,
           trainDecisions: trained, trainEpisodes: episodes, truncatedTrainEpisodes: interrupted } }));
     } catch (e) {
       rows.push(run({ arm, seed, split: "heldout-transition", status: "error",
@@ -180,22 +182,24 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   };
   const trainSteps = Number(opt("--train-steps", "10000"));
   const trainTasks = Number(opt("--train-tasks", "40"));
+  const devTasks = Number(opt("--dev-tasks", "12"));
   const evalTasks = Number(opt("--eval-tasks", "30")), repeats = Number(opt("--repeats", "2"));
   const out = opt("--out", null), seeds = args.length ? args.map(Number) : [1, 2, 3];
   if (!seeds.length || seeds.some(s => !Number.isInteger(s) || s < 0) ||
       new Set(seeds).size !== seeds.length) throw Error("bad seeds");
-  const groups = seeds.map(seed => runSeed(seed, { trainSteps, trainTasks, evalTasks, repeats }));
+  const groups = seeds.map(seed => runSeed(seed, { trainSteps, trainTasks, devTasks, evalTasks, repeats }));
   const runs = groups.flatMap(x => x.rows);
   if (out) writeResult(out, resultRecord({
     experiment: "brain-world/stateful-carry-diagnostic", baseline: "tabular-q", runs,
-    metrics: { "heldout.success": "higher", "heldout.invalidActionRate": "lower",
+    metrics: { "development.success": "higher", "heldout.success": "higher", "heldout.invalidActionRate": "lower",
       "heldout.timeouts": "lower", oldSuccess: "higher", greedySuccess: "higher" },
-    config: { seeds, trainTasks, evalTasks, repeats, arms: ARMS,
+    config: { seeds, trainTasks, devTasks, evalTasks, repeats, arms: ARMS,
       splitHashes: Object.fromEntries(seeds.map((seed, i) => [seed, groups[i].splitHash])),
       split: "disjoint geometry and held-out transition rules (normal versus turn-drop)",
       provenance: "engineered goal/rewards/primitives; tabular Q and backprop-free flat Brain trained; heuristic is hand-coded; no learned options",
       limitations: "diagnostic protocol: nonlearning arms have 0 training decisions; action masks use public state; hidden rule changes make evaluation deliberately difficult" },
     budgets: { primitiveTrainingDecisionsPerTrainedArm: trainSteps,
+      devEpisodesPerArm: devTasks * repeats,
       evalEpisodesPerArm: evalTasks * repeats, episodeDecisionLimit: LIMIT },
   }));
   for (const arm of ARMS) {
