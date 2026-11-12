@@ -29,6 +29,9 @@ class OnlineConfig:
             raise ValueError('Expected finite negative reward threshold')
 
 
+DEFAULT_CONFIG = OnlineConfig()
+
+
 class OnlineRewardSelector:
     """Select between two frozen checkpoints by detecting poor *past* reward.
 
@@ -37,7 +40,7 @@ class OnlineRewardSelector:
     no explicit context-change event or known target is passed to this class.
     """
 
-    def __init__(self, config: OnlineConfig = OnlineConfig(), *, initial: int = 0):
+    def __init__(self, config: OnlineConfig = DEFAULT_CONFIG, *, initial: int = 0):
         if not isinstance(config, OnlineConfig) or type(initial) is not int or initial not in (0, 1):
             raise ValueError('Invalid selector configuration or initial slot')
         self.config = config
