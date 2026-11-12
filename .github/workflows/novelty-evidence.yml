@@ -1,0 +1,38 @@
+name: Fair novelty evidence (10 seeds)
+
+# Research-only, not part of routine CI. Run when the benchmark or protocol changes.
+on:
+  pull_request:
+    paths:
+      - 'game/world/novelty_fair.mjs'
+      - '.github/workflows/novelty-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    name: 10-seed fair novelty result with candidate audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run fixed held-out comparison, all arms and validator/graded-feedback budgets
+        run: |
+          mkdir -p /tmp/brain-evidence
+          node game/world/novelty_fair.mjs 1 2 3 4 5 6 7 8 9 10 \
+            --tasks 30 --budget 8 --out /tmp/brain-evidence/novelty-fair-10seed.json
+          python research/result_schema.py --check /tmp/brain-evidence/novelty-fair-10seed.json
+      - name: Preserve every seed and candidate audit (no automatic claims)
+        uses: actions/upload-artifact@v4
+        with:
+          name: novelty-fair-10seed
+          path: /tmp/brain-evidence/novelty-fair-10seed.json
+          if-no-files-found: error
+          retention-days: 90

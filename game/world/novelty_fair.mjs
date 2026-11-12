@@ -2,7 +2,7 @@
 // information-budget comparison: it uses malformed random candidates and free graded search.
 import { pathToFileURL } from "node:url";
 import { PEN } from "./brain.js";
-import { generate, violation } from "./construct.mjs";
+import { generate, violation, solutions } from "./construct.mjs";
 import { library, penalty, pictureClass } from "./novelty.mjs";
 import { resultRecord, run, writeResult } from "./result.mjs";
 
@@ -136,19 +136,25 @@ export function compareFair(seed, { tasks = 30, budget = 8, arms = ARMS } = {}) 
     throw new Error("invalid experiment configuration");
   const known = library(seed), tasksEval = generate(seed, "eval", tasks).tasks;
   if (tasksEval.length !== tasks) throw new Error("incomplete evaluation task generation");
-  const rows = [], audit = [];
+  const rows = [], audit = [], knownClasses = new Set(known.map(pictureClass));
   for (const arm of arms) {
     const R = rng((seed * 7919) ^ stringHash(arm)), start = Date.now();
     const sum = { valid: 0, novel: 0, validatorCalls: 0, gradedCalls: 0 };
+    let eligibleTasks = 0, eligibleNovel = 0;
     for (const task of tasksEval) {
+      const opportunity = solutions(task).some(candidate => !knownClasses.has(pictureClass(candidate)));
+      if (opportunity) { eligibleTasks++; }
       const trial = runTask(task, budget, R, known, arm);
+      if (opportunity) eligibleNovel += trial.novel;
       for (const k of Object.keys(sum)) sum[k] += trial[k];
       audit.push({ seed, arm, task: task.id, checked: trial.validatorCalls,
         gradedFeedback: trial.gradedCalls, valid: trial.valid, novel: trial.novel,
-        rejected: trial.rejected, candidates: trial.trace });
+        novelOpportunity: opportunity, rejected: trial.rejected, candidates: trial.trace });
     }
     rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - start) / 1000,
-      scores: Object.fromEntries(Object.entries(sum).map(([k, v]) => [k, v / tasks])) }));
+      scores: { ...Object.fromEntries(Object.entries(sum).map(([k, v]) => [k, v / tasks])),
+        novelOpportunityRate: eligibleTasks / tasks,
+        conditionalNovel: eligibleTasks ? eligibleNovel / eligibleTasks : null } }));
   }
   return { rows, audit, libraryClasses: new Set(known.map(pictureClass)).size };
 }
@@ -177,9 +183,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
   if (out) writeResult(out, resultRecord({
     experiment: "brain-world/novelty-fair", baseline: "random-valid", runs,
-    metrics: { valid: "higher", novel: "higher", validatorCalls: "lower", gradedCalls: "lower" },
+    metrics: { valid: "higher", novel: "higher", conditionalNovel: "higher",
+      validatorCalls: "lower", gradedCalls: "lower" },
     config: { seeds, tasks, split: "eval", arms: ARMS, feedback: FEEDBACK,
-      limitations: "Engineered search and oracle-built library, no trained creature; six-stroke space has only 63 nonempty combinations.",
+      limitations: "Engineered search and oracle-built library, no trained creature; six-stroke space has only 63 nonempty combinations; conditional novelty is per task with at least one unseen valid picture.",
       audit }, budgets: { validatorCallsPerTask: budget,
       privilegedGradedCallsPerTask: "0 for binary arms, budget for search-graded" },
   }));

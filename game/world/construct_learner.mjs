@@ -3,7 +3,7 @@
 // Supplied: six strokes, submit action, task-to-sensor encoding, validator and reward.
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
-import { Brain, N_IN, PEN, ACT_SETS } from "./brain.js";
+import { Brain, N_IN, PEN, ACT_SETS, rng as evaluationRng } from "./brain.js";
 import { assertDisjoint, generate, valid, solutions } from "./construct.mjs";
 import { pictureClass } from "./novelty.mjs";
 import { randomLegal, rng } from "./novelty_fair.mjs";
@@ -11,8 +11,7 @@ import { resultRecord, run, writeResult } from "./result.mjs";
 
 export const SUBMIT = 4; // the existing grasp action is repurposed as submit
 export const ALLOWED = Object.freeze([SUBMIT, ...ACT_SETS[2]]);
-export const ARMS = Object.freeze(["learner", "learner-legal", "goal-masked",
-  "learning-off", "random-raw", "random-valid"]);
+export const ARMS = Object.freeze(["learner", "learner-masked", "goal-masked", "learning-off", "random-step-raw", "random-step-masked", "random-valid"]);
 export const PROVENANCE = Object.freeze({
   learner: "Brain local three-factor actor-critic; fixed random expansion; no backprop",
   supplied: "goal sensor map, six stroke primitives, submit, validator/reward and split grammar",
@@ -35,112 +34,160 @@ export function observation(task, strokes, revealGoal = true) {
   return x;
 }
 
-// Goal-blind legality: excludes strokes already used, but cannot inspect the
-// target's required cells, symmetry or any verifier result. Optional by design.
-export const legalActions = (strokes, mask = false) =>
-  mask ? ALLOWED.filter(a => a === SUBMIT || !strokes.includes(a - 5)) : ALLOWED;
 
-export function playEpisode(brain, task, {
-  learn = true, revealGoal = true, legalMask = false, evalSeed = null, greedy = false,
-} = {}) {
-  const prevLearn = brain.learning, prevGreedy = brain.greedy, prevRand = brain.rand;
-  brain.learning = learn; brain.greedy = !learn && greedy;
-  // A frozen trial must not advance the training policy's random stream.
-  if (!learn && evalSeed !== null) brain.rand = rng(evalSeed);
-  const strokes = [];
-  let repeated = 0;
+/** Syntactic history-only mask. It never consults the target or validator. */
+export function legalActions(strokes, maskHistory = false) {
+  return maskHistory ? [SUBMIT, ...ACT_SETS[2].filter(a => !strokes.includes(a - 5))] : ALLOWED;
+}
+
+export function playEpisode(brain, task, { learn = true, revealGoal = true,
+  maskHistory = false, greedy = false, maxDecisions = task.budget } = {}) {
+  if (!Number.isInteger(maxDecisions) || maxDecisions < 1)
+    throw new Error("positive decision budget required");
+  const prevLearn = brain.learning, prevGreedy = brain.greedy;
+  brain.learning = learn; brain.greedy = greedy;
+  const strokes = [], actions = [];
+  let duplicateActions = 0;
   try {
-    for (let n = 0; n <= task.budget; n++) {
+    for (let n = 0; n < Math.min(task.budget, maxDecisions); n++) {
       const h = brain.encode(observation(task, strokes, revealGoal), 0);
-      const allowed = legalActions(strokes, legalMask);
-      const action = brain.act(h, allowed);
+      const allowed = legalActions(strokes, maskHistory), action = brain.act(h, allowed);
       if (!allowed.includes(action)) throw new Error("invalid construction action");
+      actions.push(action);
       if (action !== SUBMIT) {
-        if (strokes.includes(action - 5)) repeated++;
+        if (strokes.includes(action - 5)) duplicateActions++;
         strokes.push(action - 5);
       }
-      const done = action === SUBMIT || strokes.length >= task.budget;
-      if (done) {
-        const success = valid(task, strokes);
+      // The final partial training episode is censored, never a lucky early submission.
+      const truncated = action !== SUBMIT && n + 1 === maxDecisions && n + 1 < task.budget;
+      if (action === SUBMIT || strokes.length >= task.budget || truncated) {
+        const success = !truncated && valid(task, strokes);
         brain.learn(success ? 1 : -0.2, null);
-        return { success, strokes, decisions: n + 1, repeated };
+        return { success, strokes, actions, decisions: n + 1, duplicateActions,
+          emptySubmit: action === SUBMIT && !strokes.length, validatorCalls: truncated ? 0 : 1,
+          truncated };
       }
       brain.learn(-0.005, brain.encode(observation(task, strokes, revealGoal), 0));
     }
     throw new Error("construction failed to terminate within stroke budget");
   } finally {
-    brain.learning = prevLearn; brain.greedy = prevGreedy; brain.rand = prevRand;
+    brain.learning = prevLearn; brain.greedy = prevGreedy;
   }
 }
 
-// Include traces and learned sensory parameters, not just actor and critic.
+/** A random policy that interacts with the same submit and per-step protocol. */
+export function randomEpisode(R, task, { maskHistory = false } = {}) {
+  const strokes = [], actions = [];
+  let duplicateActions = 0;
+  for (let n = 0; n < task.budget; n++) {
+    const allowed = legalActions(strokes, maskHistory);
+    const action = allowed[Math.floor(R() * allowed.length)];
+    actions.push(action);
+    if (action !== SUBMIT) {
+      if (strokes.includes(action - 5)) duplicateActions++;
+      strokes.push(action - 5);
+    }
+    if (action === SUBMIT || strokes.length >= task.budget) return {
+      success: valid(task, strokes), strokes, actions, decisions: n + 1,
+      duplicateActions, emptySubmit: action === SUBMIT && !strokes.length,
+      validatorCalls: 1, truncated: false,
+    };
+  }
+  throw new Error("stepwise random episode did not terminate");
+}
+
 export function weightDigest(brain) {
+  // Cover all observable typed-array state, not just actor and critic weights.
   const hash = createHash("sha256");
-  for (const key of ["P", "v", "ev", "eP", "wIn", "bias", "gate", "proto", "uses"]) {
-    const array = brain[key];
-    if (array && ArrayBuffer.isView(array))
-      hash.update(Buffer.from(array.buffer, array.byteOffset, array.byteLength));
+  for (const key of ["P", "v", "ev", "eP", "wIn", "bias", "gate", "proto", "uses",
+    "fast", "slow"]) {
+    const a = brain[key];
+    if (a && ArrayBuffer.isView(a))
+      hash.update(Buffer.from(a.buffer, a.byteOffset, a.byteLength));
   }
   return hash.digest("hex");
 }
-const hashSeed = s => {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
-  return h >>> 0;
-};
-// Stable per-task trial streams make scoring independent of episode order and
-// of earlier train-set evaluation, without learning from frozen examples.
-export const trialSeed = (seed, task, repeat) =>
-  hashSeed(`${seed}/${task.id ?? JSON.stringify(task)}/${repeat}`);
 
-export function frozenScore(brain, tasks, repeats, {
-  revealGoal = true, seen = new Set(), legalMask = false, seed = 0, greedy = false,
-} = {}) {
-  if (!Number.isInteger(repeats) || repeats < 1 || !tasks.length)
-    throw new Error("positive evaluation workload required");
-  const before = weightDigest(brain), observed = new Set(seen);
-  const old = { h: brain.h, dopamine: brain.dopamine,
-    nActive: brain.nActive, nEncode: brain.nEncode, pi: brain.pi?.slice() };
-  let success = 0, novel = 0, decisions = 0, repeated = 0;
-  try {
-    for (const task of tasks) for (let i = 0; i < repeats; i++) {
-      const episode = playEpisode(brain, task, { learn: false, revealGoal, legalMask,
-        greedy, evalSeed: trialSeed(seed, task, i) });
-      decisions += episode.decisions; repeated += episode.repeated;
-      if (episode.success) {
-        success++;
-        const cls = pictureClass(episode.strokes);
-        if (!observed.has(cls)) { observed.add(cls); novel++; }
-      }
-    }
-  } finally {
-    brain.h = old.h; brain.dopamine = old.dopamine;
-    brain.nActive = old.nActive; brain.nEncode = old.nEncode;
-    if (old.pi) brain.pi.set(old.pi);
+/** Evaluation copies every mutable field, including traces, policy and metrics, not only weights. */
+export function evaluationCopy(brain, seed = 1) {
+  if (!Number.isInteger(seed)) throw new Error("evaluation seed must be integer");
+  const detached = Object.create(Object.getPrototypeOf(brain));
+  for (const [k, v] of Object.entries(brain)) {
+    if (k !== "rand") detached[k] = typeof v === "function" ? v : structuredClone(v);
   }
-  if (weightDigest(brain) !== before) throw new Error("frozen evaluation changed learner state");
-  return { success: success / (tasks.length * repeats), novel: novel / (tasks.length * repeats),
-    repeatedPerEpisode: repeated / (tasks.length * repeats),
-    decisions, episodes: tasks.length * repeats };
+  detached.rand = evaluationRng(seed);
+  return detached;
 }
 
-// Sequential random actor with exactly the learner's action/termination rules.
-// Unlike random-valid, it may waste a decision submitting an empty drawing or
-// repeat a stroke. Both baselines are retained, and are never called learned.
-export function randomEpisode(task, R, legalMask = false) {
-  const strokes = [];
-  let repeated = 0;
-  for (let n = 0; n <= task.budget; n++) {
-    const allowed = legalActions(strokes, legalMask);
-    const action = allowed[Math.floor(R() * allowed.length)];
-    if (action !== SUBMIT) {
-      if (strokes.includes(action - 5)) repeated++;
-      strokes.push(action - 5);
+function summarize(tasks, repeats, seen, next) {
+  if (!Number.isInteger(repeats) || repeats < 1 || !tasks.length)
+    throw new Error("positive evaluation workload required");
+  const observed = new Set(seen), possible = tasks.map(t =>
+    solutions(t).some(s => !seen.has(pictureClass(s))));
+  let wins = 0, novel = 0, conditionalNovel = 0, decisions = 0, calls = 0,
+    duplicates = 0, empty = 0;
+  const audit = [];
+  for (let t = 0; t < tasks.length; t++) for (let r = 0; r < repeats; r++) {
+    const x = next(tasks[t], r);
+    decisions += x.decisions; calls += x.validatorCalls || 0;
+    duplicates += x.duplicateActions || 0; empty += x.emptySubmit ? 1 : 0;
+    let newPicture = false;
+    if (x.success) {
+      wins++;
+      const cls = pictureClass(x.strokes);
+      if (!observed.has(cls)) {
+        observed.add(cls); novel++; newPicture = true;
+        if (possible[t]) conditionalNovel++;
+      }
     }
-    if (action === SUBMIT || strokes.length >= task.budget)
-      return { success: valid(task, strokes), strokes, decisions: n + 1, repeated };
+    audit.push({ task: tasks[t].id, repeat: r, actions: x.actions, success: x.success,
+      novel: newPicture, decisions: x.decisions, duplicateActions: x.duplicateActions || 0,
+      emptySubmit: !!x.emptySubmit, truncated: !!x.truncated });
   }
-  throw new Error("random construction exceeded stroke budget");
+  const episodes = tasks.length * repeats, eligible = possible.filter(Boolean).length * repeats;
+  return { success: wins / episodes, novel: novel / episodes,
+    conditionalNovel: eligible ? conditionalNovel / eligible : null,
+    novelOpportunityRate: eligible / episodes, decisions, episodes, validatorCalls: calls,
+    duplicateActionRate: decisions ? duplicates / decisions : 0, emptySubmitRate: empty / episodes,
+    audit };
+}
+
+// Independent evaluation stream per task and repeat. Preserves actions when
+// task order changes and prevents one frozen trial contaminating another.
+export function trialSeed(seed, task, repeat) {
+  if (!Number.isInteger(seed) || !Number.isInteger(repeat) || repeat < 0)
+    throw new Error("evaluation seed and repeat must be valid integers");
+  const key = `${seed}/${JSON.stringify(task)}/${repeat}`;
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+export function frozenScore(brain, tasks, repeats, {
+  revealGoal = true, seen = new Set(), evalSeed = 1, greedy = false, maskHistory = false,
+} = {}) {
+  const sourceDigest = weightDigest(brain);
+  const result = summarize(tasks, repeats, seen, (task, repeat) =>
+    playEpisode(evaluationCopy(brain, trialSeed(evalSeed, task, repeat)), task,
+      { learn: false, revealGoal, greedy, maskHistory }));
+  if (weightDigest(brain) !== sourceDigest)
+    throw new Error("source checkpoint was mutated during frozen evaluation");
+  return result;
+}
+
+export function randomStepScore(tasks, repeats, { seen = new Set(), evalSeed = 1,
+  maskHistory = false } = {}) {
+  return summarize(tasks, repeats, seen, (task, repeat) =>
+    randomEpisode(rng(trialSeed(evalSeed, task, repeat)), task, { maskHistory }));
+}
+
+/** Separate candidate-search upper bound: NOT a stepwise agent. */
+export function randomCandidateScore(tasks, repeats, { seen = new Set(), evalSeed = 1 } = {}) {
+  return summarize(tasks, repeats, seen, (task, repeat) => {
+    const strokes = randomLegal(rng(trialSeed(evalSeed, task, repeat)), task.budget);
+    return { success: valid(task, strokes), strokes, actions: [], decisions: 0,
+      duplicateActions: 0, emptySubmit: false, validatorCalls: 1, truncated: false };
+  });
 }
 
 export function runSeed(seed, { trainSteps = 10000, trainTasks = 64, evalTasks = 30, repeats = 5 } = {}) {
@@ -148,58 +195,43 @@ export function runSeed(seed, { trainSteps = 10000, trainTasks = 64, evalTasks =
       trainSteps < 1 || trainTasks < 1 || evalTasks < 1 || repeats < 1)
     throw new Error("invalid experiment configuration");
   assertDisjoint();
-  const train = generate(seed, "train", trainTasks).tasks;
-  const eval_ = generate(seed, "eval", evalTasks).tasks;
-  if (train.length !== trainTasks || eval_.length !== evalTasks)
-    throw new Error("incomplete task generation");
-  // Novelty excludes every solution of every train task, not a sampled memory subset.
-  // This deliberately makes the tiny 63-drawing task a strict novelty test.
+  const train = generate(seed, "train", trainTasks).tasks, eval_ = generate(seed, "eval", evalTasks).tasks;
+  if (train.length !== trainTasks || eval_.length !== evalTasks) throw new Error("incomplete task generation");
   const known = new Set(train.flatMap(task => solutions(task)).map(pictureClass)), rows = [];
+  const evalSeed = seed * 65537 + 97;
   for (const arm of ARMS) {
-    const started = Date.now();
-    if (arm === "random-valid" || arm === "random-raw") {
-      const R = rng(seed * 101 + 13);
-      let wins = 0, novel = 0, repeated = 0, decisions = 0;
-      const observed = new Set(known);
-      for (const task of eval_) for (let i = 0; i < repeats; i++) {
-        const ep = arm === "random-valid"
-          ? { strokes: randomLegal(R, task.budget), decisions: 1, repeated: 0 }
-          : randomEpisode(task, rng(trialSeed(seed, task, i)));
-        const { strokes } = ep;
-        repeated += ep.repeated; decisions += ep.decisions;
-        if (valid(task, strokes)) {
-          wins++;
-          const cls = pictureClass(strokes);
-          if (!observed.has(cls)) { observed.add(cls); novel++; }
-        }
-      }
+    const started = Date.now(), isRandom = arm.startsWith("random-step");
+    const maskHistory = arm === "learner-masked" || arm === "random-step-masked";
+    if (isRandom || arm === "random-valid") {
+      const heldout = isRandom
+        ? randomStepScore(eval_, repeats, { seen: known, evalSeed, maskHistory })
+        : randomCandidateScore(eval_, repeats, { seen: known, evalSeed });
       rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - started) / 1000,
-        scores: { train: { success: null },
-          heldout: { success: wins / (evalTasks * repeats), novel: novel / (evalTasks * repeats),
-            repeatedPerEpisode: repeated / (evalTasks * repeats), decisions },
-          trainSteps: 0, trainEpisodes: 0 } }));
+        scores: { train: { success: null }, heldout, trainSteps: 0, trainEpisodes: 0,
+          trainingSuccess: null, trainTruncated: 0, heldoutGreedySuccess: null } }));
       continue;
     }
     const brain = new Brain(rng(seed * 7919 + 41)), chooseTask = rng(seed * 1741 + 17);
     const revealGoal = arm !== "goal-masked", learn = arm !== "learning-off";
-    const legalMask = arm === "learner-legal";
-    let steps = 0, episodes = 0, correct = 0, repeated = 0;
+    let steps = 0, episodes = 0, correct = 0, truncated = 0;
     while (steps < trainSteps) {
       const task = train[Math.floor(chooseTask() * train.length)];
-      const outcome = playEpisode(brain, task, { learn, revealGoal, legalMask });
-      steps += outcome.decisions; repeated += outcome.repeated;
-      episodes++; correct += outcome.success ? 1 : 0;
+      const x = playEpisode(brain, task, { learn, revealGoal, maskHistory,
+        maxDecisions: trainSteps - steps });
+      steps += x.decisions; episodes++; correct += x.success ? 1 : 0;
+      truncated += x.truncated ? 1 : 0;
     }
+    if (steps !== trainSteps) throw new Error("training overshot decision budget");
     const familiar = frozenScore(brain, train.slice(0, Math.min(evalTasks, train.length)),
-      repeats, { revealGoal, legalMask, seed });
+      repeats, { revealGoal, maskHistory, evalSeed: evalSeed + 1 });
     const heldout = frozenScore(brain, eval_, repeats,
-      { revealGoal, legalMask, seed, seen: known });
+      { revealGoal, maskHistory, seen: known, evalSeed });
+    const greedyHeldout = frozenScore(brain, eval_, repeats,
+      { revealGoal, maskHistory, seen: known, evalSeed, greedy: true });
     rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - started) / 1000,
-      scores: { train: { success: familiar.success },
-        heldout: { success: heldout.success, novel: heldout.novel,
-          repeatedPerEpisode: heldout.repeatedPerEpisode, decisions: heldout.decisions },
-        trainSteps: steps, trainEpisodes: episodes, trainingSuccess: correct / episodes,
-        trainingRepeatedPerEpisode: repeated / episodes } }));
+      scores: { train: { success: familiar.success }, heldout, trainSteps: steps,
+        trainEpisodes: episodes, trainingSuccess: correct / episodes, trainTruncated: truncated,
+        heldoutGreedySuccess: greedyHeldout.success } }));
   }
   return rows;
 }
@@ -225,12 +257,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
   if (out) writeResult(out, resultRecord({
     experiment: "brain-world/construction-learner", baseline: "learning-off", runs,
-    metrics: { "heldout.success": "higher", "heldout.novel": "higher",
+    metrics: { "heldout.success": "higher", "heldout.novel": "higher", "heldout.conditionalNovel": "higher",
+      "heldout.duplicateActionRate": "lower", heldoutGreedySuccess: "higher",
       "train.success": "higher", trainSteps: "lower" },
     config: { seeds, trainTasks, evalTasks, repeats, arms: ARMS, provenance: PROVENANCE,
-      split: "fixed disjoint train/eval constraint families; evaluation frozen",
-      evaluation: "per-task/repeat independent RNG, restored learner state, sampled policy",
-      limitations: "Diagnostic pilot: no options, no reversal or adaptation, 63 nonempty stroke subsets; random-valid is an engineered legal-action control" },
-    budgets: { trainDecisionBudget: trainSteps, evalEpisodesPerArm: evalTasks * repeats },
+      split: "fixed disjoint train/eval constraint families; fully detached frozen evaluation",
+      protocol: "diagnostic only: trained arms use exact primitive decisions; random-valid generates whole candidates, not stepwise actions",
+      limitations: "Pilot baseline only: no learned options, no reversal or adaptation, no held-out task training" },
+    budgets: { trainDecisionBudget: trainSteps, evalEpisodesPerArm: evalTasks * repeats,
+      candidateQueriesPerEpisode: 1, stepwiseMaxActionsPerEpisode: "task.budget" },
   }));
 }

@@ -1,17 +1,11 @@
 import assert from "node:assert/strict";
 import { Brain, N_IN, PEN } from "./brain.js";
 import { assertDisjoint, generate } from "./construct.mjs";
-import { observation, playEpisode, frozenScore, runSeed, weightDigest, legalActions,
-  randomEpisode, trialSeed, ALLOWED, SUBMIT, ARMS } from "./construct_learner.mjs";
+import { observation, playEpisode, frozenScore, runSeed, weightDigest, ALLOWED, SUBMIT, ARMS, legalActions, evaluationCopy, randomEpisode, randomStepScore, randomCandidateScore, trialSeed } from "./construct_learner.mjs";
 import { rng } from "./novelty_fair.mjs";
 
 assertDisjoint();
 assert.equal(ALLOWED.length, 7);
-assert.equal(legalActions([0], true).length, 6);
-assert.ok(!legalActions([0], true).includes(5));
-assert.ok(legalActions([0], true).includes(SUBMIT));
-assert.equal(legalActions([0], false).length, 7);
-assert.notEqual(trialSeed(1, { id: "one" }, 0), trialSeed(1, { id: "two" }, 0));
 assert.ok(ALLOWED.includes(SUBMIT));
 const first = { id: "a", kind: "connect", axis: null, budget: 2, points: [[0, 0]] };
 const second = { ...first, points: [[4, 4]] };
@@ -27,26 +21,10 @@ const before = weightDigest(brain);
 const frozen = playEpisode(brain, first, { learn: false });
 assert.ok(frozen.decisions >= 1 && frozen.decisions <= first.budget);
 assert.equal(weightDigest(brain), before);
-const repeatedStub = { learning: false, greedy: false, P: new Float32Array(1),
-  v: new Float32Array(1), encode(x) { return x; },
-  act(_h, allowed) { return allowed.includes(5) ? 5 : allowed.includes(6) ? 6 : SUBMIT; },
-  learn() {} };
-assert.equal(playEpisode(repeatedStub, first, { learn: false }).repeated, 1);
-assert.equal(playEpisode(repeatedStub, first, { learn: false, legalMask: true }).repeated, 0);
-assert.equal(randomEpisode(first, rng(8), true).repeated, 0);
 const tasks = generate(1, "eval", 3).tasks;
 const score = frozenScore(brain, tasks, 2);
 assert.ok(score.success >= 0 && score.success <= 1);
 assert.equal(weightDigest(brain), before);
-// Frozen scoring preserves policy RNG, counters and the next training action.
-const originalRand = brain.rand, count = brain.nEncode, active = brain.nActive;
-const firstScore = frozenScore(brain, tasks, 2, { seed: 11 });
-assert.deepEqual(firstScore, frozenScore(brain, [...tasks].reverse(), 2, { seed: 11 }));
-assert.equal(brain.rand, originalRand);
-assert.equal(brain.nEncode, count);
-assert.equal(brain.nActive, active);
-assert.equal(weightDigest(brain), before);
-assert.equal(frozenScore(brain, tasks, 2, { seed: 11, legalMask: true }).repeatedPerEpisode, 0);
 // Repeated copies of one valid drawing count as one novel picture, not three.
 const stub = { learning: false, greedy: false, P: new Float32Array(1), v: new Float32Array(1),
   encode(x) { return x; }, act() { return 5; }, learn() {} };
@@ -60,10 +38,58 @@ for (const row of rows) {
   assert.equal(row.status, "ok");
   assert.ok(row.scores.heldout.success >= 0 && row.scores.heldout.success <= 1);
   assert.ok(row.scores.heldout.novel >= 0 && row.scores.heldout.novel <= 1);
-  if (!row.arm.startsWith("random-")) assert.ok(row.scores.trainSteps >= cheap.trainSteps);
-  assert.ok(row.scores.heldout.repeatedPerEpisode >= 0);
-  if (row.arm === "learner-legal") assert.equal(row.scores.heldout.repeatedPerEpisode, 0);
+  if (!row.arm.startsWith("random")) assert.equal(row.scores.trainSteps, cheap.trainSteps);
+  if (row.arm.startsWith("random")) assert.equal(row.scores.trainSteps, 0);
+  assert.equal(row.scores.heldout.validatorCalls, cheap.evalTasks * cheap.repeats);
 }
 const cfg = { trainSteps: 20, trainTasks: 3, evalTasks: 3, repeats: 1 };
 assert.deepEqual(runSeed(2, cfg).map(x => x.scores), runSeed(2, cfg).map(x => x.scores));
+
+// Mutate a detached eval copy and prove source arrays, counters, and RNG are untouched.
+const detached = evaluationCopy(brain, 123);
+assert.notEqual(detached, brain);
+assert.notEqual(detached.P.buffer, brain.P.buffer);
+const originalWeight = brain.P[0], originalActive = brain.nActive, originalRandom = brain.rand;
+detached.P[0] += 1;
+assert.equal(brain.P[0], originalWeight);
+const left = frozenScore(brain, tasks, 2, { evalSeed: 77, greedy: true });
+const right = frozenScore(brain, tasks, 2, { evalSeed: 77, greedy: true });
+assert.deepEqual(left, right);
+assert.equal(brain.nActive, originalActive);
+assert.equal(brain.rand, originalRandom);
+assert.equal(weightDigest(brain), before);
+assert.deepEqual(legalActions([0], true), ALLOWED.filter(a => a !== 5));
+assert.deepEqual(legalActions([0], false), ALLOWED);
+assert.equal(randomStepScore(tasks, 2, { evalSeed: 19, maskHistory: true }).duplicateActionRate, 0);
+assert.equal(randomCandidateScore(tasks, 2, { evalSeed: 19 }).decisions, 0);
+const randomOut = randomEpisode(rng(42), { ...first, budget: 2 }, { maskHistory: true });
+assert.ok(randomOut.decisions >= 1 && randomOut.decisions <= 2);
+assert.equal(randomOut.validatorCalls, 1);
+const interrupted = playEpisode(stub, first, { maxDecisions: 1 });
+assert.equal(interrupted.truncated, true);
+assert.equal(interrupted.validatorCalls, 0);
+// Train-then-test, test-then-train and test-only use the exact same frozen checkpoint.
+const trainScore = frozenScore(brain, generate(7, "train", 2).tasks, 2, { evalSeed: 18 });
+const testA = frozenScore(brain, tasks, 2, { evalSeed: 17 });
+const testB = frozenScore(brain, tasks, 2, { evalSeed: 17 });
+const trainAgain = frozenScore(brain, generate(7, "train", 2).tasks, 2, { evalSeed: 18 });
+assert.deepEqual(trainScore, trainAgain);
+assert.deepEqual(testA, testB);
+// Frozen trials must have per-task RNG; evaluation order cannot alter actions.
+const evalA = frozenScore(brain, tasks, 3, { evalSeed: 23 });
+const evalB = frozenScore(brain, [...tasks].reverse(), 3, { evalSeed: 23 });
+const ordered = x => [...x.audit].map(a => ({
+  key: `${a.task}/${a.repeat}`, actions: a.actions, success: a.success,
+})).sort((a, b) => a.key.localeCompare(b.key));
+assert.deepEqual(ordered(evalA), ordered(evalB));
+assert.notEqual(trialSeed(23, tasks[0], 0), trialSeed(23, tasks[0], 1));
+assert.deepEqual(
+  randomStepScore(tasks, 2, { evalSeed: 23 }).audit.map(a => a.actions),
+  randomStepScore(tasks, 2, { evalSeed: 23 }).audit.map(a => a.actions),
+);
+const beforeGate = weightDigest(brain);
+brain.gate[0] ^= 1;
+assert.notEqual(weightDigest(brain), beforeGate);
+brain.gate[0] ^= 1;
+assert.equal(weightDigest(brain), beforeGate);
 console.log("construction learner: ok");

@@ -55,12 +55,16 @@ jobs:
         run: xvfb-run python game/test_levels_ui.py
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
+        run: python research/test_analyze_stateful_options.py
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
         run: python research/test_continual_guard.py
       - name: Replay analysis keeps failures, budgets and paired uncertainty (#152)
         run: python research/test_analyze_replay.py
+      - name: Stateful carry evaluator preselects comparators on development only
+        run: python research/test_analyze_stateful_carry.py
       - name: LLM verified mistake-learning memory and no-leakage regression tests
         run: python research/test_llm_mistake_learning.py
       - name: Agent mistake-learning stack (skills, RAG, subagents, plugins)
@@ -98,11 +102,32 @@ jobs:
         run: node game/world/test_navigation.mjs
       - name: Construction tasks are deterministic, valid and held out (#110)
         run: node game/world/test_construct.mjs
+      - name: Stateful acquire-carry-place environment and matched learning baselines (#112)
+        run: |
+          node game/world/test_stateful_carry.mjs
+          node game/world/test_stateful_baselines.mjs
+          node game/world/stateful_baselines.mjs 1 --train-steps 20 --train-tasks 4 --eval-tasks 4 --repeats 1 --out /tmp/stateful-carry-smoke.json
+          python research/result_schema.py --check /tmp/stateful-carry-smoke.json
+          python research/analyze_stateful_carry.py /tmp/stateful-carry-smoke.json
+      - name: Curriculum gait/action scaffold has an opt-out control and paired frozen scenes
+        run: node game/world/test_scaffold.mjs
+      - name: Stateful construction transitions, disjoint goals and independent oracle (#110/#112)
+        run: node game/world/test_stateful_construct.mjs
+      - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
+        run: |
+          node game/world/test_stateful_options.mjs
+          node game/world/stateful_options.mjs 1 --train-steps 10 --train-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/stateful-options-smoke.json
+          python research/result_schema.py --check /tmp/stateful-options-smoke.json
       - name: Goal-conditioned construction learner has frozen, masked controls (#112)
         run: |
           node game/world/test_construct_learner.mjs
           node game/world/construct_learner.mjs 1 --train-steps 20 --train-tasks 4 --eval-tasks 4 --repeats 1 --out /tmp/construct-learner-smoke.json
           python research/result_schema.py --check /tmp/construct-learner-smoke.json
+      - name: Construction transfer pilot keeps adaptation tasks and tests separate (#112)
+        run: |
+          node game/world/test_construct_transfer.mjs
+          node game/world/construct_transfer.mjs 1 --train-steps 8 --adapt-steps 8 --train-tasks 4 --adapt-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/construct-transfer-smoke.json
+          python research/result_schema.py --check /tmp/construct-transfer-smoke.json
       - name: Novelty scoring rejects invalid, duplicate and mirrored candidates (#111)
         run: node game/world/test_novelty.mjs
       - name: Fair novelty feedback queries are audited (#111)

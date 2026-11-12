@@ -791,6 +791,29 @@ This is a **pilot, not a confirmed transfer result**. The learned policy has
 no compositional skill hierarchy, mistake-memory retrieval, planning or
 creativity claim. Do not tune it on the frozen evaluation tasks.
 
+### Controlled pretraining versus scratch adaptation (experimental)
+
+The `construct_transfer.mjs` **pilot** extends the goal-conditioned baseline with
+a disjoint *adaptation* task list and a distinct held-out *final evaluation*
+task list from the same previously unseen constraint families. It reports
+separate pretraining, adaptation and frozen-evaluation decision budgets for
+\`pretrained\`, \`scratch\`, \`goal-masked\`, \`frozen\` and \`random-valid\`.
+Scoring freezes weights and restores the training RNG stream. These are
+**not** sealed stress-test results or evidence of general skill composition.
+
+```bash
+node game/world/test_construct_transfer.mjs
+node game/world/construct_transfer.mjs 1 2 3 --train-steps 10000 --adapt-steps 2000 --train-tasks 64 --adapt-tasks 12 --eval-tasks 30 --repeats 5 --out /tmp/construct-transfer.json
+python research/result_schema.py --check /tmp/construct-transfer.json
+```
+
+Do not optimize against the final held-out instances; use a separately
+defined development set. Report total pretraining **plus** adaptation decisions
+when comparing to scratch, as well as adaptation-only differences. A positive
+pilot is insufficient for the registered compositional-transfer acceptance
+criteria: it still needs independent stress generators, exact-memory-only and
+shared-network backprop controls, larger paired seeds and uncertainty bounds.
+
 ## Construction tasks (#110)
 
 `construct.mjs` is a task suite, not a trained arm: draw with the six pen strokes under constraints
@@ -1081,3 +1104,36 @@ kept them.
   closure in kittens", *J Physiol* 206:419. doi:10.1113/jphysiol.1970.sp009022
 - Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a
   review", *Neural Netw* 21:642. https://pubmed.ncbi.nlm.nih.gov/18555958/
+
+## Fair novelty baseline (10 seeds, 2026-11-12; #111)
+
+The original `novelty.mjs` comparison is **confounded**: random generated
+malformed and duplicate strokes and engineered search used uncharged graded
+penalties. The follow-up `novelty_fair.mjs` evaluation uses legal random
+drawings, retrieval, blind mutation, binary-feedback mutation, and a
+**separately priced privileged graded-feedback arm**. Every arm receives
+8 validator calls per task on 30 frozen held-out tasks for each of seeds 1–10.
+
+| Arm | Valid drawings/task | Novel valid drawings/task |
+|---|---:|---:|
+| legal random | 2.287 | 0.583 |
+| retrieval | 2.070 | 0.000 |
+| blind mutation | 1.963 | 0.523 |
+| binary-feedback search | 2.227 | 0.620 |
+| privileged graded-feedback search | 2.313 | 0.587 |
+
+**With legal random at 0.583 and binary search at 0.620, no reliable search
+advantage is established** (paired delta +0.037 novel drawings/task, 95%
+paired bootstrap CI −0.060 to +0.160, exact paired sign-flip p = 0.709).
+Graded search at 0.587 is also not distinguishable from legal random in
+this 10-seed run (p = 1.000). These are *engineered candidate generators*;
+no trained creature is scored. Retrieval scoring zero novelty is expected
+because the prior solution library is excluded from novelty.
+
+Reproduce with `node game/world/novelty_fair.mjs 1 2 3 4 5 6 7 8 9 10
+--tasks 30 --budget 8 --out /tmp/novelty-fair.json`. The 50 run summaries
+are in `research/results/novelty-fair-2026-11-12.json`. The full 1,500
+task-arm candidate audit is archived in [the successful GitHub Actions
+experiment](https://github.com/faheemkhaskheli9/Brain/actions/runs/43129642597)
+(90-day artifact retention). Further details and limitations:
+[adversarial evidence report](../../research/novelty-fair-report-2026-11-12.md).
