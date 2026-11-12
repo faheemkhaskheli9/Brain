@@ -87,6 +87,15 @@ jobs:
           python research/result_schema.py --check /tmp/online-context-smoke.json
           python research/test_online_context_results.py
           python research/result_schema.py --check research/results/online-context-2026-11-12.json
+      - name: Continuous one-body motor stream and causal delayed reward controls
+        run: |
+          python research/test_continuous_motor.py
+          python research/test_evaluate_continuous_motor.py
+          python research/evaluate_continuous_motor.py --seeds 0 1 --train-episodes 8 --adapt-episodes 5 --phase-steps 33 41 47 39 --out /tmp/continuous-motor-smoke.json
+          python research/result_schema.py --check /tmp/continuous-motor-smoke.json
+          python research/test_analyze_continuous_motor.py
+          python research/result_schema.py --check research/results/continuous-motor-2026-11-12.json
+          python research/analyze_continuous_motor.py research/results/continuous-motor-2026-11-12.json
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
