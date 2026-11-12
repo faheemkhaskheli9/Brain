@@ -19,7 +19,7 @@ class SensorimotorTests(unittest.TestCase):
             for side in ("L", "R"):
                 self.assertIn(f"{side}_{port.relay}", ids)
                 self.assertIn(f"{side}_{port.cortex}", ids)
-        self.assertEqual(len(self.graph.regions), 70)
+        self.assertEqual(len(self.graph.regions), 78)
 
     def test_visual_auditory_and_smell_target_distinct_relays(self):
         data = self.loop.sensors.route({"vision": {"L": [0, 0, 1]},

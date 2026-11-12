@@ -143,6 +143,14 @@ _IO_REGIONS = (
     ("brainstem_motor", "Descending brainstem motor system", "brainstem"),
 )
 
+# Abstract orthographic/language/output nodes; not a native biological text sense.
+_MULTIMODAL_REGIONS = (
+    ("orthography", "Ventral occipitotemporal orthographic region (simplified)", "cortex"),
+    ("language_temporal", "Temporal language network (simplified)", "cortex"),
+    ("language_frontal", "Frontal language network (simplified)", "cortex"),
+    ("writing_premotor", "Writing/typing premotor representation (simplified)", "cortex"),
+)
+
 # Source, target, named coarse pathway. Some paths skip biological relays.
 _PATHS = (
     ("lgn", "v1", "geniculostriate"),
@@ -204,6 +212,19 @@ _IO_PATHS = (
     ("posterior_insula", "amygdala", "interoceptive_limbic"),
 )
 
+_MULTIMODAL_PATHS = (
+    ("visual_assoc", "orthography", "visual_to_orthographic_schematic"),
+    ("orthography", "language_temporal", "orthography_to_language_schematic"),
+    ("language_temporal", "language_frontal", "temporofrontal_language_schematic"),
+    ("language_frontal", "language_temporal", "frontotemporal_language_feedback"),
+    ("language_frontal", "writing_premotor", "language_to_writing_motor_schematic"),
+    ("writing_premotor", "premotor", "writing_motor_schematic"),
+    ("temporal_assoc", "language_temporal", "temporal_language_association"),
+    ("auditory_assoc", "language_temporal", "auditory_language_association"),
+    ("language_frontal", "pfc", "language_to_prefrontal"),
+    ("pfc", "language_frontal", "prefrontal_to_language"),
+)
+
 # Homotopic cortical commissural targets; these are NOT a complete callosal map.
 _CALLOSAL = ("pfc", "m1", "s1", "premotor", "parietal_assoc", "temporal_assoc", "visual_assoc",
              "a1", "auditory_assoc", "s2", "sma", "orbitofrontal")
@@ -213,12 +234,12 @@ def make_schematic_graph() -> StructuralGraph:
     regions = [
         Region(f"{side}_{key}", name, side, system)
         for side in ("L", "R")
-        for key, name, system in (*_REGIONS, *_IO_REGIONS)
+        for key, name, system in (*_REGIONS, *_IO_REGIONS, *_MULTIMODAL_REGIONS)
     ]
     connections = [
         Connection(f"{side}_{src}", f"{side}_{dst}", pathway, "schematic-anatomical-pathway", True)
         for side in ("L", "R")
-        for src, dst, pathway in (*_PATHS, *_IO_PATHS)
+        for src, dst, pathway in (*_PATHS, *_IO_PATHS, *_MULTIMODAL_PATHS)
     ]
     connections.extend(
         Connection(f"L_{key}", f"R_{key}", "corpus_callosum_schematic", "schematic-anatomical-pathway", False)

@@ -25,6 +25,9 @@ class SensoryPort:
 # Channel counts and normalized features are software contracts, NOT measurements.
 PORTS = (
     SensoryPort("vision", "lgn", "v1", 3),
+    SensoryPort("vision_pixels", "lgn", "v1", 8 * 8 * 3),
+    SensoryPort("visual_change", "lgn", "visual_assoc", 8 * 8 * 3),
+    SensoryPort("text_symbols", "orthography", "language_temporal", 33),
     SensoryPort("hearing", "mgb", "a1", 3),
     SensoryPort("touch", "thalamus", "s1", 2),
     SensoryPort("proprioception", "thalamus", "s1", None),
