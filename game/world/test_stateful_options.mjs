@@ -40,11 +40,16 @@ for (const arm of ARMS) {
   assert.ok(sample.success >= 0 && sample.success <= 1);
   if (arm === "oracle") assert.equal(sample.success, 1);
 }
-const rows = runSeed(1, { trainSteps: 10, trainTasks: 3, evalTasks: 3, repeats: 1 });
+const rows = runSeed(1, { trainSteps: 10, adaptSteps: 10,
+  trainTasks: 3, evalTasks: 3, repeats: 1 });
 assert.deepEqual(rows.map(x => x.arm), ARMS);
 for (const row of rows) {
   assert.equal(row.status, "ok");
   assert.ok(row.scores.heldout.success >= 0 && row.scores.heldout.success <= 1);
+  assert.ok(row.scores.zeroShot.success >= 0 && row.scores.zeroShot.success <= 1);
+  assert.ok(row.scores.sourceRetentionDelta >= -1 && row.scores.sourceRetentionDelta <= 1);
+  if (row.arm !== "random" && row.arm !== "oracle")
+    assert.ok(row.scores.adaptation.decisions >= 10);
   if (row.arm !== "random" && row.arm !== "oracle")
     assert.ok(row.scores.training.decisions >= 10);
 }
