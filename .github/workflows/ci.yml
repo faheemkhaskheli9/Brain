@@ -55,6 +55,8 @@ jobs:
         run: xvfb-run python game/test_levels_ui.py
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
+        run: python research/test_analyze_stateful_options.py
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
