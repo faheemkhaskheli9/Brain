@@ -174,17 +174,17 @@ export function runSeed(seed, { trainSteps = 2000, adaptSteps = 0, trainTasks = 
     throw new Error("invalid experiment budget");
   const train = generate(seed, "train", trainTasks);
   const dev = generate(seed, "dev", trainTasks);
-  const heldout = generate(seed, "eval", evalTasks);
+  const evalSet = generate(seed, "eval", evalTasks);
   const sourceTasks = train.slice(0, Math.min(evalTasks, train.length));
   const rows = [];
   for (const arm of ARMS) {
     const start = Date.now(), model = createModel(mix(seed, 31), arm);
     const training = trainPhase(model, train, seed, trainSteps, 617);
     const sourceBefore = scoreTasks(model, sourceTasks, repeats, seed);
-    const zeroShot = scoreTasks(model, heldout, repeats, seed);
+    const zeroShot = scoreTasks(model, evalSet, repeats, seed);
     const adaptation = trainPhase(model, dev, seed, adaptSteps, 997);
     const sourceAfter = adaptSteps ? scoreTasks(model, sourceTasks, repeats, seed) : sourceBefore;
-    const heldout = adaptSteps ? scoreTasks(model, heldout, repeats, seed) : zeroShot;
+    const heldout = adaptSteps ? scoreTasks(model, evalSet, repeats, seed) : zeroShot;
     rows.push(run({ arm, seed, split: "eval", status: "ok",
       seconds: (Date.now() - start) / 1000,
       scores: { zeroShot, heldout, sourceBefore, sourceAfter,
