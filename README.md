@@ -125,6 +125,27 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Local learning and activity-dependent connection growth (research-only)
+
+[Structural-plasticity diagnostic](research/sparse-plasticity-pilot.md)
+is a bounded **toy microcircuit** with 24 input features, 2 action units,
+reward-modulated local eligibility, deterministic growth of useful candidate
+synapses, pruning of mature low-magnitude connections, and a limit of four
+active synapses. It learns only when external action reward arrives.
+Existing macroscopic anatomical pathways remain unchanged.
+The [10-seed measured toy pilot](research/sparse-plasticity-results-2026-11-12.md) reports frozen held-out accuracy of 1.000 with evidence-guided rewiring versus 0.648 for random rewiring under a deliberately missing-cue initial topology; a privileged correctly wired static network also reaches 1.000.
+
+```bash
+python research/learn_sparse_brain.py --seeds 1 2 --train-steps 140 --eval-trials 25 --out /tmp/brain-sparse-learning-smoke.json
+python research/result_schema.py --check /tmp/brain-sparse-learning-smoke.json
+```
+
+Initial connections intentionally omit the informative cue. Comparison
+controls include fixed, frozen, random-growth, shuffled-feedback and
+privileged handwired topology. Positive toy-association results are **not**
+evidence of a complete brain, novel anatomy, natural video/audio/text
+understanding, or learned body control.
+
 ## Evidence-gated sparse brain implementation plan
 
 [Next Brain implementation plan](research/sparse-brain-next-implementation-plan.md)

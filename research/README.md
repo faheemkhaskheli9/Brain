@@ -1,5 +1,7 @@
 # research/
 
+- [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).
+
 | Path | What |
 |---|---|
 | [implementation-status.md](implementation-status.md) | Which open and closed issues are actually implemented, tested and recorded on `main`, with file links (#103). Lists closed issues whose code was never pushed (#128). |

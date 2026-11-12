@@ -57,6 +57,14 @@ jobs:
         run: python research/test_result_schema.py
       - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
         run: python research/test_analyze_stateful_options.py
+      - name: Sparse local synaptic learning, growth/prune and frozen evaluation
+        run: |
+          python research/test_sparse_brain_tasks.py
+          python research/test_structural_plasticity.py
+          python research/test_learn_sparse_brain.py
+          python research/learn_sparse_brain.py --seeds 1 2 --train-steps 140 --eval-trials 25 --out /tmp/sparse-learning-smoke.json
+          python research/result_schema.py --check /tmp/sparse-learning-smoke.json
+          python research/result_schema.py --check research/results/structural-plasticity-2026-11-12.json
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
