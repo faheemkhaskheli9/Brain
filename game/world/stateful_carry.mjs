@@ -59,7 +59,7 @@ export function generateTasks(seed, split, n) {
     if (unique.has(signature(t))) continue;
     unique.add(signature(t)); tasks.push(t);
   }
-  if (tasks.length !== n) throw Error("insufficient unique tasks");
+  if (tasks.length !== n) throw Error("insufficient unique tasks: " + JSON.stringify({ seed, split, expected: n, actual: tasks.length }));
   return tasks;
 }
 export const feasible = t => reachable(t.start, t.object, t.walls) &&
