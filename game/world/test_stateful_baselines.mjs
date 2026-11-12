@@ -17,6 +17,12 @@ copy.P[0] += 1;
 assert.equal(brain.P[0], before);
 assert.notEqual(copy.rand, brain.rand);
 const q = new TabularQ(3), actions = legalActions(worldObs);
+// Equal Q values must not always select the first action. This was a weak-baseline trap.
+const tieA = new TabularQ(101), tieB = new TabularQ(101);
+const picks = Array.from({ length: 100 }, () => tieA.act(worldObs, actions));
+assert.ok(new Set(picks).size >= 2, "uninformative Q ties must be randomized");
+assert.deepEqual(picks, Array.from({ length: 100 }, () => tieB.act(worldObs, actions)));
+assert.ok(picks.every(action => actions.includes(action)));
 const chosen = q.act(worldObs, actions);
 q.update(worldObs, chosen, 1, { ...worldObs, position: task.object }, true);
 const qcopy = q.copy(9);

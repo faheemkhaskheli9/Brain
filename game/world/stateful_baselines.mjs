@@ -41,9 +41,11 @@ export class TabularQ {
   act(obs, allowed, learn = false) {
     if (learn && this.random() < 0.2) return randPick(this.random, allowed);
     const row = this.row(stateKey(obs));
-    let best = -Infinity, chosen = allowed[0];
-    for (const a of allowed) if (row[a] > best) { best = row[a]; chosen = a; }
-    return chosen;
+    const best = Math.max(...allowed.map(a => row[a]));
+    // Untrained Q-values tie at zero; a fixed first-action tie-break would
+    // make the control mostly walk north, artificially weakening the baseline.
+    const ties = allowed.filter(a => Math.abs(row[a] - best) < 1e-9);
+    return randPick(this.random, ties);
   }
   update(obs, action, reward, nextObs, terminal) {
     const q = this.row(stateKey(obs));
