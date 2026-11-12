@@ -13,6 +13,7 @@ python -m unittest discover -s research -p 'test_multimodal_io.py' -v
 From repository root:
 
 ```python
+# not run here (optional Pillow / OpenCV codecs required)
 import sys
 from pathlib import Path
 import numpy as np

@@ -145,6 +145,24 @@ proprioceptive feedback. See the structural connectome research guide.
 
 This does **not** generate neural commands or train weights.
 
+### Image, video and text I/O (research-only)
+
+[Multimodal image/video/text adapter](research/multimodal-io.md) provides PNG/JPEG
+input, spatial vision features, timestamped MP4/AVI frames with visual changes,
+Unicode UTF-8 input packets, and explicit PNG/MP4/UTF-8 output encoders.
+It adds schematic orthography, temporal/frontal language and writing-premotor
+regions; the graph now has **78 regional nodes and 142 connections**.
+
+```bash
+pip install '.[media]'
+python research/multimodal_io.py
+python -m unittest discover -s research -p test_multimodal_io.py -v
+```
+
+Image/video/text outputs render caller-supplied data; there is no OCR,
+language understanding, neural propagation, media generation or learned
+body control in this module.
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is
