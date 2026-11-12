@@ -109,6 +109,19 @@ class StructuralConnectomeTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     load_undirected_matrix(matrix_path, region_path, threshold=threshold)
 
+    def test_numpy_weight_scalar_and_empty_atlas(self):
+        import numpy as np
+
+        weights = LearningWeights(self.graph)
+        weights.set(self.graph.connections[0].id, np.float32(0.5))
+        self.assertEqual(weights.values[self.graph.connections[0].id], 0.5)
+        with tempfile.TemporaryDirectory() as path:
+            directory = Path(path)
+            (directory / "regions.csv").write_text("id,name,hemisphere,system\\n", encoding="utf-8")
+            (directory / "matrix.csv").write_text("region\\n", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                load_undirected_matrix(directory / "matrix.csv", directory / "regions.csv")
+
     def test_output_is_deterministic(self):
         graph1 = make_schematic_graph().to_dict()
         graph2 = make_schematic_graph().to_dict()

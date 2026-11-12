@@ -12,6 +12,7 @@ import csv
 import json
 import math
 from dataclasses import asdict, dataclass
+from numbers import Real
 from pathlib import Path
 
 
@@ -48,7 +49,8 @@ class StructuralGraph:
 
     def __post_init__(self) -> None:
         ids = [region.id for region in self.regions]
-        if any(not value or "|" in value for value in ids) or len(set(ids)) != len(ids):
+        known_ids = set(ids)
+        if any(not value or "|" in value for value in ids) or len(known_ids) != len(ids):
             raise ValueError("Region IDs must be unique, nonempty and contain no '|'")
         if not self.provenance.strip() or not self.model_kind.strip():
             raise ValueError("Provenance and model kind are required")
@@ -57,7 +59,7 @@ class StructuralGraph:
                 raise ValueError(f"Invalid coordinates: {region.id}")
         edge_ids: set[str] = set()
         for edge in self.connections:
-            if edge.source not in ids or edge.target not in ids or edge.source == edge.target:
+            if edge.source not in known_ids or edge.target not in known_ids or edge.source == edge.target:
                 raise ValueError(f"Invalid endpoints for {edge.pathway}: {edge.source} -> {edge.target}")
             if not edge.pathway or "|" in edge.pathway or not edge.evidence:
                 raise ValueError("Every edge needs an unambiguous pathway and evidence class")
@@ -89,7 +91,7 @@ class LearningWeights:
     def set(self, edge_id: str, value: float) -> None:
         if edge_id not in self.values:
             raise KeyError(f"Unknown structural connection: {edge_id}")
-        if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value):
+        if isinstance(value, bool) or not isinstance(value, Real) or not math.isfinite(value):
             raise ValueError("Learning weight must be a finite real number")
         self.values[edge_id] = float(value)
 
@@ -193,6 +195,8 @@ def _regions_from_csv(path: str | Path) -> list[Region]:
                 raise ValueError(f"Incomplete x,y,z for region {row['id']}")
             xyz = tuple(float(v) for v in coords) if all(coords) else None
             regions.append(Region(row["id"].strip(), row["name"].strip(), row["hemisphere"].strip(), row["system"].strip(), xyz))
+        if not regions:
+            raise ValueError("Region CSV must include at least one region")
         return regions
 
 
