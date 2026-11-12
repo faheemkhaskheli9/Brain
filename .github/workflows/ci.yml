@@ -105,6 +105,11 @@ jobs:
           node game/world/test_construct_learner.mjs
           node game/world/construct_learner.mjs 1 --train-steps 20 --train-tasks 4 --eval-tasks 4 --repeats 1 --out /tmp/construct-learner-smoke.json
           python research/result_schema.py --check /tmp/construct-learner-smoke.json
+      - name: Construction transfer pilot keeps adaptation tasks and tests separate (#112)
+        run: |
+          node game/world/test_construct_transfer.mjs
+          node game/world/construct_transfer.mjs 1 --train-steps 8 --adapt-steps 8 --train-tasks 4 --adapt-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/construct-transfer-smoke.json
+          python research/result_schema.py --check /tmp/construct-transfer-smoke.json
       - name: Novelty scoring rejects invalid, duplicate and mirrored candidates (#111)
         run: node game/world/test_novelty.mjs
       - name: Fair novelty feedback queries are audited (#111)

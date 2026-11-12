@@ -791,6 +791,29 @@ This is a **pilot, not a confirmed transfer result**. The learned policy has
 no compositional skill hierarchy, mistake-memory retrieval, planning or
 creativity claim. Do not tune it on the frozen evaluation tasks.
 
+### Controlled pretraining versus scratch adaptation (experimental)
+
+The `construct_transfer.mjs` **pilot** extends the goal-conditioned baseline with
+a disjoint *adaptation* task list and a distinct held-out *final evaluation*
+task list from the same previously unseen constraint families. It reports
+separate pretraining, adaptation and frozen-evaluation decision budgets for
+\`pretrained\`, \`scratch\`, \`goal-masked\`, \`frozen\` and \`random-valid\`.
+Scoring freezes weights and restores the training RNG stream. These are
+**not** sealed stress-test results or evidence of general skill composition.
+
+```bash
+node game/world/test_construct_transfer.mjs
+node game/world/construct_transfer.mjs 1 2 3 --train-steps 10000 --adapt-steps 2000 --train-tasks 64 --adapt-tasks 12 --eval-tasks 30 --repeats 5 --out /tmp/construct-transfer.json
+python research/result_schema.py --check /tmp/construct-transfer.json
+```
+
+Do not optimize against the final held-out instances; use a separately
+defined development set. Report total pretraining **plus** adaptation decisions
+when comparing to scratch, as well as adaptation-only differences. A positive
+pilot is insufficient for the registered compositional-transfer acceptance
+criteria: it still needs independent stress generators, exact-memory-only and
+shared-network backprop controls, larger paired seeds and uncertainty bounds.
+
 ## Construction tasks (#110)
 
 `construct.mjs` is a task suite, not a trained arm: draw with the six pen strokes under constraints
