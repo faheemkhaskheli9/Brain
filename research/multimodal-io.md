@@ -76,6 +76,15 @@ rendering actions**, not biological cortex-generated content or learned skills.
 - No decoder is a generative model: callers explicitly supply the output
   string, output pixels or output frames.
 
+## Audio input and output
+
+See [audio I/O](audio-io.md) for the standalone WAV PCM16/PCM8 audio interface.
+The same `MultimodalBridge` instance exposes `audio_input(bytes | Path |
+AudioClip)` and `audio_output(float32_samples, sample_rate=16000)`. Each
+audio window produces MGB/A1 spectral/loudness and auditory-association
+temporal-change packets. Output is a WAV file **encoding a supplied waveform**,
+not speech, sound understanding or learned sound generation.
+
 ## Optional sparse event routing downstream
 
 The [event-driven sparse router](sparse-connectivity.md) accepts these

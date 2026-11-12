@@ -163,6 +163,22 @@ Image/video/text outputs render caller-supplied data; there is no OCR,
 language understanding, neural propagation, media generation or learned
 body control in this module.
 
+### Audio input and output (research-only)
+
+The same multimodal adapter now supports PCM WAV audio input and output.
+`audio_input(...)` converts mono or stereo WAV files into timestamped
+spectral/loudness and temporal-change features for bilateral auditory cortex;
+`audio_output(...)` serializes an explicitly provided waveform to PCM16 WAV.
+See [audio I/O](research/audio-io.md) for the exact API and limits.
+
+```bash
+python research/audio_io.py
+python -m unittest discover -s research -p 'test_audio_io.py' -v
+```
+
+No speech recognition, TTS, music generation, live microphone input or
+automatic audio extraction from video is implemented.
+
 ### Sparse, event-driven connectivity (research-only)
 
 [Sparse regional event router](research/sparse-connectivity.md) stores only

@@ -29,6 +29,8 @@ PORTS = (
     SensoryPort("visual_change", "lgn", "visual_assoc", 8 * 8 * 3),
     SensoryPort("text_symbols", "orthography", "language_temporal", 33),
     SensoryPort("hearing", "mgb", "a1", 3),
+    SensoryPort("audio_spectrum", "mgb", "a1", 9),
+    SensoryPort("audio_change", "mgb", "auditory_assoc", 9),
     SensoryPort("touch", "thalamus", "s1", 2),
     SensoryPort("proprioception", "thalamus", "s1", None),
     SensoryPort("smell", "olfactory_bulb", "piriform", 2),

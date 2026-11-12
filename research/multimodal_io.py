@@ -16,6 +16,7 @@ from typing import Iterable
 import numpy as np
 
 from sensorimotor_bridge import SensoryPacket, SensorimotorLoop
+from audio_io import AudioClip, audio_packets, read_wav, write_wav
 
 GRID = 8
 TEXT_CHUNK = 32
@@ -261,6 +262,16 @@ class MultimodalBridge:
             result.append((frame.time_s, sensory))
             previous = visual
         return tuple(result)
+
+    def audio_input(self, source: bytes | Path | AudioClip) -> tuple[tuple[float, tuple[SensoryPacket, ...]], ...]:
+        """Route bounded WAV PCM16/PCM8 or supplied audio clip to auditory regions."""
+        clip = source if isinstance(source, AudioClip) else read_wav(source)
+        return audio_packets(clip, self.sensorimotor.sensors)
+
+    @staticmethod
+    def audio_output(samples: np.ndarray, *, sample_rate: int = 16_000) -> bytes:
+        """Render caller-supplied waveform to PCM16 WAV; no speech/audio generation."""
+        return write_wav(samples, sample_rate)
 
     def text_input(self, text: str) -> tuple[SensoryPacket, ...]:
         # Software symbolic injection: not visual OCR nor brain-level reading.
