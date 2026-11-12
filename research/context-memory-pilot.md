@@ -1,3 +1,8 @@
+**Post-run update, 2026-11-12:** The reserved experiment was completed and recorded in
+[context-memory-results-2026-11-12.md](context-memory-results-2026-11-12.md).
+The original preregistration below was committed *before* the experiment;
+the primary p-value gate failed (p=0.125). No seeds were changed.
+
 # Context-dependent sparse checkpoint memory: precommitted motor-reversal experiment
 
 **Research status:** implementation and exploratory tests; confirmatory run is reserved and not yet executed when this protocol is committed. This is a bounded **engineering-memory mechanism**, not a mammalian hippocampus, autonomous context-change detection, or brain-equivalent synaptogenesis. The structural 78-region graph and Brain World's backprop-free learner are unchanged. Reuses #65 (surprise and context), #112 (reusable skills), #114 (episodic retrieval), #152 (replay), and #154 (retention gates). H149 remains unproven.

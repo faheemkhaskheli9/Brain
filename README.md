@@ -133,6 +133,11 @@ preserves two independently trained sparse microcircuits. A bounded, charged
 checkpoint after a change in motor dynamics; no simulator context label is
 given to the selector. This separates learning connections from retrieving
 previous learning, and tests whether an old skill survives reversal.
+The [10-seed evaluation](research/context-memory-results-2026-11-12.md)
+measured 0.9475 return-task success for reward-probe retrieval against
+0.7700 for random memory selection, but **the precommitted statistical
+superiority criterion failed** (exact paired p=0.125). An always-latest
+checkpoint scored 0.3725.
 
 **Limits:** the experimenter specifies when a new context begins; each probe
 resets the toy body and pays extra interactions, and two checkpoints use
