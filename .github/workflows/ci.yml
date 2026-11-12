@@ -55,6 +55,8 @@ jobs:
         run: xvfb-run python game/test_levels_ui.py
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
+        run: python research/test_analyze_stateful_options.py
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
@@ -100,6 +102,11 @@ jobs:
         run: node game/world/test_construct.mjs
       - name: Stateful construction transitions, disjoint goals and independent oracle (#110/#112)
         run: node game/world/test_stateful_construct.mjs
+      - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
+        run: |
+          node game/world/test_stateful_options.mjs
+          node game/world/stateful_options.mjs 1 --train-steps 10 --train-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/stateful-options-smoke.json
+          python research/result_schema.py --check /tmp/stateful-options-smoke.json
       - name: Goal-conditioned construction learner has frozen, masked controls (#112)
         run: |
           node game/world/test_construct_learner.mjs

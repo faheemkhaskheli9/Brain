@@ -1,0 +1,60 @@
+name: Stateful option transfer evidence (10 seeds)
+
+# Expensive confirmatory research, separate from short CI mutation/smoke checks.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/stateful-options-evidence.yml'
+      - 'game/world/stateful_options.mjs'
+      - 'research/analyze_stateful_options.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    name: 10-seed stateful option transfer and retention
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Matched training and development adaptation, frozen evaluation
+        run: |
+          mkdir -p /tmp/stateful-evidence
+          node game/world/stateful_options.mjs 1 2 3 4 5 6 7 8 9 10 \
+            --train-steps 10000 --adapt-steps 2000 --train-tasks 32 \
+            --eval-tasks 16 --repeats 2 \
+            --out /tmp/stateful-evidence/stateful-options-10seed.json
+          python research/result_schema.py --check /tmp/stateful-evidence/stateful-options-10seed.json
+      - name: Record decision rule including negative result (never fail CI for null hypothesis)
+        shell: bash
+        run: |
+          set +e
+          python research/analyze_stateful_options.py \
+            /tmp/stateful-evidence/stateful-options-10seed.json > /tmp/stateful-evidence/gate.json
+          verdict=$?
+          set -e
+          python - <<'PY'
+          import json
+          with open('/tmp/stateful-evidence/gate.json', encoding='utf-8') as f:
+              result = json.load(f)
+          assert result['gate'] in ('pass', 'fail')
+          print(json.dumps(result, indent=2))
+          PY
+          if [ "$verdict" -ne 0 ]; then
+            echo "Pre-registered scientific improvement criterion NOT met (a valid negative result)"
+          fi
+      - name: Preserve all arms, seeds, failures and evidence decision
+        uses: actions/upload-artifact@v4
+        with:
+          name: stateful-options-10seed
+          path: /tmp/stateful-evidence/
+          if-no-files-found: error
+          retention-days: 90
