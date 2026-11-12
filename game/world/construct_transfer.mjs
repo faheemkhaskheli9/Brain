@@ -32,19 +32,17 @@ export function partitions(seed, trainN, adaptN, evalN) {
 
 // Frozen measurement must neither update weights nor consume the training RNG stream.
 function score(brain, tasks, repeats, seed, opts = {}) {
-  const state = brain.rand.state;
-  brain.rand.state = seed >>> 0;
-  try { return frozenScore(brain, tasks, repeats, opts); }
-  finally { brain.rand.state = state; }
+  return frozenScore(brain, tasks, repeats, {...opts, evalSeed: seed >>> 0});
 }
 function train(brain, tasks, budget, revealGoal, seed, learn = true) {
   const choose = rng(seed >>> 0);
   let decisions = 0, episodes = 0, wins = 0;
   while (decisions < budget) {
     const task = tasks[Math.floor(choose() * tasks.length)];
-    const e = playEpisode(brain, task, {learn, revealGoal});
+    const e = playEpisode(brain, task, {learn, revealGoal, maxDecisions: budget - decisions});
     decisions += e.decisions; episodes++; wins += Number(e.success);
   }
+  if (decisions !== budget) throw Error("training overshot primitive decision cap");
   return {decisions, episodes, success: wins / episodes};
 }
 function randomScore(tasks, repeats, seed, excluded) {
