@@ -29,3 +29,9 @@ In [test_stateful_options.mjs](../game/world/test_stateful_options.mjs), exercis
 - No novel learned-option initiation, open-ended planning, cross-domain transfer, or AGI was demonstrated.
 
 Scientific formalism: Sutton, Precup & Singh (1999), [DOI 10.1016/S0004-3702(99)00052-1](https://doi.org/10.1016/S0004-3702(99)00052-1) defines temporally abstract options; it does not establish the efficacy of this implementation. Reuse [brain-result/1](result_schema.py), [claims register](claims.tsv), and [continual guard](continual_guard.py), rather than introducing duplicate evidence infrastructure.
+
+## Adversarial correction: confirmatory analyzer protocol (2026-11-12)
+
+A follow-up source audit of [analyze_stateful_options.py](analyze_stateful_options.py) found it still accepted `limit <= decisions < limit + 81` (the historical whole-episode overshoot tolerance). An M0b run could therefore pass its scientific budget gate even when exceeding the exact cap. The evidence checker now **requires equality** for records explicitly declaring `trainingOvershoot: "none (exact cap)"`. Legacy/missing markers are still interpreted under the older bounded overshoot protocol for historical reproducibility, but are flagged `budget_protocol: "legacy-overshoot"` and can no longer receive the new confirmatory **pass** verdict, even if their effect-size statistics look favorable.
+
+Synthetic tests distinguish the two modes and reject a one-decision overrun and unrecognized protocol. This is a *method-integrity repair*, not newly measured generalization. Historical raw files and the original negative conclusions remain unchanged. GitHub CI must verify the patch before it is reported as tested.

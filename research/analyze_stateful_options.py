@@ -57,6 +57,15 @@ def audit(record: dict) -> dict:
         budget.get("adaptationDecisionsPerArm"), int
     ) or budget["trainingDecisionsPerArm"] != 10000 or budget["adaptationDecisionsPerArm"] != 2000:
         raise ValueError("confirmatory protocol requires exactly 10000 train / 2000 dev decisions")
+    # Historical results allowed a whole final episode past the requested cap.
+    # Only explicitly exact-budget runs can pass the new confirmatory gate.
+    mode = budget.get("trainingOvershoot")
+    if mode == "none (exact cap)":
+        exact_budget = True
+    elif mode in (None, "episode boundary, logged per run"):
+        exact_budget = False
+    else:
+        raise ValueError("unknown budget protocol")
     indexed: dict[tuple[int, str], dict] = {}
     for row in record.get("runs", []):
         key = (row.get("seed"), row.get("arm"))
@@ -80,7 +89,8 @@ def audit(record: dict) -> dict:
                                    ("adaptation", "adaptationDecisionsPerArm")):
                     spent = scores[phase]["decisions"]
                     limit = budget[key]
-                    if not isinstance(spent, int) or not limit <= spent < limit + 81:
+                    allowed = spent == limit if exact_budget else limit <= spent < limit + 81
+                    if not isinstance(spent, int) or not allowed:
                         raise ValueError(f"unmatched decision budget {seed}/{arm}/{phase}")
     difference = [
         indexed[seed, TREATMENT]["scores"]["heldout"]["success"]
@@ -122,9 +132,11 @@ def audit(record: dict) -> dict:
             "delta": sum(diff) / len(diff), "ci95": [c_lo, c_hi],
             "positive": sum(diff) / len(diff) >= 0.10 and c_lo > 0,
         }
-    gate = all(v["positive"] for v in comparisons.values()) and rlo >= -0.05
+    gate = exact_budget and all(v["positive"] for v in comparisons.values()) and rlo >= -0.05
     return {
-        "gate": "pass" if gate else "fail", "primary_comparator": PRIMARY,
+        "gate": "pass" if gate else "fail",
+        "budget_protocol": "exact" if exact_budget else "legacy-overshoot",
+        "primary_comparator": PRIMARY,
         "n_seeds": len(TARGET_SEEDS), "delta": shift,
         "delta_ci95": [lo, hi], "paired_signflip_p": signflip_p(difference),
         "retention_delta": sum(retention) / len(retention),
