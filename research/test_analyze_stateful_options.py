@@ -22,8 +22,8 @@ def fixture(treatment: float = 0.7, baseline: float = 0.4,
                 "sourceAfter": {
                     "success": source + retained if arm == "options" else source
                 },
-                "training": {"decisions": 106},
-                "adaptation": {"decisions": 105},
+                "training": {"decisions": 10006},
+                "adaptation": {"decisions": 2005},
             }
             runs.append({
                 "seed": seed, "arm": arm, "split": "eval", "status": "ok",
@@ -33,8 +33,8 @@ def fixture(treatment: float = 0.7, baseline: float = 0.4,
         "schema": "brain-result/1",
         "experiment": "brain-world/stateful-options-pilot",
         "config": {"seeds": list(range(1, 11))},
-        "budgets": {"trainingDecisionsPerArm": 100,
-                    "adaptationDecisionsPerArm": 100},
+        "budgets": {"trainingDecisionsPerArm": 10000,
+                    "adaptationDecisionsPerArm": 2000},
         "runs": runs,
     }
 
@@ -64,6 +64,9 @@ must_fail(duplicated, "duplicate")
 leaked = fixture()
 leaked["config"]["seeds"] = [1, 2, 3]
 must_fail(leaked, "fixed seeds")
+wrongbudget = fixture()
+wrongbudget["budgets"]["trainingDecisionsPerArm"] = 100
+must_fail(wrongbudget, "exactly 10000")
 underbudget = fixture()
 underbudget["runs"][0]["scores"]["training"]["decisions"] = 1
 must_fail(underbudget, "unmatched")
