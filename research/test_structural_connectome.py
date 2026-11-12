@@ -117,8 +117,8 @@ class StructuralConnectomeTests(unittest.TestCase):
         self.assertEqual(weights.values[self.graph.connections[0].id], 0.5)
         with tempfile.TemporaryDirectory() as path:
             directory = Path(path)
-            (directory / "regions.csv").write_text("id,name,hemisphere,system\\n", encoding="utf-8")
-            (directory / "matrix.csv").write_text("region\\n", encoding="utf-8")
+            (directory / "regions.csv").write_text("id,name,hemisphere,system\n", encoding="utf-8")
+            (directory / "matrix.csv").write_text("region\n", encoding="utf-8")
             with self.assertRaises(ValueError):
                 load_undirected_matrix(directory / "matrix.csv", directory / "regions.csv")
 
