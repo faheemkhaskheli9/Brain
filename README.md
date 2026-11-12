@@ -125,6 +125,28 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Continuous body and delayed reward context pilot (research-only)
+
+[Predeclared persistent-body experiment](research/continuous-motor-pilot.md)
+extends the saved two-context sparse motor-policy selector to a *single*
+physical joint body. Only the target changes each 16-action window;
+positions and velocities do not reset. The selector uses previously
+received outcomes delayed by **one or three physical actions**. It performs
+no counterfactual probes, remains backprop-free, and does not know hidden
+motor-rule transitions.
+
+**Experimental status:** preregistered, not evidence of improved learning
+or biological synaptic mechanisms. Both policy checkpoints were trained
+with experimenter-known regimes in advance; natural pixels/audio and a
+previously unseen third regime are not handled.
+
+```bash
+python research/test_continuous_motor.py
+python research/test_evaluate_continuous_motor.py
+python research/evaluate_continuous_motor.py --seeds 0 1 --train-episodes 8 --adapt-episodes 5 --phase-steps 33 41 47 39 --out /tmp/brain-continuous-smoke.json
+python research/result_schema.py --check /tmp/brain-continuous-smoke.json
+```
+
 ## Online reward-guided context change response (research-only)
 
 [Boundary-blind online context protocol](research/online-context-pilot.md)
