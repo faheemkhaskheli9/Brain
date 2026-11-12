@@ -55,8 +55,8 @@ def audit(record: dict) -> dict:
     budget = record.get("budgets", {})
     if not isinstance(budget.get("trainingDecisionsPerArm"), int) or not isinstance(
         budget.get("adaptationDecisionsPerArm"), int
-    ) or budget["trainingDecisionsPerArm"] < 1 or budget["adaptationDecisionsPerArm"] < 1:
-        raise ValueError("nonzero training and development adaptation budgets required")
+    ) or budget["trainingDecisionsPerArm"] != 10000 or budget["adaptationDecisionsPerArm"] != 2000:
+        raise ValueError("confirmatory protocol requires exactly 10000 train / 2000 dev decisions")
     indexed: dict[tuple[int, str], dict] = {}
     for row in record.get("runs", []):
         key = (row.get("seed"), row.get("arm"))
