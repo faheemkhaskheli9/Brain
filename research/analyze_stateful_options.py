@@ -107,13 +107,28 @@ def audit(record: dict) -> dict:
         (arm for arm in ARMS if arm not in (TREATMENT, "oracle")),
         key=lambda a: means[a], reverse=True
     )
-    gate = shift >= 0.10 and lo > 0 and rlo >= -0.05
+    # Require advantage over *every* preregistered budget-matched learned
+    # control, rather than selecting whichever happens to lose on frozen test.
+    controls = ("flat", "flat-goal-masked", "options-no-gate", "options-no-terminate")
+    comparisons = {}
+    for control in controls:
+        diff = [
+            indexed[seed, TREATMENT]["scores"]["heldout"]["success"]
+            - indexed[seed, control]["scores"]["heldout"]["success"]
+            for seed in TARGET_SEEDS
+        ]
+        c_lo, c_hi = paired_interval(diff)
+        comparisons[control] = {
+            "delta": sum(diff) / len(diff), "ci95": [c_lo, c_hi],
+            "positive": sum(diff) / len(diff) >= 0.10 and c_lo > 0,
+        }
+    gate = all(v["positive"] for v in comparisons.values()) and rlo >= -0.05
     return {
         "gate": "pass" if gate else "fail", "primary_comparator": PRIMARY,
         "n_seeds": len(TARGET_SEEDS), "delta": shift,
         "delta_ci95": [lo, hi], "paired_signflip_p": signflip_p(difference),
         "retention_delta": sum(retention) / len(retention),
-        "retention_ci95": [rlo, rhi],
+        "retention_ci95": [rlo, rhi], "matched_controls": comparisons,
         "means": means, "strongest_nonoracle_descriptive": secondary[0],
         "warning": "No learned initiation: positive results would describe engineered-gate options only.",
     }
