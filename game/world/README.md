@@ -1087,6 +1087,12 @@ compositional transfer or evidence of AGI. Direct `episode(..., {learn:false})`
 on a live model is still a stateful performance step; use `scoreTasks`
 when isolation is required.
 
+The [exact-decision-budget audit](../../research/stateful-decision-budget-audit-2026-11-12.md)
+describes the follow-up M0b repair: every training action, including EXIT,
+counts toward the declared primitive-decision budget. A final partial episode
+is labelled as truncated rather than a task-level failure. This is an
+evaluation integrity change, not an improved learning claim.
+
 ## References
 
 - McClelland, McNaughton and O'Reilly (1995) "Why there are complementary learning systems in the
