@@ -30,7 +30,7 @@ const bad = episode(task, 11, () => 4, () => {}, 3);
 assert.equal(bad.decisions, 3);
 assert.ok(bad.invalid >= 0);
 
-const cfg = { trainSteps: 17, trainTasks: 3, evalTasks: 3, repeats: 1 };
+const cfg = { trainSteps: 17, trainTasks: 3, devTasks: 3, evalTasks: 3, repeats: 1 };
 const one = runSeed(2, cfg), two = runSeed(2, cfg);
 assert.equal(one.splitHash, two.splitHash);
 assert.deepEqual(one.rows.map(r => r.arm), ARMS);
@@ -39,6 +39,8 @@ for (const row of one.rows) {
   assert.equal(row.status, "ok", row.reason);
   const s = row.scores;
   assert.ok(s.heldout.success >= 0 && s.heldout.success <= 1);
+  assert.ok(s.development.success >= 0 && s.development.success <= 1);
+  assert.equal(s.development.episodes, cfg.devTasks * cfg.repeats);
   assert.equal(s.heldout.impossibleWins, 0);
   assert.equal(s.heldout.episodes, cfg.evalTasks * cfg.repeats);
   assert.ok(s.heldout.decisions >= s.heldout.episodes);
