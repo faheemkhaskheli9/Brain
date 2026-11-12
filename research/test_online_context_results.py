@@ -63,7 +63,7 @@ class OnlineResultsTests(unittest.TestCase):
             self.assertEqual(len(trace['switchDelays']), 3)
             self.assertLessEqual(score['switches'], 32 if run['arm'] == 'online_reward' else 1000)
         self.assertEqual(set(by_seed), set(SEEDS))
-        for seed, rows in by_seed.items():
+        for rows in by_seed.values():
             self.assertEqual({r['arm'] for r in rows}, set(ARMS))
             self.assertEqual(len({tuple(r['trace']['phaseLengths']) for r in rows}), 1)
             self.assertEqual(len({r['checkpoint'] for r in rows}), 1)
