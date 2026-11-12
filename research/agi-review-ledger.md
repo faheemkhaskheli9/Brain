@@ -112,3 +112,12 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
 - Attack: high scores on a named AGI benchmark could mask differences in action-efficiency incentives, harness elicitation, versioning or evaluation setup. A publicly available test manifest is not secret from an agent that can read it.
 - Decision: ARC-AGI-3 is a useful **optional interactive generalization stress test**, not the sole AGI gate. Report real completion separately from action efficiency, harness/version, learning interactions, planning calls, hidden information and test contamination. Independent benchmark critique is an external report, not a result reproduced by Brain.
 - Falsification: claimed transfer must survive a second unexposed task generator and matched evaluation protocol. [Execution addendum](agi-execution-addendum-2026-11-12.md) contains the M0c implementation sequence.
+
+## Round 12 — can a 'strict' science gate still pass over-budget trials? (2026-11-12)
+
+- Baseline: M0b [PR #196](https://github.com/faheemkhaskheli9/Brain/pull/196), before analyzer commits `01c95ff2` and `bda1db3d`; historical `research/analyze_stateful_options.py` accepted `limit <= spent < limit + 81`.
+- Attack: even after an exact-limit implementation, its science checker could have accepted an 80-decision overrun and declared the run comparable. A source-model fix without validating the downstream verifier is insufficient.
+- Decision: identify versioned protocols in the result metadata. Explicit `trainingOvershoot: "none (exact cap)"` requires `spent == requested`; historical missing/episode-boundary metadata may still be analysed for reproducibility but is labelled `legacy-overshoot` and cannot produce a new confirmatory pass.
+- Synthetic counterexamples: one extra training decision, malformed string count, unknown protocol, and an apparently high-performing legacy run must be rejected or receive a nonconfirmatory verdict. Check both status and actual per-run spent counts.
+- Verification at entry: code/test commits pushed; updated GitHub Actions checks for `bda1db3d` in progress. Earlier M0b code `c44cd932` had passed CI and 10-seed workflows; **do not conflate that earlier pass with this later gate change**.
+- Claim status: method-level bug found by source inspection, corrective test patch awaiting CI. No result establishes AGI, transfer or memory performance.
