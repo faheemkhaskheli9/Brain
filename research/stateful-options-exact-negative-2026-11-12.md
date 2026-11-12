@@ -31,7 +31,7 @@
 
 This negative finding cannot tell whether (a) the task horizon, reward, observation/hidden layout, or partial observability makes learning implausible; (b) the existing backprop-free actor lacks memory, exploration, credit assignment or training capacity; or (c) the engineered manager harms behavior. The tiny 4×4 per-split authored grammar means this is not independent transfer evidence. The privileged BFS oracle proves only task feasibility with full transition access, not policy learnability from public observations.
 
-**Gate decision: HOLD M1 and later AGI architecture work.** Proceed with [M0c handoff](agi-execution-blueprint-v1.1-2026-11-12.md): first implement a public-observation tabular/history policy and legal heuristic with equal experience; test whether *any* unprivileged learner beats random on a deliberately learnable diagnostic. Add independently generated obstacle/start/dynamics families only after the diagnostic. Do not call the engineered option policy a discovered compositional skill. Keep exact budget and full-state scoring tests green.
+**Gate decision: HOLD M1 and later AGI architecture work.** Proceed with [M0c handoff in reviewed blueprint v1.1](https://github.com/faheemkhaskheli9/Brain/blob/docs/agi-v1-reviewed-blueprint-20261112/research/agi-execution-blueprint-v1.1-2026-11-12.md): first implement a public-observation tabular/history policy and legal heuristic with equal experience; test whether *any* unprivileged learner beats random on a deliberately learnable diagnostic. Add independently generated obstacle/start/dynamics families only after the diagnostic. Do not call the engineered option policy a discovered compositional skill. Keep exact budget and full-state scoring tests green.
 
 ## Reproduce and check
 
