@@ -127,12 +127,23 @@ Run `python research/test_agent_learning.py` and `python research/agent_learning
 
 ## Structural human-inspired brain wiring (untrained)
 
-[Executable structural connectome](research/structural-connectome.md): a deterministic 38-region, 63-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
+[Executable structural connectome](research/structural-connectome.md): a deterministic 70-region, 122-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
 
 ```bash
 python research/structural_connectome.py --out /tmp/brain-graph.json --weights-out /tmp/brain-weights.json
 python -m unittest discover -s research -p 'test_structural_connectome.py'
 ```
+
+### Sensory and motor pathways
+
+The untrained model has independent visual, auditory, somatosensory,
+olfactory, taste, vestibular and interoceptive inputs. It exposes
+an external motor-pool interface for a bounded toy body, with
+proprioceptive feedback. See the structural connectome research guide.
+
+    python research/sensorimotor_bridge.py
+
+This does **not** generate neural commands or train weights.
 
 ## License
 

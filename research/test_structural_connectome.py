@@ -15,8 +15,8 @@ class StructuralConnectomeTests(unittest.TestCase):
         self.graph = make_schematic_graph()
 
     def test_scaffold_has_bilateral_regions_and_callosal_paths(self):
-        self.assertEqual(len(self.graph.regions), 38)
-        self.assertEqual(len(self.graph.connections), 2 * 28 + 7)
+        self.assertEqual(len(self.graph.regions), 70)
+        self.assertEqual(len(self.graph.connections), 2 * (28 + 26) + 12 + 2)
         self.assertEqual(len({e.id for e in self.graph.connections}), len(self.graph.connections))
         self.assertTrue(any(e.pathway == "corpus_callosum_schematic" and not e.directed for e in self.graph.connections))
 

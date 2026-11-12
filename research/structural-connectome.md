@@ -6,7 +6,7 @@
 
 - **Measured:** HCP multimodal cortical parcellation has 180 cortical areas per hemisphere. This is an anatomical *parcellation*, **not** a synapse-level connectivity map (Glasser et al., 2016).
 - **Measured/inferred:** Diffusion MRI and tractography estimate undirected regional white-matter connectivity, but may have substantial false positives and negatives (Hagmann et al., 2008; Maier-Hein et al., 2017). A tractography score is **not** a synaptic efficacy.
-- **Designed schematic:** The bundled model uses 19 deliberately coarse regions per hemisphere, pathways such as thalamocortical, cortico-basal-ganglia-thalamic, cortico-ponto-cerebellar and selective homotopic callosal links. Each connection is tagged `schematic-anatomical-pathway`. Selected projection direction is an abstraction, not MRI-measured direction. Relays, cell types, inhibitory signs, cortical layers, individual axons, actual geometry and many pathways are omitted. Bilaterality is simplified (especially in cerebellar circuits).
+- **Designed schematic:** The bundled model uses 35 deliberately coarse regions per hemisphere, pathways such as thalamocortical, cortico-basal-ganglia-thalamic, cortico-ponto-cerebellar and selective homotopic callosal links. Each connection is tagged `schematic-anatomical-pathway`. Selected projection direction is an abstraction, not MRI-measured direction. Relays, cell types, inhibitory signs, cortical layers, individual axons, actual geometry and many pathways are omitted. Bilaterality is simplified (especially in cerebellar circuits).
 - **Unassigned:** All learning weights start `null` in a separate store, never copied from MRI streamline counts. No learning algorithm is claimed or included.
 
 ## Run
@@ -16,7 +16,47 @@ python research/structural_connectome.py --out /tmp/brain-graph.json --weights-o
 python -m unittest discover -s research -p 'test_structural_connectome.py' -v
 ```
 
-The schematic exports **38 regions and 63 connections** (56 directed projections and 7 undirected commissural links). It has no measured spatial coordinates; `xyz` is `null`. JSON formats are `brain-structural-graph/1` and `brain-learning-weights/1`. To train later, use each unique connection `id` as the key for a learning parameter; the structural graph remains unchanged. Signs and magnitudes are **not** constrained by the schematic; a biologically constrained future learning layer would need cell types and neurotransmitter identities.
+The schematic exports **70 regions and 122 connections** (110 directed projections, including two simplified crossed corticospinal pathways; 12 undirected commissural links). It has no measured spatial coordinates; `xyz` is `null`. JSON formats are `brain-structural-graph/1` and `brain-learning-weights/1`. To train later, use each unique connection `id` as the key for a learning parameter; the structural graph remains unchanged. Signs and magnitudes are **not** constrained by the schematic; a biologically constrained future learning layer would need cell types and neurotransmitter identities.
+
+## Sensory cortices and motor output
+
+The research-only sensorimotor_bridge.py adds separate visual (LGN -> V1),
+auditory (MGB -> A1), somatosensory (thalamus -> S1/S2),
+proprioceptive (thalamus -> S1), olfactory (bulb -> piriform),
+gustatory (thalamus -> insula/operculum), vestibular (vestibular nuclei
+-> thalamus -> vestibular cortical network) and internal-state (posterior
+insula) ports. Channel widths are software contracts, not anatomical
+cell counts. Hemisphere-specific sensory packets carry normalized values.
+
+Motor pathways extend supplementary/premotor and primary motor cortex to
+contralateral spinal circuits and spinal motor pools, with separate brainstem
+motor paths. A bounded, configurable joint simulator accepts **external**
+motor-pool activity and provides proprioceptive feedback. There is no
+neural propagation or trained input-to-motor mapping. Unassigned weights
+cannot move the body; absent motor activity causes zero drive.
+
+Run:
+    python research/sensorimotor_bridge.py
+    python -m unittest discover -s research -p test_sensorimotor_bridge.py -v
+
+**Adversarial limitations:** the architecture omits actual bilateral and
+decussating sensory streams, corticospinal crossing fractions, efference
+copies, reflexes, neuron types, brainstem relays, delays, signal processing,
+and all physiology. The abstract joint integrator is not a biomechanics
+simulation. Do not count injected motor drives as learned behavior.
+
+Before integrating a learner, preregister matched seeds and budgets, held-out
+sensorimotor control and proprioception ablations; compare against
+random-rewired and disconnected network controls, measure repeated
+errors and retention, and record negative outcomes.
+
+References:
+- Auditory relay: https://doi.org/10.1016/j.bandl.2012.05.004
+- Olfactory circuits: https://pmc.ncbi.nlm.nih.gov/articles/PMC3077578/
+- Gustatory cortex: https://pubmed.ncbi.nlm.nih.gov/21305668/
+- Vestibular cortex: https://doi.org/10.1152/jn.00907.2017
+- Interoception: https://doi.org/10.1016/S0959-4388(03)00090-4
+- Motor pathways: https://doi.org/10.1146/annurev.neuro.31.060407.125547
 
 ## Import an actual atlas-derived connectivity matrix
 

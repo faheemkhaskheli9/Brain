@@ -123,6 +123,26 @@ _REGIONS = (
     ("cerebellar_nuclei", "Deep cerebellar nuclei", "cerebellum"),
 )
 
+# Abstract sensory and spinal-motor populations; not neuron-level atlas ROIs.
+_IO_REGIONS = (
+    ("mgb", "Medial geniculate body", "thalamus"),
+    ("a1", "Primary auditory cortex", "cortex"),
+    ("auditory_assoc", "Auditory association cortex", "cortex"),
+    ("s2", "Secondary somatosensory cortex", "cortex"),
+    ("olfactory_bulb", "Olfactory bulb", "olfactory"),
+    ("piriform", "Piriform cortex", "cortex"),
+    ("orbitofrontal", "Orbitofrontal cortex", "cortex"),
+    ("gustatory_thalamus", "Gustatory thalamic relay (VPMpc simplified)", "thalamus"),
+    ("gustatory_cortex", "Insula/frontal operculum gustatory region", "cortex"),
+    ("vestibular_nuclei", "Vestibular nuclei (simplified)", "brainstem"),
+    ("vestibular_cortex", "Parieto-insular vestibular cortical network", "cortex"),
+    ("posterior_insula", "Posterior insular interoceptive cortex", "cortex"),
+    ("sma", "Supplementary motor area", "cortex"),
+    ("spinal_cord", "Spinal interneuron circuitry", "spinal"),
+    ("motor_pool", "Spinal motor-neuron pool", "spinal"),
+    ("brainstem_motor", "Descending brainstem motor system", "brainstem"),
+)
+
 # Source, target, named coarse pathway. Some paths skip biological relays.
 _PATHS = (
     ("lgn", "v1", "geniculostriate"),
@@ -155,24 +175,59 @@ _PATHS = (
     ("cerebellar_nuclei", "thalamus", "cerebellothalamic_simplified"),
 )
 
+_IO_PATHS = (
+    ("mgb", "a1", "medial_geniculate_auditory"),
+    ("a1", "auditory_assoc", "auditory_feedforward"),
+    ("auditory_assoc", "a1", "auditory_feedback"),
+    ("auditory_assoc", "temporal_assoc", "auditory_temporal"),
+    ("auditory_assoc", "pfc", "auditory_frontal"),
+    ("s1", "s2", "somatosensory_higher"),
+    ("s2", "parietal_assoc", "somatoparietal"),
+    ("thalamus", "posterior_insula", "interoceptive_thalamocortical_simplified"),
+    ("posterior_insula", "pfc", "interoceptive_prefrontal"),
+    ("olfactory_bulb", "piriform", "olfactory_bulb_piriform"),
+    ("piriform", "orbitofrontal", "olfactory_orbitofrontal"),
+    ("orbitofrontal", "pfc", "orbitofrontal_prefrontal"),
+    ("gustatory_thalamus", "gustatory_cortex", "gustatory_thalamocortical"),
+    ("gustatory_cortex", "orbitofrontal", "gustatory_orbitofrontal"),
+    ("vestibular_nuclei", "thalamus", "vestibular_thalamic"),
+    ("thalamus", "vestibular_cortex", "vestibular_thalamocortical"),
+    ("vestibular_cortex", "parietal_assoc", "vestibular_parietal"),
+    ("s1", "premotor", "somatosensory_premotor"),
+    ("pfc", "sma", "prefrontal_supplementary_motor"),
+    ("sma", "m1", "supplementary_primary_motor"),
+    ("spinal_cord", "motor_pool", "spinal_motor_pool"),
+    ("m1", "brainstem_motor", "corticobulbar_simplified"),
+    ("brainstem_motor", "spinal_cord", "brainstem_descending_motor"),
+    ("cerebellar_nuclei", "brainstem_motor", "cerebellar_brainstem"),
+    ("vestibular_nuclei", "brainstem_motor", "vestibular_brainstem"),
+    ("posterior_insula", "amygdala", "interoceptive_limbic"),
+)
+
 # Homotopic cortical commissural targets; these are NOT a complete callosal map.
-_CALLOSAL = ("pfc", "m1", "s1", "premotor", "parietal_assoc", "temporal_assoc", "visual_assoc")
+_CALLOSAL = ("pfc", "m1", "s1", "premotor", "parietal_assoc", "temporal_assoc", "visual_assoc",
+             "a1", "auditory_assoc", "s2", "sma", "orbitofrontal")
 
 
 def make_schematic_graph() -> StructuralGraph:
     regions = [
         Region(f"{side}_{key}", name, side, system)
         for side in ("L", "R")
-        for key, name, system in _REGIONS
+        for key, name, system in (*_REGIONS, *_IO_REGIONS)
     ]
     connections = [
         Connection(f"{side}_{src}", f"{side}_{dst}", pathway, "schematic-anatomical-pathway", True)
         for side in ("L", "R")
-        for src, dst, pathway in _PATHS
+        for src, dst, pathway in (*_PATHS, *_IO_PATHS)
     ]
     connections.extend(
         Connection(f"L_{key}", f"R_{key}", "corpus_callosum_schematic", "schematic-anatomical-pathway", False)
         for key in _CALLOSAL
+    )
+    # Predominant contralateral corticospinal projection; simplified.
+    connections.extend(
+        Connection(f"{side}_m1", f"{other}_spinal_cord", "crossed_corticospinal_schematic", "schematic-anatomical-pathway", True)
+        for side, other in (("L", "R"), ("R", "L"))
     )
     return StructuralGraph(
         regions,
