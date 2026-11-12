@@ -1,3 +1,9 @@
+**Post-evaluation update (2026-11-12):** [Frozen 10-seed results](online-context-results-2026-11-12.md)
+passed the preregistered synthetic-task gate. The experimental protocol
+below was committed at `667b6a7230dc4546957c7e313b72c2071da0b083`
+**before** evaluating reserved seeds 501–510. These seed outcomes were
+not used to tune thresholds. The report documents limits and adversarial checks.
+
 # Online motor context detection without simulator probing
 
 **Scope:** separate, backprop-free sparse microcircuit *research* prototype. The

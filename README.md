@@ -135,8 +135,11 @@ signal, no per-candidate simulator reset and no extra probe actions**.
 Two saved policies are still separately trained with engineered regime labels
 before the evaluation; this is retrieval rather than autonomous acquisition
 of new skills. Compare blind switching, reward-shuffled feedback and a
-separately labeled privileged context oracle. Results are required before
-claims of improvement or reduction in forgetting.
+separately labeled privileged context oracle. The [fresh 10-seed measured pilot](research/online-context-results-2026-11-12.md)
+reports +0.197 actual progress reward per action against −0.368 for the
+preselected blind-random control. The preregistered criterion passes in
+this simplified simulator (paired p=0.00195); the method does not learn
+new contexts online, and still incurs false switches.
 
 ```bash
 python research/test_online_context.py
