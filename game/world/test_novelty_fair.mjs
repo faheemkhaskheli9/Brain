@@ -45,8 +45,14 @@ assert.deepEqual(a.rows.map(x => x.scores), b.rows.map(x => x.scores));
 assert.deepEqual(a.audit, b.audit);
 assert.equal(a.rows.length, ARMS.length);
 assert.equal(a.audit.length, ARMS.length * 10);
+assert.ok(a.audit.every(task => typeof task.novelOpportunity === "boolean"));
+assert.equal(new Set(a.audit.map(x => x.novelOpportunity)).size >= 1, true);
 for (const r of a.rows) {
   assert.equal(r.scores.validatorCalls, 8);
+  assert.ok(r.scores.novelOpportunityRate >= 0 && r.scores.novelOpportunityRate <= 1);
+  assert.ok(r.scores.conditionalNovel === null || r.scores.conditionalNovel >= 0);
+  assert.ok(r.scores.conditionalNovel === null || r.scores.conditionalNovel <= 8);
+
   assert.equal(r.scores.gradedCalls, r.arm === "search-graded" ? 8 : 0);
 }
 assert.equal(a.rows.find(r => r.arm === "retrieval").scores.novel, 0);
