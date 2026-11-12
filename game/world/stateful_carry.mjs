@@ -47,7 +47,7 @@ export function generateTasks(seed, split, n) {
     const free = Array.from({ length: SIZE * SIZE }, (_, i) => i).filter(c => !walls.includes(c));
     const start = choose(R, free), object = choose(R, free.filter(c => c !== start));
     if (!reachable(start, object, walls)) continue;
-    const impossible = attempt % 8 === 7;
+    const impossible = (tasks.length + 1) % 8 === 0;
     const choices = impossible ? walls : free.filter(c => c !== start && c !== object &&
       reachable(start, c, walls) && reachable(object, c, walls));
     if (!choices.length) continue;
