@@ -152,32 +152,44 @@ export function scoreTasks(model, tasks, repeats = 2, seed = 0) {
   return { success: wins / episodes, failed: timeouts, invalidPerEpisode: invalid / episodes,
     decisions, envSteps, exits, episodes };
 }
-export function runSeed(seed, { trainSteps = 2000, trainTasks = 32,
+// The adaptation phase uses DEVELOPMENT goal pairs only, never the frozen eval
+// family. Budget is primitive + exit decisions, and is logged separately.
+function trainPhase(model, tasks, seed, budget, salt) {
+  const R = rng(mix(seed, salt));
+  let decisions = 0, envSteps = 0, episodes = 0, wins = 0, invalid = 0;
+  if (isLearned(model.arm)) while (decisions < budget) {
+    const task = tasks[Math.floor(R() * tasks.length)];
+    const trial = episode(model, task, { learn: true,
+      seed: mix(seed, episodes + salt + 971) });
+    decisions += trial.decisions; envSteps += trial.envSteps;
+    episodes++; wins += Number(trial.success); invalid += trial.invalid;
+  }
+  return { decisions, envSteps, episodes, success: episodes ? wins / episodes : null, invalid };
+}
+export function runSeed(seed, { trainSteps = 2000, adaptSteps = 0, trainTasks = 32,
   evalTasks = 16, repeats = 2 } = {}) {
-  if (![seed, trainSteps, trainTasks, evalTasks, repeats].every(Number.isInteger) ||
-    seed < 0 || trainSteps < 1 || trainTasks < 1 || evalTasks < 1 || repeats < 1)
+  if (![seed, trainSteps, adaptSteps, trainTasks, evalTasks, repeats].every(Number.isInteger) ||
+    seed < 0 || trainSteps < 1 || adaptSteps < 0 ||
+    trainTasks < 1 || evalTasks < 1 || repeats < 1)
     throw new Error("invalid experiment budget");
   const train = generate(seed, "train", trainTasks);
+  const dev = generate(seed, "dev", trainTasks);
   const heldout = generate(seed, "eval", evalTasks);
+  const sourceTasks = train.slice(0, Math.min(evalTasks, train.length));
   const rows = [];
   for (const arm of ARMS) {
     const start = Date.now(), model = createModel(mix(seed, 31), arm);
-    const R = rng(mix(seed, 617));
-    let decisions = 0, envSteps = 0, episodes = 0, wins = 0, invalid = 0;
-    if (isLearned(arm)) while (decisions < trainSteps) {
-      const task = train[Math.floor(R() * train.length)];
-      const trial = episode(model, task, { learn: true,
-        seed: mix(seed, episodes + 971) });
-      decisions += trial.decisions; envSteps += trial.envSteps;
-      episodes++; wins += Number(trial.success); invalid += trial.invalid;
-    }
-    const source = scoreTasks(model, train.slice(0, Math.min(evalTasks, train.length)), repeats, seed);
-    const eval_ = scoreTasks(model, heldout, repeats, seed);
+    const training = trainPhase(model, train, seed, trainSteps, 617);
+    const sourceBefore = scoreTasks(model, sourceTasks, repeats, seed);
+    const zeroShot = scoreTasks(model, heldout, repeats, seed);
+    const adaptation = trainPhase(model, dev, seed, adaptSteps, 997);
+    const sourceAfter = adaptSteps ? scoreTasks(model, sourceTasks, repeats, seed) : sourceBefore;
+    const heldout = adaptSteps ? scoreTasks(model, heldout, repeats, seed) : zeroShot;
     rows.push(run({ arm, seed, split: "eval", status: "ok",
       seconds: (Date.now() - start) / 1000,
-      scores: { heldout: eval_, source, training: { decisions, envSteps, episodes,
-        success: episodes ? wins / episodes : null, invalid },
-        modelBytes: modelBytes(model) } }));
+      scores: { zeroShot, heldout, sourceBefore, sourceAfter,
+        sourceRetentionDelta: sourceAfter.success - sourceBefore.success,
+        training, adaptation, modelBytes: modelBytes(model) } }));
   }
   return rows;
 }
@@ -188,13 +200,14 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     return i === -1 ? fallback : args.splice(i, 2)[1];
   };
   const trainSteps = Number(opt("--train-steps", "2000")),
+    adaptSteps = Number(opt("--adapt-steps", "0")),
     trainTasks = Number(opt("--train-tasks", "32")),
     evalTasks = Number(opt("--eval-tasks", "16")),
     repeats = Number(opt("--repeats", "2")), out = opt("--out", null);
   const seeds = args.length ? args.map(Number) : [1, 2, 3];
   if (!seeds.length || seeds.some(s => !Number.isInteger(s) || s < 0) ||
     new Set(seeds).size !== seeds.length) throw new Error("invalid seeds");
-  const runs = seeds.flatMap(seed => runSeed(seed, { trainSteps, trainTasks, evalTasks, repeats }));
+  const runs = seeds.flatMap(seed => runSeed(seed, { trainSteps, adaptSteps, trainTasks, evalTasks, repeats }));
   for (const arm of ARMS) {
     const group = runs.filter(r => r.arm === arm);
     const mean = group.reduce((s, r) => s + r.scores.heldout.success, 0) / group.length;
@@ -202,12 +215,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   }
   if (out) writeResult(out, resultRecord({
     experiment: "brain-world/stateful-options-pilot", baseline: "flat", runs,
-    metrics: { "heldout.success": "higher", "source.success": "higher",
-      "heldout.invalidPerEpisode": "lower", modelBytes: "lower" },
-    budgets: { trainingDecisionsPerArm: trainSteps, evalEpisodes: evalTasks * repeats,
+    metrics: { "zeroShot.success": "higher", "heldout.success": "higher",
+      sourceRetentionDelta: "higher", "heldout.invalidPerEpisode": "lower", modelBytes: "lower" },
+    budgets: { trainingDecisionsPerArm: trainSteps, adaptationDecisionsPerArm: adaptSteps,
+      evalEpisodes: evalTasks * repeats,
       optionExitCountsAsDecision: true, trainingOvershoot: "episode boundary, logged per run" },
     config: { seeds, trainTasks, evalTasks, repeats, arms: ARMS, provenance: PROVENANCE,
-      splits: "disjoint object-to-goal pair families; frozen evaluation",
-      limitations: "Engineered option initiation and reward; no learned option discovery, no adaptation or statistically confirmed advantage" },
+      splits: "train pretraining, dev adaptation, frozen eval; disjoint goal-pair families",
+      limitations: "Engineered option initiation and reward; no learned option discovery or statistically confirmed advantage" },
   }));
 }
