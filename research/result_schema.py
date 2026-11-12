@@ -70,7 +70,18 @@ def is_null(scores, name):
 
 
 def validate(r):
-    """Return a list of problems (empty if the record is valid)."""
+    """Return a list of problems (empty if the record is valid).
+
+    Malformed split values must produce diagnostics rather than raising:
+    >>> fixture = make_result("x", "run", {}, {}, {"score": "higher"}, [
+    ...     {"arm": "a", "seed": 1, "split": {"bad": 1},
+    ...      "status": "ok", "scores": {"score": 1.0}}], commit="abc")
+    >>> any("split must be" in err for err in validate(fixture))
+    True
+    >>> fixture["runs"][0]["split"] = "heldout"
+    >>> validate(fixture)
+    []
+    """
     if not isinstance(r, dict):
         return ["not a JSON object"]
     errs = [f"{k}: missing or not {t.__name__}" for k, t in REQUIRED.items() if not isinstance(r.get(k), t)]
@@ -93,8 +104,14 @@ def validate(r):
         if bad:
             errs.append(f"{where}: {', '.join(bad)} missing or wrong type")
             continue
+        # Split identifiers are part of the pairing key. Reject non-scalar
+        # JSON values instead of crashing while deduplicating runs.
+        split = run.get("split")
+        if split is not None and not isinstance(split, str):
+            errs.append(f"{where}: split must be a string or null")
+            continue
         arms.add(run["arm"])
-        key = (run["arm"], run["seed"], run.get("split"))
+        key = (run["arm"], run["seed"], split)
         if key in seen:
             errs.append(f"{where}: duplicate arm/seed/split {key}")
         seen.add(key)
