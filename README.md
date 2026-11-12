@@ -135,10 +135,13 @@ received outcomes delayed by **one or three physical actions**. It performs
 no counterfactual probes, remains backprop-free, and does not know hidden
 motor-rule transitions.
 
-**Experimental status:** preregistered, not evidence of improved learning
-or biological synaptic mechanisms. Both policy checkpoints were trained
-with experimenter-known regimes in advance; natural pixels/audio and a
-previously unseen third regime are not handled.
+**Frozen 10-seed results:** [full report](research/continuous-motor-results-2026-11-12.md)
+reports +0.2368 progress reward/action for three-action delayed feedback,
+versus −0.0531 for periodic switching (paired p=0.00195, positive CI).
+**However, goal contact fell to 22.66% versus 25.29%; no reliable goal-hit
+gain was demonstrated.** The reward measure is not a substitute for actual
+motor competence. Both policy checkpoints were pretrained under known motor
+regimes; natural media and an unfamiliar third context remain unsupported.
 
 ```bash
 python research/test_continuous_motor.py

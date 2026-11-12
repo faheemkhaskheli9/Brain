@@ -5,7 +5,7 @@
 
 - [Online reward-based motor context](online-context-pilot.md) ([10-seed evaluation](online-context-results-2026-11-12.md)) — causal reward-triggered switching of stored sparse motor policies on one lived stream; no candidate resets or externally signaled change boundary during evaluation; fixed controls, cost and preregistration.
 
-- [Continuous motor and delayed-reward pilot](continuous-motor-pilot.md) — one persistent physical joint across target and motor-rule changes, three-action reward latency and eight matched policy-selection arms. This is a preregistered toy experiment, not a biologically accurate brain.
+- [Continuous motor and delayed-reward pilot](continuous-motor-pilot.md) ([frozen 10-seed results and objective-mismatch finding](continuous-motor-results-2026-11-12.md)) — one persistent physical joint across target and motor-rule changes, three-action reward latency and eight matched policy-selection arms. This is a preregistered toy experiment, not a biologically accurate brain.
 # research/
 
 - [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).

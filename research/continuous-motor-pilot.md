@@ -1,3 +1,10 @@
+**Post-evaluation record (2026-11-12):** The held-out 601–610 evaluation has
+been completed and published as [continuous-motor-results-2026-11-12.md](continuous-motor-results-2026-11-12.md).
+The predeclared *reward* primary and shuffled-signal criteria passed,
+but **goal-hit success did not improve**. All original controls, budgets and
+acceptance thresholds below were committed as `4fe342e487eb9da213e2482e158fa3ae8c332be2`
+before the held-out run. This post-run note does not revise them.
+
 # Continuous-body motor control and causal reward-latency experiment
 
 Date: 2026-11-12. Status: **preregistered pilot, not yet a result**.
