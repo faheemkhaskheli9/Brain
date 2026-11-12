@@ -133,7 +133,7 @@ error and S1 proprioception**, selects L-hip motor commands through the
 existing MotorDecoder and SimpleJointBody, and observes **post-action**
 reward. It supports learned connection growth/pruning under four edges,
 a two-step delayed-feedback control, frozen retention tests and motor
-reversal. The sensory representation is engineered; natural image/audio/text
+reversal. [10-seed experiment](research/closed-loop-reaching-results-2026-11-12.md): evidence-guided growth reached 0.930 held-out goal-hit rate versus 0.798 for random growth (paired 95% CI for advantage crosses zero); reversal adaptation damaged prior-skill retention. The sensory representation is engineered; natural image/audio/text
 understanding and macro-brain learning are NOT implemented.
 
 ```bash

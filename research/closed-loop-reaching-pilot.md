@@ -1,7 +1,7 @@
 # Sparse local learner controlling a toy joint: preregistered reaching pilot
 
 Date: 2026-11-12  
-Status: **implementation and preregistration**; the confirmatory results below are *not yet measured* at first publication.
+Status: **implemented and evaluated**. This preregistration was committed before the frozen confirmatory seed run. [Measured 10-seed findings](closed-loop-reaching-results-2026-11-12.md) reject the preregistered superiority criterion and show substantial forgetting under motor reversal.
 
 ## What is new
 
