@@ -196,7 +196,8 @@ export function runSeed(seed, { trainSteps = 10000, trainTasks = 64, evalTasks =
       { revealGoal, legalMask, seed, seen: known });
     rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - started) / 1000,
       scores: { train: { success: familiar.success },
-        heldout: { success: heldout.success, novel: heldout.novel },
+        heldout: { success: heldout.success, novel: heldout.novel,
+          repeatedPerEpisode: heldout.repeatedPerEpisode, decisions: heldout.decisions },
         trainSteps: steps, trainEpisodes: episodes, trainingSuccess: correct / episodes,
         trainingRepeatedPerEpisode: repeated / episodes } }));
   }
