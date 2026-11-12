@@ -45,6 +45,39 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
 
 **Ready for implementation:** M0 evaluation/measurement repairs. **Not yet validated:** M1-M8. The program is research-ready, not AGI-ready. The dominant early uncertainty is whether the local learner can discover transferable action structure under fair stateful tasks. The next code PR must address frozen-state equivalence and fair budget/controls; this review made no experimental performance claim.
 
+
+## Round 5 — implementation adversary: a budget that is not actually bounded (2026-11-12)
+
+- Baseline: main 49e2c6f1; PR #194 eefd33e3, unmerged. Inspected stateful_options.mjs, stateful_construct.mjs, brain.js, tests; no test run or code change.
+- Attack: trainPhase can overshoot its declared training decision cap because it scores an entire episode then increments decisions. The BFS oracle claims success without taking the same actual environment actions; EXIT is a decision but not a transition.
+- Decision: split M0 into M0a–M0d. Enforce exact remaining-budget caps inside episode; classify oracle as privileged ceiling; report decisions, transitions and all optional calls separately.
+- Falsification: budgets 1/39/80/81/137, EXIT bursts, timeouts, failure paths and replay must never overshoot. Until tested, this is a code-backed risk, not a verified regression fix.
+- Claim status: source-observed behavior and proposed correction; untested.
+
+## Round 6 — representation adversary: can source state survive an evaluation exactly?
+
+- Baseline: same. Model digest hashes selected arrays, frozenEpisode explicitly restores a subset, whereas Brain has nested syn, RNG closure and further state. World.toJSON intentionally resumes by replay.
+- Attack: a previously passed weight-only freeze assertion might miss a future change in synaptic importance, RNG, surprise, hidden eligibility or learned features. A shallow clone would alias typed-array memory.
+- Decision: add complete-state inventory and isolated actor snapshot protocol; do not reuse arbitrary World save as a mid-episode snapshot. Inspect the next training action trace, not just the immediate weight hash.
+- Falsification: train/eval/train equals train/train in full state and future action trace, across greedy/stochastic/surprise/SI cases; intentional alias mutation is detected.
+- Claim status: potential evaluation integrity risk, not an observed changed training trace; untested.
+
+## Round 7 — generalization adversary: a new seed is not a new environment
+
+- Baseline: same. Four item-goal relations × four obstacle templates per split, fixed start and horizon; there are at most 16 structural patterns/split.
+- Attack: random new IDs and seeds produce repeated task structures; a significant 20-seed improvement can still be overfitting to tiny same-family layouts. A full-map baseline would be privileged over observe().
+- Decision: retain tiny split as regression, add nonisomorphic structural generators, history-aware controls, family-level split fingerprint, and family-stratified independent confirmation. Strongest tuned non-oracle control fixed before sealed scoring; retention must pass confidence-bound non-inferiority, not only a point estimate.
+- Falsification: unseen families, new starts/obstacles/interruptions, masked-sensor tests and independent evaluator should preserve the claimed benefit. Otherwise remove the transfer/generalization interpretation.
+- Claim status: source-backed narrow task breadth; proposed new evaluation untested.
+
+## Round 8 — scientific governance adversary: does the roadmap permit a false AGI declaration?
+
+- Baseline: v1.0 and this inspection; primary options formalism checked against Sutton et al. 1999; ARC-AGI-2 primary benchmark documentation checked for independent evaluation practice.
+- Attack: a single shaped reward or tiny controlled benchmark can be promoted as AGI; new knowledge can be filed as established without a run; document edits could erase earlier failed decisions.
+- Decision: publish v1.1 **as a new file** leaving v1.0 and all old ledger entries in place. Link a separate source-grounded knowledge note; gate M1 on M0 and prohibit model/AGI claims without independent replication. Add capture rules to AGENTS.md.
+- Falsification: any missing failure, changed sealed suite, hidden oracle, unverified source or erased negative invalidates promotion; create a new version rather than rewriting history.
+- Claim status: implementation-ready M0 specification; no experiment, AGI outcome or independent validation claim.
+
 ## Entry template for subsequent reviews (append; do not overwrite)
 
 - Date and baseline commit:

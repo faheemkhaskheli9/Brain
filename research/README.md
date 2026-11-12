@@ -10,8 +10,10 @@
 
 ## Executing the Brain research program
 
-- [Versioned AGI research execution blueprint (v1.0)](agi-execution-blueprint-2026-11-12.md): integration architecture, M0-M8 dependency graph, first PR implementation handoff, controls, budgets, falsification and evidence gates. This is a roadmap, not an achieved capability.
-- [Append-only adversarial review ledger](agi-review-ledger.md): four review rounds, rejected shortcuts, changed decisions, and a repeatable process to preserve subsequent review history in Git.
+- [AGI research execution blueprint v1.1](agi-execution-blueprint-v1.1-2026-11-12.md): revised canonical M0-to-M8 implementation protocol, explicit code-backed measurement blockers and ordered PR handoffs; **M0 is ready for coding, later stages conditional**.
+- [Historical execution blueprint v1.0](agi-execution-blueprint-2026-11-12.md): preserved predecessor for the Git review record.
+- [M0 code-audit knowledge note](agi-audit-knowledge-2026-11-12.md): precise source inspection, important negative limitations, primary external references, and open falsification questions; not an experiment.
+- [Append-only adversarial review ledger](agi-review-ledger.md): eight review rounds, rejected shortcuts, changed decisions, and a repeatable process to preserve subsequent review history in Git.
 - [Existing adversarial implementation plan](adversarial-implementation-plan.md) and [sparse brain experiment plan](sparse-brain-next-implementation-plan.md) remain detailed source plans; issue #120 owns goals and #136 owns ordering.
 
 

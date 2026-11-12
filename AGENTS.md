@@ -69,7 +69,7 @@ with DOI/URL; record exact versions and limits. Update relevant backlinks /
 research/README.md; do not duplicate existing work.
 
 Before proposing a new Brain mechanism, consult
-[the versioned execution blueprint](research/agi-execution-blueprint-2026-11-12.md),
+[the latest evidence-gated execution blueprint](research/agi-execution-blueprint-v1.1-2026-11-12.md),
 [the append-only adversarial review ledger](research/agi-review-ledger.md),
 the current issues #120/#136, and [implementation status](research/implementation-status.md).
 After each material decision or code result, append the review outcome (baseline
@@ -78,3 +78,12 @@ unsuccessful experiments and raw brain-result/1 artifacts; update claims.tsv
 only when supported. Use normal Git commits and PRs as a permanent history;
 avoid force-push or erasing earlier review decisions. Never claim AGI achieved
 from these prototypes, or tests run when not executed.
+
+Every task's knowledge capture must cite the **exact inspected source commit/path**,
+separate code-observed facts from hypotheses and measurements, and give the
+source URL/DOI, date, review status, failure/null findings and next falsification
+test. Use a dated research note when the matched topic cannot hold the detail.
+Do not silently replace old plans, ledger entries, raw result files or negative
+claims. The [M0 audit knowledge note](research/agi-audit-knowledge-2026-11-12.md)
+shows the required standard. Treat unmerged PR documents as proposed until
+merged, and never confuse a green documentation CI check with a scientific run.
