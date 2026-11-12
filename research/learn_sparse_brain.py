@@ -12,7 +12,6 @@ import hashlib
 import json
 import platform
 import random
-import sys
 import time
 from pathlib import Path
 
