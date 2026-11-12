@@ -31,7 +31,7 @@ cell counts. Hemisphere-specific sensory packets carry normalized values.
 Motor pathways extend supplementary/premotor and primary motor cortex to
 contralateral spinal circuits and spinal motor pools, with separate brainstem
 motor paths. A bounded, configurable joint simulator accepts **external**
-motor-pool activity and provides proprioceptive feedback. There is no
+motor-pool activity and provides proprioceptive feedback. The sensorimotor bridge itself has no
 neural propagation or trained input-to-motor mapping. Unassigned weights
 cannot move the body; absent motor activity causes zero drive.
 
@@ -65,6 +65,21 @@ routes spatial vision, frame differences and symbolic UTF-8 packets to
 the relevant simplified visual/language populations. Its output interfaces
 encode externally supplied pixels, video frames and Unicode; it does not
 infer new content or learn neural weights.
+
+## Sparse event-driven activity
+
+The optional [sparse regional router](sparse-connectivity.md) keeps this
+anatomical graph as an adjacency list and processes only outgoing arcs
+from active regions. It uses the same `LearningWeights` slots, initially
+all unassigned; missing weights transmit no signal. The router supports
+per-source activity thresholds, reversible pathway inhibition and a
+configurable fan-out limit. It does not learn weights, model neurons,
+perform real brain dynamics or directly control the body.
+
+The 78-region scaffold has 142 stored connections and 154 traversable
+arcs, **2.56% of its 6,006 potential directed region pairs**. This is an
+engineered example, not a measurement of human cellular wiring. Cortical
+area-level density must not be confused with neuron-level sparsity.
 
 ## Import an actual atlas-derived connectivity matrix
 

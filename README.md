@@ -127,7 +127,7 @@ Run `python research/test_agent_learning.py` and `python research/agent_learning
 
 ## Structural human-inspired brain wiring (untrained)
 
-[Executable structural connectome](research/structural-connectome.md): a deterministic 70-region, 122-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
+[Executable structural connectome](research/structural-connectome.md): a deterministic 78-region, 142-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
 
 ```bash
 python research/structural_connectome.py --out /tmp/brain-graph.json --weights-out /tmp/brain-weights.json
@@ -162,6 +162,25 @@ python -m unittest discover -s research -p test_multimodal_io.py -v
 Image/video/text outputs render caller-supplied data; there is no OCR,
 language understanding, neural propagation, media generation or learned
 body control in this module.
+
+### Sparse, event-driven connectivity (research-only)
+
+[Sparse regional event router](research/sparse-connectivity.md) stores only
+154 directed traversable arcs for 78 regions (2.56% of the 6,006 potential
+directed region pairs). It visits only outgoing connections of active
+regions, skips unassigned/disabled/zero-weight pathways, and can limit
+active fan-out. The full 78-region / 142-edge schematic has no dense
+all-to-all matrix.
+
+```bash
+python research/sparse_connectivity.py
+python -m unittest discover -s research -p test_sparse_connectivity.py -v
+python research/sparse_connectivity_benchmark.py
+```
+
+This is a **selective message router**, not learned intelligence, real
+neuronal dynamics or a measured human neuronal connection density.
+Learning weights remain unassigned until an external learner supplies them.
 
 ## License
 

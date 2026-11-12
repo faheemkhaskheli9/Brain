@@ -76,6 +76,16 @@ rendering actions**, not biological cortex-generated content or learned skills.
 - No decoder is a generative model: callers explicitly supply the output
   string, output pixels or output frames.
 
+## Optional sparse event routing downstream
+
+The [event-driven sparse router](sparse-connectivity.md) accepts these
+sensory packets through `network.input_packets(packets)` and routes
+nonzero activity only along explicitly present, enabled structural arcs
+whose weights have been assigned. For now, this adapter applies fixed,
+lossy mean-absolute pooling to each packet; no trained multimodal
+representation or understanding is implemented. The original media
+input/output codecs remain independent of routing.
+
 ## Adversarial evaluation
 
 1. **Interface correctness:** different images and text scripts route to
