@@ -1,0 +1,39 @@
+name: One-off preregistered stateful carry diagnostic
+
+on:
+  push:
+    branches: [research/carry-diagnostic-2026-11-12]
+
+permissions:
+  contents: read
+
+jobs:
+  paired_seeds:
+    name: Ten-seed stateful dependent-action baseline benchmark
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Ten paired seeds with exact 10000-decision training per trained arm
+        run: |
+          node game/world/stateful_baselines.mjs 1 2 3 4 5 6 7 8 9 10 --train-steps 10000 --train-tasks 40 --dev-tasks 12 --eval-tasks 30 --repeats 2 --out carry-gate-b-10seed.json
+          python research/result_schema.py --check carry-gate-b-10seed.json
+          python research/analyze_stateful_carry.py carry-gate-b-10seed.json > carry-gate-b-10seed-analysis.json
+          sha256sum carry-gate-b-10seed.json carry-gate-b-10seed-analysis.json > carry-gate-b-10seed.sha256
+          cat carry-gate-b-10seed-analysis.json
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: carry-gate-b-10seed
+          path: |
+            carry-gate-b-10seed.json
+            carry-gate-b-10seed-analysis.json
+            carry-gate-b-10seed.sha256
+          if-no-files-found: warn
+          retention-days: 30
