@@ -9,14 +9,16 @@ const xy = c => [c % SIZE, Math.floor(c / SIZE)];
 const choose = (R, xs) => xs[Math.floor(R() * xs.length)];
 function wallsFor(split, hole, variant) {
   const w = [];
-  if (split === "train")
+  if (split === "train") {
     for (let y = 0; y < SIZE; y++) if (y !== hole) w.push(cell(2, y));
-  else if (split === "dev")
+  } else if (split === "dev") {
     for (let x = 0; x < SIZE; x++) if (x !== hole) w.push(cell(x, 2));
-  else if (split === "eval") {
+  } else if (split === "eval") {
     for (let y = 0; y < SIZE; y++) if (y !== hole) w.push(cell(2, y));
     w.push(cell(variant % 2 ? 0 : 4, (hole + 2) % SIZE));
-  } else throw Error("unknown task split");
+  } else {
+    throw Error("unknown task split");
+  }
   return [...new Set(w)].sort((a, b) => a - b);
 }
 function adjacent(p, walls) {
