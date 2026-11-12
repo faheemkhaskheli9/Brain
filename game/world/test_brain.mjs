@@ -12,7 +12,8 @@ assert.ok(!Brain.toString().includes("STAGES"), "Brain is indexed by task");
 for (const [, arg] of World.toString().matchAll(/\.encode\(([^;]*)/g)) assert.ok(!/playing|mode|task|stage/.test(arg), `encode is told the task: ${arg}`);
 assert.ok(!/playing|mode|task|stage|target|tone/.test(World.prototype.context.toString()), "context() reads the task");
 assert.equal(new World(1).brain.gate.length, GAINS.slots * GAINS.hidden);
-// The action set and the leg habit come from the body and development, not the task name (#61).
+// The historical body scaffold changes the gait and available actions by curriculum stage.
+ // Task labels still must not be sent to the learned policy; compare opt-out in test_scaffold.mjs.
 const stepSrc = World.prototype.step.toString();
 for (const [, arg] of stepSrc.matchAll(/\.act\(([^;]*)/g)) assert.ok(!/\bm\b|mode|playing/.test(arg), `act is told the task: ${arg}`);
 for (const [, rhs] of stepSrc.matchAll(/(?:const set|const habit|this\.legs) = ([^;]*)/g)) assert.ok(!/\bm\b|mode|playing|task/.test(rhs), `action set or habit reads the task: ${rhs}`);

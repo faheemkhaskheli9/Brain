@@ -98,6 +98,8 @@ jobs:
         run: node game/world/test_navigation.mjs
       - name: Construction tasks are deterministic, valid and held out (#110)
         run: node game/world/test_construct.mjs
+      - name: Curriculum gait/action scaffold has an opt-out control and paired frozen scenes
+        run: node game/world/test_scaffold.mjs
       - name: Goal-conditioned construction learner has frozen, masked controls (#112)
         run: |
           node game/world/test_construct_learner.mjs
