@@ -100,6 +100,11 @@ jobs:
         run: node game/world/test_construct.mjs
       - name: Stateful construction transitions, disjoint goals and independent oracle (#110/#112)
         run: node game/world/test_stateful_construct.mjs
+      - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
+        run: |
+          node game/world/test_stateful_options.mjs
+          node game/world/stateful_options.mjs 1 --train-steps 10 --train-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/stateful-options-smoke.json
+          python research/result_schema.py --check /tmp/stateful-options-smoke.json
       - name: Goal-conditioned construction learner has frozen, masked controls (#112)
         run: |
           node game/world/test_construct_learner.mjs
