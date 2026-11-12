@@ -125,6 +125,27 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Outcome-based context memory and reversal retention (research-only)
+
+[Opt-in checkpoint memory and preregistered test](research/context-memory-pilot.md)
+preserves two independently trained sparse microcircuits. A bounded, charged
+**public-reward probe** of both policies in a toy body selects an appropriate
+checkpoint after a change in motor dynamics; no simulator context label is
+given to the selector. This separates learning connections from retrieving
+previous learning, and tests whether an old skill survives reversal.
+
+**Limits:** the experimenter specifies when a new context begins; each probe
+resets the toy body and pays extra interactions, and two checkpoints use
+roughly twice the storage. It is neither autonomous context discovery nor a
+biological hippocampus.
+
+```bash
+python research/test_context_memory.py
+python research/test_evaluate_context_memory.py
+python research/evaluate_context_memory.py --seeds 0 1 --train-episodes 6 --adapt-episodes 4 --eval-episodes 3 --probe-trials 2 --probe-steps 2 --out /tmp/context-smoke.json
+python research/result_schema.py --check /tmp/context-smoke.json
+```
+
 ## Closed-loop learned motor commands (research-only)
 
 [Opt-in sparse reaching experiment](research/closed-loop-reaching-pilot.md):
