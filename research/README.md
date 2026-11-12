@@ -1,3 +1,5 @@
+
+- [Closed-loop sparse reaching](closed-loop-reaching-pilot.md) ([10-seed outcomes](closed-loop-reaching-results-2026-11-12.md), including failed superiority criterion and reversal forgetting) — opt-in learned motor action through visual/S1 packets and the existing joint-body simulator; preregistered frozen transfer, reversal and delayed-feedback controls. **Toy task, not a human connectome.**
 # research/
 
 - [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).
