@@ -102,4 +102,38 @@ unknownField.brains[0].uncloneable = () => 1;
 assert.throws(() => cloneForEvaluation(unknownField, 42), /cannot clone brain field/,
   "future uncloneable state must fail closed instead of being aliased");
 
+// Exact budget: an option exit consumes one decision but no physical step.
+// A short training allotment cuts off the final episode without inventing an
+// environment failure reward or granting free actions.
+const budgetTask = generate(11, "train", 1)[0];
+for (const arm of ["flat", "options", "options-no-gate", "random"]) {
+  for (const budget of [1, 39, 80, 81, 137]) {
+    const instance = createModel(13, arm);
+    const result = episode(instance, budgetTask,
+      { learn: true, maxDecisions: budget, seed: 14 });
+    assert.ok(result.decisions > 0 && result.decisions <= Math.min(budget, 80));
+    assert.equal(result.envSteps + result.exits, result.decisions);
+    assert.ok(result.envSteps <= budgetTask.maxSteps);
+    if (result.truncated) assert.equal(result.reason, "training-budget-truncated");
+  }
+}
+for (const invalid of [0, -2, 1.2, Infinity, NaN])
+  assert.throws(() => episode(createModel(1, "flat"), budgetTask,
+    { maxDecisions: invalid }), /invalid primitive decision budget/);
+assert.throws(() => episode(createModel(1, "oracle"), budgetTask,
+  { maxDecisions: 1 }), /privileged oracle/);
+for (const budget of [1, 17, 79, 81, 137]) {
+  const runs = runSeed(6, { trainSteps: budget, adaptSteps: budget,
+    trainTasks: 2, evalTasks: 2, repeats: 1 });
+  for (const row of runs) {
+    if (row.arm !== "random" && row.arm !== "oracle") {
+      assert.equal(row.scores.training.decisions, budget,
+        "whole training episodes overshot the requested cap");
+      assert.equal(row.scores.adaptation.decisions, budget,
+        "whole adaptation episodes overshot the requested cap");
+      assert.ok(row.scores.training.envSteps <= budget);
+      assert.ok(row.scores.adaptation.envSteps <= budget);
+    }
+  }
+}
 console.log("stateful options: ok");
