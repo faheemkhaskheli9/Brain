@@ -98,6 +98,8 @@ jobs:
         run: node game/world/test_navigation.mjs
       - name: Construction tasks are deterministic, valid and held out (#110)
         run: node game/world/test_construct.mjs
+      - name: Stateful construction transitions, disjoint goals and independent oracle (#110/#112)
+        run: node game/world/test_stateful_construct.mjs
       - name: Goal-conditioned construction learner has frozen, masked controls (#112)
         run: |
           node game/world/test_construct_learner.mjs
