@@ -191,7 +191,7 @@ export function runSeed(seed, { trainSteps = 10000, trainTasks = 64, evalTasks =
         : randomCandidateScore(eval_, repeats, { seen: known, evalSeed });
       rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - started) / 1000,
         scores: { train: { success: null }, heldout, trainSteps: 0, trainEpisodes: 0,
-          trainingSuccess: null, trainTruncated: 0 } }));
+          trainingSuccess: null, trainTruncated: 0, heldoutGreedySuccess: null } }));
       continue;
     }
     const brain = new Brain(rng(seed * 7919 + 41)), chooseTask = rng(seed * 1741 + 17);
@@ -209,9 +209,12 @@ export function runSeed(seed, { trainSteps = 10000, trainTasks = 64, evalTasks =
       repeats, { revealGoal, maskHistory, evalSeed: evalSeed + 1 });
     const heldout = frozenScore(brain, eval_, repeats,
       { revealGoal, maskHistory, seen: known, evalSeed });
+    const greedyHeldout = frozenScore(brain, eval_, repeats,
+      { revealGoal, maskHistory, seen: known, evalSeed, greedy: true });
     rows.push(run({ arm, seed, split: "eval", status: "ok", seconds: (Date.now() - started) / 1000,
       scores: { train: { success: familiar.success }, heldout, trainSteps: steps,
-        trainEpisodes: episodes, trainingSuccess: correct / episodes, trainTruncated: truncated } }));
+        trainEpisodes: episodes, trainingSuccess: correct / episodes, trainTruncated: truncated,
+        heldoutGreedySuccess: greedyHeldout.success } }));
   }
   return rows;
 }
@@ -238,7 +241,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   if (out) writeResult(out, resultRecord({
     experiment: "brain-world/construction-learner", baseline: "learning-off", runs,
     metrics: { "heldout.success": "higher", "heldout.novel": "higher", "heldout.conditionalNovel": "higher",
-      "heldout.duplicateActionRate": "lower",
+      "heldout.duplicateActionRate": "lower", heldoutGreedySuccess: "higher",
       "train.success": "higher", trainSteps: "lower" },
     config: { seeds, trainTasks, evalTasks, repeats, arms: ARMS, provenance: PROVENANCE,
       split: "fixed disjoint train/eval constraint families; fully detached frozen evaluation",
