@@ -125,6 +125,15 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Structural human-inspired brain wiring (untrained)
+
+[Executable structural connectome](research/structural-connectome.md): a deterministic 38-region, 63-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
+
+```bash
+python research/structural_connectome.py --out /tmp/brain-graph.json --weights-out /tmp/brain-weights.json
+python -m unittest discover -s research -p 'test_structural_connectome.py'
+```
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is
