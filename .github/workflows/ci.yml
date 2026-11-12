@@ -72,6 +72,13 @@ jobs:
           python research/learn_reach.py --seeds 1 2 --train-episodes 4 --eval-episodes 3 --reverse-episodes 2 --out /tmp/reach-smoke.json
           python research/result_schema.py --check /tmp/reach-smoke.json
           python research/result_schema.py --check research/results/closed-loop-reaching-2026-11-12.json
+      - name: Sparse context checkpoint retrieval and adversarial learning controls
+        run: |
+          python research/test_context_memory.py
+          python research/test_evaluate_context_memory.py
+          python research/evaluate_context_memory.py --seeds 0 1 --train-episodes 6 --adapt-episodes 4 --eval-episodes 3 --probe-trials 2 --probe-steps 2 --out /tmp/context-memory-smoke.json
+          python research/result_schema.py --check /tmp/context-memory-smoke.json
+          python research/result_schema.py --check research/results/context-memory-2026-11-12.json
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
