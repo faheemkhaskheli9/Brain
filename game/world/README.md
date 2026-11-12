@@ -1093,6 +1093,8 @@ counts toward the declared primitive-decision budget. A final partial episode
 is labelled as truncated rather than a task-level failure. This is an
 evaluation integrity change, not an improved learning claim.
 
+[Exact-budget 10-seed result](../../research/stateful-options-exact-negative-2026-11-12.md): all six non-oracle arms scored **0.000 held-out task completion**, despite passing integrity checks; the privileged BFS ceiling reached 1.000. The primary option-transfer hypothesis **failed**. Full raw arm-by-seed records and the statistical gate are archived permanently in Git. Do not claim learned generalization from this pilot.
+
 ## References
 
 - McClelland, McNaughton and O'Reilly (1995) "Why there are complementary learning systems in the
