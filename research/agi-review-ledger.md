@@ -89,3 +89,26 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
 - Tests run, failed/skipped and raw result links:
 - Claim status (confirmed / weakened / refuted / inconclusive / untested):
 - Next minimal experiment:
+
+## Round 9 — isolated-evaluation intervention (2026-11-12)
+
+- Baseline main `49e2c6f1`, preceding v1.1 `b74396f6`. [PR #195](https://github.com/faheemkhaskheli9/Brain/pull/195): code `98544659` and source-grounded KB note `0be775b6`.
+- Attack: frozen scoring temporarily used the live learner and restored selected fields; future new state could bypass a parameter-only digest. RNG closures also cannot be deep-cloned as ordinary data.
+- Change: evaluate on an independently seeded deep copy of every owned Brain field, preserving methods but not data aliases. Fail closed for unknown noncloneable fields; test training before/after scoring, greedy performance and invalid tasks.
+- Verification: PR #195 CI and separate 10-seed stateful option workflow **passed**. They test integrity and historical pilot behavior, not new learning or AGI.
+- Counterattack: global/module state, task-object side effects, arbitrary mid-episode RNG restoration and independent test-generator leakage remain open.
+
+## Round 10 — exact interaction budget intervention (2026-11-12)
+
+- [PR #196](https://github.com/faheemkhaskheli9/Brain/pull/196), stacked on #195: code `aab50b1d`, KB `c44cd932`; both full CI and 10-seed stateful option workflow **passed**.
+- Attack: trainPhase's whole episodes could overshoot the declared budget, with EXIT counted as a decision but not a physical action. Requested steps were not necessarily actual steps.
+- Change: cap exact primitive decisions, use remaining allowance in every trainPhase episode, reject cap errors, record truncated episodes and distinguish experiment cutoff from natural timeout.
+- Counterattack: the cutoff's TD bootstrap and partial-episode schedule can still change outcomes; compare boundary policies on development tasks and disclose truncation fraction. No performance advantage claimed.
+- Next: M0c fair public-observation controls and genuinely different structural task families. Do not reuse historical budget-confounded rows as confirmatory evidence.
+
+## Round 11 — external benchmark skepticism (2026-11-12)
+
+- Sources: [ARC Prize ARC-AGI-3 competition](https://arcprize.org/competitions/2026/arc-agi-3) and [official testing policy](https://arcprize.org/policy), contrasted with independent [Epoch AI ARC-AGI-3 review](https://epoch.ai/benchmarks/arc-agi-3/review) (review date 2026-10-30; verdict **Flawed**).
+- Attack: high scores on a named AGI benchmark could mask differences in action-efficiency incentives, harness elicitation, versioning or evaluation setup. A publicly available test manifest is not secret from an agent that can read it.
+- Decision: ARC-AGI-3 is a useful **optional interactive generalization stress test**, not the sole AGI gate. Report real completion separately from action efficiency, harness/version, learning interactions, planning calls, hidden information and test contamination. Independent benchmark critique is an external report, not a result reproduced by Brain.
+- Falsification: claimed transfer must survive a second unexposed task generator and matched evaluation protocol. [Execution addendum](agi-execution-addendum-2026-11-12.md) contains the M0c implementation sequence.

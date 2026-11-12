@@ -10,6 +10,7 @@
 
 ## Executing the Brain research program
 
+- [Execution addendum: M0a/M0b tests and detailed M0c handoff](agi-execution-addendum-2026-11-12.md): status, critical adversarial findings, next implementation sequence and independent benchmark skepticism.
 - [AGI research execution blueprint v1.1](agi-execution-blueprint-v1.1-2026-11-12.md): revised canonical M0-to-M8 implementation protocol, explicit code-backed measurement blockers and ordered PR handoffs; **M0 is ready for coding, later stages conditional**.
 - [Historical execution blueprint v1.0](agi-execution-blueprint-2026-11-12.md): preserved predecessor for the Git review record.
 - [M0 code-audit knowledge note](agi-audit-knowledge-2026-11-12.md): precise source inspection, important negative limitations, primary external references, and open falsification questions; not an experiment.
