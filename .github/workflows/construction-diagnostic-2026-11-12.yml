@@ -1,0 +1,63 @@
+name: One-off preregistered construction diagnostics
+
+on:
+  push:
+    branches: [research/construction-diagnostics-2026-11-12]
+
+permissions:
+  contents: read
+
+jobs:
+  novelty:
+    name: Ten-seed fair novelty diagnostic
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Ten paired seeds with audited query costs
+        run: |
+          node game/world/novelty_fair.mjs 1 2 3 4 5 6 7 8 9 10 --tasks 30 --budget 8 --out novelty-fair-10seed.json
+          python research/result_schema.py --check novelty-fair-10seed.json
+          sha256sum novelty-fair-10seed.json > novelty-fair-10seed.sha256
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: construction-novelty-fair-10seed
+          path: |
+            novelty-fair-10seed.json
+            novelty-fair-10seed.sha256
+          if-no-files-found: warn
+          retention-days: 30
+
+  construction:
+    name: Ten-seed construction-learning diagnostic
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Ten paired seeds, exact decision budgets, sampled and greedy evaluation
+        run: |
+          node game/world/construct_learner.mjs 1 2 3 4 5 6 7 8 9 10 --train-steps 10000 --train-tasks 64 --eval-tasks 30 --repeats 5 --out construct-learner-10seed.json
+          python research/result_schema.py --check construct-learner-10seed.json
+          sha256sum construct-learner-10seed.json > construct-learner-10seed.sha256
+      - uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: construct-learner-10seed
+          path: |
+            construct-learner-10seed.json
+            construct-learner-10seed.sha256
+          if-no-files-found: warn
+          retention-days: 30
