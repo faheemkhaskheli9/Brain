@@ -125,6 +125,14 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Evidence-gated sparse brain implementation plan
+
+[Next Brain implementation plan](research/sparse-brain-next-implementation-plan.md)
+prioritizes feature-preserving neuronal populations, local credit
+assignment, closed-loop embodied learning, memory, multimodal grounding and
+empirical validation. **This is a proposed roadmap, not a capability claim.**
+It reuses the existing evidence and issues #65, #94, #112-#115 and #120/#136.
+
 ## Structural human-inspired brain wiring (untrained)
 
 [Executable structural connectome](research/structural-connectome.md): a deterministic 78-region, 142-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
