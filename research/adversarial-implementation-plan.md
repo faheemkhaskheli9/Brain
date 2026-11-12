@@ -212,3 +212,57 @@ and `node game/test_browser.mjs`.
 
 Update this state only after code and results are verified, not from an issue
 closure or a proposed design.
+
+## Next execution batch: falsify the construction pilot before adding options (2026-11-12)
+
+**Reason for this batch:** #173 delivered a fairer *engineered* novelty evaluator and #174 delivered a backprop-free construction **pilot**, but neither has a recorded confirmatory multi-seed transfer advantage. This batch narrows the existing #110–#112 work; it does not create a parallel roadmap. Preserve the frozen split, existing negative results and prior research gates.
+
+### A. P0 — audit measurements and publish the pilot baseline (#111, #112, #154)
+
+1. **Legal-action parity:** In `construct_learner.mjs`, the policy can choose the same pen stroke twice, while `random-valid` samples unique strokes. Add two controls: raw/unmasked random and syntactically masked learner/random. Distinguish this from a forbidden *goal-aware* action mask; it may exclude already-used strokes but may not reveal which stroke satisfies a goal. Record illegal-action frequency, chosen actions and decision cost.
+2. **Frozen means no adaptation or evaluation-order effects:** `frozenScore` currently hashes `P` and `v`, but `Brain.act` consumes RNG even when `learning=false`. Verify whether train-set scoring changes the later test result. Evaluate from identical copied checkpoints and isolated deterministic evaluation RNG streams; test reversed evaluation order, no weight/state updates, and sampled-policy versus greedy-policy performance. Do not count a passed weight hash as proof of fully isolated evaluation.
+3. **Novelty opportunity ceiling:** The six-stroke toy admits only 63 nonempty subsets. The pilot builds the known set by enumerating *every* valid train-task solution, not just observed experience. Calculate per-task reachable novel classes and report conditional novelty among tasks with at least one novel valid solution, alongside the unconditional score. Keep the strict historical metric, but do not equate it with useful open-ended creativity.
+4. **Complete the missing artifact:** run `novelty_fair.mjs` on preregistered seeds 1–10, 30 eval tasks/seed, eight verifier calls/task and all five existing arms. Save candidate audits and a validated `brain-result/1` artifact. Compare legal random, retrieval, blind mutation, binary feedback and *separately priced privileged graded feedback*. Do not recycle the legacy 0.49 versus 0.27 claim.
+5. **Pilot comparison:** run `construct_learner.mjs` on seeds 1–10 with 10,000 training decisions, 64 training tasks, 30 frozen eval tasks and five evaluation attempts per task. Include goal-conditioned, goal-masked, learning-off, legal random and raw random; add legal-mask parity arms only after a dev-only, declared amendment. Record every run and failure, total and adaptation-only experience, training and test success, infeasible/invalid action frequency, old-task retention, bytes, calls and wall time. Treat this as a **diagnostic** protocol, not a post-hoc winner selection.
+
+**Gate A:** All arms use comparable action/feedback budgets or are clearly labeled unequal. Frozen test results do not depend on scoring order; results and costs are reproducible, integrity-checked and archived. If the learned policy cannot beat a legal nonlearning control, diagnose representation/credit assignment **before** introducing more mechanisms.
+
+### B. P0 — make composition require real temporal dependencies (#110, #112)
+
+The current drawing validator tests an unordered subset of up to six supplied strokes; its task is not evidence of multi-step skill execution. Retain it as a unit-level construction benchmark, then introduce **one** tiny stateful environment: acquire object → carry past an obstacle → place at a requested destination, with possible failed pickup, drop and retry. Each action changes the next observation and has observable consequences. Do not expose the simulator's hidden state, task identifier, oracle route or solution enumeration to the learner.
+
+Freeze train, development and evaluation families *before* training. Hold out destination/obstacle combinations and perturb one transition rule. Include impossible goals, distractors and interrupted episodes. Supply an engineered oracle **only** as a labeled feasibility ceiling. Add tests for episode-state transitions, mask legality, reward provenance, evaluator independence and impossible-goal handling.
+
+**Gate B:** A flat backprop-free policy and valid nonlearning baselines can be run on the same environment and fail/succeed for observable reasons. If the task is solved by one fixed action macro independent of observation, redesign it rather than presenting macro execution as intelligence.
+
+### C. P1 — learn and test one reusable option hierarchy (#112)
+
+Implement *one* minimal option with an initiation condition, a learned intra-option policy and a termination decision. The manager selects options using only available observations and goals; interrupted/failed execution must return control for recovery. Distinguish designed primitive actions, designed option interfaces, learned option parameters and optional hand-scripted upper bounds. Use the existing three-factor learner; backprop and LLM baselines remain separate.
+
+Pre-register 10 paired seeds (1–10), train/dev/frozen-test splits and an equal primitive-decision **total** training budget. Compare flat trained policy, option-enabled policy, option-disabled ablation, fixed-script macro, shuffled option/termination, scratch learning and a task-specific oracle ceiling. Report zero-shot and up-to-2,000-decision adaptation separately, plus source-task retention, repeated failure, valid goal completion, compute, and training history. Match the tuning allowance on **development data**, not test. Use a paired 95% interval and the pre-existing decision rule: at least +0.10 absolute held-out success over the strongest non-oracle, budget-matched arm, interval excluding zero, and no more than -0.05 loss on source skills.
+
+**Gate C:** Keep the mechanism only if it meets the frozen evaluation rule without a disproportionate compute/cost increase. Otherwise save a negative result and audit the failed seed/task families before trying #150's corrective memory or #113's planner.
+
+### Adversarial review: code-level attacks to test in this batch
+
+| Priority | Potential failure | Evidence / adversarial test |
+|---|---|---|
+| P0 | **Unequal legal action spaces** favor the random-valid baseline or hide how often the learner wastes strokes. | `playEpisode` accepts any action in `ALLOWED`, including a prior stroke; `randomLegal` samples a set without repetitions. Compare unmasked/masked versions of **both** arms. |
+| P0 | **Evaluation RNG contamination** produces a lucky or order-dependent held-out score. | `Brain.act` samples `this.rand()` with learning disabled, while `frozenScore` checks only weight arrays; restore matched RNG and state for each eval arm and reverse scoring order. |
+| P0 | **Artificial novelty ceiling** causes apparent creativity or failure for the wrong reason. | `construct.mjs` has 2^6-1 candidates; `runSeed` excludes all enumerated train solutions. Report feasible novel classes and a nontrivial larger task before any creativity claim. |
+| P0 | **Unordered subset mistaken for learned option composition.** | The current validator ignores stroke order; require stateful dependent actions and interruption handling before accepting #112 as a reusable-skill result. |
+| P1 | **Training/test family leakage** hides in task-template variants. | Test semantic-equivalence groups and duplicate solution classes, and validate that a changed rule or new affordance is truly absent from training. |
+| P1 | **Unequal adaptation and verifier information** inflate gains. | Match primitive steps, total pretraining, repeat attempts, validator queries and memory. Keep privileged graded feedback as an explicitly unequal-information upper bound. |
+| P1 | **Winner selection and weak comparator** overstate significance. | Declare the primary effect before confirmation, publish all seeds including failures, and retain legal random, flat, fixed macro and tuned development-only comparators. |
+| P1 | **Positive new-skill metric masks forgetting.** | Score old skills before and after, and run the existing held-out/reversal guards before promoting any learned-option claim. |
+
+### Delivery order, checks and stop conditions
+
+- **PR 1 (measurement repair):** evaluation-state and legal-action controls, stronger tests, fair-novelty full artifact, diagnostic construction pilot report. No new learning architecture.
+- **PR 2 (stateful task):** minimal dependent-action environment, split generator, independent verifier, oracle upper bound, frozen tests and baseline runner.
+- **PR 3 (learned option):** one learned option plus ablations, ten-seed confirmatory artifact and honest negative/positive claim update.
+- Defer #113–#115 and #150 until Gate C is measured or rejected; #164 remains an independent repository-governance requirement.
+- For code PRs, run the applicable JS tests, `ruff check .`, `python build_index.py`, `python run_code_blocks.py`, `python research/check_claims.py` and CI's integration suites. If local execution is unavailable, report tests as **not run**; do not substitute a green smoke check for scientific evidence.
+- Reference foundations: Sutton, Precup & Singh, *Artificial Intelligence* (1999), DOI 10.1016/S0004-3702(99)00052-1 (options); Bacon, Harb & Precup, AAAI (2017), DOI 10.1609/aaai.v31i1.10916 (learned termination). These are methods to test, not proof that the Brain implementation works.
+
+**Status on 2026-11-12:** plan and adversarial review only; Gates A–C are *not* implemented or satisfied.
