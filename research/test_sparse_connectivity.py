@@ -4,9 +4,9 @@ import math
 import random
 import unittest
 
-from sparse_connectivity import SparseConnectivity, make_sparse_schematic
+from sparse_connectivity import SparseConnectivity
 from structural_connectome import Connection, LearningWeights, Region, StructuralGraph, make_schematic_graph
-from sensorimotor_bridge import SensoryPacket, SensorimotorLoop
+from sensorimotor_bridge import SensorimotorLoop
 
 
 class SparseConnectivityTests(unittest.TestCase):
