@@ -79,6 +79,14 @@ jobs:
           python research/evaluate_context_memory.py --seeds 0 1 --train-episodes 6 --adapt-episodes 4 --eval-episodes 3 --probe-trials 2 --probe-steps 2 --out /tmp/context-memory-smoke.json
           python research/result_schema.py --check /tmp/context-memory-smoke.json
           python research/result_schema.py --check research/results/context-memory-2026-11-12.json
+      - name: Online sparse context switch without resettable probes
+        run: |
+          python research/test_online_context.py
+          python research/test_evaluate_online_context.py
+          python research/evaluate_online_context.py --seeds 0 1 --train-episodes 8 --adapt-episodes 5 --phase-steps 33 41 47 39 --out /tmp/online-context-smoke.json
+          python research/result_schema.py --check /tmp/online-context-smoke.json
+          python research/test_online_context_results.py
+          python research/result_schema.py --check research/results/online-context-2026-11-12.json
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)

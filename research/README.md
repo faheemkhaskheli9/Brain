@@ -2,6 +2,8 @@
 - [Closed-loop sparse reaching](closed-loop-reaching-pilot.md) ([10-seed outcomes](closed-loop-reaching-results-2026-11-12.md), including failed superiority criterion and reversal forgetting) — opt-in learned motor action through visual/S1 packets and the existing joint-body simulator; preregistered frozen transfer, reversal and delayed-feedback controls. **Toy task, not a human connectome.**
 
 - [Sparse context memory](context-memory-pilot.md) ([ten-seed negative primary finding](context-memory-results-2026-11-12.md)) — two independently learned bounded synaptic checkpoint policies, reward-probe retrieval, source-task retention after motor reversal; preregistered controls and result schema. Not autonomous context discovery.
+
+- [Online reward-based motor context](online-context-pilot.md) ([10-seed evaluation](online-context-results-2026-11-12.md)) — causal reward-triggered switching of stored sparse motor policies on one lived stream; no candidate resets or externally signaled change boundary during evaluation; fixed controls, cost and preregistration.
 # research/
 
 - [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).

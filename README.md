@@ -125,6 +125,29 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Online reward-guided context change response (research-only)
+
+[Boundary-blind online context protocol](research/online-context-pilot.md)
+tests whether the sparse motor controller can switch between two **previously
+trained** checkpoint policies based solely on rewards from its actual actions.
+It uses one real action per feedback update, **no external context-change
+signal, no per-candidate simulator reset and no extra probe actions**.
+Two saved policies are still separately trained with engineered regime labels
+before the evaluation; this is retrieval rather than autonomous acquisition
+of new skills. Compare blind switching, reward-shuffled feedback and a
+separately labeled privileged context oracle. The [fresh 10-seed measured pilot](research/online-context-results-2026-11-12.md)
+reports +0.197 actual progress reward per action against −0.368 for the
+preselected blind-random control. The preregistered criterion passes in
+this simplified simulator (paired p=0.00195); the method does not learn
+new contexts online, and still incurs false switches.
+
+```bash
+python research/test_online_context.py
+python research/test_evaluate_online_context.py
+python research/evaluate_online_context.py --seeds 0 1 --train-episodes 8 --adapt-episodes 5 --phase-steps 33 41 47 39 --out /tmp/online-context-smoke.json
+python research/result_schema.py --check /tmp/online-context-smoke.json
+```
+
 ## Outcome-based context memory and reversal retention (research-only)
 
 [Opt-in checkpoint memory and preregistered test](research/context-memory-pilot.md)
