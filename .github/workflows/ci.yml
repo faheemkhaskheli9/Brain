@@ -64,6 +64,7 @@ jobs:
           python research/test_learn_sparse_brain.py
           python research/learn_sparse_brain.py --seeds 1 2 --train-steps 140 --eval-trials 25 --out /tmp/sparse-learning-smoke.json
           python research/result_schema.py --check /tmp/sparse-learning-smoke.json
+          python research/result_schema.py --check research/results/structural-plasticity-2026-11-12.json
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)

@@ -133,6 +133,7 @@ reward-modulated local eligibility, deterministic growth of useful candidate
 synapses, pruning of mature low-magnitude connections, and a limit of four
 active synapses. It learns only when external action reward arrives.
 Existing macroscopic anatomical pathways remain unchanged.
+The [10-seed measured toy pilot](research/sparse-plasticity-results-2026-11-12.md) reports frozen held-out accuracy of 1.000 with evidence-guided rewiring versus 0.648 for random rewiring under a deliberately missing-cue initial topology; a privileged correctly wired static network also reaches 1.000.
 
 ```bash
 python research/learn_sparse_brain.py --seeds 1 2 --train-steps 140 --eval-trials 25 --out /tmp/brain-sparse-learning-smoke.json

@@ -1,6 +1,6 @@
 # Structural micro-synapse plasticity: first backprop-free learning pilot
 
-**Status:** implementation and exploratory tests; confirmatory protocol frozen below before the new 10-seed evaluation. **Scope:** a separate 24-input/2-action microcircuit policy. Not human connectome reconstruction, not integrated with the 78-region anatomical network or with Brain World, and not learned image/audio/text recognition. Brain World's backprop-free learner is unchanged.
+**Status:** implementation, preregistered protocol, and completed 10-seed frozen evaluation. [Detailed measured results](sparse-plasticity-results-2026-11-12.md). The protocol below was committed before the confirmatory run. **Scope:** a separate 24-input/2-action microcircuit policy. Not human connectome reconstruction, not integrated with the 78-region anatomical network or with Brain World, and not learned image/audio/text recognition. Brain World's backprop-free learner is unchanged.
 
 ## Question and falsifiable hypothesis
 
