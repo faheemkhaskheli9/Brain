@@ -47,8 +47,9 @@ function train(brain, tasks, budget, revealGoal, seed, learn = true) {
   }
   return {decisions, episodes, success: wins / episodes};
 }
-function randomScore(tasks, repeats, seed) {
-  const R = rng(seed >>> 0), seen = new Set();
+function randomScore(tasks, repeats, seed, excluded) {
+  // Compare novelty against the same complete training-solution exclusion used by learners.
+  const R = rng(seed >>> 0), seen = new Set(excluded);
   let wins = 0, novel = 0, decisions = 0;
   for (const task of tasks) for (let i = 0; i < repeats; i++) {
     const strokes = randomLegal(R, task.budget);
@@ -77,7 +78,7 @@ export function runSeed(seed, cfg = {}) {
     const start = Date.now();
     try {
       if (arm === "random-valid") {
-        const r = randomScore(heldout,repeats,seed * 13 + 59);
+        const r = randomScore(heldout,repeats,seed * 13 + 59,known);
         rows.push(run({arm,seed,split:"unseen-combinations",status:"ok",seconds:(Date.now()-start)/1000,
           scores:{zeroShot:r.success,adapted:r.success,newDrawing:r.novel,oldBefore:0,oldAfter:0,
             forgetting:0,trainDecisions:0,adaptDecisions:0,evalDecisions:r.decisions}}));
