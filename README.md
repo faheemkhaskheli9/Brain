@@ -125,6 +125,79 @@ All examples require an independent verifier; this is not LLM weight training.
 Run `python research/test_agent_learning.py` and `python research/agent_learning.py`
 (offline deterministic integration demo, **not** a real-LLM accuracy result).
 
+## Structural human-inspired brain wiring (untrained)
+
+[Executable structural connectome](research/structural-connectome.md): a deterministic 78-region, 142-connection anatomical *schematic* with separately unassigned learning weights, plus an importer for user-provided undirected structural MRI matrices. This is not a mapped human connectome and it does not change Brain World's learner.
+
+```bash
+python research/structural_connectome.py --out /tmp/brain-graph.json --weights-out /tmp/brain-weights.json
+python -m unittest discover -s research -p 'test_structural_connectome.py'
+```
+
+### Sensory and motor pathways
+
+The untrained model has independent visual, auditory, somatosensory,
+olfactory, taste, vestibular and interoceptive inputs. It exposes
+an external motor-pool interface for a bounded toy body, with
+proprioceptive feedback. See the structural connectome research guide.
+
+    python research/sensorimotor_bridge.py
+
+This does **not** generate neural commands or train weights.
+
+### Image, video and text I/O (research-only)
+
+[Multimodal image/video/text adapter](research/multimodal-io.md) provides PNG/JPEG
+input, spatial vision features, timestamped MP4/AVI frames with visual changes,
+Unicode UTF-8 input packets, and explicit PNG/MP4/UTF-8 output encoders.
+It adds schematic orthography, temporal/frontal language and writing-premotor
+regions; the graph now has **78 regional nodes and 142 connections**.
+
+```bash
+pip install '.[media]'
+python research/multimodal_io.py
+python -m unittest discover -s research -p test_multimodal_io.py -v
+```
+
+Image/video/text outputs render caller-supplied data; there is no OCR,
+language understanding, neural propagation, media generation or learned
+body control in this module.
+
+### Audio input and output (research-only)
+
+The same multimodal adapter now supports PCM WAV audio input and output.
+`audio_input(...)` converts mono or stereo WAV files into timestamped
+spectral/loudness and temporal-change features for bilateral auditory cortex;
+`audio_output(...)` serializes an explicitly provided waveform to PCM16 WAV.
+See [audio I/O](research/audio-io.md) for the exact API and limits.
+
+```bash
+python research/audio_io.py
+python -m unittest discover -s research -p 'test_audio_io.py' -v
+```
+
+No speech recognition, TTS, music generation, live microphone input or
+automatic audio extraction from video is implemented.
+
+### Sparse, event-driven connectivity (research-only)
+
+[Sparse regional event router](research/sparse-connectivity.md) stores only
+154 directed traversable arcs for 78 regions (2.56% of the 6,006 potential
+directed region pairs). It visits only outgoing connections of active
+regions, skips unassigned/disabled/zero-weight pathways, and can limit
+active fan-out. The full 78-region / 142-edge schematic has no dense
+all-to-all matrix.
+
+```bash
+python research/sparse_connectivity.py
+python -m unittest discover -s research -p test_sparse_connectivity.py -v
+python research/sparse_connectivity_benchmark.py
+```
+
+This is a **selective message router**, not learned intelligence, real
+neuronal dynamics or a measured human neuronal connection density.
+Learning weights remain unassigned until an external learner supplies them.
+
 ## License
 
 Code (`*.py` and code blocks in topics) is [Apache-2.0](LICENSE); prose is
