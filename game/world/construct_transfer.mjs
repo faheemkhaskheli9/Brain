@@ -80,7 +80,7 @@ export function runSeed(seed, cfg = {}) {
       if (arm === "random-valid") {
         const r = randomScore(heldout,repeats,seed * 13 + 59,known);
         rows.push(run({arm,seed,split:"unseen-combinations",status:"ok",seconds:(Date.now()-start)/1000,
-          scores:{zeroShot:r.success,adapted:r.success,newDrawing:r.novel,oldBefore:0,oldAfter:0,
+          scores:{zeroShot:r.success,adapted:r.success,gain:0,newDrawing:r.novel,oldBefore:0,oldAfter:0,
             forgetting:0,trainDecisions:0,adaptDecisions:0,evalDecisions:r.decisions}}));
         continue;
       }
