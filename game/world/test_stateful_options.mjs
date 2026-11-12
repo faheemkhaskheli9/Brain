@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { generate } from "./stateful_construct.mjs";
 import { ARMS, EXIT, PROVENANCE, createModel, episode,
-  legalActions, modelBytes, modelDigest, scoreTasks, selectOption,
+  legalActions, modelBytes, modelDigest, cloneForEvaluation, scoreTasks, selectOption,
   runSeed } from "./stateful_options.mjs";
 
 assert.equal(EXIT, 6);
@@ -53,4 +53,53 @@ for (const row of rows) {
   if (row.arm !== "random" && row.arm !== "oracle")
     assert.ok(row.scores.training.decisions >= 10);
 }
+// Frozen scoring must not consume training RNG or mutate *any* Brain state,
+// including synaptic importance, surprise traces and optional future fields.
+const stateCopy = instance => instance.brains.map(b => Object.fromEntries(
+  Reflect.ownKeys(b).filter(k => k !== "rand").map(k => [k, structuredClone(b[k])])));
+const sourceTask = generate(29, "train", 1)[0];
+for (const arm of ["flat", "options", "options-no-gate"]) {
+  const learner = createModel(19, arm), control = createModel(19, arm);
+  for (let i = 0; i < 3; i++)
+    assert.deepEqual(episode(learner, sourceTask, { seed: 100 + i }),
+      episode(control, sourceTask, { seed: 100 + i }),
+      "identically seeded pretraining must agree");
+
+  const frozenState = stateCopy(learner);
+  const frozenDigest = modelDigest(learner);
+  const trainingRng = learner.brains.map(b => b.rand);
+  scoreTasks(learner, tasks, 2, 31);
+  scoreTasks(learner, [...tasks].reverse(), 2, 31);
+  assert.deepEqual(stateCopy(learner), frozenState, "scoring must not change actor state");
+  assert.equal(modelDigest(learner), frozenDigest);
+  for (let i = 0; i < learner.brains.length; i++)
+    assert.strictEqual(learner.brains[i].rand, trainingRng[i]);
+
+  const isolated = cloneForEvaluation(learner, 31);
+  assert.notStrictEqual(isolated.brains[0], learner.brains[0]);
+  assert.notStrictEqual(isolated.brains[0].P, learner.brains[0].P);
+  assert.notStrictEqual(isolated.brains[0].syn.P.omega, learner.brains[0].syn.P.omega);
+  isolated.brains[0].P[0] += 1;
+  isolated.brains[0].syn.P.omega[0] += 1;
+  isolated.brains[0].pi[0] += 1;
+  episode(cloneForEvaluation(learner, 44), tasks[0],
+    { learn: false, greedy: true, seed: 44 });
+  const badTask = { ...tasks[0], walls: [[2, 0]] };
+  assert.throws(() => scoreTasks(learner, [badTask]), /invalid wall placement/);
+  assert.deepEqual(stateCopy(learner), frozenState,
+    "evaluating an isolated actor, even on failure, must not mutate training");
+
+  for (let i = 0; i < 5; i++) {
+    const left = episode(learner, sourceTask, { seed: 300 + i });
+    const right = episode(control, sourceTask, { seed: 300 + i });
+    assert.deepEqual(left, right, "later training diverged after frozen evaluation");
+    assert.deepEqual(stateCopy(learner), stateCopy(control),
+      "complete actor state diverged after frozen evaluation");
+  }
+}
+const unknownField = createModel(40, "flat");
+unknownField.brains[0].uncloneable = () => 1;
+assert.throws(() => cloneForEvaluation(unknownField, 42), /cannot clone brain field/,
+  "future uncloneable state must fail closed instead of being aliased");
+
 console.log("stateful options: ok");
