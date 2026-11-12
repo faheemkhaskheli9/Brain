@@ -27,6 +27,14 @@
 - The trained options arm made fewer invalid actions than several baselines (mean frozen invalid actions per episode 6.86875 versus flat 12.928125), but its actual held-out completion was still zero. **Do not switch endpoints from success to invalid-action count** after seeing a failed primary.
 - Options final training-budget truncation occurred on 9/10 seeds; no-gate on 10/10; flat on 0/10. A future comparison must evaluate sensitivity to budget boundary and policy-specific rollout length.
 
+## Mechanism-level and comparator audit from the raw runs
+
+The engineered option learner averaged **2,559.6 policy decisions** per 32 frozen held-out episodes, but only **480.2 physical transitions**; its mean **2,079.4 EXIT decisions** were **81.24%** of its decisions. A flat learner executed 1,280.0 decisions/transitions. The option manager immediately reselects the same option after EXIT whenever the carrying state has not changed; hence EXIT is often a costly no-op, not a discovered skill-switch decision. The separate [older negative pilot](stateful-options-negative-2026-11-12.md) had independently reported a similar EXIT collapse, so this is **confirmation of an existing failure mode**, not a novel discovery.
+
+**Additional fairness warning:** the policies are matched in **training decisions** but not in frozen **evaluation decision counts or physical transitions**. The flat arm naturally exhausts its 40-step physical episode earlier, whereas the two-option arm can spend the 80-decision cap on EXIT. Report success together with actual decisions, environment steps, model bytes and option exits; the next diagnostic should compare EXIT-disabled/matched-evaluation-allowance controls and track step efficiency. The `options-no-terminate` arm also had **0.000 held-out completion**, so simply forbidding EXIT is not evidence that the underlying learner solves the task.
+
+There is already a different public-observation [tabular-Q, legal random and heuristic baseline](../game/world/stateful_baselines.mjs) for the **separate** [stateful_carry.mjs](../game/world/stateful_carry.mjs) environment. Reuse its tested tabular code/design for an identical-observation baseline on `stateful_construct.mjs` rather than building a duplicate framework. Its performance on the other environment is **not a matched control** for this 5×5 construction pilot.
+
 ## Adversarial interpretation and next experiment
 
 This negative finding cannot tell whether (a) the task horizon, reward, observation/hidden layout, or partial observability makes learning implausible; (b) the existing backprop-free actor lacks memory, exploration, credit assignment or training capacity; or (c) the engineered manager harms behavior. The tiny 4×4 per-split authored grammar means this is not independent transfer evidence. The privileged BFS oracle proves only task feasibility with full transition access, not policy learnability from public observations.
