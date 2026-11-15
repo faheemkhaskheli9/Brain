@@ -45,6 +45,10 @@ def check_checkpoint(run: dict, root: Path = ROOT) -> list[str]:
     if relative.is_absolute() or ".." in relative.parts:
         return ["checkpoint: path must stay inside repository"]
     path = root / relative
+    # Resolve every ancestor, not just the final component: a symlinked
+    # directory can otherwise redirect a checkpoint outside the archive.
+    if not path.resolve().is_relative_to(root.resolve()):
+        return ["checkpoint: path must stay inside repository"]
     if path.is_symlink() or not path.is_file():
         return ["checkpoint: missing file or symlink"]
     if hashlib.sha256(path.read_bytes()).hexdigest() != digest:

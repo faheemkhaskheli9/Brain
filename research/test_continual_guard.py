@@ -84,6 +84,18 @@ class ContinualGuardTests(unittest.TestCase):
             self.assertTrue(any("mismatch" in e for e in check_checkpoint(ref, root)))
             ref["checkpoint"]["path"] = "../model.json"
             self.assertTrue(any("inside repository" in e for e in check_checkpoint(ref, root)))
+            # A directory symlink can escape even when the file itself is not a symlink.
+            outside = root.parent / (root.name + "-outside")
+            outside.mkdir(exist_ok=True)
+            try:
+                (outside / "model.json").write_text('{"ok":true}', encoding="utf-8")
+                (root / "alias").symlink_to(outside, target_is_directory=True)
+                ref["checkpoint"] = {"path": "alias/model.json", "sha256": digest}
+                self.assertTrue(any("inside repository" in e for e in check_checkpoint(ref, root)))
+            finally:
+                (root / "alias").unlink(missing_ok=True)
+                (outside / "model.json").unlink(missing_ok=True)
+                outside.rmdir()
 
 
 if __name__ == "__main__":
