@@ -8,6 +8,19 @@
 - [Continuous motor and delayed-reward pilot](continuous-motor-pilot.md) ([frozen 10-seed results and objective-mismatch finding](continuous-motor-results-2026-11-12.md)) — one persistent physical joint across target and motor-rule changes, three-action reward latency and eight matched policy-selection arms. This is a preregistered toy experiment, not a biologically accurate brain.
 # research/
 
+## Executing the Brain research program
+
+- [Frozen exact-budget negative learning result (10 seeds)](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/stateful-options-exact-negative-2026-11-12.md): all non-oracle arms failed held-out tasks; full raw `brain-result/1` and gate saved in [Git archive](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/results/stateful-options-exact-2026-11-12.tar.br). Do not claim an option-transfer win.
+
+
+- [Execution addendum: M0a/M0b tests and detailed M0c handoff](agi-execution-addendum-2026-11-12.md): status, critical adversarial findings, next implementation sequence and independent benchmark skepticism.
+- [AGI research execution blueprint v1.1](agi-execution-blueprint-v1.1-2026-11-12.md): revised canonical M0-to-M8 implementation protocol, explicit code-backed measurement blockers and ordered PR handoffs; **M0 is ready for coding, later stages conditional**.
+- [Historical execution blueprint v1.0](agi-execution-blueprint-2026-11-12.md): preserved predecessor for the Git review record.
+- [M0 code-audit knowledge note](agi-audit-knowledge-2026-11-12.md): precise source inspection, important negative limitations, primary external references, and open falsification questions; not an experiment.
+- [Append-only adversarial review ledger](agi-review-ledger.md): chronological review rounds, rejected shortcuts, changed decisions, and a repeatable process to preserve subsequent review history in Git.
+- [Existing adversarial implementation plan](adversarial-implementation-plan.md) and [sparse brain experiment plan](sparse-brain-next-implementation-plan.md) remain detailed source plans; issue #120 owns goals and #136 owns ordering.
+
+
 - [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).
 
 | Path | What |
