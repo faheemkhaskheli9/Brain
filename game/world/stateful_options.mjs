@@ -65,15 +65,21 @@ function sensed(task, state, arm) {
 
 // Primitive-decision budget includes the option's exit action; environment steps
 // and voluntary exits are separately reported. Wrong drops can be recovered by pickup.
-export function episode(model, task, { learn = true, seed = 0, greedy = false } = {}) {
+export function episode(model, task, { learn = true, seed = 0, greedy = false,
+  maxDecisions = null } = {}) {
+  if (maxDecisions !== null && (!Number.isSafeInteger(maxDecisions) || maxDecisions < 1))
+    throw new Error("invalid primitive decision budget");
   const R = rng(mix(seed, 991)), optionActions = legalActions(model.arm);
   const old = model.brains.map(b => ({ learning: b.learning, greedy: b.greedy }));
   for (const b of model.brains) { b.learning = learn; b.greedy = !learn && greedy; }
   let state = initial(task), successes = 0, decisions = 0, exits = 0, envSteps = 0;
   let option = selectOption(model.arm, state, R), reason = "decision-budget";
-  const limit = task.maxSteps * 2;
+  const naturalLimit = task.maxSteps * 2;
+  const limit = maxDecisions === null ? naturalLimit : Math.min(naturalLimit, maxDecisions);
   try {
     if (model.arm === "oracle") {
+      if (maxDecisions !== null)
+        throw new Error("privileged oracle has no charged policy decision cap");
       const path = oracle(task);
       if (path) return { success: true, decisions: path.length, envSteps: path.length,
         invalid: 0, exits: 0, reason: "oracle" };
@@ -89,7 +95,7 @@ export function episode(model, task, { learn = true, seed = 0, greedy = false } 
       if (!optionActions.includes(action)) throw new Error("illegal option action");
       if (action === EXIT) {
         exits++;
-        b.learn(n === limit - 1 ? -0.2 : -0.04, null);
+        b.learn(n === naturalLimit - 1 ? -0.2 : -0.04, null);
         option = selectOption(model.arm, state, R);
         continue;
       }
@@ -99,15 +105,22 @@ export function episode(model, task, { learn = true, seed = 0, greedy = false } 
       if (result.success) successes++;
       const next = selectOption(model.arm, state, R);
       if (b) {
-        const last = result.done || n === limit - 1 || next !== option;
-        const reward = result.reward - (n === limit - 1 && !result.done ? 0.2 : 0);
-        b.learn(reward, last ? null : b.encode(sensed(task, state, model.arm), 0));
+        const atCap = n === limit - 1, naturalTimeout = n === naturalLimit - 1;
+        const last = result.done || atCap || next !== option;
+        const reward = result.reward - (naturalTimeout && !result.done ? 0.2 : 0);
+        // A final budget cutoff is not an environment failure. Bootstrap the
+        // same policy's next value, then clear traces for the next episode.
+        const bootstrap = atCap && !naturalTimeout && !result.done && next === option;
+        const hNext = last && !bootstrap ? null : b.encode(sensed(task, state, model.arm), 0);
+        b.learn(reward, hNext, last);
       }
       if (result.done) break;
       option = next;
     }
+    const truncated = !state.done && limit < naturalLimit && decisions === limit;
     return { success: successes > 0, decisions, envSteps,
-      invalid: state.invalid, exits, reason };
+      invalid: state.invalid, exits,
+      reason: truncated ? "training-budget-truncated" : reason, truncated };
   } finally {
     for (let i = 0; i < old.length; i++) {
       model.brains[i].learning = old[i].learning;
@@ -173,15 +186,22 @@ export function scoreTasks(model, tasks, repeats = 2, seed = 0) {
 // family. Budget is primitive + exit decisions, and is logged separately.
 function trainPhase(model, tasks, seed, budget, salt) {
   const R = rng(mix(seed, salt));
-  let decisions = 0, envSteps = 0, episodes = 0, wins = 0, invalid = 0;
+  let decisions = 0, envSteps = 0, episodes = 0, wins = 0, invalid = 0, truncated = 0;
   if (isLearned(model.arm)) while (decisions < budget) {
     const task = tasks[Math.floor(R() * tasks.length)];
+    const remaining = budget - decisions;
     const trial = episode(model, task, { learn: true,
-      seed: mix(seed, episodes + salt + 971) });
+      seed: mix(seed, episodes + salt + 971), maxDecisions: remaining });
+    if (trial.decisions < 1 || trial.decisions > remaining)
+      throw new Error("primitive decision budget exceeded or stalled");
     decisions += trial.decisions; envSteps += trial.envSteps;
     episodes++; wins += Number(trial.success); invalid += trial.invalid;
+    truncated += Number(trial.truncated);
   }
-  return { decisions, envSteps, episodes, success: episodes ? wins / episodes : null, invalid };
+  if (isLearned(model.arm) && decisions !== budget)
+    throw new Error("training did not consume exact decision budget");
+  return { decisions, envSteps, episodes, success: episodes ? wins / episodes : null,
+    invalid, truncated };
 }
 export function runSeed(seed, { trainSteps = 2000, adaptSteps = 0, trainTasks = 32,
   evalTasks = 16, repeats = 2 } = {}) {
@@ -236,7 +256,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       sourceRetentionDelta: "higher", "heldout.invalidPerEpisode": "lower", modelBytes: "lower" },
     budgets: { trainingDecisionsPerArm: trainSteps, adaptationDecisionsPerArm: adaptSteps,
       evalEpisodes: evalTasks * repeats,
-      optionExitCountsAsDecision: true, trainingOvershoot: "episode boundary, logged per run" },
+      optionExitCountsAsDecision: true, trainingOvershoot: "none (exact cap)",
+      budgetCutoffBootstrap: "next-value bootstrap when option continues; no artificial timeout penalty" },
     config: { seeds, trainTasks, evalTasks, repeats, arms: ARMS, provenance: PROVENANCE,
       splits: "train pretraining, dev adaptation, frozen eval; disjoint goal-pair families",
       limitations: "Engineered option initiation and reward; no learned option discovery or statistically confirmed advantage" },
