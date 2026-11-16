@@ -7,7 +7,7 @@ from analyze_stateful_options import ARMS, audit
 
 
 def fixture(treatment: float = 0.7, baseline: float = 0.4,
-            retained: float = -0.01) -> dict:
+            retained: float = -0.01, exact: bool = True) -> dict:
     runs = []
     for seed in range(1, 11):
         for arm in ARMS:
@@ -22,8 +22,8 @@ def fixture(treatment: float = 0.7, baseline: float = 0.4,
                 "sourceAfter": {
                     "success": source + retained if arm == "options" else source
                 },
-                "training": {"decisions": 10006},
-                "adaptation": {"decisions": 2005},
+                "training": {"decisions": 10000 if exact else 10006},
+                "adaptation": {"decisions": 2000 if exact else 2005},
             }
             runs.append({
                 "seed": seed, "arm": arm, "split": "eval", "status": "ok",
@@ -34,7 +34,9 @@ def fixture(treatment: float = 0.7, baseline: float = 0.4,
         "experiment": "brain-world/stateful-options-pilot",
         "config": {"seeds": list(range(1, 11))},
         "budgets": {"trainingDecisionsPerArm": 10000,
-                    "adaptationDecisionsPerArm": 2000},
+                    "adaptationDecisionsPerArm": 2000,
+                    "trainingOvershoot": "none (exact cap)" if exact
+                    else "episode boundary, logged per run"},
         "runs": runs,
     }
 
@@ -50,6 +52,10 @@ def must_fail(record: dict, reason: str) -> None:
 
 passing = audit(fixture())
 assert passing["gate"] == "pass"
+assert passing["budget_protocol"] == "exact"
+legacy = audit(fixture(exact=False))
+assert legacy["budget_protocol"] == "legacy-overshoot"
+assert legacy["gate"] == "fail", "overshoot-era evidence cannot confirm an exact-budget claim"
 assert abs(passing["delta"] - 0.3) < 1e-9
 assert passing["delta_ci95"][0] > 0
 assert passing["n_seeds"] == 10
@@ -70,6 +76,15 @@ must_fail(wrongbudget, "exactly 10000")
 underbudget = fixture()
 underbudget["runs"][0]["scores"]["training"]["decisions"] = 1
 must_fail(underbudget, "unmatched")
+overbudget = fixture()
+overbudget["runs"][0]["scores"]["training"]["decisions"] = 10001
+must_fail(overbudget, "unmatched")
+invalid_type = fixture()
+invalid_type["runs"][0]["scores"]["training"]["decisions"] = "10000"
+must_fail(invalid_type, "unmatched")
+unknown_mode = fixture()
+unknown_mode["budgets"]["trainingOvershoot"] = "unlimited"
+must_fail(unknown_mode, "unknown budget protocol")
 failed = fixture()
 failed["runs"][0]["status"] = "timeout"
 must_fail(failed, "failed run")
