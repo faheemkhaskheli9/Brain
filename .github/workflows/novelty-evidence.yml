@@ -30,7 +30,7 @@ jobs:
             --tasks 30 --budget 8 --out /tmp/brain-evidence/novelty-fair-10seed.json
           python research/result_schema.py --check /tmp/brain-evidence/novelty-fair-10seed.json
       - name: Preserve every seed and candidate audit (no automatic claims)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: novelty-fair-10seed
           path: /tmp/brain-evidence/novelty-fair-10seed.json

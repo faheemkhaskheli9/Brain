@@ -52,7 +52,7 @@ jobs:
             echo "Pre-registered scientific improvement criterion NOT met (a valid negative result)"
           fi
       - name: Preserve all arms, seeds, failures and evidence decision
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stateful-options-10seed
           path: /tmp/stateful-evidence/
