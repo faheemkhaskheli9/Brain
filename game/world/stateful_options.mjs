@@ -116,23 +116,40 @@ export function episode(model, task, { learn = true, seed = 0, greedy = false } 
   }
 }
 
+// Isolate every owned mutable field, not only the arrays in modelDigest.
+// A single structuredClone preserves nested typed arrays and any internal aliases;
+// the opaque training RNG closure is deliberately never shared with evaluation.
+// Fail closed if a future Brain field cannot safely be copied.
+export function cloneForEvaluation(model, seed) {
+  if (!Number.isSafeInteger(seed) || seed < 0) throw new Error("invalid evaluation seed");
+  return { arm: model.arm, brains: model.brains.map((brain, i) => {
+    const descriptors = Object.getOwnPropertyDescriptors(brain), fields = {};
+    for (const key of Reflect.ownKeys(brain)) {
+      if (typeof key !== "string") throw new Error("cannot clone symbol brain field");
+      if (key === "rand") continue;
+      const descriptor = descriptors[key];
+      if (!Object.hasOwn(descriptor, "value") || typeof descriptor.value === "function")
+        throw new Error("cannot clone brain field: " + key);
+      fields[key] = descriptor.value;
+    }
+    const copied = structuredClone(fields);
+    const isolated = Object.create(Object.getPrototypeOf(brain));
+    for (const [key, descriptor] of Object.entries(descriptors)) {
+      if (key !== "rand")
+        Object.defineProperty(isolated, key, { ...descriptor, value: copied[key] });
+    }
+    if (typeof brain.rand !== "function") throw new Error("invalid brain RNG");
+    isolated.rand = rng(mix(seed, i + 47));
+    return isolated;
+  }) };
+}
+
 function frozenEpisode(model, task, seed) {
+  // Never let scoring modify the source actor, even if future Brain.encode,
+  // act or learn methods gain extra mutable state. The old weight digest is
+  // retained as a redundant guard, not as a completeness proof.
   const before = modelDigest(model);
-  const saved = model.brains.map((b, i) => ({
-    rand: b.rand, h: b.h, dopamine: b.dopamine, pi: b.pi.slice(),
-    nActive: b.nActive, nEncode: b.nEncode, learning: b.learning, greedy: b.greedy,
-  }));
-  model.brains.forEach((b, i) => { b.rand = rng(mix(seed, i + 47)); });
-  let result;
-  try { result = episode(model, task, { learn: false, seed }); }
-  finally {
-    model.brains.forEach((b, i) => {
-      const old = saved[i];
-      b.rand = old.rand; b.h = old.h; b.dopamine = old.dopamine;
-      b.pi.set(old.pi); b.nActive = old.nActive; b.nEncode = old.nEncode;
-      b.learning = old.learning; b.greedy = old.greedy;
-    });
-  }
+  const result = episode(cloneForEvaluation(model, seed), task, { learn: false, seed });
   if (before !== modelDigest(model))
     throw new Error("frozen stateful scoring changed the learner");
   return result;

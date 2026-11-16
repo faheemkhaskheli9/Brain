@@ -1075,6 +1075,18 @@ kept them.
 - Limbs in a physics engine (for example Rapier). The torque and pattern-generator legs (#38) are
   hand-written dynamics, not physics, and the discrete legs stay the default.
 
+## Frozen option evaluation integrity (#112/#154; research-only)
+
+The separate [stateful construction option pilot](stateful_options.mjs) scores
+backprop-free policies on an isolated deep copy, including eligibility,
+synaptic-importance, hidden, and optional cached state. Evaluation uses its
+own RNG, not a temporarily swapped training RNG. [Audit, tests, and remaining
+limitations](../../research/stateful-frozen-evaluation-audit-2026-11-12.md).
+This is an evaluation integrity change, **not** a demonstrated gain in
+compositional transfer or evidence of AGI. Direct `episode(..., {learn:false})`
+on a live model is still a stateful performance step; use `scoreTasks`
+when isolation is required.
+
 ## References
 
 - McClelland, McNaughton and O'Reilly (1995) "Why there are complementary learning systems in the
