@@ -172,6 +172,8 @@ jobs:
           python research/check_m0c_calibration.py /tmp/m0c-calibration-smoke.json
       - name: M0c calibration artifact mutation gate
         run: python research/test_check_m0c_calibration.py
+      - name: Calibration paired uncertainty and analysis integrity
+        run: python research/test_analyze_m0c_calibration.py
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
         run: |
           node game/world/test_stateful_options.mjs
