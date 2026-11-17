@@ -1,0 +1,62 @@
+name: M0c mechanistic sensor and TD audit
+
+on:
+  pull_request:
+    paths:
+      - game/world/stateful_credit_probe.mjs
+      - game/world/test_stateful_credit_probe.mjs
+      - research/analyze_m0c_credit_probe.py
+      - .github/workflows/m0c-credit-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mechanism:
+    name: Fixed-geometry sensor, entropy and TD ablations (10 seeds)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test isolation, raw sensory access and TD counterexample
+        run: |
+          node game/world/test_stateful_credit_probe.mjs
+          python research/test_analyze_m0c_credit_probe.py
+      - name: Run 10 paired initializations and fixed 4,000-decision budgets
+        run: |
+          node game/world/stateful_credit_probe.mjs 1 2 3 4 5 6 7 8 9 10 \
+            --checkpoints 0,250,1000,4000 --repeats 12 \
+            --out /tmp/m0c-credit.json
+      - name: Audit every learned action and preserve paired uncertainty
+        run: |
+          python research/result_schema.py --check /tmp/m0c-credit.json
+          python research/analyze_m0c_credit_probe.py /tmp/m0c-credit.json \
+            /tmp/m0c-credit-analysis.json
+      - name: Expose complete evidence for Git archiving
+        run: |
+          python - <<'PY'
+          import json
+          for path, marker in (
+              ('/tmp/m0c-credit.json', 'M0C_CREDIT_JSON='),
+              ('/tmp/m0c-credit-analysis.json', 'M0C_CREDIT_ANALYSIS_JSON='),
+          ):
+              with open(path, encoding='utf-8') as fh:
+                  content = json.load(fh)
+              print(marker + json.dumps(content, sort_keys=True, separators=(',', ':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m0c-credit-audit-${{ github.sha }}
+          path: |
+            /tmp/m0c-credit.json
+            /tmp/m0c-credit-analysis.json
+          if-no-files-found: warn
+          retention-days: 30
