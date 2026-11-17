@@ -60,7 +60,7 @@ for (const entry of a.rows) {
     assert.ok(s[x].success >= 0 && s[x].success <= 1);
     assert.equal(s[x].exits, 0);
     assert.equal(s[x].envSteps, s[x].decisions);
-    assert.equal(s[x].episodes, (x === "source" ? cfg.trainTasks : 
+    assert.equal(s[x].episodes, (x === "source" ? Math.min(cfg.trainTasks, cfg.evalTasks) : 
       x === "development" ? cfg.devTasks : cfg.evalTasks) * cfg.repeats);
   }
   assert.equal(s.oracleQueries, 0);

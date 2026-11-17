@@ -167,11 +167,11 @@ function scorePublic(model, arm, tasks, repeats, seed) {
   let successes = 0, invalid = 0, decisions = 0, rewardSum = 0, censored = 0;
   for (const task of tasks) for (let i = 0; i < repeats; i++) {
     const s = evaluationSeed(seed, task, i);
+    // The random arm's RNG is seeded independently for each evaluation task.
+    const R = rng(s);
     const policy = arm.startsWith("tabular") ? model.clone(s) :
       arm === "uniform-random" ? { act: () => pick(R, ALLOWED) } :
         new PublicMazeHeuristic();
-    // The random arm's RNG is seeded independently for each evaluation task.
-    const R = rng(s);
     const outcome = rollout(task, policy);
     successes += Number(outcome.success);
     invalid += outcome.invalid;
