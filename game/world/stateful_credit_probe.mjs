@@ -2,7 +2,7 @@
 // All learned arms preserve the existing backprop-free Brain class, same six primitives,
 // transitions and reward. Single-task ablations diagnose mechanisms; NOT heldout transfer.
 import { pathToFileURL } from "node:url";
-import { Brain, GAINS, rng } from "./brain.js";
+// Brain remains a separately imported class through the existing stateful model adapter.
 import { ALLOWED, initial, observe, transition } from "./stateful_construct.mjs";
 import { TASK, PROBES } from "./stateful_calibration.mjs";
 import { cloneForEvaluation, createModel, modelBytes } from "./stateful_options.mjs";
@@ -222,9 +222,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     budgets: { physicalDecisionsPerArm: checkpoints.at(-1),
       policyOracleQueriesPerArm: 0, frozenScoring: true,
       note: "same fixed task; two-step arm has simpler objective, not fair geometry transfer" },
-    metrics: { "curve.0.calibration.success": "higher",
-      trainDecisions: "lower", trainInvalid: "lower",
-      trainMeanAbsTD: "lower" },
+    metrics: { trainDeliveries: "higher", trainInvalid: "lower",
+      trainEnvSteps: "lower" },
   }));
   for (const arm of ARMS) {
     const group = runs.filter(r => r.arm === arm && r.status === "ok");

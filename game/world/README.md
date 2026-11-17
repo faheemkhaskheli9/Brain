@@ -772,6 +772,21 @@ The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-1
 
 [Executed ten-seed calibration](../../research/m0c-fixed-calibration-results-2026-11-17.md): Brain repeated-task delivery 5.00% to 9.17% (paired improvement CI spans zero), versus 0.83% to 100% for public tabular Q. This is a diagnostic learning gap, not independent structural transfer.
 
+## M0c causal credit and sensory audit (#112/#153)
+
+Six controlled native Brain arms test its direct observation channels, policy entropy,
+goal-counterfactual sensitivity, terminal/bootstrap credit, and an explicit no-reward
+control on repeated two- and three-step pickup/delivery tasks. **No backprop** is
+introduced. This is a mechanism diagnostic, not a structural transfer claim.
+
+```bash
+node game/world/test_stateful_credit_probe.mjs
+node game/world/stateful_credit_probe.mjs 1 2 3 --checkpoints 0,250,1000,4000 --repeats 12 --out /tmp/credit.json
+python research/result_schema.py --check /tmp/credit.json
+```
+
+See the [preregistered adversarial protocol](../../research/m0c-sensory-credit-audit-2026-11-18.md).
+
 ## M0c fixed-task learning diagnosis (#112/#153)
 
 To diagnose zero heldout delivery, use the backprop-free learner and public-state Q
