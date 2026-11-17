@@ -10,6 +10,7 @@
 
 ## Executing the Brain research program
 
+- [M0c fixed-geometry feedback/exploration calibration](m0c-fixed-calibration-protocol-2026-11-17.md): seven-arm same-task diagnosis with input representation, exploration, engineered feedback, negative controls and frozen learning checkpoints; 10-seed evidence pending.
 - [Executed M0c ten-seed negative result and raw evidence](m0c-ten-seed-evidence-2026-11-17.md): 180 arm/seed records; Brain 0% physical heldout delivery on legacy and both obstacle-transfer directions; engineered heuristic 100%. **Exploratory, M1 still HOLD.**
 - [M0c bidirectional structural stress and ten-seed evidence protocol](m0c-structural-transfer-protocol-2026-11-17.md): randomized starts, scattered-vs-divider topologies, offline feasibility accounting, reproducible ten-seed artifact workflow, paired CIs and explicit stop/go limits; no AGI claim.
 

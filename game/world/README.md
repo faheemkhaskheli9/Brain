@@ -770,6 +770,21 @@ over 8 seeds. Paired sign-flip p against scratch:
 
 The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-17.md) reports **0% heldout physical delivery by the current flat Brain learner** on legacy and two structural stress directions, versus **100% by a supplied public-sensor maze heuristic**; this is a negative learning result, not demonstrated generalization.
 
+## M0c fixed-task learning diagnosis (#112/#153)
+
+To diagnose zero heldout delivery, use the backprop-free learner and public-state Q
+on a **single repeated** pickup–east–drop task. Compare native reward,
+exploration, supplied goal-distance feedback shaping, zero feedback, and random.
+This is a learnability calibration, **not a transfer benchmark**.
+
+```bash
+node game/world/test_stateful_calibration.mjs
+node game/world/stateful_calibration.mjs 1 2 3 --checkpoints 0,250,1000,4000 --repeats 12 --out /tmp/m0c-calibration.json
+python research/result_schema.py --check /tmp/m0c-calibration.json
+```
+
+See the [reproducible calibration protocol](../../research/m0c-fixed-calibration-protocol-2026-11-17.md).
+
 ## Structural transfer stress (M0c, #110/#112)
 
 Run ten-seed, frozen heldout construction baselines with independently sampled
