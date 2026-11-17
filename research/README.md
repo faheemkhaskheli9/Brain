@@ -10,6 +10,8 @@
 
 ## Executing the Brain research program
 
+- [Executed ten-seed native Brain credit study](m0c-sensory-credit-results-2026-11-18.md): 60 valid runs; two-step 97.5%, three-step 10%, removing prior eligibility traces 0%; independent transfer not shown, scientific HOLD.
+- [M0c sensory-input and TD-credit adversarial diagnostic](m0c-sensory-credit-audit-2026-11-18.md): controlled direct-channel audit, frozen target counterfactual, goal masking, trace/critic ablations, short-task and zero-reward controls on the native backprop-free Brain; ten-seed evidence pending.
 - [Executed ten-seed fixed-task learning diagnostic](m0c-fixed-calibration-results-2026-11-17.md): Brain 5% to 9.17% same-task delivery (paired gain CI includes zero); public-state Q reaches 100% on the repeated task, but not validated independent transfer. Raw data and uncertainty archived. **M1 HOLD.**
 - [M0c fixed-geometry feedback/exploration calibration](m0c-fixed-calibration-protocol-2026-11-17.md): seven-arm same-task diagnosis with input representation, exploration, engineered feedback, negative controls and frozen learning checkpoints; 10-seed evidence pending.
 - [Executed M0c ten-seed negative result and raw evidence](m0c-ten-seed-evidence-2026-11-17.md): 180 arm/seed records; Brain 0% physical heldout delivery on legacy and both obstacle-transfer directions; engineered heuristic 100%. **Exploratory, M1 still HOLD.**

@@ -1,0 +1,128 @@
+{
+  "advancement": "HOLD: repeated-task mechanistic diagnostic, no sealed transfer",
+  "arms": {
+    "mask-goal": {
+      "averageTrainMeanAbsTD": 0.08820506924472263,
+      "beforeSuccess": 0.025,
+      "finalCi95": [
+        0.041666666666666664,
+        0.14166666666666666
+      ],
+      "finalSuccess": 0.09166666666666666,
+      "gain": 0.06666666666666667,
+      "gainCi95": [
+        0.025,
+        0.10833333333333332
+      ],
+      "goalSensitivityL1": 0,
+      "nearbyVariants": 0.041666666666666664,
+      "totalTrainingDeliveries": 205
+    },
+    "native-three": {
+      "averageTrainMeanAbsTD": 0.0748317451743984,
+      "beforeSuccess": 0.025,
+      "finalCi95": [
+        0.041666666666666664,
+        0.18333333333333332
+      ],
+      "finalSuccess": 0.1,
+      "gain": 0.075,
+      "gainCi95": [
+        0.016666666666666666,
+        0.15833333333333335
+      ],
+      "goalSensitivityL1": 0.08444469794631004,
+      "nearbyVariants": 0.05,
+      "totalTrainingDeliveries": 166
+    },
+    "native-two": {
+      "averageTrainMeanAbsTD": 0.14668200667501435,
+      "beforeSuccess": 0.1,
+      "finalCi95": [
+        0.95,
+        1
+      ],
+      "finalSuccess": 0.975,
+      "gain": 0.875,
+      "gainCi95": [
+        0.7916666666666666,
+        0.9416666666666667
+      ],
+      "goalSensitivityL1": 0.0013342857360839843,
+      "nearbyVariants": 0.04583333333333333,
+      "totalTrainingDeliveries": 7698
+    },
+    "no-bootstrap": {
+      "averageTrainMeanAbsTD": 0.0684727338132459,
+      "beforeSuccess": 0.025,
+      "finalCi95": [
+        0,
+        0.05
+      ],
+      "finalSuccess": 0.025,
+      "gain": 0,
+      "gainCi95": [
+        -0.03333333333333333,
+        0.03333333333333333
+      ],
+      "goalSensitivityL1": 0.11779251173138619,
+      "nearbyVariants": 0.016666666666666666,
+      "totalTrainingDeliveries": 88
+    },
+    "trace-one-step": {
+      "averageTrainMeanAbsTD": 0.06699523154494134,
+      "beforeSuccess": 0.025,
+      "finalCi95": [
+        0,
+        0
+      ],
+      "finalSuccess": 0,
+      "gain": -0.025,
+      "gainCi95": [
+        -0.05,
+        0
+      ],
+      "goalSensitivityL1": 0.16594946831464769,
+      "nearbyVariants": 0.020833333333333332,
+      "totalTrainingDeliveries": 70
+    },
+    "zero-feedback": {
+      "averageTrainMeanAbsTD": 0,
+      "beforeSuccess": 0.025,
+      "finalCi95": [
+        0,
+        0.05
+      ],
+      "finalSuccess": 0.025,
+      "gain": 0,
+      "gainCi95": [
+        0,
+        0
+      ],
+      "goalSensitivityL1": 0,
+      "nearbyVariants": 0.020833333333333332,
+      "totalTrainingDeliveries": 131
+    }
+  },
+  "checkpoints": [
+    0,
+    250,
+    1000,
+    4000
+  ],
+  "limits": "Two-step arm has a different objective; goal mask on fixed geometry does not test goal following; action trajectories diverge after learning.",
+  "schema": "brain-m0c-credit-audit/1",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "sourceCommit": "916d4b3"
+}
