@@ -7,8 +7,8 @@ import { rng } from "./brain.js";
 import { TabularQ } from "./stateful_baselines.mjs";
 import { createModel, episode as brainEpisode, scoreTasks as brainScore,
   modelBytes as brainBytes } from "./stateful_options.mjs";
-import { ALLOWED, SIDE, START, generate, initial, observe, transition,
-  validateTask } from "./stateful_construct.mjs";
+import { ALLOWED, SIDE, generate, initial, observe, transition } from "./stateful_construct.mjs";
+import { PROTOCOLS, physicalFingerprint, createStructuralBenchmark } from "./stateful_structural.mjs";
 import { resultRecord, run, writeResult } from "./result.mjs";
 
 export const ARMS = Object.freeze(["flat", "flat-goal-masked", "tabular-absolute",
@@ -111,11 +111,7 @@ export class PublicMazeHeuristic {
   }
 }
 
-export function structureKey(task) {
-  validateTask(task);
-  const walls = task.walls.map(([x, y]) => y * SIDE + x).sort((a, b) => a - b);
-  return JSON.stringify([START, task.item, task.goal, walls, task.maxSteps, "legacy-dynamics-v1"]);
-}
+export const structureKey = physicalFingerprint;
 
 export function buildManifest(train, dev, heldout) {
   const parts = { train, dev, heldout }, indexed = {}, hashes = {}, counts = {};
@@ -188,15 +184,22 @@ function scorePublic(model, arm, tasks, repeats, seed) {
 function trainedArm(arm) { return TRAINED.has(arm); }
 export function runSeed(seed, options = {}) {
   const { trainSteps = 10000, trainTasks = 32, devTasks = 16, evalTasks = 16,
-    repeats = 2 } = options;
+    repeats = 2, protocol = "legacy" } = options;
   if (![seed, trainSteps, trainTasks, devTasks, evalTasks, repeats]
     .every(Number.isSafeInteger) || seed < 0 ||
-      Math.min(trainSteps, trainTasks, devTasks, evalTasks, repeats) < 1)
+      Math.min(trainSteps, trainTasks, devTasks, evalTasks, repeats) < 1 ||
+      !PROTOCOLS.includes(protocol))
     throw new Error("invalid control budgets/seed");
-  const train = generate(seed, "train", trainTasks);
-  const dev = generate(seed, "dev", devTasks);
-  const heldout = generate(seed, "eval", evalTasks);
+  const generated = protocol === "legacy" ? {
+    train: generate(seed, "train", trainTasks),
+    dev: generate(seed, "dev", devTasks),
+    heldout: generate(seed, "eval", evalTasks), audit: { protocol: "legacy",
+      totalOfflineOracleQueries: 0 },
+  } : createStructuralBenchmark(seed, protocol, {
+    train: trainTasks, dev: devTasks, heldout: evalTasks });
+  const { train, dev, heldout, audit: generatorAudit } = generated;
   const manifest = buildManifest(train, dev, heldout);
+  manifest.generator = protocol === "legacy" ? manifest.generator : generatorAudit;
   const rows = [];
   for (const arm of ARMS) {
     const start = Date.now();
@@ -223,24 +226,30 @@ export function runSeed(seed, options = {}) {
       if (trainedArm(arm) && trainDecisions !== trainSteps)
         throw new Error("exact training budget violated");
       const score = (tasks, salt) => isBrain ?
-        brainScore(model, tasks, repeats, mix(seed, salt)) :
+        // Older scoreTasks hashes task.id for evaluation RNG. In stress mode,
+        // substitute the physical fingerprint to prove IDs cannot steer noise.
+        brainScore(model, protocol === "legacy" ? tasks :
+          tasks.map(t => ({ ...t, id: structureKey(t) })),
+          repeats, mix(seed, salt)) :
         scorePublic(model, arm, tasks, repeats, mix(seed, salt));
       const source = score(train.slice(0, Math.min(train.length, evalTasks)), 101);
       const development = score(dev, 103);
       const evaluation = score(heldout, 107);
       const bytes = isBrain ? brainBytes(model) :
         model?.bytesEstimate ?? 0;
-      rows.push(run({ arm, seed, split: "legacy-goal-pair-holdout", status: "ok",
+      rows.push(run({ arm, seed, split: protocol === "legacy" ?
+        "legacy-goal-pair-holdout" : "structural-" + protocol, status: "ok",
         seconds: (Date.now() - start) / 1000,
         scores: { source, development, heldout: evaluation, trainDecisions,
           trainEnvSteps, trainEpisodes, truncatedTrain, modelBytesEstimate: bytes,
           tableStates: model?.states ?? 0, oracleQueries: 0 } }));
     } catch (e) {
-      rows.push(run({ arm, seed, split: "legacy-goal-pair-holdout", status: "error",
+      rows.push(run({ arm, seed, split: protocol === "legacy" ?
+        "legacy-goal-pair-holdout" : "structural-" + protocol, status: "error",
         reason: String(e?.message || e), seconds: (Date.now() - start) / 1000, scores: {} }));
     }
   }
-  return { rows, manifest };
+  return { rows, manifest, generatorAudit };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
@@ -253,12 +262,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const devTasks = Number(option("--dev-tasks", "16"));
   const evalTasks = Number(option("--eval-tasks", "16"));
   const repeats = Number(option("--repeats", "2"));
+  const protocol = option("--protocol", "legacy");
   const out = option("--out", null);
   const seeds = argv.length ? argv.map(Number) : [1, 2, 3];
   if (!out || !seeds.length || new Set(seeds).size !== seeds.length ||
       seeds.some(s => !Number.isSafeInteger(s) || s < 0))
     throw new Error("usage: node game/world/stateful_construct_controls.mjs --out RESULT.json [--train-steps N] [seed ...]");
-  const cfg = { trainSteps, trainTasks, devTasks, evalTasks, repeats };
+  const cfg = { trainSteps, trainTasks, devTasks, evalTasks, repeats, protocol };
   const groups = seeds.map(seed => {
     try { return runSeed(seed, cfg); }
     catch (e) {
@@ -272,14 +282,16 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     experiment: "brain-world/stateful-construct-m0c-controls",
     baseline: "tabular-relative", runs,
     budgets: { exactPrimitiveDecisionsPerTrainedArm: trainSteps, oracleQueriesPerArm: 0,
+      offlineGeneratorOracleQueries: groups.map(g => g.generatorAudit?.totalOfflineOracleQueries ?? null),
       physicalTransitionsCharged: true, evaluationEpisodesPerSplit: evalTasks * repeats },
     metrics: { "heldout.success": "higher", "development.success": "higher",
       "source.success": "higher", "heldout.invalidPerEpisode": "lower",
       trainDecisions: "lower", modelBytesEstimate: "lower" },
     config: { ...cfg, seeds, arms: ARMS,
       manifests: Object.fromEntries(seeds.map((seed, i) => [seed, groups[i].manifest])),
+      generatorAudits: Object.fromEntries(seeds.map((seed, i) => [seed, groups[i].generatorAudit])),
       provenance: "all controls share stateful_construct.observe/transition and six public actions; heuristic uses only locally discovered walls; relative tabular has authored coordinate inductive bias; flat uses existing backprop-free Brain; no oracle during any learning/evaluation",
-      limitations: "Legacy authored goal-pair and four-template geometry pilot; no novel structural families, no sealed transfer claim, no independently tuned stronger gradient RL, no AGI result" },
+      limitations: "Legacy: 16 templated configurations/split. Structural stress: two authored 5x5 families with shifted starts and different wall topologies. Generator uses BFS offline with recorded queries; no independently sealed 20-seed confirmatory transfer, no gradient RL comparator, no AGI claim." },
   }));
   for (const arm of ARMS) {
     const group = runs.filter(x => x.arm === arm && x.status === "ok");

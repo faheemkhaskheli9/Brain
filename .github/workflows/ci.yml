@@ -157,6 +157,11 @@ jobs:
           node game/world/test_stateful_construct_controls.mjs
           node game/world/stateful_construct_controls.mjs 1 --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-controls-smoke.json
           python research/result_schema.py --check /tmp/m0c-controls-smoke.json
+      - name: M0c independent structural generator and paired family smoke (#110/#112)
+        run: |
+          node game/world/test_stateful_structural.mjs
+          node game/world/stateful_construct_controls.mjs 1 --protocol scattered-to-barrier --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-stress-smoke.json
+          python research/result_schema.py --check /tmp/m0c-stress-smoke.json
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
         run: |
           node game/world/test_stateful_options.mjs
