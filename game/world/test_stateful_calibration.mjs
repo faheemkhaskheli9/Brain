@@ -61,6 +61,10 @@ for (const r of first) {
   assert.equal(s.trainDecisions, r.arm === "uniform-random" ? 0 : 19);
   assert.equal(s.trainEnvSteps, s.trainDecisions);
   assert.ok(s.training.pickups >= 0);
+  if (r.arm === "flat-brain" || r.arm.startsWith("q-"))
+    assert.ok(s.modelBytesEstimate > 0, "learned parameter payload must be charged");
+  assert.ok(Number.isFinite(s.training.environmentRewardSum));
+  assert.ok(Number.isFinite(s.training.learningFeedbackSum));
   if (r.arm === "q-relative-no-reward") assert.ok(s.trainingEpisodes > 0);
 }
 const control = first.find(r => r.arm === "uniform-random");

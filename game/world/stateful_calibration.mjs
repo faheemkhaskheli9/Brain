@@ -6,7 +6,7 @@ import { pathToFileURL } from "node:url";
 import { rng } from "./brain.js";
 import { ALLOWED, initial, observe, transition } from "./stateful_construct.mjs";
 import { PublicTabular, publicStateKey } from "./stateful_construct_controls.mjs";
-import { cloneForEvaluation, createModel, modelDigest } from "./stateful_options.mjs";
+import { cloneForEvaluation, createModel, modelDigest, modelBytes } from "./stateful_options.mjs";
 import { resultRecord, run, writeResult } from "./result.mjs";
 
 export const ARMS = Object.freeze(["flat-brain", "q-absolute", "q-relative",
@@ -174,7 +174,8 @@ export function runSeed(seed, { checkpoints = [0, 250, 1000, 4000],
       const trained = TRAINED.has(arm);
       let spent = 0, environmentSteps = 0, trainingEpisodes = 0;
       const training = { pickups: 0, invalid: 0, failedPickups: 0,
-        misplaced: 0, blocked: 0, successes: 0, truncatedEpisodes: 0 };
+        misplaced: 0, blocked: 0, successes: 0, truncatedEpisodes: 0,
+        environmentRewardSum: 0, learningFeedbackSum: 0 };
       for (const target of checkpoints) {
         if (trained) while (spent < target) {
           const remaining = target - spent;
@@ -190,6 +191,8 @@ export function runSeed(seed, { checkpoints = [0, 250, 1000, 4000],
           training.failedPickups += result.failedPickups;
           training.misplaced += result.misplaced;
           training.blocked += result.blocked;
+          training.environmentRewardSum += result.rewardSum;
+          training.learningFeedbackSum += result.feedbackSum;
           training.successes += Number(result.success);
           training.truncatedEpisodes += Number(result.truncated);
         }
@@ -208,7 +211,8 @@ export function runSeed(seed, { checkpoints = [0, 250, 1000, 4000],
           trainDecisions: spent, trainEnvSteps: environmentSteps,
           trainingEpisodes, training, oracleQueries: 0,
           tableStates: arm.startsWith("q-") ? model.states : 0,
-          modelBytesEstimate: arm.startsWith("q-") ? model.bytesEstimate : 0,
+          modelBytesEstimate: arm === "flat-brain" ? modelBytes(model) :
+            arm.startsWith("q-") ? model.bytesEstimate : 0,
         } }));
     } catch (error) {
       rows.push(run({ arm, seed, split: "same-task-calibration-not-transfer",
