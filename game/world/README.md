@@ -772,6 +772,8 @@ The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-1
 
 [Executed ten-seed calibration](../../research/m0c-fixed-calibration-results-2026-11-17.md): Brain repeated-task delivery 5.00% to 9.17% (paired improvement CI spans zero), versus 0.83% to 100% for public tabular Q. This is a diagnostic learning gap, not independent structural transfer.
 
+The [executed 10-seed native Brain credit audit](../../research/m0c-sensory-credit-results-2026-11-18.md) measured 97.5% delivery on a *different* two-action task, 10.0% on a three-action task, 0% without previous-step eligibility traces and 2.5% without critic bootstrap; these do not prove independent transfer or isolate all confounds.
+
 ## M0c causal credit and sensory audit (#112/#153)
 
 Six controlled native Brain arms test its direct observation channels, policy entropy,
