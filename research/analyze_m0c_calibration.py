@@ -12,10 +12,12 @@ def summarize(record):
     seeds = record["config"]["seeds"]
     results = {}
     for arm in ARMS:
-        before = [rows[s, arm]["before"]["calibration"]["success"] for s in seeds]
-        after = [rows[s, arm]["after"]["calibration"]["success"] for s in seeds]
+        # The ordered checkpoint curve is the canonical evidence; avoid
+        # relying on convenience before/after aliases missing from minimal fixtures.
+        before = [rows[s, arm]["curve"][0]["calibration"]["success"] for s in seeds]
+        after = [rows[s, arm]["curve"][-1]["calibration"]["success"] for s in seeds]
         variants = [
-            rows[s, arm]["after"]["diagnosticVariants"]["success"] for s in seeds
+            rows[s, arm]["curve"][-1]["diagnosticVariants"]["success"] for s in seeds
         ]
         gain = [a - b for a, b in zip(after, before)]
         results[arm] = {
@@ -38,8 +40,8 @@ def summarize(record):
             ),
         }
     difference = [
-        rows[s, "flat-brain"]["after"]["calibration"]["success"] -
-        rows[s, "q-relative"]["after"]["calibration"]["success"]
+        rows[s, "flat-brain"]["curve"][-1]["calibration"]["success"] -
+        rows[s, "q-relative"]["curve"][-1]["calibration"]["success"]
         for s in seeds
     ]
     return {
