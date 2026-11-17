@@ -1,0 +1,67 @@
+name: M0c exploratory evidence (ten seeds)
+
+# One-off scientific evidence is archival, not a positive-score CI gate.
+on:
+  pull_request:
+    paths:
+      - game/world/stateful_construct.mjs
+      - game/world/stateful_construct_controls.mjs
+      - game/world/stateful_structural.mjs
+      - .github/workflows/m0c-evidence.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    name: Ten seeds - ${{ matrix.protocol }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - protocol: legacy
+            train_steps: 10000
+          - protocol: scattered-to-barrier
+            train_steps: 2500
+          - protocol: barrier-to-scattered
+            train_steps: 2500
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Run ten fixed seeds at equal budgets within each protocol
+        run: |
+          node game/world/stateful_construct_controls.mjs 1 2 3 4 5 6 7 8 9 10 \
+            --protocol ${{ matrix.protocol }} \
+            --train-steps ${{ matrix.train_steps }} --train-tasks 32 \
+            --dev-tasks 16 --eval-tasks 16 --repeats 2 \
+            --out /tmp/m0c-${{ matrix.protocol }}.json
+      - name: Validate brain-result schema and exact decision counts
+        run: |
+          python research/result_schema.py --check /tmp/m0c-${{ matrix.protocol }}.json
+          python research/analyze_m0c_controls.py /tmp/m0c-${{ matrix.protocol }}.json \
+            --out /tmp/m0c-${{ matrix.protocol }}-analysis.json
+      - name: Publish entire JSON to the log for reproducible Git archiving
+        run: |
+          python - <<'PY'
+          import json
+          p = '/tmp/m0c-${{ matrix.protocol }}.json'
+          a = '/tmp/m0c-${{ matrix.protocol }}-analysis.json'
+          for path, prefix in ((a, "M0C_ANALYSIS_JSON="), (p, "M0C_RESULT_JSON=")):
+              with open(path, encoding='utf-8') as stream:
+                  value = json.load(stream)
+              print(prefix + json.dumps(value, separators=(',', ':'), sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m0c-${{ matrix.protocol }}-${{ github.sha }}
+          path: |
+            /tmp/m0c-${{ matrix.protocol }}.json
+            /tmp/m0c-${{ matrix.protocol }}-analysis.json
+          if-no-files-found: warn
+          retention-days: 30
