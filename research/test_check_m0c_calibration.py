@@ -35,7 +35,8 @@ def fixture():
                                     "oracleQueries": 0,
                                     "training": {"pickups": 0, "successes": 0},
                                     "curve": [before, after]}})
-    return {"schema": "brain-result/1", "config": config, "runs": rows}
+    return {"schema": "brain-result/1", "commit": "synthetic-fixture",
+            "experiment": "test/m0c-calibration", "config": config, "runs": rows}
 
 
 class GateTests(unittest.TestCase):
