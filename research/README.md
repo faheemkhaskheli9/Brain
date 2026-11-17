@@ -10,6 +10,10 @@
 
 ## Executing the Brain research program
 
+- [Executed M0c ten-seed negative result and raw evidence](m0c-ten-seed-evidence-2026-11-17.md): 180 arm/seed records; Brain 0% physical heldout delivery on legacy and both obstacle-transfer directions; engineered heuristic 100%. **Exploratory, M1 still HOLD.**
+- [M0c bidirectional structural stress and ten-seed evidence protocol](m0c-structural-transfer-protocol-2026-11-17.md): randomized starts, scattered-vs-divider topologies, offline feasibility accounting, reproducible ten-seed artifact workflow, paired CIs and explicit stop/go limits; no AGI claim.
+
+
 - [Frozen exact-budget negative learning result (10 seeds)](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/stateful-options-exact-negative-2026-11-12.md): all non-oracle arms failed held-out tasks; full raw `brain-result/1` and gate saved in [Git archive](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/results/stateful-options-exact-2026-11-12.tar.br). Do not claim an option-transfer win.
 
 

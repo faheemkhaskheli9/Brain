@@ -1,0 +1,4104 @@
+{
+ "baseline": "tabular-relative",
+ "budgets": {
+  "evaluationEpisodesPerSplit": 32,
+  "exactPrimitiveDecisionsPerTrainedArm": 2500,
+  "offlineGeneratorOracleQueries": [
+   79,
+   78,
+   75,
+   72,
+   70,
+   76,
+   79,
+   77,
+   75,
+   78
+  ],
+  "oracleQueriesPerArm": 0,
+  "physicalTransitionsCharged": true
+ },
+ "command": "node game/world/stateful_construct_controls.mjs 1 2 3 4 5 6 7 8 9 10 --protocol barrier-to-scattered --train-steps 2500 --train-tasks 32 --dev-tasks 16 --eval-tasks 16 --repeats 2 --out /tmp/m0c-barrier-to-scattered.json",
+ "commit": "511f6c6",
+ "config": {
+  "arms": [
+   "flat",
+   "flat-goal-masked",
+   "tabular-absolute",
+   "tabular-relative",
+   "uniform-random",
+   "public-maze-heuristic"
+  ],
+  "devTasks": 16,
+  "evalTasks": 16,
+  "generatorAudits": {
+   "1": {
+    "dev": {
+     "attempted": 26,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 10,
+     "invalidRejected": 0,
+     "maxMinimalPath": 13,
+     "minMinimalPath": 7,
+     "oracleQueries": 26,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 20,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 0,
+     "invalidRejected": 4,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 7,
+     "oracleQueries": 16,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 79,
+    "train": {
+     "attempted": 37,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 5,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 6,
+     "oracleQueries": 37,
+     "split": "train"
+    }
+   },
+   "2": {
+    "dev": {
+     "attempted": 19,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 3,
+     "invalidRejected": 0,
+     "maxMinimalPath": 18,
+     "minMinimalPath": 7,
+     "oracleQueries": 19,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 22,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 2,
+     "invalidRejected": 4,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 7,
+     "oracleQueries": 18,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 78,
+    "train": {
+     "attempted": 41,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 9,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 6,
+     "oracleQueries": 41,
+     "split": "train"
+    }
+   },
+   "3": {
+    "dev": {
+     "attempted": 17,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 0,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 18,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 1,
+     "maxMinimalPath": 23,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 75,
+    "train": {
+     "attempted": 41,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 9,
+     "invalidRejected": 0,
+     "maxMinimalPath": 17,
+     "minMinimalPath": 7,
+     "oracleQueries": 41,
+     "split": "train"
+    }
+   },
+   "4": {
+    "dev": {
+     "attempted": 17,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 20,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 0,
+     "invalidRejected": 4,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 7,
+     "oracleQueries": 16,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 72,
+    "train": {
+     "attempted": 39,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 7,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 7,
+     "oracleQueries": 39,
+     "split": "train"
+    }
+   },
+   "5": {
+    "dev": {
+     "attempted": 17,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 0,
+     "maxMinimalPath": 12,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 18,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 1,
+     "maxMinimalPath": 17,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 70,
+    "train": {
+     "attempted": 36,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 4,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 6,
+     "oracleQueries": 36,
+     "split": "train"
+    }
+   },
+   "6": {
+    "dev": {
+     "attempted": 21,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 5,
+     "invalidRejected": 0,
+     "maxMinimalPath": 13,
+     "minMinimalPath": 6,
+     "oracleQueries": 21,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 18,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 1,
+     "maxMinimalPath": 13,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 76,
+    "train": {
+     "attempted": 38,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 6,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 7,
+     "oracleQueries": 38,
+     "split": "train"
+    }
+   },
+   "7": {
+    "dev": {
+     "attempted": 19,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 3,
+     "invalidRejected": 0,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 8,
+     "oracleQueries": 19,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 18,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 0,
+     "invalidRejected": 2,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 7,
+     "oracleQueries": 16,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 79,
+    "train": {
+     "attempted": 44,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 12,
+     "invalidRejected": 0,
+     "maxMinimalPath": 17,
+     "minMinimalPath": 6,
+     "oracleQueries": 44,
+     "split": "train"
+    }
+   },
+   "8": {
+    "dev": {
+     "attempted": 18,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 2,
+     "invalidRejected": 0,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 7,
+     "oracleQueries": 18,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 23,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 1,
+     "invalidRejected": 6,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 7,
+     "oracleQueries": 17,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 77,
+    "train": {
+     "attempted": 42,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 10,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 6,
+     "oracleQueries": 42,
+     "split": "train"
+    }
+   },
+   "9": {
+    "dev": {
+     "attempted": 19,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 3,
+     "invalidRejected": 0,
+     "maxMinimalPath": 16,
+     "minMinimalPath": 8,
+     "oracleQueries": 19,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 22,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 2,
+     "invalidRejected": 4,
+     "maxMinimalPath": 17,
+     "minMinimalPath": 7,
+     "oracleQueries": 18,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 75,
+    "train": {
+     "attempted": 38,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 6,
+     "invalidRejected": 0,
+     "maxMinimalPath": 18,
+     "minMinimalPath": 5,
+     "oracleQueries": 38,
+     "split": "train"
+    }
+   },
+   "10": {
+    "dev": {
+     "attempted": 21,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 16,
+     "infeasibleRejected": 5,
+     "invalidRejected": 0,
+     "maxMinimalPath": 15,
+     "minMinimalPath": 7,
+     "oracleQueries": 21,
+     "split": "dev"
+    },
+    "heldout": {
+     "attempted": 19,
+     "duplicateRejected": 0,
+     "family": "scattered",
+     "feasible": 16,
+     "infeasibleRejected": 0,
+     "invalidRejected": 3,
+     "maxMinimalPath": 17,
+     "minMinimalPath": 7,
+     "oracleQueries": 16,
+     "split": "eval"
+    },
+    "heldoutFamily": "scattered",
+    "protocol": "barrier-to-scattered",
+    "sourceFamily": "barrier",
+    "totalOfflineOracleQueries": 78,
+    "train": {
+     "attempted": 41,
+     "duplicateRejected": 0,
+     "family": "barrier",
+     "feasible": 32,
+     "infeasibleRejected": 9,
+     "invalidRejected": 0,
+     "maxMinimalPath": 13,
+     "minMinimalPath": 7,
+     "oracleQueries": 41,
+     "split": "train"
+    }
+   }
+  },
+  "limitations": "Legacy: 16 templated configurations/split. Structural stress: two authored 5x5 families with shifted starts and different wall topologies. Generator uses BFS offline with recorded queries; no independently sealed 20-seed confirmatory transfer, no gradient RL comparator, no AGI claim.",
+  "manifests": {
+   "1": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 26,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 10,
+      "invalidRejected": 0,
+      "maxMinimalPath": 13,
+      "minMinimalPath": 7,
+      "oracleQueries": 26,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 20,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 0,
+      "invalidRejected": 4,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 7,
+      "oracleQueries": 16,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 79,
+     "train": {
+      "attempted": 37,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 5,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 6,
+      "oracleQueries": 37,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "601a80c45f30bd0ed3f7368a8fa31001d51873efe77e1c1b4acddac197a359d7",
+     "heldout": "78e3aa9ca8b59356eb9286c76e54d6827a7141089a94824ec5b19dfb48d500a6",
+     "train": "b8b262990974085392590108fe5c11fb7430ef7d14e44b55bf13bf102e8c5488"
+    }
+   },
+   "2": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 19,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 3,
+      "invalidRejected": 0,
+      "maxMinimalPath": 18,
+      "minMinimalPath": 7,
+      "oracleQueries": 19,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 22,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 2,
+      "invalidRejected": 4,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 7,
+      "oracleQueries": 18,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 78,
+     "train": {
+      "attempted": 41,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 9,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 6,
+      "oracleQueries": 41,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "124b59c55a63b421a18ad1d1b4ad6b169c23e30b3cc6d73d7b96c310d55f1049",
+     "heldout": "1f54450e9ef8fd8d3eab61ba67fcbe9d21ecfb742915b74f6d8e99b6062646cf",
+     "train": "f740c7993750970e8c57d8541f07671bba69802105aec9884f0f1645a90848e3"
+    }
+   },
+   "3": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 17,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 0,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 18,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 1,
+      "maxMinimalPath": 23,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 75,
+     "train": {
+      "attempted": 41,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 9,
+      "invalidRejected": 0,
+      "maxMinimalPath": 17,
+      "minMinimalPath": 7,
+      "oracleQueries": 41,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "8e864c7784a2133dec188b6ecf58a1b49d45b2386e913d0433fbfb4269ba7c76",
+     "heldout": "5730781335bf449c412892d7f40cd2ff753b5a212f4ae6e452a6a7fe0797d747",
+     "train": "4aa1fbbe092365b042d5c05d5ec798dcf8c9c8490671e2af30df96cbb3a9d6b0"
+    }
+   },
+   "4": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 17,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 20,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 0,
+      "invalidRejected": 4,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 7,
+      "oracleQueries": 16,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 72,
+     "train": {
+      "attempted": 39,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 7,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 7,
+      "oracleQueries": 39,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "2025c4e362631237f232e2ef6dcb54d724d268fa140029344886015cf0696f43",
+     "heldout": "c88fecb11439756c6d4aae8e646948857956e4cfd85277bb6cfe5b0e95c59d5f",
+     "train": "f0c74d72902d2a1c97555bd8b5f5c53d9a97036b2bda2fbf295c68c6862689cd"
+    }
+   },
+   "5": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 17,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 0,
+      "maxMinimalPath": 12,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 18,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 1,
+      "maxMinimalPath": 17,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 70,
+     "train": {
+      "attempted": 36,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 4,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 6,
+      "oracleQueries": 36,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "b7043301d6172c75fa87851b6b95f984c8f9f2f15cb9665d813c404539bebe39",
+     "heldout": "2612c7d6b9e816de9296d228484e182c691c657183e1f73ab37ba243d652084f",
+     "train": "1a25e20adc7d6c29f4405026a2e56db827cfe7c33a1b4ec27689a89b0d9f6a4d"
+    }
+   },
+   "6": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 21,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 5,
+      "invalidRejected": 0,
+      "maxMinimalPath": 13,
+      "minMinimalPath": 6,
+      "oracleQueries": 21,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 18,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 1,
+      "maxMinimalPath": 13,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 76,
+     "train": {
+      "attempted": 38,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 6,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 7,
+      "oracleQueries": 38,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "9d5cba13343193adef9fb550aad2a301604dfcf40e987118fce9701e3f5a4c5f",
+     "heldout": "38322aa0a00c3f53bb827feb87930a2e326e26dc1cf1586a99188a1ff3342d71",
+     "train": "89b28a58cbf867f7da5db2541ad95f5264017cb8b6409e75ec6ec712c069440e"
+    }
+   },
+   "7": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 19,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 3,
+      "invalidRejected": 0,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 8,
+      "oracleQueries": 19,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 18,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 0,
+      "invalidRejected": 2,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 7,
+      "oracleQueries": 16,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 79,
+     "train": {
+      "attempted": 44,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 12,
+      "invalidRejected": 0,
+      "maxMinimalPath": 17,
+      "minMinimalPath": 6,
+      "oracleQueries": 44,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "cff2c3b2a6ab7962d28171dabc274ff830b7a9fa7087c32c5c4dca888d5f465d",
+     "heldout": "040de4c44a8fa277132a3702c653bea40906d5a6213cab84feda362c4cb4e812",
+     "train": "6cf68b8c161879c043e62f429a9edb989b1163eddda459a02044988dce0bdea8"
+    }
+   },
+   "8": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 18,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 2,
+      "invalidRejected": 0,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 7,
+      "oracleQueries": 18,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 23,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 1,
+      "invalidRejected": 6,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 7,
+      "oracleQueries": 17,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 77,
+     "train": {
+      "attempted": 42,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 10,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 6,
+      "oracleQueries": 42,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "333a76bfd4efb963781e8f40133089dabad851d5c0171bdebd5e0effb14acb0e",
+     "heldout": "3072884c505df962097adb7bc2647a31c018fc09e8bdca22c29e67f530da8b04",
+     "train": "69152ae6dbc0b1be643e703d07bc2641db8194bf92b9a657e17932e757196b90"
+    }
+   },
+   "9": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 19,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 3,
+      "invalidRejected": 0,
+      "maxMinimalPath": 16,
+      "minMinimalPath": 8,
+      "oracleQueries": 19,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 22,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 2,
+      "invalidRejected": 4,
+      "maxMinimalPath": 17,
+      "minMinimalPath": 7,
+      "oracleQueries": 18,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 75,
+     "train": {
+      "attempted": 38,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 6,
+      "invalidRejected": 0,
+      "maxMinimalPath": 18,
+      "minMinimalPath": 5,
+      "oracleQueries": 38,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "3ccfbcc46d762474a7deaa54c678de793aea5ee6ec1f2b6b9c906b49192abf51",
+     "heldout": "097d4d2d069efc5bdbe801e2ff6be852aa973c3d89e0c684da6df9ccd57898a7",
+     "train": "b543000f78e5fc2a9c76909cc4f88200116f9c36547c114fd643c89b49606cad"
+    }
+   },
+   "10": {
+    "counts": {
+     "dev": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "heldout": {
+      "duplicates": 0,
+      "tasks": 16,
+      "uniqueStructures": 16
+     },
+     "train": {
+      "duplicates": 0,
+      "tasks": 32,
+      "uniqueStructures": 32
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": {
+     "dev": {
+      "attempted": 21,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 16,
+      "infeasibleRejected": 5,
+      "invalidRejected": 0,
+      "maxMinimalPath": 15,
+      "minMinimalPath": 7,
+      "oracleQueries": 21,
+      "split": "dev"
+     },
+     "heldout": {
+      "attempted": 19,
+      "duplicateRejected": 0,
+      "family": "scattered",
+      "feasible": 16,
+      "infeasibleRejected": 0,
+      "invalidRejected": 3,
+      "maxMinimalPath": 17,
+      "minMinimalPath": 7,
+      "oracleQueries": 16,
+      "split": "eval"
+     },
+     "heldoutFamily": "scattered",
+     "protocol": "barrier-to-scattered",
+     "sourceFamily": "barrier",
+     "totalOfflineOracleQueries": 78,
+     "train": {
+      "attempted": 41,
+      "duplicateRejected": 0,
+      "family": "barrier",
+      "feasible": 32,
+      "infeasibleRejected": 9,
+      "invalidRejected": 0,
+      "maxMinimalPath": 13,
+      "minMinimalPath": 7,
+      "oracleQueries": 41,
+      "split": "train"
+     }
+    },
+    "hashes": {
+     "dev": "c448c1f5fb7406664846b4d1417681067f562bbed1fdb8624c0ba5469604fef0",
+     "heldout": "ab377f565269feabdded24d0177814415b3617d2045c68c5088731b42911a2f0",
+     "train": "425426334d1df342cf6baf30e7706c7f382a32c59199191c3f9abec7a724c9f5"
+    }
+   }
+  },
+  "protocol": "barrier-to-scattered",
+  "provenance": "all controls share stateful_construct.observe/transition and six public actions; heuristic uses only locally discovered walls; relative tabular has authored coordinate inductive bias; flat uses existing backprop-free Brain; no oracle during any learning/evaluation",
+  "repeats": 2,
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "trainSteps": 2500,
+  "trainTasks": 32
+ },
+ "created": "2026-11-17T12:56:34Z",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "experiment": "brain-world/stateful-construct-m0c-controls",
+ "metrics": {
+  "development.success": "higher",
+  "heldout.invalidPerEpisode": "lower",
+  "heldout.success": "higher",
+  "modelBytesEstimate": "lower",
+  "source.success": "higher",
+  "trainDecisions": "lower"
+ },
+ "runs": [
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1264,
+     "envSteps": 1264,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 17.96875,
+     "success": 0.03125
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.1875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.511,
+   "seed": 1,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.21875,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 16.8125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.34375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.569,
+   "seed": 1,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.40625,
+     "rewardPerEpisode": -2.5934375,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.53125,
+     "rewardPerEpisode": -2.5546874999999996,
+     "success": 0
+    },
+    "modelBytesEstimate": 58531,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.96875,
+     "rewardPerEpisode": -2.4390625000000004,
+     "success": 0
+    },
+    "tableStates": 827,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.049,
+   "seed": 1,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1274,
+     "envSteps": 1274,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 19.78125,
+     "rewardPerEpisode": -2.060000000000001,
+     "success": 0.03125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.4375,
+     "rewardPerEpisode": -2.313125,
+     "success": 0
+    },
+    "modelBytesEstimate": 40395,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1263,
+     "envSteps": 1263,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 16,
+     "rewardPerEpisode": -1.6968750000000004,
+     "success": 0.03125
+    },
+    "tableStates": 596,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 64,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.041,
+   "seed": 1,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.75,
+     "rewardPerEpisode": -2.645,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.53125,
+     "rewardPerEpisode": -2.5546874999999996,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.5,
+     "rewardPerEpisode": -2.59875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.005,
+   "seed": 1,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 344,
+     "envSteps": 344,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0625,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 360,
+     "envSteps": 360,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0574999999999997,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 354,
+     "envSteps": 354,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.059375,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.015,
+   "seed": 1,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.5,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.09375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.96875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.524,
+   "seed": 2,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.5625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.03125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.71875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.559,
+   "seed": 2,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.90625,
+     "rewardPerEpisode": -2.5446875000000007,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.78125,
+     "rewardPerEpisode": -2.7084375000000005,
+     "success": 0
+    },
+    "modelBytesEstimate": 58856,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22,
+     "rewardPerEpisode": -2.5325,
+     "success": 0
+    },
+    "tableStates": 831,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.044,
+   "seed": 2,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.03125,
+     "rewardPerEpisode": -2.412187500000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24,
+     "rewardPerEpisode": -2.6887499999999998,
+     "success": 0
+    },
+    "modelBytesEstimate": 39800,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 15.125,
+     "rewardPerEpisode": -1.7212500000000002,
+     "success": 0
+    },
+    "tableStates": 586,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.032,
+   "seed": 2,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.125,
+     "rewardPerEpisode": -2.58375,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.78125,
+     "rewardPerEpisode": -2.709687500000001,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.625,
+     "rewardPerEpisode": -2.7287500000000007,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 2,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 410,
+     "envSteps": 410,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.041875,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 354,
+     "envSteps": 354,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.059375,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 358,
+     "envSteps": 358,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.058125,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.016,
+   "seed": 2,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.5,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.34375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.65625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.559,
+   "seed": 3,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.25,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.25,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.15625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.558,
+   "seed": 3,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.875,
+     "rewardPerEpisode": -2.5787500000000003,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.3125,
+     "rewardPerEpisode": -2.6143750000000003,
+     "success": 0
+    },
+    "modelBytesEstimate": 53598,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.875,
+     "rewardPerEpisode": -2.19375,
+     "success": 0
+    },
+    "tableStates": 758,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.034,
+   "seed": 3,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.25,
+     "rewardPerEpisode": -2.3024999999999998,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.0625,
+     "rewardPerEpisode": -2.164375,
+     "success": 0
+    },
+    "modelBytesEstimate": 40457,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1249,
+     "envSteps": 1249,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 16.90625,
+     "rewardPerEpisode": -1.826875000000001,
+     "success": 0.0625
+    },
+    "tableStates": 597,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 64,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.03,
+   "seed": 3,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.90625,
+     "rewardPerEpisode": -2.5771875000000004,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.3125,
+     "rewardPerEpisode": -2.6143750000000003,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.90625,
+     "rewardPerEpisode": -2.7071874999999994,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 3,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 370,
+     "envSteps": 370,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.054375,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 346,
+     "envSteps": 346,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0618750000000001,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 396,
+     "envSteps": 396,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.04625,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 3,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.75,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.15625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.557,
+   "seed": 4,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.5,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 16.65625,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.25,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.554,
+   "seed": 4,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.9375,
+     "rewardPerEpisode": -2.788125000000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.90625,
+     "rewardPerEpisode": -2.6721875,
+     "success": 0
+    },
+    "modelBytesEstimate": 56041,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.875,
+     "rewardPerEpisode": -2.852500000000001,
+     "success": 0
+    },
+    "tableStates": 792,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.032,
+   "seed": 4,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.5,
+     "rewardPerEpisode": -2.2650000000000006,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1275,
+     "envSteps": 1275,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 19.5625,
+     "rewardPerEpisode": -2.23375,
+     "success": 0.03125
+    },
+    "modelBytesEstimate": 38535,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1265,
+     "envSteps": 1265,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 16.90625,
+     "rewardPerEpisode": -1.8234375,
+     "success": 0.03125
+    },
+    "tableStates": 569,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.03,
+   "seed": 4,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.53125,
+     "rewardPerEpisode": -2.7296875000000007,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.8125,
+     "rewardPerEpisode": -2.5831250000000003,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.6875,
+     "rewardPerEpisode": -2.7118750000000005,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 4,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 376,
+     "envSteps": 376,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0525000000000002,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 326,
+     "envSteps": 326,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.068125,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 360,
+     "envSteps": 360,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0574999999999999,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 4,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.90625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.75,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.65625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.566,
+   "seed": 5,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.46875,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.5,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.0625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.562,
+   "seed": 5,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.125,
+     "rewardPerEpisode": -2.785,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.71875,
+     "rewardPerEpisode": -2.6528125000000005,
+     "success": 0
+    },
+    "modelBytesEstimate": 57197,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.3125,
+     "rewardPerEpisode": -2.589375000000001,
+     "success": 0
+    },
+    "tableStates": 808,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.032,
+   "seed": 5,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 21.6875,
+     "rewardPerEpisode": -2.1478125000000006,
+     "success": 0.03125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.0625,
+     "rewardPerEpisode": -2.3881250000000005,
+     "success": 0
+    },
+    "modelBytesEstimate": 40683,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.96875,
+     "rewardPerEpisode": -1.906562500000001,
+     "success": 0
+    },
+    "tableStates": 600,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.03,
+   "seed": 5,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.125,
+     "rewardPerEpisode": -2.785,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.875,
+     "rewardPerEpisode": -2.661250000000001,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.09375,
+     "rewardPerEpisode": -2.7878125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 5,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 326,
+     "envSteps": 326,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.068125,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 340,
+     "envSteps": 340,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0637499999999998,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 386,
+     "envSteps": 386,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0493750000000002,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 5,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.75,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.8125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.15625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.552,
+   "seed": 6,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.5,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.3125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.3125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.552,
+   "seed": 6,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.5625,
+     "rewardPerEpisode": -2.671875000000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.375,
+     "rewardPerEpisode": -2.665,
+     "success": 0
+    },
+    "modelBytesEstimate": 48055,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.90625,
+     "rewardPerEpisode": -2.5096875000000005,
+     "success": 0
+    },
+    "tableStates": 679,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.031,
+   "seed": 6,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1272,
+     "envSteps": 1272,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 21.28125,
+     "rewardPerEpisode": -2.0981250000000005,
+     "success": 0.03125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1253,
+     "envSteps": 1253,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 21.625,
+     "rewardPerEpisode": -2.3521875000000003,
+     "success": 0.0625
+    },
+    "modelBytesEstimate": 38595,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.3125,
+     "rewardPerEpisode": -2.311875000000001,
+     "success": 0
+    },
+    "tableStates": 569,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 64,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.029,
+   "seed": 6,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.5625,
+     "rewardPerEpisode": -2.671875000000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.375,
+     "rewardPerEpisode": -2.665,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1270,
+     "envSteps": 1270,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 23.59375,
+     "rewardPerEpisode": -2.6506250000000007,
+     "success": 0.03125
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 6,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 338,
+     "envSteps": 338,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0643749999999998,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 298,
+     "envSteps": 298,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0768749999999998,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 398,
+     "envSteps": 398,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0456249999999996,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 6,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.5625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.5,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.59375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.56,
+   "seed": 7,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.90625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.84375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.59375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.563,
+   "seed": 7,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.03125,
+     "rewardPerEpisode": -2.6821875,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.40625,
+     "rewardPerEpisode": -2.4984374999999996,
+     "success": 0
+    },
+    "modelBytesEstimate": 50912,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.21875,
+     "rewardPerEpisode": -2.4815625000000003,
+     "success": 0
+    },
+    "tableStates": 718,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 64,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.032,
+   "seed": 7,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.8125,
+     "rewardPerEpisode": -2.3193749999999995,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.875,
+     "rewardPerEpisode": -2.20375,
+     "success": 0
+    },
+    "modelBytesEstimate": 40359,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.34375,
+     "rewardPerEpisode": -1.9878125000000006,
+     "success": 0
+    },
+    "tableStates": 595,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.03,
+   "seed": 7,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.46875,
+     "rewardPerEpisode": -2.6303125,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.5,
+     "rewardPerEpisode": -2.5062499999999996,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.4375,
+     "rewardPerEpisode": -2.8206249999999997,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 7,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 422,
+     "envSteps": 422,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0381250000000004,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 328,
+     "envSteps": 328,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0675000000000003,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 420,
+     "envSteps": 420,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.03875,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 7,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.75,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.625,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.0625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.577,
+   "seed": 8,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.125,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.25,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.03125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.57,
+   "seed": 8,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.03125,
+     "rewardPerEpisode": -2.6121875,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.28125,
+     "rewardPerEpisode": -2.5721875000000005,
+     "success": 0
+    },
+    "modelBytesEstimate": 54268,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.375,
+     "rewardPerEpisode": -2.3475,
+     "success": 0
+    },
+    "tableStates": 764,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.032,
+   "seed": 8,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1271,
+     "envSteps": 1271,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 22.15625,
+     "rewardPerEpisode": -2.2503124999999997,
+     "success": 0.03125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1227,
+     "envSteps": 1227,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 29,
+     "invalidPerEpisode": 18.375,
+     "rewardPerEpisode": -1.97875,
+     "success": 0.09375
+    },
+    "modelBytesEstimate": 40391,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 17.625,
+     "rewardPerEpisode": -1.8675000000000004,
+     "success": 0
+    },
+    "tableStates": 596,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.029,
+   "seed": 8,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.0625,
+     "rewardPerEpisode": -2.6143750000000003,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.28125,
+     "rewardPerEpisode": -2.5721875000000005,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 25.34375,
+     "rewardPerEpisode": -2.8928125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 8,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 418,
+     "envSteps": 418,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.039375,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 314,
+     "envSteps": 314,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.071875,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 386,
+     "envSteps": 386,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0493749999999997,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 8,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.90625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.6875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.565,
+   "seed": 9,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.4375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.46875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.46875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.562,
+   "seed": 9,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.65625,
+     "rewardPerEpisode": -2.8009375000000007,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.46875,
+     "rewardPerEpisode": -2.5503125000000004,
+     "success": 0
+    },
+    "modelBytesEstimate": 56560,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.9375,
+     "rewardPerEpisode": -2.3793750000000005,
+     "success": 0
+    },
+    "tableStates": 799,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.033,
+   "seed": 9,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.09375,
+     "rewardPerEpisode": -2.2953125000000005,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1267,
+     "envSteps": 1267,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 21.65625,
+     "rewardPerEpisode": -2.4525,
+     "success": 0.0625
+    },
+    "modelBytesEstimate": 37783,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 18.25,
+     "rewardPerEpisode": -2.062500000000001,
+     "success": 0
+    },
+    "tableStates": 557,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.03,
+   "seed": 9,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.9375,
+     "rewardPerEpisode": -2.7493750000000006,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.46875,
+     "rewardPerEpisode": -2.5503125000000004,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.90625,
+     "rewardPerEpisode": -2.6796875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 9,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 412,
+     "envSteps": 412,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0412499999999993,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 342,
+     "envSteps": 342,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.063125,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 434,
+     "envSteps": 434,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0343749999999998,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.005,
+   "seed": 9,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.59375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.59375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.15625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.571,
+   "seed": 10,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.90625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.96875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 19.21875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.57,
+   "seed": 10,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.8125,
+     "rewardPerEpisode": -2.644375,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.71875,
+     "rewardPerEpisode": -2.6428124999999993,
+     "success": 0
+    },
+    "modelBytesEstimate": 58673,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.78125,
+     "rewardPerEpisode": -2.7284375000000005,
+     "success": 0
+    },
+    "tableStates": 829,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.035,
+   "seed": 10,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.53125,
+     "rewardPerEpisode": -2.4459375000000003,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.5,
+     "rewardPerEpisode": -2.4325000000000006,
+     "success": 0
+    },
+    "modelBytesEstimate": 38926,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.65625,
+     "rewardPerEpisode": -2.4259375000000007,
+     "success": 0
+    },
+    "tableStates": 574,
+    "trainDecisions": 2500,
+    "trainEnvSteps": 2500,
+    "trainEpisodes": 63,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.029,
+   "seed": 10,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.8125,
+     "rewardPerEpisode": -2.641875,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.84375,
+     "rewardPerEpisode": -2.6528124999999996,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.625,
+     "rewardPerEpisode": -2.6937499999999996,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 10,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 384,
+     "envSteps": 384,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.05,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 332,
+     "envSteps": 332,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.06625,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 368,
+     "envSteps": 368,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0549999999999997,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 10,
+   "split": "structural-barrier-to-scattered",
+   "status": "ok"
+  }
+ ],
+ "schema": "brain-result/1"
+}

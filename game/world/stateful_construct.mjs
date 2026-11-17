@@ -51,17 +51,18 @@ export function validateTask(task) {
   if (!task || !Array.isArray(task.item) || !Array.isArray(task.goal) ||
       !Array.isArray(task.walls) || !Number.isInteger(task.maxSteps) || task.maxSteps < 1)
     throw new Error("invalid task");
-  const all = [task.item, task.goal, ...task.walls];
+  const start = task.start ?? START;
+  const all = [start, task.item, task.goal, ...task.walls];
   if (all.some(p => !Array.isArray(p) || p.length !== 2 ||
       p.some(n => !Number.isInteger(n)) || !inside(p)))
     throw new Error("invalid grid coordinate");
   if (new Set(task.walls.map(key)).size !== task.walls.length ||
-      task.walls.some(p => at(p, START)))
+      task.walls.some(p => at(p, start)))
     throw new Error("invalid wall placement");
 }
 export function initial(task) {
   validateTask(task);
-  return { agent: [...START], item: [...task.item], carrying: false,
+  return { agent: [...(task.start ?? START)], item: [...task.item], carrying: false,
     steps: 0, done: false, invalid: 0, lastFailure: false };
 }
 const blocked = (task, p) => !inside(p) || task.walls.some(w => at(w, p));

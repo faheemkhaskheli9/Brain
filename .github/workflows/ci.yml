@@ -55,6 +55,8 @@ jobs:
         run: xvfb-run python game/test_levels_ui.py
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: M0c paired multi-seed analysis rejects omissions and budgets
+        run: python research/test_analyze_m0c_controls.py
       - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
         run: python research/test_analyze_stateful_options.py
       - name: Sparse local synaptic learning, growth/prune and frozen evaluation
@@ -157,6 +159,11 @@ jobs:
           node game/world/test_stateful_construct_controls.mjs
           node game/world/stateful_construct_controls.mjs 1 --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-controls-smoke.json
           python research/result_schema.py --check /tmp/m0c-controls-smoke.json
+      - name: M0c independent structural generator and paired family smoke (#110/#112)
+        run: |
+          node game/world/test_stateful_structural.mjs
+          node game/world/stateful_construct_controls.mjs 1 --protocol scattered-to-barrier --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-stress-smoke.json
+          python research/result_schema.py --check /tmp/m0c-stress-smoke.json
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
         run: |
           node game/world/test_stateful_options.mjs

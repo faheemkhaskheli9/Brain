@@ -768,6 +768,27 @@ over 8 seeds. Paired sign-flip p against scratch:
   and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
   matches "New letters" above.
 
+The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-17.md) reports **0% heldout physical delivery by the current flat Brain learner** on legacy and two structural stress directions, versus **100% by a supplied public-sensor maze heuristic**; this is a negative learning result, not demonstrated generalization.
+
+## Structural transfer stress (M0c, #110/#112)
+
+Run ten-seed, frozen heldout construction baselines with independently sampled
+**scattered obstacles → barrier corridor** or the reverse direction. Both
+families use variable starting positions, public sensory observation, the same
+six primitive actions, and a separately audited **offline** BFS feasibility
+filter. This tests changes in authored obstacle topology within a 5×5 toy
+world, not biological/general intelligence.
+
+```bash
+node game/world/test_stateful_structural.mjs
+node game/world/stateful_construct_controls.mjs 1 2 3 --protocol scattered-to-barrier --train-steps 2500 --train-tasks 32 --dev-tasks 16 --eval-tasks 16 --repeats 2 --out /tmp/m0c-stress.json
+python research/result_schema.py --check /tmp/m0c-stress.json
+```
+
+See [dated research protocol](../../research/m0c-structural-transfer-protocol-2026-11-17.md)
+and [ten-seed evidence workflow](../../.github/workflows/m0c-evidence.yml).
+**The legacy generator is preserved** for regression comparison.
+
 ## Same-environment public-observation controls (M0c, #112/#153)
 
 The legacy stateful acquire–carry–place environment now has **same-simulator**
