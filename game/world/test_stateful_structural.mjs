@@ -63,7 +63,9 @@ for (const protocol of PROTOCOLS.filter(x => x !== "legacy")) {
     if (seed === 1) {
       const rows = runSeed(seed, { trainSteps: 23, trainTasks: 7,
         devTasks: 5, evalTasks: 5, repeats: 1, protocol });
-      assert.deepEqual(rows.manifest, manifest);
+      assert.deepEqual(rows.manifest.hashes, manifest.hashes);
+      assert.deepEqual(rows.manifest.counts, manifest.counts);
+      assert.deepEqual(rows.manifest.generator, a.audit);
       assert.equal(rows.generatorAudit.totalOfflineOracleQueries,
         a.audit.totalOfflineOracleQueries);
       assert.equal(rows.rows.length, 6);

@@ -55,6 +55,8 @@ jobs:
         run: xvfb-run python game/test_levels_ui.py
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: M0c paired multi-seed analysis rejects omissions and budgets
+        run: python research/test_analyze_m0c_controls.py
       - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
         run: python research/test_analyze_stateful_options.py
       - name: Sparse local synaptic learning, growth/prune and frozen evaluation
