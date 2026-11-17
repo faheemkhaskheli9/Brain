@@ -1,9 +1,12 @@
 # Brain World: a creature that learns on its own
 
 A 3D browser simulation. A creature with a colour retina, a fovea, a cochlea, two legs, an arm and a
-pen learns five skills in a row from reward alone: **walk, grasp, listen, read, write**. Nothing is
-scripted. It gets a dopamine signal (a reward prediction error), and its synapses change where an
-eligibility trace meets that signal. Brain Lab (`game/play.py`) has you operate one mechanism at a time.
+pen trains on five engineered curriculum skills: **walk, grasp, listen, read, write**.
+The scenes, rewards, sensory mappings, legal actions and the later-stage automatic gait scaffold
+are programmed; the actor/critic weights are updated from experienced rewards rather than scripted
+solutions. This is within-environment local learning, not demonstrated general intelligence.
+A reward-prediction error (called dopamine in the model) modulates synaptic eligibility traces.
+Brain Lab (`game/play.py`) has you operate one mechanism at a time.
 Here you watch the mechanisms work together in one learner.
 
 A user guide with a screenshot of every feature is in [docs/app-guide.md](../../docs/app-guide.md).
