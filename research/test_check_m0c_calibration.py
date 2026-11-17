@@ -33,6 +33,7 @@ def fixture():
                          "scores": {"trainDecisions": 0 if arm == "uniform-random" else 5,
                                     "trainEnvSteps": 0 if arm == "uniform-random" else 5,
                                     "oracleQueries": 0,
+                                    "training": {"pickups": 0, "successes": 0},
                                     "curve": [before, after]}})
     return {"schema": "brain-result/1", "config": config, "runs": rows}
 
