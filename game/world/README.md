@@ -768,6 +768,8 @@ over 8 seeds. Paired sign-flip p against scratch:
   and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
   matches "New letters" above.
 
+The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-17.md) reports **0% heldout physical delivery by the current flat Brain learner** on legacy and two structural stress directions, versus **100% by a supplied public-sensor maze heuristic**; this is a negative learning result, not demonstrated generalization.
+
 ## Structural transfer stress (M0c, #110/#112)
 
 Run ten-seed, frozen heldout construction baselines with independently sampled
