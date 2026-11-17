@@ -33,9 +33,12 @@ export function stateKey(o, revealGoal = true) {
     o.wet, o.carrying, o.previousMove, o.lastEvent, Math.floor(o.remaining / 8)]);
 }
 export class TabularQ {
-  constructor(seed) { this.random = rng(seed); this.values = new Map(); }
+  constructor(seed, actionCount = 7) {
+    if (!Number.isSafeInteger(actionCount) || actionCount < 1) throw new Error("invalid tabular action count");
+    this.random = rng(seed); this.values = new Map(); this.actionCount = actionCount;
+  }
   row(key) {
-    if (!this.values.has(key)) this.values.set(key, Array(7).fill(0));
+    if (!this.values.has(key)) this.values.set(key, Array(this.actionCount).fill(0));
     return this.values.get(key);
   }
   act(obs, allowed, learn = false) {
@@ -53,7 +56,7 @@ export class TabularQ {
     q[action] += 0.2 * (reward + 0.95 * future - q[action]);
   }
   copy(seed) {
-    const q = new TabularQ(seed);
+    const q = new TabularQ(seed, this.actionCount);
     q.values = new Map([...this.values].map(([k, v]) => [k, [...v]]));
     return q;
   }
