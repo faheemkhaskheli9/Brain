@@ -26,9 +26,22 @@ function sense(task, state, arm) {
   return x;
 }
 function actorEntropy(pi) {
+  // Brain.policy stores probabilities in Float32Array: equal 1/6 values sum
+  // slightly ABOVE 1 in float32. Renormalize for descriptive entropy only,
+  // without changing the action sampler or silently admitting invalid logits.
+  let sum = 0;
+  for (const a of ALLOWED) {
+    if (!Number.isFinite(pi[a]) || pi[a] < 0) throw new Error("invalid actor probabilities");
+    sum += pi[a];
+  }
+  if (!Number.isFinite(sum) || Math.abs(sum - 1) > 1e-4)
+    throw new Error("invalid actor probability normalization");
   let e = 0;
-  for (const a of ALLOWED) if (pi[a] > 0) e -= pi[a] * Math.log(pi[a]);
-  return e / Math.log(ALLOWED.length);
+  for (const a of ALLOWED) {
+    const p = pi[a] / sum;
+    if (p > 0) e -= p * Math.log(p);
+  }
+  return Math.min(1, Math.max(0, e / Math.log(ALLOWED.length)));
 }
 export function rollout(model, arm, task, { learn = false,
   cap = task.maxSteps } = {}) {
