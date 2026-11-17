@@ -768,6 +768,29 @@ over 8 seeds. Paired sign-flip p against scratch:
   and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
   matches "New letters" above.
 
+## Same-environment public-observation controls (M0c, #112/#153)
+
+The legacy stateful acquire–carry–place environment now has **same-simulator**
+flat Brain, goal-masked Brain, tabular-Q absolute/relative, uniform-random and
+public-sensor maze-heuristic controls. All use the same six primitives,
+`stateful_construct.mjs` observations/transitions/rewards, and a per-trained-arm
+exact primitive-decision budget. The Q table and heuristic see only public
+observations; the relative-Q representation and grid pathfinding are
+**engineered inductive biases**, not learned by Brain.
+
+```bash
+node game/world/test_stateful_construct_controls.mjs
+node game/world/stateful_construct_controls.mjs 1 2 3 --train-steps 10000 --train-tasks 32 --dev-tasks 16 --eval-tasks 16 --repeats 2 --out /tmp/m0c.json
+python research/result_schema.py --check /tmp/m0c.json
+```
+
+The runner reports full task-structure fingerprints, duplicate counts,
+source/development/goal-pair-held-out success, real environment actions,
+failed attempts and model-size estimates in `brain-result/1`. Its fixed
+start/four-obstacle templates are **not** a sealed stress generator or
+evidence of independent composition. Scientific success on new structural
+families is not established. See the [M0c research note](../../research/m0c-stateful-construction-controls-2026-11-17.md).
+
 ## Backprop-free construction policy pilot (#112, research baseline)
 
 `construct_learner.mjs` reuses the *actual Brain World local three-factor actor-critic*
