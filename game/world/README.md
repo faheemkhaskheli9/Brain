@@ -770,6 +770,8 @@ over 8 seeds. Paired sign-flip p against scratch:
 
 The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-17.md) reports **0% heldout physical delivery by the current flat Brain learner** on legacy and two structural stress directions, versus **100% by a supplied public-sensor maze heuristic**; this is a negative learning result, not demonstrated generalization.
 
+[Executed ten-seed calibration](../../research/m0c-fixed-calibration-results-2026-11-17.md): Brain repeated-task delivery 5.00% to 9.17% (paired improvement CI spans zero), versus 0.83% to 100% for public tabular Q. This is a diagnostic learning gap, not independent structural transfer.
+
 ## M0c fixed-task learning diagnosis (#112/#153)
 
 To diagnose zero heldout delivery, use the backprop-free learner and public-state Q
