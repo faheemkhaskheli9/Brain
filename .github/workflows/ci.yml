@@ -164,6 +164,16 @@ jobs:
           node game/world/test_stateful_structural.mjs
           node game/world/stateful_construct_controls.mjs 1 --protocol scattered-to-barrier --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-stress-smoke.json
           python research/result_schema.py --check /tmp/m0c-stress-smoke.json
+      - name: M0c fixed-task exploration/credit probe and frozen feedback tests
+        run: |
+          node game/world/test_stateful_calibration.mjs
+          node game/world/stateful_calibration.mjs 1 --checkpoints 0,4,11 --repeats 2 --out /tmp/m0c-calibration-smoke.json
+          python research/result_schema.py --check /tmp/m0c-calibration-smoke.json
+          python research/check_m0c_calibration.py /tmp/m0c-calibration-smoke.json
+      - name: M0c calibration artifact mutation gate
+        run: python research/test_check_m0c_calibration.py
+      - name: Calibration paired uncertainty and analysis integrity
+        run: python research/test_analyze_m0c_calibration.py
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
         run: |
           node game/world/test_stateful_options.mjs
