@@ -10,6 +10,8 @@
 
 ## Executing the Brain research program
 
+- [M0d matched-public-transition credit audit](m0d-matched-transition-credit-protocol-2026-11-18.md): seven backprop-free update ablations on an identical, hashed, supplied public observation/action/reward stream; zero new online interactions, ten-seed evidence workflow. **Mechanistic diagnosis only; not on-policy learning or held-out transfer.**
+
 - [Executed ten-seed native Brain credit study](m0c-sensory-credit-results-2026-11-18.md): 60 valid runs; two-step 97.5%, three-step 10%, removing prior eligibility traces 0%; independent transfer not shown, scientific HOLD.
 - [M0c sensory-input and TD-credit adversarial diagnostic](m0c-sensory-credit-audit-2026-11-18.md): controlled direct-channel audit, frozen target counterfactual, goal masking, trace/critic ablations, short-task and zero-reward controls on the native backprop-free Brain; ten-seed evidence pending.
 - [Executed ten-seed fixed-task learning diagnostic](m0c-fixed-calibration-results-2026-11-17.md): Brain 5% to 9.17% same-task delivery (paired gain CI includes zero); public-state Q reaches 100% on the repeated task, but not validated independent transfer. Raw data and uncertainty archived. **M1 HOLD.**
