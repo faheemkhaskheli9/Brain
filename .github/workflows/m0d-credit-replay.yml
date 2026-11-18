@@ -6,6 +6,8 @@ on:
       - game/world/stateful_credit_replay.mjs
       - game/world/test_stateful_credit_replay.mjs
       - .github/workflows/m0d-credit-replay.yml
+      - research/analyze_m0d_credit_replay.py
+      - research/test_analyze_m0d_credit_replay.py
   workflow_dispatch:
 
 permissions:
@@ -32,6 +34,8 @@ jobs:
       - name: Reject missing arms, differing data or uncharged policy interactions
         run: |
           python research/result_schema.py --check /tmp/m0d-matched-credit.json
+          python research/analyze_m0d_credit_replay.py /tmp/m0d-matched-credit.json --out /tmp/m0d-matched-credit-analysis.json > /dev/null
+          python research/test_analyze_m0d_credit_replay.py
           python - <<'PY'
           import json
           from collections import defaultdict
@@ -70,6 +74,8 @@ jobs:
         if: always()
         with:
           name: m0d-matched-credit-${{ github.sha }}
-          path: /tmp/m0d-matched-credit.json
+          path: |
+            /tmp/m0d-matched-credit.json
+            /tmp/m0d-matched-credit-analysis.json
           if-no-files-found: warn
           retention-days: 30
