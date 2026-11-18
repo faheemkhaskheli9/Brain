@@ -1,0 +1,1349 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/m0c-identical-transition-replay",
+ "commit": "e571cd2",
+ "created": "2026-11-18T07:05:14Z",
+ "command": "node game/world/stateful_replay_td.mjs --out research/results/m0c-identical-replay-10seed-2026-11-18.json 1 2 3 4 5 6 7 8 9 10",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "arms": [
+   "replay-native",
+   "replay-no-bootstrap",
+   "replay-trace-one-step",
+   "replay-zero-feedback",
+   "replay-shuffled"
+  ],
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "decisions": 4000,
+  "repeats": 12,
+  "task": {
+   "id": "fixed-train",
+   "start": [
+    2,
+    0
+   ],
+   "item": [
+    2,
+    0
+   ],
+   "goal": [
+    3,
+    0
+   ],
+   "walls": [],
+   "maxSteps": 12
+  },
+  "diagnosticVariants": [
+   {
+    "id": "left-one-cell",
+    "start": [
+     2,
+     0
+    ],
+    "item": [
+     2,
+     0
+    ],
+    "goal": [
+     1,
+     0
+    ],
+    "walls": [],
+    "maxSteps": 12
+   },
+   {
+    "id": "move-then-pickup",
+    "start": [
+     2,
+     0
+    ],
+    "item": [
+     3,
+     0
+    ],
+    "goal": [
+     4,
+     0
+    ],
+    "walls": [],
+    "maxSteps": 12
+   }
+  ],
+  "design": "one logged native-three stream per seed replayed with forced actions into identically initialised learners; only the update rule differs"
+ },
+ "budgets": {
+  "replayedTransitionsPerArm": 4000,
+  "policyOracleQueriesPerArm": 0,
+  "frozenScoring": true
+ },
+ "metrics": {
+  "deliverySuccess": "higher"
+ },
+ "baseline": "replay-native",
+ "runs": [
+  {
+   "arm": "replay-native",
+   "seed": 1,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.469,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.08333333333333333,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.061598384333239206,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 1,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.458,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06999486974814224,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 1,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.56,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06714819778924108,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 1,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.562,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.08333333333333333,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 1,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.588,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.125,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07081583598330025,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 2,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.543,
+   "scores": {
+    "calibration": {
+     "success": 0.16666666666666666,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.16666666666666666,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07839969595381469,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 2,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.446,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07821788398570528,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 2,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.537,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07991884967224053,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 2,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.534,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 2,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.54,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.08760519501915051,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 3,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.561,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.0800374164557692,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 3,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.442,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07506264762060336,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 3,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.594,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.08639316630740898,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 3,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.634,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 3,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.553,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.0920798423219832,
+    "loggedRewardEnds": 21,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 4,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.539,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06185300200114202,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 4,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.437,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06829779282470418,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 4,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.552,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.0706019234684768,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 4,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.552,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 4,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.54,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07494519734556306,
+    "loggedRewardEnds": 8,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 5,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.607,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.05961157342972446,
+    "loggedRewardEnds": 5,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 5,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.442,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06909182705253453,
+    "loggedRewardEnds": 5,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 5,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.542,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06693236074575315,
+    "loggedRewardEnds": 5,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 5,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.639,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 5,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 5,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.555,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07452486326287704,
+    "loggedRewardEnds": 5,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 6,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.556,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07201963647780836,
+    "loggedRewardEnds": 12,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 6,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.469,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07370444702779996,
+    "loggedRewardEnds": 12,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 6,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.536,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07404404827484001,
+    "loggedRewardEnds": 12,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 6,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.555,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 12,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 6,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.536,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.0834182937595753,
+    "loggedRewardEnds": 12,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 7,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.644,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.08333333333333333,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07429787969874714,
+    "loggedRewardEnds": 13,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 7,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.455,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07461147579860786,
+    "loggedRewardEnds": 13,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 7,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.571,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.0734624826610903,
+    "loggedRewardEnds": 13,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 7,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.522,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 13,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 7,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.633,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.08521235935648348,
+    "loggedRewardEnds": 13,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 8,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.538,
+   "scores": {
+    "calibration": {
+     "success": 0.5,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.5,
+    "diagnosticVariants": {
+     "success": 0.125,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.11019054951451072,
+    "loggedRewardEnds": 51,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 8,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.442,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.09371564247299889,
+    "loggedRewardEnds": 51,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 8,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.547,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.08333333333333333,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.112036336146283,
+    "loggedRewardEnds": 51,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 8,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.604,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 51,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 8,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.553,
+   "scores": {
+    "calibration": {
+     "success": 0.16666666666666666,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.16666666666666666,
+    "diagnosticVariants": {
+     "success": 0.08333333333333333,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.12610910687467497,
+    "loggedRewardEnds": 51,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 9,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.619,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.060440425559236996,
+    "loggedRewardEnds": 7,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 9,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.534,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06789489016421338,
+    "loggedRewardEnds": 7,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 9,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.543,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.06599556776851787,
+    "loggedRewardEnds": 7,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 9,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.608,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 7,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 9,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.532,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07058686879507821,
+    "loggedRewardEnds": 7,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-native",
+   "seed": 10,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.567,
+   "scores": {
+    "calibration": {
+     "success": 0.25,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.25,
+    "diagnosticVariants": {
+     "success": 0.125,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.08298717561061544,
+    "loggedRewardEnds": 22,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-no-bootstrap",
+   "seed": 10,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.444,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.08333333333333333,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.07846494016397766,
+    "loggedRewardEnds": 22,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-trace-one-step",
+   "seed": 10,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.553,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.125,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.08472953380878465,
+    "loggedRewardEnds": 22,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-zero-feedback",
+   "seed": 10,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.549,
+   "scores": {
+    "calibration": {
+     "success": 0.08333333333333333,
+     "episodes": 12
+    },
+    "deliverySuccess": 0.08333333333333333,
+    "diagnosticVariants": {
+     "success": 0.041666666666666664,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0,
+    "loggedRewardEnds": 22,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "replay-shuffled",
+   "seed": 10,
+   "split": "identical-transition-replay-not-transfer",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.576,
+   "scores": {
+    "calibration": {
+     "success": 0,
+     "episodes": 12
+    },
+    "deliverySuccess": 0,
+    "diagnosticVariants": {
+     "success": 0.125,
+     "episodes": 24
+    },
+    "replayedTransitions": 4000,
+    "meanAbsTD": 0.09285215160375367,
+    "loggedRewardEnds": 22,
+    "modelBytes": 150464,
+    "onlineOracleQueries": 0
+   },
+   "checkpoint": null
+  }
+ ]
+}

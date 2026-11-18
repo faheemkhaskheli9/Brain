@@ -180,6 +180,12 @@ jobs:
           node game/world/stateful_credit_probe.mjs 1 --checkpoints 0,5,17 --repeats 2 --out /tmp/m0c-credit-smoke.json
           python research/result_schema.py --check /tmp/m0c-credit-smoke.json
           python research/analyze_m0c_credit_probe.py /tmp/m0c-credit-smoke.json
+      - name: M0c identical-transition update-rule replay
+        run: |
+          node game/world/test_stateful_replay_td.mjs
+          node game/world/stateful_replay_td.mjs 1 --decisions 40 --repeats 1 --out /tmp/m0c-replay-smoke.json
+          python research/result_schema.py --check /tmp/m0c-replay-smoke.json
+          python research/result_schema.py --check research/results/m0c-identical-replay-10seed-2026-11-18.json
       - name: M0c causal diagnostic evidence mutation gate
         run: python research/test_analyze_m0c_credit_probe.py
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
