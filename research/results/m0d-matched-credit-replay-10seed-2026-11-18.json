@@ -1,0 +1,2832 @@
+{
+ "baseline": "native",
+ "budgets": {
+  "comparison": "same recorded experiences; does not equal on-policy distribution",
+  "loggedEpisodesPerSeed": 12,
+  "policyOracleQueriesPerArm": 0,
+  "replayPassesPerArm": 1,
+  "trainedEnvironmentInteractionsPerArm": 0
+ },
+ "command": "node game/world/stateful_credit_replay.mjs 1 2 3 4 5 6 7 8 9 10 --episodes 12 --out /tmp/m0d-matched-credit.json",
+ "commit": "78b1502",
+ "config": {
+  "arms": [
+   "native",
+   "trace-one-step",
+   "no-bootstrap",
+   "actor-frozen",
+   "critic-frozen",
+   "reward-shifted",
+   "zero-feedback"
+  ],
+  "episodes": 12,
+  "loggedFields": "public observations, selected action, post-action reward and terminal flags",
+  "noModelRollout": true,
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "source": "alternating explicit demonstration and uniform random behavior",
+  "tasks": [
+   {
+    "goal": [
+     3,
+     0
+    ],
+    "id": "fixed-train",
+    "item": [
+     2,
+     0
+    ],
+    "maxSteps": 12,
+    "start": [
+     2,
+     0
+    ],
+    "walls": []
+   },
+   {
+    "goal": [
+     1,
+     0
+    ],
+    "id": "left-one-cell",
+    "item": [
+     2,
+     0
+    ],
+    "maxSteps": 12,
+    "start": [
+     2,
+     0
+    ],
+    "walls": []
+   },
+   {
+    "goal": [
+     4,
+     0
+    ],
+    "id": "move-then-pickup",
+    "item": [
+     3,
+     0
+    ],
+    "maxSteps": 12,
+    "start": [
+     2,
+     0
+    ],
+    "walls": []
+   }
+  ]
+ },
+ "created": "2026-11-18T06:21:43Z",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "experiment": "brain-world/m0d-matched-public-transition-credit-replay",
+ "metrics": {},
+ "runs": [
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7033146835628798,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1633746325969696,
+     "moveRightAfterPickup": 0.1762082725763321,
+     "pickupAtStart": 0.18158671259880066
+    },
+    "appliedRewardSum": 2.330000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.39586525192203226,
+    "meanAbsTD": 0.14436464988830883,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.02775368094444275,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.4434484371979912,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1609429568052292,
+     "moveRightAfterPickup": 0.16406911611557007,
+     "pickupAtStart": 0.1669646054506302
+    },
+    "appliedRewardSum": 2.330000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.23113232972057673,
+    "meanAbsTD": 0.1386959522754755,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.00861920416355133,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6288745144085084,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16321922838687897,
+     "moveRightAfterPickup": 0.1726856380701065,
+     "pickupAtStart": 0.17664143443107605
+    },
+    "appliedRewardSum": 2.330000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.35572146721978015,
+    "meanAbsTD": 0.14892577492408854,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.01944117248058319,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 2.330000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.39586525192203226,
+    "meanAbsTD": 0.14436464988830883,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7567076407270079,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16311393678188324,
+     "moveRightAfterPickup": 0.17619165778160095,
+     "pickupAtStart": 0.18159706890583038
+    },
+    "appliedRewardSum": 2.330000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.13119565217391296,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.028008118271827698,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.39830735106484383,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16306765377521515,
+     "moveRightAfterPickup": 0.1631568819284439,
+     "pickupAtStart": 0.16584230959415436
+    },
+    "appliedRewardSum": 2.329999999999999,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.35844005641524745,
+    "meanAbsTD": 0.14271037632035402,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.007933169603347778,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.330000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 27,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "4f365993e560d3cafc4389aed6e00ee44cfbc94d6d69913a8c248b2d6e3ff270"
+   },
+   "seconds": 0,
+   "seed": 1,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6099107005799169,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.165304034948349,
+     "moveRightAfterPickup": 0.17182987928390503,
+     "pickupAtStart": 0.1889457106590271
+    },
+    "appliedRewardSum": 2.4000000000000017,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3011526458094522,
+    "meanAbsTD": 0.14098398961803757,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.028804883360862732,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.37922918372451875,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16237159073352814,
+     "moveRightAfterPickup": 0.16197524964809418,
+     "pickupAtStart": 0.16970984637737274
+    },
+    "appliedRewardSum": 2.4000000000000017,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.18768874224019783,
+    "meanAbsTD": 0.13635356345256214,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.012029677629470825,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.5940762094500371,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16504012048244476,
+     "moveRightAfterPickup": 0.17083938419818878,
+     "pickupAtStart": 0.18557360768318176
+    },
+    "appliedRewardSum": 2.4000000000000017,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.28848597445175983,
+    "meanAbsTD": 0.15202018833998002,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.024706199765205383,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 2.4000000000000017,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3011526458094522,
+    "meanAbsTD": 0.14098398961803757,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6216973050327539,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16526637971401215,
+     "moveRightAfterPickup": 0.17177417874336243,
+     "pickupAtStart": 0.18854887783527374
+    },
+    "appliedRewardSum": 2.4000000000000017,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.13369565217391297,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.028390005230903625,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.41494251151855366,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16791003942489624,
+     "moveRightAfterPickup": 0.1636359542608261,
+     "pickupAtStart": 0.15369589626789093
+    },
+    "appliedRewardSum": 2.3999999999999995,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.32532599783417027,
+    "meanAbsTD": 0.15497411613755085,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.017244860529899597,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.4000000000000017,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 30,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "3c783f9957327906823bffbee4ca231412335f044f119b551b96d6dd1afea948"
+   },
+   "seconds": 0,
+   "seed": 2,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7282695710467806,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1629648059606552,
+     "moveRightAfterPickup": 0.16724444925785065,
+     "pickupAtStart": 0.1918642669916153
+    },
+    "appliedRewardSum": 3.2199999999999998,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.4045673563908849,
+    "meanAbsTD": 0.16140156864920807,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.029477238655090332,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.4555283157804837,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1631324291229248,
+     "moveRightAfterPickup": 0.16130860149860382,
+     "pickupAtStart": 0.16856138408184052
+    },
+    "appliedRewardSum": 3.2199999999999998,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.22715548435542132,
+    "meanAbsTD": 0.15453267328945697,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.010787025094032288,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6973452303952428,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16221344470977783,
+     "moveRightAfterPickup": 0.1647988259792328,
+     "pickupAtStart": 0.18300111591815948
+    },
+    "appliedRewardSum": 3.2199999999999998,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.35980484054147155,
+    "meanAbsTD": 0.1706368016902669,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.022655516862869263,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 3.2199999999999998,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.4045673563908849,
+    "meanAbsTD": 0.16140156864920807,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7469465319136503,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16259349882602692,
+     "moveRightAfterPickup": 0.16721989214420319,
+     "pickupAtStart": 0.1901308000087738
+    },
+    "appliedRewardSum": 3.2199999999999998,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.14808988764044934,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.028090521693229675,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.5435095125101832,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16628281772136688,
+     "moveRightAfterPickup": 0.17687097191810608,
+     "pickupAtStart": 0.1761353760957718
+    },
+    "appliedRewardSum": 3.220000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3574160543062135,
+    "meanAbsTD": 0.17433688020160254,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.02005685865879059,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 3.2199999999999998,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 89,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 7,
+    "replayDecisions": 89,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "ff22b3767f0fa9b2220c4b47b4d665c0178a1fd69a9a94bed9eb80a9f78c118d"
+   },
+   "seconds": 0,
+   "seed": 3,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 1.283168037923133,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15469461679458618,
+     "moveRightAfterPickup": 0.17923952639102936,
+     "pickupAtStart": 0.19356831908226013
+    },
+    "appliedRewardSum": 2.0100000000000007,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.6282031759042184,
+    "meanAbsTD": 0.14643452627184625,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.05144655704498291,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7049183007599993,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1595977544784546,
+     "moveRightAfterPickup": 0.16394253075122833,
+     "pickupAtStart": 0.170394167304039
+    },
+    "appliedRewardSum": 2.0100000000000007,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3666632521714064,
+    "meanAbsTD": 0.13748441394151434,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.013520553708076477,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 1.1649523276073572,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15689203143119812,
+     "moveRightAfterPickup": 0.1768697053194046,
+     "pickupAtStart": 0.18661242723464966
+    },
+    "appliedRewardSum": 2.0100000000000007,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.5556247594552133,
+    "meanAbsTD": 0.14107668145553945,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.03992342948913574,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 2.0100000000000007,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.6282031759042184,
+    "meanAbsTD": 0.14643452627184625,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 1.3473141508439994,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15348435938358307,
+     "moveRightAfterPickup": 0.17918483912944794,
+     "pickupAtStart": 0.19122901558876038
+    },
+    "appliedRewardSum": 2.0100000000000007,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.1314130434782608,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.050262823700904846,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6190363133918935,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.17037171125411987,
+     "moveRightAfterPickup": 0.16473297774791718,
+     "pickupAtStart": 0.156748428940773
+    },
+    "appliedRewardSum": 2.01,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.5208825925716969,
+    "meanAbsTD": 0.15328505588736044,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.015556976199150085,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.0100000000000007,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 35,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "d40921426ce1636654b421a71d6b07f6035f36afde56f06183ef65d2db658c9e"
+   },
+   "seconds": 0,
+   "seed": 4,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6051624893211169,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16859032213687897,
+     "moveRightAfterPickup": 0.16920113563537598,
+     "pickupAtStart": 0.18984869122505188
+    },
+    "appliedRewardSum": 2.350000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.33297085947181415,
+    "meanAbsTD": 0.1529318637578721,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.02764013409614563,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.3723842279246723,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16413870453834534,
+     "moveRightAfterPickup": 0.16454961895942688,
+     "pickupAtStart": 0.17186346650123596
+    },
+    "appliedRewardSum": 2.350000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.17503125308064682,
+    "meanAbsTD": 0.14366762718637577,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.009841814637184143,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.5272394000199014,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16770552098751068,
+     "moveRightAfterPickup": 0.16721558570861816,
+     "pickupAtStart": 0.18548265099525452
+    },
+    "appliedRewardSum": 2.350000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.30168816641488405,
+    "meanAbsTD": 0.15625442526657687,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.020403742790222168,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 2.350000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.33297085947181415,
+    "meanAbsTD": 0.1529318637578721,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6350839378004594,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16839641332626343,
+     "moveRightAfterPickup": 0.17061938345432281,
+     "pickupAtStart": 0.1896458864212036
+    },
+    "appliedRewardSum": 2.350000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.13423913043478253,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.028661668300628662,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.549676348256692,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16249719262123108,
+     "moveRightAfterPickup": 0.16768878698349,
+     "pickupAtStart": 0.1548565924167633
+    },
+    "appliedRewardSum": 2.3499999999999996,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.37007089190268605,
+    "meanAbsTD": 0.1565798414767248,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.017001673579216003,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.350000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "7eb2e2bc8cb575631dc5061dbecf9bca692866ed858a2d36760a4c276e0690d0"
+   },
+   "seconds": 0,
+   "seed": 5,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6930201801344076,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15400531888008118,
+     "moveRightAfterPickup": 0.18288110196590424,
+     "pickupAtStart": 0.1897856593132019
+    },
+    "appliedRewardSum": 1.7999999999999992,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.28878185441601545,
+    "meanAbsTD": 0.15187479959120678,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.051994770765304565,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.3793067985988614,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16018402576446533,
+     "moveRightAfterPickup": 0.1632007509469986,
+     "pickupAtStart": 0.1684674769639969
+    },
+    "appliedRewardSum": 1.7999999999999992,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.17021208945874378,
+    "meanAbsTD": 0.14282160508277114,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.011749371886253357,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7044720320328111,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15438926219940186,
+     "moveRightAfterPickup": 0.1831728219985962,
+     "pickupAtStart": 0.18930719792842865
+    },
+    "appliedRewardSum": 1.7999999999999992,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3093547352133328,
+    "meanAbsTD": 0.1594600151540316,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.05142408609390259,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 1.7999999999999992,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.28878185441601545,
+    "meanAbsTD": 0.15187479959120678,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6888611034868575,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15544219315052032,
+     "moveRightAfterPickup": 0.1821734607219696,
+     "pickupAtStart": 0.1886271983385086
+    },
+    "appliedRewardSum": 1.7999999999999992,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.1369565217391303,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.04869179427623749,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.3678246160348291,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1770429015159607,
+     "moveRightAfterPickup": 0.16038012504577637,
+     "pickupAtStart": 0.15938685834407806
+    },
+    "appliedRewardSum": 1.799999999999999,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.25917250597419184,
+    "meanAbsTD": 0.15758328823169415,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.02394258975982666,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.7999999999999992,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 34,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "9baceb256c5749d76daccc3afb5f0fc44d0c4a01c832b4a6c46e6b6ef8df3b58"
+   },
+   "seconds": 0,
+   "seed": 6,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.8453747427199403,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16609716415405273,
+     "moveRightAfterPickup": 0.17670826613903046,
+     "pickupAtStart": 0.20322707295417786
+    },
+    "appliedRewardSum": 1.78,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.4241914166477727,
+    "meanAbsTD": 0.1390025523943396,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.04717150330543518,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.44256748423044456,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16220976412296295,
+     "moveRightAfterPickup": 0.16237199306488037,
+     "pickupAtStart": 0.17154765129089355
+    },
+    "appliedRewardSum": 1.78,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.23493593999228324,
+    "meanAbsTD": 0.13479280980652322,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.01363256573677063,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.7687758088315206,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1650436818599701,
+     "moveRightAfterPickup": 0.1742882877588272,
+     "pickupAtStart": 0.1987392157316208
+    },
+    "appliedRewardSum": 1.78,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3818646317704406,
+    "meanAbsTD": 0.15226807724187133,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.04131714999675751,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 1.78,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.4241914166477727,
+    "meanAbsTD": 0.1390025523943396,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.8699844858887928,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16599135100841522,
+     "moveRightAfterPickup": 0.17653630673885345,
+     "pickupAtStart": 0.20107336342334747
+    },
+    "appliedRewardSum": 1.78,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.13065217391304343,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.04495164752006531,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.48469670585546965,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1622900813817978,
+     "moveRightAfterPickup": 0.16353243589401245,
+     "pickupAtStart": 0.1568579375743866
+    },
+    "appliedRewardSum": 1.7799999999999991,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.4134381944077177,
+    "meanAbsTD": 0.14600504497346314,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.017319560050964355,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 1.78,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 32,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "19f098b0ee6d9a6380714cb8b632e167096a39eec45d967291cd28d88ca58ddb"
+   },
+   "seconds": 0,
+   "seed": 7,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.878913399616323,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16216793656349182,
+     "moveRightAfterPickup": 0.17403694987297058,
+     "pickupAtStart": 0.18758806586265564
+    },
+    "appliedRewardSum": 4.1000000000000005,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3816876872347166,
+    "meanAbsTD": 0.1682195174694132,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.032790407538414,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.5719004780552801,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16079024970531464,
+     "moveRightAfterPickup": 0.16193217039108276,
+     "pickupAtStart": 0.16864535212516785
+    },
+    "appliedRewardSum": 4.1000000000000005,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.23467177512804938,
+    "meanAbsTD": 0.15641270242964903,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.012589603662490845,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.8633629239054272,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16324807703495026,
+     "moveRightAfterPickup": 0.17268791794776917,
+     "pickupAtStart": 0.17847400903701782
+    },
+    "appliedRewardSum": 4.1000000000000005,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3766493507246196,
+    "meanAbsTD": 0.17769016683146954,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.021247178316116333,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 4.1000000000000005,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3816876872347166,
+    "meanAbsTD": 0.1682195174694132,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.9183698245527552,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16101518273353577,
+     "moveRightAfterPickup": 0.1727047860622406,
+     "pickupAtStart": 0.1896987110376358
+    },
+    "appliedRewardSum": 4.1000000000000005,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.14482758620689645,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.03472164273262024,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.30575453881479575,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16348721086978912,
+     "moveRightAfterPickup": 0.16598348319530487,
+     "pickupAtStart": 0.16805969178676605
+    },
+    "appliedRewardSum": 4.1000000000000005,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.40981562093929824,
+    "meanAbsTD": 0.16520538071715649,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.005255669355392456,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.1000000000000005,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 26,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "652e48ffd3804052fde3725a6ebb1963874c1cf091cf008a36a659f41d5865d4"
+   },
+   "seconds": 0,
+   "seed": 8,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 1.0546661779947044,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16262419521808624,
+     "moveRightAfterPickup": 0.18428467214107513,
+     "pickupAtStart": 0.19744926691055298
+    },
+    "appliedRewardSum": 4.130000000000002,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.608258134033008,
+    "meanAbsTD": 0.15400751227055642,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.05244307219982147,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.6274656827838938,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15895730257034302,
+     "moveRightAfterPickup": 0.15965889394283295,
+     "pickupAtStart": 0.17348003387451172
+    },
+    "appliedRewardSum": 4.130000000000002,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.3368875271462741,
+    "meanAbsTD": 0.1432392213703675,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.021530508995056152,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.9471874578076296,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16145466268062592,
+     "moveRightAfterPickup": 0.17906810343265533,
+     "pickupAtStart": 0.18755625188350677
+    },
+    "appliedRewardSum": 4.130000000000002,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.5011325388909427,
+    "meanAbsTD": 0.15898316684178557,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.038503021001815796,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 4.130000000000002,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.608258134033008,
+    "meanAbsTD": 0.15400751227055642,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 1.1078370020162858,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.16420342028141022,
+     "moveRightAfterPickup": 0.18302860856056213,
+     "pickupAtStart": 0.1938723772764206
+    },
+    "appliedRewardSum": 4.130000000000002,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.13758620689655165,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.04603089392185211,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.5048269026188592,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15689925849437714,
+     "moveRightAfterPickup": 0.17116178572177887,
+     "pickupAtStart": 0.16227257251739502
+    },
+    "appliedRewardSum": 4.130000000000003,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.5057020914873647,
+    "meanAbsTD": 0.15441313663848982,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.018656626343727112,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 4.130000000000002,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 87,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 25,
+    "recordedSuccesses": 7,
+    "replayDecisions": 87,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "61c327450fdc36a18d563db8ad814a0a5961c742374c1bda23ca7bcee48759e5"
+   },
+   "seconds": 0,
+   "seed": 9,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "native",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.9280493515494896,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.15753646194934845,
+     "moveRightAfterPickup": 0.18087923526763916,
+     "pickupAtStart": 0.19447685778141022
+    },
+    "appliedRewardSum": 2.190000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.5246984266094046,
+    "meanAbsTD": 0.14466217989363783,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.05115295946598053,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "trace-one-step",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.5409305595166334,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.158466175198555,
+     "moveRightAfterPickup": 0.15908290445804596,
+     "pickupAtStart": 0.17020122706890106
+    },
+    "appliedRewardSum": 2.190000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.2841923599624323,
+    "meanAbsTD": 0.13547902476383408,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.019318819046020508,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "no-bootstrap",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.8346649024209185,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1584201157093048,
+     "moveRightAfterPickup": 0.17613688111305237,
+     "pickupAtStart": 0.18891693651676178
+    },
+    "appliedRewardSum": 2.190000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.48348031983789497,
+    "meanAbsTD": 0.14894656476161325,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.03996703028678894,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "actor-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 2.190000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.5246984266094046,
+    "meanAbsTD": 0.14466217989363783,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "critic-frozen",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.9658711586360624,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1597844362258911,
+     "moveRightAfterPickup": 0.18171536922454834,
+     "pickupAtStart": 0.190912663936615
+    },
+    "appliedRewardSum": 2.190000000000001,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0.12619565217391296,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.04617692530155182,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "reward-shifted",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0.583505883078411,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.18045936524868011,
+     "moveRightAfterPickup": 0.15803983807563782,
+     "pickupAtStart": 0.16062070429325104
+    },
+    "appliedRewardSum": 2.1899999999999995,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0.39405792368198433,
+    "meanAbsTD": 0.1462437239166353,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0.028465494513511658,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  },
+  {
+   "arm": "zero-feedback",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "actorDeltaL1": 0,
+    "afterProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "appliedRewardSum": 0,
+    "beforeProbe": {
+     "moveLeftAfterPickup": 0.1666666716337204,
+     "moveRightAfterPickup": 0.1666666716337204,
+     "pickupAtStart": 0.1666666716337204
+    },
+    "criticDeltaL1": 0,
+    "meanAbsTD": 0,
+    "modelBytes": 150464,
+    "originalRewardSum": 2.190000000000001,
+    "policyEnvironmentInteractions": 0,
+    "policyOracleQueries": 0,
+    "probeChangeL1": 0,
+    "recordedEnvironmentSteps": 92,
+    "recordedEpisodes": 12,
+    "recordedInvalid": 29,
+    "recordedSuccesses": 6,
+    "replayDecisions": 92,
+    "replayEnvironmentSteps": 0,
+    "replayProvenance": "forced action, fixed logged observations, offline TD; not on-policy",
+    "scriptedEpisodes": 6,
+    "streamHash": "8311798702e71027f43c1da68a3a0f5ed99194573ce44b219ef0129a6d791ea8"
+   },
+   "seconds": 0,
+   "seed": 10,
+   "split": "logged-public-transitions-not-transfer",
+   "status": "ok"
+  }
+ ],
+ "schema": "brain-result/1"
+}

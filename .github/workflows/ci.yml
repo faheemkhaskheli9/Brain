@@ -180,6 +180,13 @@ jobs:
           node game/world/stateful_credit_probe.mjs 1 --checkpoints 0,5,17 --repeats 2 --out /tmp/m0c-credit-smoke.json
           python research/result_schema.py --check /tmp/m0c-credit-smoke.json
           python research/analyze_m0c_credit_probe.py /tmp/m0c-credit-smoke.json
+      - name: M0d matched public-transition TD/actor replay and provenance gates
+        run: |
+          node game/world/test_stateful_credit_replay.mjs
+          node game/world/stateful_credit_replay.mjs 1 2 --episodes 6 --out /tmp/m0d-credit-replay-smoke.json
+          python research/result_schema.py --check /tmp/m0d-credit-replay-smoke.json
+      - name: M0d matched-credit archived evidence and mutation regression
+        run: python research/test_analyze_m0d_credit_replay.py
       - name: M0c causal diagnostic evidence mutation gate
         run: python research/test_analyze_m0c_credit_probe.py
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
