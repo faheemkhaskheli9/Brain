@@ -55,12 +55,57 @@ jobs:
         run: xvfb-run python game/test_levels_ui.py
       - name: Experiment result files validate and keep failed runs (#104)
         run: python research/test_result_schema.py
+      - name: M0c paired multi-seed analysis rejects omissions and budgets
+        run: python research/test_analyze_m0c_controls.py
+      - name: Stateful option science gate rejects missing seeds, leaks and forgetting (#112)
+        run: python research/test_analyze_stateful_options.py
+      - name: Sparse local synaptic learning, growth/prune and frozen evaluation
+        run: |
+          python research/test_sparse_brain_tasks.py
+          python research/test_structural_plasticity.py
+          python research/test_learn_sparse_brain.py
+          python research/learn_sparse_brain.py --seeds 1 2 --train-steps 140 --eval-trials 25 --out /tmp/sparse-learning-smoke.json
+          python research/result_schema.py --check /tmp/sparse-learning-smoke.json
+          python research/result_schema.py --check research/results/structural-plasticity-2026-11-12.json
+      - name: Learned sparse motor control and post-action reward regressions
+        run: |
+          python research/test_closed_loop_reach.py
+          python research/test_learn_reach.py
+          python research/learn_reach.py --seeds 1 2 --train-episodes 4 --eval-episodes 3 --reverse-episodes 2 --out /tmp/reach-smoke.json
+          python research/result_schema.py --check /tmp/reach-smoke.json
+          python research/result_schema.py --check research/results/closed-loop-reaching-2026-11-12.json
+      - name: Sparse context checkpoint retrieval and adversarial learning controls
+        run: |
+          python research/test_context_memory.py
+          python research/test_evaluate_context_memory.py
+          python research/evaluate_context_memory.py --seeds 0 1 --train-episodes 6 --adapt-episodes 4 --eval-episodes 3 --probe-trials 2 --probe-steps 2 --out /tmp/context-memory-smoke.json
+          python research/result_schema.py --check /tmp/context-memory-smoke.json
+          python research/result_schema.py --check research/results/context-memory-2026-11-12.json
+      - name: Online sparse context switch without resettable probes
+        run: |
+          python research/test_online_context.py
+          python research/test_evaluate_online_context.py
+          python research/evaluate_online_context.py --seeds 0 1 --train-episodes 8 --adapt-episodes 5 --phase-steps 33 41 47 39 --out /tmp/online-context-smoke.json
+          python research/result_schema.py --check /tmp/online-context-smoke.json
+          python research/test_online_context_results.py
+          python research/result_schema.py --check research/results/online-context-2026-11-12.json
+      - name: Continuous one-body motor stream and causal delayed reward controls
+        run: |
+          python research/test_continuous_motor.py
+          python research/test_evaluate_continuous_motor.py
+          python research/evaluate_continuous_motor.py --seeds 0 1 --train-episodes 8 --adapt-episodes 5 --phase-steps 33 41 47 39 --out /tmp/continuous-motor-smoke.json
+          python research/result_schema.py --check /tmp/continuous-motor-smoke.json
+          python research/test_analyze_continuous_motor.py
+          python research/result_schema.py --check research/results/continuous-motor-2026-11-12.json
+          python research/analyze_continuous_motor.py research/results/continuous-motor-2026-11-12.json
       - name: Results dashboard reports bad files and exports exact values (#107)
         run: python research/test_dashboard.py
       - name: Continual-learning archived results and mutation gates (#154)
         run: python research/test_continual_guard.py
       - name: Replay analysis keeps failures, budgets and paired uncertainty (#152)
         run: python research/test_analyze_replay.py
+      - name: Stateful carry evaluator preselects comparators on development only
+        run: python research/test_analyze_stateful_carry.py
       - name: LLM verified mistake-learning memory and no-leakage regression tests
         run: python research/test_llm_mistake_learning.py
       - name: Agent mistake-learning stack (skills, RAG, subagents, plugins)
@@ -98,8 +143,67 @@ jobs:
         run: node game/world/test_navigation.mjs
       - name: Construction tasks are deterministic, valid and held out (#110)
         run: node game/world/test_construct.mjs
+      - name: Stateful acquire-carry-place environment and matched learning baselines (#112)
+        run: |
+          node game/world/test_stateful_carry.mjs
+          node game/world/test_stateful_baselines.mjs
+          node game/world/stateful_baselines.mjs 1 --train-steps 20 --train-tasks 4 --eval-tasks 4 --repeats 1 --out /tmp/stateful-carry-smoke.json
+          python research/result_schema.py --check /tmp/stateful-carry-smoke.json
+          python research/analyze_stateful_carry.py /tmp/stateful-carry-smoke.json
+      - name: Curriculum gait/action scaffold has an opt-out control and paired frozen scenes
+        run: node game/world/test_scaffold.mjs
+      - name: Stateful construction transitions, disjoint goals and independent oracle (#110/#112)
+        run: node game/world/test_stateful_construct.mjs
+      - name: M0c same-environment tabular, random and heuristic controls (#112/#153)
+        run: |
+          node game/world/test_stateful_construct_controls.mjs
+          node game/world/stateful_construct_controls.mjs 1 --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-controls-smoke.json
+          python research/result_schema.py --check /tmp/m0c-controls-smoke.json
+      - name: M0c independent structural generator and paired family smoke (#110/#112)
+        run: |
+          node game/world/test_stateful_structural.mjs
+          node game/world/stateful_construct_controls.mjs 1 --protocol scattered-to-barrier --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-stress-smoke.json
+          python research/result_schema.py --check /tmp/m0c-stress-smoke.json
+      - name: M0c fixed-task exploration/credit probe and frozen feedback tests
+        run: |
+          node game/world/test_stateful_calibration.mjs
+          node game/world/stateful_calibration.mjs 1 --checkpoints 0,4,11 --repeats 2 --out /tmp/m0c-calibration-smoke.json
+          python research/result_schema.py --check /tmp/m0c-calibration-smoke.json
+          python research/check_m0c_calibration.py /tmp/m0c-calibration-smoke.json
+      - name: M0c calibration artifact mutation gate
+        run: python research/test_check_m0c_calibration.py
+      - name: Calibration paired uncertainty and analysis integrity
+        run: python research/test_analyze_m0c_calibration.py
+      - name: M0c direct sensory and TD-credit isolation regressions
+        run: |
+          node game/world/test_stateful_credit_probe.mjs
+          node game/world/stateful_credit_probe.mjs 1 --checkpoints 0,5,17 --repeats 2 --out /tmp/m0c-credit-smoke.json
+          python research/result_schema.py --check /tmp/m0c-credit-smoke.json
+          python research/analyze_m0c_credit_probe.py /tmp/m0c-credit-smoke.json
+      - name: M0c causal diagnostic evidence mutation gate
+        run: python research/test_analyze_m0c_credit_probe.py
+      - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
+        run: |
+          node game/world/test_stateful_options.mjs
+          node game/world/stateful_options.mjs 1 --train-steps 10 --train-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/stateful-options-smoke.json
+          python research/result_schema.py --check /tmp/stateful-options-smoke.json
+      - name: Goal-conditioned construction learner has frozen, masked controls (#112)
+        run: |
+          node game/world/test_construct_learner.mjs
+          node game/world/construct_learner.mjs 1 --train-steps 20 --train-tasks 4 --eval-tasks 4 --repeats 1 --out /tmp/construct-learner-smoke.json
+          python research/result_schema.py --check /tmp/construct-learner-smoke.json
+      - name: Construction transfer pilot keeps adaptation tasks and tests separate (#112)
+        run: |
+          node game/world/test_construct_transfer.mjs
+          node game/world/construct_transfer.mjs 1 --train-steps 8 --adapt-steps 8 --train-tasks 4 --adapt-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/construct-transfer-smoke.json
+          python research/result_schema.py --check /tmp/construct-transfer-smoke.json
       - name: Novelty scoring rejects invalid, duplicate and mirrored candidates (#111)
         run: node game/world/test_novelty.mjs
+      - name: Fair novelty feedback queries are audited (#111)
+        run: |
+          node game/world/test_novelty_fair.mjs
+          node game/world/novelty_fair.mjs 1 --tasks 3 --budget 8 --out /tmp/novelty-fair-smoke.json
+          python research/result_schema.py --check /tmp/novelty-fair-smoke.json
       - name: Every species in Brain Ecosystem learns
         run: node game/ecosystem/test_ecosystem.mjs 1 2 3
 
@@ -131,7 +235,7 @@ jobs:
       - run: npm install -g playwright@$PLAYWRIGHT_VERSION three@0.160.0
       - name: Cache the Chromium download
         id: chromium
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ env.PLAYWRIGHT_VERSION }}-chromium

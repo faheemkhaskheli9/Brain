@@ -1,0 +1,2388 @@
+{
+  "schema": "brain-result/1",
+  "experiment": "brain/sparse-microcircuit-structural-plasticity",
+  "commit": "a2ce54102a23489ae8b0956f384f3d2472d21ab6",
+  "created": "2026-11-12T06:34:20Z",
+  "command": "python research/learn_sparse_brain.py --seeds 101 102 103 104 105 106 107 108 109 110 --train-steps 1000 --eval-trials 400",
+  "environment": {
+    "runtime": "python 3.13.5",
+    "device": "Linux-6.18.57-x86_64-with-glibc2.41"
+  },
+  "config": {
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110
+    ],
+    "initialEdges": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "learner": {
+      "inputs": 24,
+      "actions": 2,
+      "max_edges": 4,
+      "max_fanout": 2,
+      "learning_rate": 0.06,
+      "eligibility_decay": 0.8,
+      "activity_threshold": 0.01,
+      "weight_bound": 4,
+      "grow_every": 80,
+      "warmup": 80,
+      "candidate_decay": 0.99,
+      "candidate_min_score": 0.75,
+      "growth_strength": 0.04,
+      "min_prune_age": 50,
+      "max_candidates": 64,
+      "min_error_rate": 0.12,
+      "error_window": 80,
+      "max_delayed_steps": 16
+    },
+    "growthModes": [
+      "evidence",
+      "random_growth",
+      "fixed",
+      "frozen",
+      "shuffled_feedback",
+      "privileged_topology"
+    ],
+    "privilegedTopology": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "prespecification": "confirmatory seeds 101-110; exploratory seeds 0-9 excluded",
+    "caveat": "Synthetic 24-feature association: initial edges deliberately omit informative cue; no human biology claims"
+  },
+  "budgets": {
+    "trainEnvironmentActions": 1000,
+    "sourceEvaluationTrials": 400,
+    "frozenHeldoutTrials": 400,
+    "learningRewardCalls": 1000,
+    "maxSynapses": 4
+  },
+  "metrics": {
+    "heldoutSuccess": "higher",
+    "sourceSuccess": "higher",
+    "trainLateSuccess": "higher",
+    "weightedProducts": "lower",
+    "newSynapses": "lower"
+  },
+  "runs": [
+    {
+      "arm": "evidence",
+      "seed": 101,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.18303775599997607,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.98,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43968,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "1a2f1bb856d253db1afc512618ff7baa9140f1faaab77082851d349688393842",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 101,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.5067780469998979,
+      "scores": {
+        "heldoutSuccess": 0.47,
+        "sourceSuccess": 0.43,
+        "trainEarlySuccess": 0.48,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 41313,
+        "candidateEvictions": 24
+      },
+      "checkpoint": "f7afb16f714476407810b539566c06597b790cc4a59d1f9dec10fb8a27679eab",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          14,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 101,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4532120379990374,
+      "scores": {
+        "heldoutSuccess": 0.495,
+        "sourceSuccess": 0.5175,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "489fc9c80df88884c3f017ed0550085613bbd4a63b9c4e1787a87ad96fe6e0a6",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 101,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.0583912740003143,
+      "scores": {
+        "heldoutSuccess": 0.47,
+        "sourceSuccess": 0.43,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.45,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "9fa0845749950d25beae2fcbbd1b82f4752c048d293230fa9334c85bd4b095fb",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 101,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.5263849189996108,
+      "scores": {
+        "heldoutSuccess": 0.53,
+        "sourceSuccess": 0.57,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.56,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42221,
+        "candidateEvictions": 15
+      },
+      "checkpoint": "154f6cab3038ca91753c5212761221e5494b0ac8342b32150b5a0c7c794ccf2a",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          8,
+          0
+        ],
+        [
+          16,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 101,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.08360503199946834,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.84,
+        "trainLateSuccess": 0.98,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "816933b0df21d97204b368ab0ab186b17a3747831b2a5c78475ccc56b2258dcb",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 102,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.35451100099999167,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43960,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "82c6337efe25cc047c3f35cab22f738fb8d383d531321847d5e8af481b87b2d9",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 102,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.7508745170016482,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.51,
+        "trainLateSuccess": 0.71,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 41582,
+        "candidateEvictions": 15
+      },
+      "checkpoint": "6762cc29492d7413a9a26d4dc304a7f06cd32ebe7c342b5d1de3e3cf3cdce67f",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          20,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 102,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.05199352500130772,
+      "scores": {
+        "heldoutSuccess": 0.5125,
+        "sourceSuccess": 0.545,
+        "trainEarlySuccess": 0.48,
+        "trainLateSuccess": 0.54,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "265be3371fb70b03d8db745d1584329b7028c740a3fc4978e22d01f95270f516",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 102,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.03931340400049521,
+      "scores": {
+        "heldoutSuccess": 0.4925,
+        "sourceSuccess": 0.4875,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.56,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "df3876e38f953d5522ab8e1c66898b3fa1f66a032ec6b51951555bbdb705bebb",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 102,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.11096552699927997,
+      "scores": {
+        "heldoutSuccess": 0.4925,
+        "sourceSuccess": 0.515,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.57,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 41625,
+        "candidateEvictions": 19
+      },
+      "checkpoint": "fe0b3008a4a53aee638232c4d166894aecebee4047c5f82f837f75a471e8246d",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          12,
+          0
+        ],
+        [
+          13,
+          0
+        ],
+        [
+          19,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 102,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.06458293499963474,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.83,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "a85ba94a17de27db674a9aefd884463e95b63c0ea635f4144fbd6a6e7e4448d2",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 103,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.16179533900140086,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43964,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "549d5bf79dd106d195bd1fa4007afc4e62f03241138991488be824f4fd85a2f7",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 103,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.1053260999997292,
+      "scores": {
+        "heldoutSuccess": 0.4775,
+        "sourceSuccess": 0.5125,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 40673,
+        "candidateEvictions": 21
+      },
+      "checkpoint": "bd36dbe4fcfa4329ac0bd5b56471f0a78d31b47e514f617b5e6321553f7f8e6d",
+      "connectionTopology": [
+        [
+          2,
+          0
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          12,
+          1
+        ],
+        [
+          14,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 103,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.04966305800007831,
+      "scores": {
+        "heldoutSuccess": 0.5525,
+        "sourceSuccess": 0.495,
+        "trainEarlySuccess": 0.48,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "bd933d871416e44b627e79a7f1ca3e6ab6bb8c93c08a99e9605cfc3e9acf0d7f",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 103,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.030135666998830857,
+      "scores": {
+        "heldoutSuccess": 0.5525,
+        "sourceSuccess": 0.495,
+        "trainEarlySuccess": 0.54,
+        "trainLateSuccess": 0.46,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "aab4884587bc0550ab7e76a6c90174d7d55db5045aa56f99e18edf66f8b38a3b",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 103,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.08672194999962812,
+      "scores": {
+        "heldoutSuccess": 0.5425,
+        "sourceSuccess": 0.475,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.46,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 43258,
+        "candidateEvictions": 28
+      },
+      "checkpoint": "2eb63e222f4faf7a2f7183b5ea12f7e2806ad05a163dccb19086dab180d4fbd1",
+      "connectionTopology": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          15,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 103,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.04251760500119417,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.85,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "d3009b0a189ba9b55bbd03465120fd2002191d8a366dc21a0508ee87638da5b4",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 104,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.0805695930012007,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.55,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43958,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "31c57b41754457641e2b98d0379a2efeb36692506907297179e5800bd5cb1e95",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 104,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.2468257510008698,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.54,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 5,
+        "prunedSynapses": 5,
+        "weightedProducts": 7200,
+        "candidateProducts": 43292,
+        "candidateEvictions": 22
+      },
+      "checkpoint": "7c8cdb7fc752221fa775657fb6610905ba1efe7efbfb0c557ff4956c817ec947",
+      "connectionTopology": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          9,
+          0
+        ],
+        [
+          11,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 104,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.0582057760002499,
+      "scores": {
+        "heldoutSuccess": 0.49,
+        "sourceSuccess": 0.5025,
+        "trainEarlySuccess": 0.54,
+        "trainLateSuccess": 0.46,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "b07abd01e8f89db8bf42946b8f4a525a3da770de963f1b8012ddc912ddb74920",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 104,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.0400466030005191,
+      "scores": {
+        "heldoutSuccess": 0.51,
+        "sourceSuccess": 0.4975,
+        "trainEarlySuccess": 0.56,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "e1fe4a206eeec60b23d0c0b26d66b2a00ae800007b0585f1187598db71637425",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 104,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.11997981499916932,
+      "scores": {
+        "heldoutSuccess": 0.51,
+        "sourceSuccess": 0.4975,
+        "trainEarlySuccess": 0.58,
+        "trainLateSuccess": 0.49,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 41947,
+        "candidateEvictions": 37
+      },
+      "checkpoint": "af9f573ab724e6d470b1984cce65e7f6718d602b9fb760bad4fe16db200d86d8",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          15,
+          1
+        ],
+        [
+          20,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 104,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.06471368700113089,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.85,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "3af9c1e97a4167066a1b30c7a1265d1e509d401693e9a1926979c2ce62cf7cce",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 105,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.09730697099985264,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43946,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "28593293ea1fa7673d07c385fae19114d27da899201fb1895e4e63d9b27a98c8",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 105,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.08635193200098001,
+      "scores": {
+        "heldoutSuccess": 0.48,
+        "sourceSuccess": 0.52,
+        "trainEarlySuccess": 0.45,
+        "trainLateSuccess": 0.46,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7194,
+        "candidateProducts": 41950,
+        "candidateEvictions": 36
+      },
+      "checkpoint": "e0eae93397c217e74039cc8b29861774fb03741806c4080d70565285e8700733",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          22,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 105,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.04629858299995249,
+      "scores": {
+        "heldoutSuccess": 0.48,
+        "sourceSuccess": 0.52,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.44,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "07fd015d29c86e6c5fac7a5295e4f0168f192bf74aee6ff163c0763fd22816e4",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 105,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.031502803998591844,
+      "scores": {
+        "heldoutSuccess": 0.4775,
+        "sourceSuccess": 0.4925,
+        "trainEarlySuccess": 0.46,
+        "trainLateSuccess": 0.49,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "eb904957243b007efc9d448a7e00a42e31edb2de05d923d38a3d6755fd9db6a6",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 105,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.2823975729988888,
+      "scores": {
+        "heldoutSuccess": 0.505,
+        "sourceSuccess": 0.515,
+        "trainEarlySuccess": 0.41,
+        "trainLateSuccess": 0.45,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 41794,
+        "candidateEvictions": 49
+      },
+      "checkpoint": "06de38effc19390c6bb08e9d8420c76ff12f68f42d6d86f8c3f11b5e2525d5d3",
+      "connectionTopology": [
+        [
+          2,
+          0
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          14,
+          1
+        ],
+        [
+          21,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 105,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.10674566499983484,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.84,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "77a415a32481bb3c732213c57996f6bcf4399ee80bc13b5c7bb4ea9537f6d8f8",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 106,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.08981994699934148,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.52,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43960,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "8bfb232c93ecefff8d7a994bdcea0af50d34638dc5fbfda6bcd38f982579f6e9",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 106,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.10362451599939959,
+      "scores": {
+        "heldoutSuccess": 0.5625,
+        "sourceSuccess": 0.505,
+        "trainEarlySuccess": 0.48,
+        "trainLateSuccess": 0.58,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42265,
+        "candidateEvictions": 21
+      },
+      "checkpoint": "a3a4fdef3d27f61fdcd66cc538aaaf3ec6a562d3173d27c460885fd7001254d8",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          12,
+          1
+        ],
+        [
+          13,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 106,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.062253250000139815,
+      "scores": {
+        "heldoutSuccess": 0.52,
+        "sourceSuccess": 0.4975,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.46,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "51b0fdde88bc1f3561637df968459921ea67006a4ff37c99ff085e2092ca5c26",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 106,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.04981046800094191,
+      "scores": {
+        "heldoutSuccess": 0.5025,
+        "sourceSuccess": 0.565,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "594d84701d844d9064ab91b3a56ada215b826e62d01b089ad9395b83fa516ad4",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 106,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.10300973300036276,
+      "scores": {
+        "heldoutSuccess": 0.4975,
+        "sourceSuccess": 0.435,
+        "trainEarlySuccess": 0.46,
+        "trainLateSuccess": 0.49,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42143,
+        "candidateEvictions": 21
+      },
+      "checkpoint": "2274c78f1f258256a683441170dba66f36a2314dc5714349e54af113a2022018",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          11,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 106,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.06465402899993933,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.84,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "f34aef0f215236f1524df97ffbb366bfd5b444861cf5073e39a373bf7dd24d89",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 107,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.24772422299975005,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.55,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43968,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "d7a1dac2ee2ec9405fde9cc0886fc121e53b6a0a06b1652a3049679e4f9ba73f",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 107,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.1228629599991109,
+      "scores": {
+        "heldoutSuccess": 0.5225,
+        "sourceSuccess": 0.4825,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7198,
+        "candidateProducts": 40545,
+        "candidateEvictions": 12
+      },
+      "checkpoint": "b049d440f5f05e605fea69c1c6827e2df96b3330e96c906c895774d20b7ec75f",
+      "connectionTopology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          18,
+          1
+        ],
+        [
+          19,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 107,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.05735423300029652,
+      "scores": {
+        "heldoutSuccess": 0.5225,
+        "sourceSuccess": 0.4825,
+        "trainEarlySuccess": 0.53,
+        "trainLateSuccess": 0.47,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "91c3fad391940345c1926b27f4171c86b9b4f1a02fbe13ff4e9a5456eea21bf9",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 107,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.055181078998430166,
+      "scores": {
+        "heldoutSuccess": 0.4775,
+        "sourceSuccess": 0.57,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.51,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "0dc67efddf8a8d27d42ad32cf6d929732a8574bad21e796dee554ec957495c11",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 107,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.2328919709998445,
+      "scores": {
+        "heldoutSuccess": 0.53,
+        "sourceSuccess": 0.505,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.47,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 43608,
+        "candidateEvictions": 12
+      },
+      "checkpoint": "9e1e70204d25028a6fea2bc2f9a76836ef86f8b739e9bb762acc70abd0336ff7",
+      "connectionTopology": [
+        [
+          1,
+          1
+        ],
+        [
+          10,
+          0
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          17,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 107,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.5192034840001725,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.78,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "a719f64b8310824be2c7190eefc1edf8ef4cc41f07f81ca697203acd0e41ddf9",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 108,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.13110218300062115,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.54,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43960,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "6dbd5ced406429adaad3e13bc8d19b299b4f9b1e0c82ce365c9dc71fcae660dc",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 108,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.2971187059993099,
+      "scores": {
+        "heldoutSuccess": 0.4975,
+        "sourceSuccess": 0.52,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.48,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42310,
+        "candidateEvictions": 24
+      },
+      "checkpoint": "5a8134ccce3ef5599502d31e748539b1e10dc88a985c7ef3cd5532b514f0a0eb",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 108,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.07742598499862652,
+      "scores": {
+        "heldoutSuccess": 0.4975,
+        "sourceSuccess": 0.52,
+        "trainEarlySuccess": 0.52,
+        "trainLateSuccess": 0.49,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "617a2be0096a4fe9a486bc974b6a6a43f6347982c5de85ce8753566f533434b1",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 108,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.12793475600119564,
+      "scores": {
+        "heldoutSuccess": 0.515,
+        "sourceSuccess": 0.47,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.49,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "9d20a0cb500c9623d39992d959269dfe0adab54720d45990e735ae74b139588b",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 108,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.20968776799963962,
+      "scores": {
+        "heldoutSuccess": 0.4875,
+        "sourceSuccess": 0.555,
+        "trainEarlySuccess": 0.6,
+        "trainLateSuccess": 0.49,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 43180,
+        "candidateEvictions": 32
+      },
+      "checkpoint": "3771dd12781649d3433f18b2db83502b5c937a2e62748553e8fcfcadd3000ea2",
+      "connectionTopology": [
+        [
+          9,
+          1
+        ],
+        [
+          11,
+          0
+        ],
+        [
+          20,
+          1
+        ],
+        [
+          21,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 108,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.09085829600007855,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.84,
+        "trainLateSuccess": 0.99,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "c3292ad76c54f5421da70168a1f6f2a53388352604ec0a9008cbc6422366ad24",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 109,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.1672730299997056,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 3,
+        "prunedSynapses": 3,
+        "weightedProducts": 7200,
+        "candidateProducts": 43950,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "51b8eaf02ea6adadc66a67242e7c93ef1730c779fdd9f09ca23dcb4bad9143ef",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 109,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.164650986000197,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.49,
+        "trainLateSuccess": 0.97,
+        "synapses": 4,
+        "newSynapses": 5,
+        "prunedSynapses": 5,
+        "weightedProducts": 7200,
+        "candidateProducts": 43207,
+        "candidateEvictions": 28
+      },
+      "checkpoint": "c09808ee101bd2bc35dc57e802d1bac2245396ee7671c7d2be66ecaf0ee02b86",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          17,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 109,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.09002575600061391,
+      "scores": {
+        "heldoutSuccess": 0.51,
+        "sourceSuccess": 0.52,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.56,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "4572c7f4b3693471d1b2381ce9c1b32e3835f3d7d0d56a999814b9cfbe38660a",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 109,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.06013336599971808,
+      "scores": {
+        "heldoutSuccess": 0.51,
+        "sourceSuccess": 0.52,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.56,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "a3f91f24266d2a9939d27a89081f35ce6662369ac6f38416b4908ba1cb09ec13",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 109,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.15334587100005592,
+      "scores": {
+        "heldoutSuccess": 0.425,
+        "sourceSuccess": 0.51,
+        "trainEarlySuccess": 0.47,
+        "trainLateSuccess": 0.5,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42305,
+        "candidateEvictions": 50
+      },
+      "checkpoint": "5b23b2be23191a791ebf3ffd27c091ce1bfb8ce03c1a3b7989fb22d6fe1645f7",
+      "connectionTopology": [
+        [
+          8,
+          1
+        ],
+        [
+          15,
+          1
+        ],
+        [
+          19,
+          0
+        ],
+        [
+          19,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 109,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.09114477100047225,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.85,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "f15103520a5778a16518e5af9ac6ce0d57ddf78a70db584ffcb5d7f88d5b4a37",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 110,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.13076894400001038,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.54,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 2,
+        "prunedSynapses": 2,
+        "weightedProducts": 7200,
+        "candidateProducts": 43950,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "66eab4c5468624ab06b2c67152b5458cb16c9b8b00f8aa9d5a7a3315599d3ab9",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 110,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.16947946500113176,
+      "scores": {
+        "heldoutSuccess": 0.4675,
+        "sourceSuccess": 0.475,
+        "trainEarlySuccess": 0.5,
+        "trainLateSuccess": 0.47,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42340,
+        "candidateEvictions": 26
+      },
+      "checkpoint": "393643c6ee48bd59de79a0846e2938fbe1a35ec75123d3a83243ab33b21507d6",
+      "connectionTopology": [
+        [
+          5,
+          1
+        ],
+        [
+          13,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          21,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 110,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.09503276299983554,
+      "scores": {
+        "heldoutSuccess": 0.5475,
+        "sourceSuccess": 0.4975,
+        "trainEarlySuccess": 0.54,
+        "trainLateSuccess": 0.55,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "287ea2e7d3e2388443cb4beacc3bc8a58e6268686d8dd6fed9f2aa61826d130a",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 110,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.0551350679997995,
+      "scores": {
+        "heldoutSuccess": 0.4675,
+        "sourceSuccess": 0.495,
+        "trainEarlySuccess": 0.52,
+        "trainLateSuccess": 0.51,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "7d323d03fcd5d84f7542c40b4dbebfa3922527b96d5b60072652c0da5cc74cb5",
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "shuffled_feedback",
+      "seed": 110,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.1550787529995432,
+      "scores": {
+        "heldoutSuccess": 0.5075,
+        "sourceSuccess": 0.4875,
+        "trainEarlySuccess": 0.53,
+        "trainLateSuccess": 0.53,
+        "synapses": 4,
+        "newSynapses": 12,
+        "prunedSynapses": 12,
+        "weightedProducts": 7200,
+        "candidateProducts": 42213,
+        "candidateEvictions": 22
+      },
+      "checkpoint": "4df16223430438ecaa9d788d70a22a124c144c774336cae8a3070b638aa37bb3",
+      "connectionTopology": [
+        [
+          3,
+          1
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "privileged_topology",
+      "seed": 110,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.20312640799966175,
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainEarlySuccess": 0.84,
+        "trainLateSuccess": 1,
+        "synapses": 4,
+        "newSynapses": 0,
+        "prunedSynapses": 0,
+        "weightedProducts": 7200,
+        "candidateProducts": 0,
+        "candidateEvictions": 0
+      },
+      "checkpoint": "93aa437679d74c16e1d1148e4c9cbd9bc46f7d6d3d4a35f9e9fa76a09abc5a7a",
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "baseline": "fixed"
+}

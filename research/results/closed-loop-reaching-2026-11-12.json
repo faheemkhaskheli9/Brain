@@ -1,0 +1,2876 @@
+{
+  "schema": "brain-result/1",
+  "experiment": "brain/closed-loop-sparse-reaching",
+  "commit": "fccf2c6d0983a617365ba53f5230ffd10a2422d8",
+  "created": "2026-11-12T07:19:13Z",
+  "command": "python research/learn_reach.py --seeds 301 302 303 304 305 306 307 308 309 310 --train-episodes 120 --eval-episodes 80 --reverse-episodes 40",
+  "environment": {
+    "runtime": "3.13.5",
+    "body": "SimpleJointBody",
+    "cpu": ""
+  },
+  "config": {
+    "seeds": [
+      301,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310
+    ],
+    "configuration": {
+      "inputs": 24,
+      "actions": 2,
+      "max_edges": 4,
+      "max_fanout": 2,
+      "learning_rate": 0.06,
+      "eligibility_decay": 0.8,
+      "activity_threshold": 0.01,
+      "weight_bound": 4,
+      "grow_every": 80,
+      "warmup": 80,
+      "candidate_decay": 0.99,
+      "candidate_min_score": 0.75,
+      "growth_strength": 0.04,
+      "min_prune_age": 1000,
+      "max_candidates": 64,
+      "min_error_rate": 0.15,
+      "error_window": 80,
+      "max_delayed_steps": 16
+    },
+    "initialWiring": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "privilegedWiring": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "arms": [
+      "evidence",
+      "random_growth",
+      "fixed",
+      "frozen",
+      "privileged",
+      "evidence_delay2"
+    ],
+    "holdout": "new target magnitudes from a disjoint seed/split namespace",
+    "delayedFeedback": "delay2 has half as many reward calls for equal motor decisions",
+    "provenance": "engineered delta-position visual sensor; preexisting S1 proprioception and fixed motor decoder",
+    "limitation": "simple one-joint simulator, task-specific shaping reward, incomplete macro-anatomical integration"
+  },
+  "budgets": {
+    "trainingBodyActions": 1920,
+    "developmentReversalBodyActions": 640,
+    "sourceFrozenEvalBodyActions": 1280,
+    "heldoutFrozenEvalBodyActions": 1280,
+    "maxSynapses": 4,
+    "trainingFeedbackCalls": {
+      "standard": 1920,
+      "delay2": 960
+    }
+  },
+  "metrics": {
+    "heldoutSuccess": "higher",
+    "sourceSuccess": "higher",
+    "reversedAfter": "higher",
+    "sourceRetentionDelta": "higher",
+    "heldoutFinalError": "lower",
+    "candidateProducts": "lower"
+  },
+  "runs": [
+    {
+      "arm": "evidence",
+      "seed": 301,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2862489389990515,
+      "checkpoint": "5dd051f0d5995ab54037ffc892a12ae34bd479b5fecf2874a538f2e34d5ed82b",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.45,
+        "trainingLateSuccess": 0.53,
+        "reversedBefore": 0,
+        "reversedAfter": 0.525,
+        "sourceAfterReversal": 0.475,
+        "heldoutFinalError": 0.09778480079993399,
+        "heldoutProgress": 0.5640625,
+        "heldoutWrongDirection": 0.21796875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22857,
+        "candidateProducts": 10527,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.775,
+        "sourceRetentionDelta": -0.525
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 301,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2218771669995476,
+      "checkpoint": "ea6fa8b5309c77bd623727a010e680be915e4d9764afcaed1eeb8123954e2ba2",
+      "scores": {
+        "heldoutSuccess": 0.5875,
+        "sourceSuccess": 0.475,
+        "trainingEarlySuccess": 0.3,
+        "trainingLateSuccess": 0.41,
+        "reversedBefore": 0.525,
+        "reversedAfter": 0.75,
+        "sourceAfterReversal": 0.2,
+        "heldoutFinalError": 0.6350362656510716,
+        "heldoutProgress": -0.1515625,
+        "heldoutWrongDirection": 0.57578125,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 21473,
+        "candidateProducts": 10883,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.851063829787234,
+        "sourceRetentionDelta": -0.27499999999999997
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 301,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2918799529998068,
+      "checkpoint": "c1dbc160a5cd1eb842c5e0868a7d3a41caaca4cc4d7fa2b584292b96e7be00c0",
+      "scores": {
+        "heldoutSuccess": 0.5875,
+        "sourceSuccess": 0.475,
+        "trainingEarlySuccess": 0.45,
+        "trainingLateSuccess": 0.53,
+        "reversedBefore": 0.525,
+        "reversedAfter": 0.525,
+        "sourceAfterReversal": 0.475,
+        "heldoutFinalError": 0.6350362656510716,
+        "heldoutProgress": -0.1515625,
+        "heldoutWrongDirection": 0.57578125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.851063829787234,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 301,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2610628379989066,
+      "checkpoint": "7206bec5159bdec24c9b21b41977eb97a6d4e02ebf57907d746365214579d4d3",
+      "scores": {
+        "heldoutSuccess": 0.4125,
+        "sourceSuccess": 0.525,
+        "trainingEarlySuccess": 0.15,
+        "trainingLateSuccess": 0.12,
+        "reversedBefore": 0.475,
+        "reversedAfter": 0.475,
+        "sourceAfterReversal": 0.525,
+        "heldoutFinalError": 0.7988423328383985,
+        "heldoutProgress": -0.40625,
+        "heldoutWrongDirection": 0.703125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.666666666666666,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 301,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.1598576180003874,
+      "checkpoint": "d1dcf6f561acde5bde8e25212a52435a48a661a369c97b51dad37fa0952d9164",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.5,
+        "trainingLateSuccess": 0.81,
+        "reversedBefore": 0,
+        "reversedAfter": 0,
+        "sourceAfterReversal": 1,
+        "heldoutFinalError": 0.09454004681555901,
+        "heldoutProgress": 0.5671875,
+        "heldoutWrongDirection": 0.21640625,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22746,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.775,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 301,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.239855040999828,
+      "checkpoint": "0ba59f06be09dc514f6b16dccd250c3f2195afcbf37acd39100f3491e56d9edd",
+      "scores": {
+        "heldoutSuccess": 0.5875,
+        "sourceSuccess": 0.5875,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.49,
+        "reversedBefore": 0,
+        "reversedAfter": 0.525,
+        "sourceAfterReversal": 0.475,
+        "heldoutFinalError": 0.20934852728008954,
+        "heldoutProgress": 0.45625,
+        "heldoutWrongDirection": 0.271875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22949,
+        "candidateProducts": 10557,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.680851063829786,
+        "sourceRetentionDelta": -0.11250000000000004
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 302,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2095950059992902,
+      "checkpoint": "c0bcb6747a22efa2da8bb3dfdd8e977550bc4b09b46f4a101c559c872a981008",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.51,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5,
+        "sourceAfterReversal": 0.525,
+        "heldoutFinalError": 0.12102335941217708,
+        "heldoutProgress": 0.525,
+        "heldoutWrongDirection": 0.2375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22260,
+        "candidateProducts": 10704,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.475
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 302,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2013954579997517,
+      "checkpoint": "6cd228b6b28060a88c1124e323ea92f49db4d099d1820382d3386842b0b47896",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.48,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5,
+        "sourceAfterReversal": 0.525,
+        "heldoutFinalError": 0.11523182191217704,
+        "heldoutProgress": 0.5328125,
+        "heldoutWrongDirection": 0.23359375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 21964,
+        "candidateProducts": 10747,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.475
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 302,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.1803404260008392,
+      "checkpoint": "e9aae432c55bc58ca259c4c561bfcfef1d6349c7a8df75f446712f460b75c77d",
+      "scores": {
+        "heldoutSuccess": 0.525,
+        "sourceSuccess": 0.475,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.5,
+        "reversedBefore": 0.5125,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.475,
+        "heldoutFinalError": 0.6934128495555502,
+        "heldoutProgress": -0.2390625,
+        "heldoutWrongDirection": 0.61953125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.761904761904763,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 302,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.166431558000113,
+      "checkpoint": "3a72d9604f583a164ffa36ea5b650be73865baa52f22a9b126e1cfcbf2e68fc5",
+      "scores": {
+        "heldoutSuccess": 0.5875,
+        "sourceSuccess": 0.475,
+        "trainingEarlySuccess": 0.2,
+        "trainingLateSuccess": 0.18,
+        "reversedBefore": 0.5,
+        "reversedAfter": 0.5,
+        "sourceAfterReversal": 0.475,
+        "heldoutFinalError": 0.6486951487276404,
+        "heldoutProgress": -0.1625,
+        "heldoutWrongDirection": 0.58125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.680851063829786,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 302,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.1657188249992032,
+      "checkpoint": "39bfbdd6a121bc35abb3cc5c883c1cbef523a5aaeea210f3d94dedae6f512e03",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.45,
+        "trainingLateSuccess": 0.83,
+        "reversedBefore": 0,
+        "reversedAfter": 0,
+        "sourceAfterReversal": 0.9875,
+        "heldoutFinalError": 0.09091403617939077,
+        "heldoutProgress": 0.5921875,
+        "heldoutWrongDirection": 0.20390625,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22670,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.012499999999999956
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 302,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.1505547110009502,
+      "checkpoint": "59ce060262f4bf7fa51da500a43feb12afd55eed8ee3c43828cb1186c7abd174",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.38,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.475,
+        "heldoutFinalError": 0.09312038915710963,
+        "heldoutProgress": 0.6015625,
+        "heldoutWrongDirection": 0.19921875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22767,
+        "candidateProducts": 10391,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.525
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 303,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2131099170001107,
+      "checkpoint": "84b091101288daef3e4f1317ea31da5e5b6c5819ea0c0217d21881be9199f74c",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.45,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.4625,
+        "heldoutFinalError": 0.10258438764429678,
+        "heldoutProgress": 0.546875,
+        "heldoutWrongDirection": 0.2265625,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22562,
+        "candidateProducts": 10538,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.4625,
+        "sourceRetentionDelta": -0.5375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 303,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.284782783000992,
+      "checkpoint": "4893fa31f777815a3259a119b4d20d7b37e8065c75694c4f6110e371ac37f773",
+      "scores": {
+        "heldoutSuccess": 0.475,
+        "sourceSuccess": 0.5625,
+        "trainingEarlySuccess": 0.5,
+        "trainingLateSuccess": 0.45,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.4625,
+        "heldoutFinalError": 0.30057064685403295,
+        "heldoutProgress": 0.3296875,
+        "heldoutWrongDirection": 0.33515625,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22234,
+        "candidateProducts": 10598,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.421052631578947,
+        "sourceRetentionDelta": -0.09999999999999998
+      },
+      "connectionTopology": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 303,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.1730085979997966,
+      "checkpoint": "1d44a53fb0526cfc76c4cec9cf9ccac039d965c9f9c62aede52b8d76fbaf09e7",
+      "scores": {
+        "heldoutSuccess": 0.4625,
+        "sourceSuccess": 0.4625,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.52,
+        "reversedBefore": 0.4875,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.4625,
+        "heldoutFinalError": 0.7481271494197378,
+        "heldoutProgress": -0.3453125,
+        "heldoutWrongDirection": 0.67265625,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.486486486486486,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 303,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2001669149994996,
+      "checkpoint": "de2422e2df68b8bac6148a18f7086eb3227fce228e8ca9791547f249a72d6960",
+      "scores": {
+        "heldoutSuccess": 0.5375,
+        "sourceSuccess": 0.5375,
+        "trainingEarlySuccess": 0.15,
+        "trainingLateSuccess": 0.13,
+        "reversedBefore": 0.5125,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.5375,
+        "heldoutFinalError": 0.6857514490697327,
+        "heldoutProgress": -0.2453125,
+        "heldoutWrongDirection": 0.62265625,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.44186046511628,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 303,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.6020618929997,
+      "checkpoint": "5d97ff2a368945f288772308edc717d40ad4a69acdf86c24718bde255ccd975c",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.81,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5375,
+        "sourceAfterReversal": 0.5625,
+        "heldoutFinalError": 0.09806559788161112,
+        "heldoutProgress": 0.5734375,
+        "heldoutWrongDirection": 0.21328125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22614,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.4625,
+        "sourceRetentionDelta": -0.4375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 303,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.9668014649996621,
+      "checkpoint": "4f9465795df9ba9f718867c98502a0c0683cb6db6ccd6433d4f3759bf7c6d299",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.4,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.4625,
+        "heldoutFinalError": 0.1094959356130468,
+        "heldoutProgress": 0.53125,
+        "heldoutWrongDirection": 0.234375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22266,
+        "candidateProducts": 10534,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.4625,
+        "sourceRetentionDelta": -0.5375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 304,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.7074605279995012,
+      "checkpoint": "fd552e6f41295a695f6182390797178ab476247d1d10575e5f6caa3a2ba4434a",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.53,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.10118845916988146,
+        "heldoutProgress": 0.575,
+        "heldoutWrongDirection": 0.2125,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22755,
+        "candidateProducts": 10549,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6625,
+        "sourceRetentionDelta": -0.44999999999999996
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 304,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.5129926270001306,
+      "checkpoint": "3579146847dd7657c24cac88745619a2925255c1c186ed39077bab5341aea24e",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.45,
+        "trainingLateSuccess": 0.44,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.2188922725099927,
+        "heldoutProgress": 0.4203125,
+        "heldoutWrongDirection": 0.28984375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22032,
+        "candidateProducts": 10717,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6625,
+        "sourceRetentionDelta": -0.44999999999999996
+      },
+      "connectionTopology": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 304,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.6039890079991892,
+      "checkpoint": "ad6a5149da29b821052b6631d989525e67e5454a3800609b32211ae93f809675",
+      "scores": {
+        "heldoutSuccess": 0.475,
+        "sourceSuccess": 0.55,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.57,
+        "reversedBefore": 0.4875,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.7339619810230956,
+        "heldoutProgress": -0.3203125,
+        "heldoutWrongDirection": 0.66015625,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.736842105263158,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 304,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.4416540889997123,
+      "checkpoint": "eda459f5effa7a60a869d1ab6fc3ea83a434723865963e471e0b385b86a5dc2f",
+      "scores": {
+        "heldoutSuccess": 0.525,
+        "sourceSuccess": 0.4125,
+        "trainingEarlySuccess": 0.1,
+        "trainingLateSuccess": 0.14,
+        "reversedBefore": 0.55,
+        "reversedAfter": 0.55,
+        "sourceAfterReversal": 0.4125,
+        "heldoutFinalError": 0.6960611212844693,
+        "heldoutProgress": -0.253125,
+        "heldoutWrongDirection": 0.6265625,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.595238095238095,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 304,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2961509260003368,
+      "checkpoint": "74bacfe49e550e7065a79d4ffe8f3b4ef9183751bb96f707ca8cca7803ddbe99",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.5,
+        "trainingLateSuccess": 0.77,
+        "reversedBefore": 0,
+        "reversedAfter": 0.45,
+        "sourceAfterReversal": 0.5875,
+        "heldoutFinalError": 0.0926479521974927,
+        "heldoutProgress": 0.559375,
+        "heldoutWrongDirection": 0.2203125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22794,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6625,
+        "sourceRetentionDelta": -0.4125
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 304,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.225972840000395,
+      "checkpoint": "70bf0c58eb04d9321b4b2a51c04ce55fadaa04ef778f5bbd4b4e5593e7ac40e0",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 0.95,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.41,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.11128653656729548,
+        "heldoutProgress": 0.528125,
+        "heldoutWrongDirection": 0.2359375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22609,
+        "candidateProducts": 10490,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.775,
+        "sourceRetentionDelta": -0.3999999999999999
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 305,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2372219280005083,
+      "checkpoint": "b4aedf4706423c3e9af6efb9f44948225a4458792ad0898ee403931911342afc",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.75,
+        "trainingLateSuccess": 0.54,
+        "reversedBefore": 0,
+        "reversedAfter": 1,
+        "sourceAfterReversal": 0,
+        "heldoutFinalError": 0.07991009292127803,
+        "heldoutProgress": 0.590625,
+        "heldoutWrongDirection": 0.2046875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22139,
+        "candidateProducts": 10627,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.7625,
+        "sourceRetentionDelta": -1
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 305,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.3951042009994126,
+      "checkpoint": "77a90e916c7a6b68af8d20a146d20b67fd84bbaa1cf2fef5b29eb7a11fa80886",
+      "scores": {
+        "heldoutSuccess": 0.575,
+        "sourceSuccess": 0.5375,
+        "trainingEarlySuccess": 0.75,
+        "trainingLateSuccess": 0.41,
+        "reversedBefore": 0.4875,
+        "reversedAfter": 1,
+        "sourceAfterReversal": 0,
+        "heldoutFinalError": 0.6557126969146297,
+        "heldoutProgress": -0.178125,
+        "heldoutWrongDirection": 0.5890625,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 21762,
+        "candidateProducts": 10892,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.673913043478262,
+        "sourceRetentionDelta": -0.5375
+      },
+      "connectionTopology": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 305,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.3306871420008974,
+      "checkpoint": "d3e2d3a3db26b3ce16d3d2357a493cea5b7a2ae8939020dc5d09810903ab6773",
+      "scores": {
+        "heldoutSuccess": 0.625,
+        "sourceSuccess": 0.5625,
+        "trainingEarlySuccess": 0.75,
+        "trainingLateSuccess": 0.47,
+        "reversedBefore": 0.5125,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.5625,
+        "heldoutFinalError": 0.6116678240724548,
+        "heldoutProgress": -0.1046875,
+        "heldoutWrongDirection": 0.55234375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.7,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 305,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2900452759986365,
+      "checkpoint": "b28b0af52952c0f294a3c3ecbc2e9fca7ea8383fe6ea02cb913460d4cbac0f97",
+      "scores": {
+        "heldoutSuccess": 0.375,
+        "sourceSuccess": 0.4375,
+        "trainingEarlySuccess": 0.2,
+        "trainingLateSuccess": 0.14,
+        "reversedBefore": 0.4875,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.4375,
+        "heldoutFinalError": 0.8222107744170156,
+        "heldoutProgress": -0.4515625,
+        "heldoutWrongDirection": 0.72578125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.866666666666667,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 305,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.208232038999995,
+      "checkpoint": "b08e03691d8ae04f3481d803e560370211a73ffda0c474f7a0835bb11453e11b",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.75,
+        "trainingLateSuccess": 0.69,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.5375,
+        "heldoutFinalError": 0.09692561323377802,
+        "heldoutProgress": 0.565625,
+        "heldoutWrongDirection": 0.2171875,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22744,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.7625,
+        "sourceRetentionDelta": -0.4625
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 305,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2595042230004765,
+      "checkpoint": "9cc185055c682d508b34c4a3b6662fd2d533dd35de54295a8024ab4a84e23a2e",
+      "scores": {
+        "heldoutSuccess": 0.975,
+        "sourceSuccess": 0.7625,
+        "trainingEarlySuccess": 0.55,
+        "trainingLateSuccess": 0.48,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.1125,
+        "heldoutFinalError": 0.14374176642874664,
+        "heldoutProgress": 0.5265625,
+        "heldoutWrongDirection": 0.23671875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22643,
+        "candidateProducts": 10514,
+        "feedbackCalls": 960,
+        "firstHitStep": 11.064102564102564,
+        "sourceRetentionDelta": -0.6499999999999999
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 306,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.355964311000207,
+      "checkpoint": "d96169f0ed323a0c2104e6d336a062dcfcb2dcd0cb68689cf9271184ffe32c67",
+      "scores": {
+        "heldoutSuccess": 0.6,
+        "sourceSuccess": 0.5375,
+        "trainingEarlySuccess": 0.5,
+        "trainingLateSuccess": 0.51,
+        "reversedBefore": 0,
+        "reversedAfter": 0.6,
+        "sourceAfterReversal": 0.05,
+        "heldoutFinalError": 0.22593724816929064,
+        "heldoutProgress": 0.4421875,
+        "heldoutWrongDirection": 0.27890625,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22956,
+        "candidateProducts": 10540,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.833333333333334,
+        "sourceRetentionDelta": -0.4875
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 306,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 5.691841830999692,
+      "checkpoint": "1092617f813bcf056cd2677d846f893203241254c2dadd72b0a0b7528229f8fd",
+      "scores": {
+        "heldoutSuccess": 0.6,
+        "sourceSuccess": 0.5375,
+        "trainingEarlySuccess": 0.55,
+        "trainingLateSuccess": 0.42,
+        "reversedBefore": 0.5625,
+        "reversedAfter": 1,
+        "sourceAfterReversal": 0,
+        "heldoutFinalError": 0.6242214978595514,
+        "heldoutProgress": -0.1359375,
+        "heldoutWrongDirection": 0.56796875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22074,
+        "candidateProducts": 10692,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.833333333333334,
+        "sourceRetentionDelta": -0.5375
+      },
+      "connectionTopology": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 306,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 2.4581732820006437,
+      "checkpoint": "1b846840efb3a722ae85050659c3ff9132fbb091d162c73312ff4d4255431eea",
+      "scores": {
+        "heldoutSuccess": 0.6,
+        "sourceSuccess": 0.5375,
+        "trainingEarlySuccess": 0.5,
+        "trainingLateSuccess": 0.46,
+        "reversedBefore": 0.5625,
+        "reversedAfter": 0.5625,
+        "sourceAfterReversal": 0.5375,
+        "heldoutFinalError": 0.6242214978595514,
+        "heldoutProgress": -0.1359375,
+        "heldoutWrongDirection": 0.56796875,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.833333333333334,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 306,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.8100155670017557,
+      "checkpoint": "acbc4a55748cf0dce1fbefbedcebf79abf1f078d203dba7af2053901e14fa2db",
+      "scores": {
+        "heldoutSuccess": 0.525,
+        "sourceSuccess": 0.4375,
+        "trainingEarlySuccess": 0.1,
+        "trainingLateSuccess": 0.12,
+        "reversedBefore": 0.4,
+        "reversedAfter": 0.4,
+        "sourceAfterReversal": 0.4375,
+        "heldoutFinalError": 0.6936655516539947,
+        "heldoutProgress": -0.2421875,
+        "heldoutWrongDirection": 0.62109375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.761904761904763,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 306,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.6051843479999661,
+      "checkpoint": "0e361142a3f1e7333fd674de07f4b19f4c79d0a6b6bc5813319ecde23e22c31a",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.8,
+        "reversedBefore": 0,
+        "reversedAfter": 0.6,
+        "sourceAfterReversal": 0.5625,
+        "heldoutFinalError": 0.09425081873298359,
+        "heldoutProgress": 0.5828125,
+        "heldoutWrongDirection": 0.20859375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22698,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.8,
+        "sourceRetentionDelta": -0.4375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 306,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.4032352730009734,
+      "checkpoint": "ac28804dd53e7d243ab563423571d427171709b1df68d72ca715f2d845adbd3e",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.42,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4,
+        "sourceAfterReversal": 0.4375,
+        "heldoutFinalError": 0.1098341302487383,
+        "heldoutProgress": 0.53125,
+        "heldoutWrongDirection": 0.234375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22263,
+        "candidateProducts": 10595,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.8,
+        "sourceRetentionDelta": -0.5625
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 307,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.3034234259994264,
+      "checkpoint": "004aa7fc951d1186625f90aa7100986e708e8a7883c315569802cf508481c5c1",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.15,
+        "trainingLateSuccess": 0.46,
+        "reversedBefore": 0,
+        "reversedAfter": 0.7625,
+        "sourceAfterReversal": 0.3125,
+        "heldoutFinalError": 0.08544950420183585,
+        "heldoutProgress": 0.590625,
+        "heldoutWrongDirection": 0.2046875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22788,
+        "candidateProducts": 10362,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6375,
+        "sourceRetentionDelta": -0.6875
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 307,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2540864730017347,
+      "checkpoint": "ec0b0991d5a9443185f1c4809fdc324c69ec9970d0fce2f730e50b96484d40a9",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.2,
+        "trainingLateSuccess": 0.33,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.07111480054951377,
+        "heldoutProgress": 0.603125,
+        "heldoutWrongDirection": 0.1984375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 21535,
+        "candidateProducts": 10753,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6375,
+        "sourceRetentionDelta": -0.55
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 307,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2420109579998098,
+      "checkpoint": "64c384d860c1afb2a9ee64618c08036bbd18653a6fd954d3562fe9e85149b1e9",
+      "scores": {
+        "heldoutSuccess": 0.65,
+        "sourceSuccess": 0.55,
+        "trainingEarlySuccess": 0.15,
+        "trainingLateSuccess": 0.49,
+        "reversedBefore": 0.4875,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.5848567209151174,
+        "heldoutProgress": -0.075,
+        "heldoutWrongDirection": 0.5375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.673076923076923,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 307,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 7.351726398001119,
+      "checkpoint": "b78ccfe4b18756690959e064140c250fb7f3531082d094db6a4a1da6c40eb49b",
+      "scores": {
+        "heldoutSuccess": 0.4875,
+        "sourceSuccess": 0.55,
+        "trainingEarlySuccess": 0.05,
+        "trainingLateSuccess": 0.18,
+        "reversedBefore": 0.5625,
+        "reversedAfter": 0.5625,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.7310542865514764,
+        "heldoutProgress": -0.309375,
+        "heldoutWrongDirection": 0.6546875,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.564102564102564,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 307,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 2.627845442000762,
+      "checkpoint": "0553259065e9bb7383177f11f25edf1e6619593842db1dac090a0ab6a0a36af7",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.3,
+        "trainingLateSuccess": 0.76,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5125,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.0782300448059711,
+        "heldoutProgress": 0.63125,
+        "heldoutWrongDirection": 0.184375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22640,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6375,
+        "sourceRetentionDelta": -0.55
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 307,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 2.992134217000057,
+      "checkpoint": "716e99ed2ec3122bb90219662629170376de956d5ca073237a09eedf49e4bccb",
+      "scores": {
+        "heldoutSuccess": 0.975,
+        "sourceSuccess": 0.8875,
+        "trainingEarlySuccess": 0.05,
+        "trainingLateSuccess": 0.3,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5625,
+        "sourceAfterReversal": 0.55,
+        "heldoutFinalError": 0.13327448248292645,
+        "heldoutProgress": 0.5234375,
+        "heldoutWrongDirection": 0.23828125,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22917,
+        "candidateProducts": 10339,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.76923076923077,
+        "sourceRetentionDelta": -0.3374999999999999
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 308,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 2.0323159569998097,
+      "checkpoint": "f3474692097a449cdf8ac07fa907eea9f1273bd76f60bef54ae3ec45165b38d3",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.15,
+        "trainingLateSuccess": 0.51,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4625,
+        "sourceAfterReversal": 0.3375,
+        "heldoutFinalError": 0.10962273370659943,
+        "heldoutProgress": 0.5734375,
+        "heldoutWrongDirection": 0.21328125,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22418,
+        "candidateProducts": 10456,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.6625
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 308,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.8609863630008476,
+      "checkpoint": "ec88d9505bb2574e01c96b08ce200ff5daa0ff1a818c0491bf9ea6fa4977537e",
+      "scores": {
+        "heldoutSuccess": 0.7375,
+        "sourceSuccess": 0.45,
+        "trainingEarlySuccess": 0.25,
+        "trainingLateSuccess": 0.46,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4375,
+        "sourceAfterReversal": 0.5875,
+        "heldoutFinalError": 0.16173398626547072,
+        "heldoutProgress": 0.49375,
+        "heldoutWrongDirection": 0.253125,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22618,
+        "candidateProducts": 10480,
+        "feedbackCalls": 1920,
+        "firstHitStep": 11.05084745762712,
+        "sourceRetentionDelta": 0.1375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 308,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.5954491289994621,
+      "checkpoint": "f471b7f19e72dceea9761e6d8c7119838fafbb4c04a7b800965cdf083aef7eb0",
+      "scores": {
+        "heldoutSuccess": 0.4625,
+        "sourceSuccess": 0.45,
+        "trainingEarlySuccess": 0.15,
+        "trainingLateSuccess": 0.47,
+        "reversedBefore": 0.4625,
+        "reversedAfter": 0.4625,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.7519002473391013,
+        "heldoutProgress": -0.3375,
+        "heldoutWrongDirection": 0.66875,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.783783783783784,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 308,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.7705791560001671,
+      "checkpoint": "a1dec84445940c67f2bb52c5d9d7d7ca3211ffa248860f052faa59907bb6ee0a",
+      "scores": {
+        "heldoutSuccess": 0.525,
+        "sourceSuccess": 0.5875,
+        "trainingEarlySuccess": 0.1,
+        "trainingLateSuccess": 0.17,
+        "reversedBefore": 0.4375,
+        "reversedAfter": 0.4375,
+        "sourceAfterReversal": 0.5875,
+        "heldoutFinalError": 0.688449347688512,
+        "heldoutProgress": -0.2390625,
+        "heldoutWrongDirection": 0.61953125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.904761904761905,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 308,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.3788561439996556,
+      "checkpoint": "d9b45a360c6530c31ac152b98d6fd9b7b476321e9c979f6e3331ceb16e1fdea9",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.82,
+        "reversedBefore": 0,
+        "reversedAfter": 0.2375,
+        "sourceAfterReversal": 0.5875,
+        "heldoutFinalError": 0.09771313971382736,
+        "heldoutProgress": 0.55,
+        "heldoutWrongDirection": 0.225,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22780,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.4125
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 308,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.589346803000808,
+      "checkpoint": "75a67aa00fff48bb041d207c4569a0cc2a48b2e3f7d61c1ea638adb7998938df",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.1,
+        "trainingLateSuccess": 0.42,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4625,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.09393266468029797,
+        "heldoutProgress": 0.5703125,
+        "heldoutWrongDirection": 0.21484375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22547,
+        "candidateProducts": 10509,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.8125,
+        "sourceRetentionDelta": -0.55
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 309,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.633674513999722,
+      "checkpoint": "6d7228ac8d457717b2c59f6eb41c4831d30422bb4fc35a04738570fed032552c",
+      "scores": {
+        "heldoutSuccess": 0.7,
+        "sourceSuccess": 0.45,
+        "trainingEarlySuccess": 0.6,
+        "trainingLateSuccess": 0.45,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4625,
+        "sourceAfterReversal": 0.5,
+        "heldoutFinalError": 0.18373310438767004,
+        "heldoutProgress": 0.4828125,
+        "heldoutWrongDirection": 0.25859375,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22951,
+        "candidateProducts": 10465,
+        "feedbackCalls": 1920,
+        "firstHitStep": 11.160714285714286,
+        "sourceRetentionDelta": 0.04999999999999999
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 309,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.3302569309998944,
+      "checkpoint": "eafee651bbcb83deca8b59b1ee2f74fe0403d872b9e8d64c8a116ee3e319b9a8",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.65,
+        "trainingLateSuccess": 0.43,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.12871292779852878,
+        "heldoutProgress": 0.521875,
+        "heldoutWrongDirection": 0.2390625,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 21978,
+        "candidateProducts": 10694,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.7625,
+        "sourceRetentionDelta": -0.55
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 309,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2306815529991582,
+      "checkpoint": "d3fee130eeb625dd9691a07cf319288ddb01bb3a7a0ebd66318f87fa27e9c6f6",
+      "scores": {
+        "heldoutSuccess": 0.4875,
+        "sourceSuccess": 0.5,
+        "trainingEarlySuccess": 0.6,
+        "trainingLateSuccess": 0.39,
+        "reversedBefore": 0.4625,
+        "reversedAfter": 0.4625,
+        "sourceAfterReversal": 0.5,
+        "heldoutFinalError": 0.7382723533345259,
+        "heldoutProgress": -0.3046875,
+        "heldoutWrongDirection": 0.65234375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.512820512820513,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 309,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.4339338959998713,
+      "checkpoint": "4058fc437efa715a083ca682d6b1ebcbd6757e64ec0b5277197cb23cb0b5c899",
+      "scores": {
+        "heldoutSuccess": 0.45,
+        "sourceSuccess": 0.45,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.2,
+        "reversedBefore": 0.4875,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.759206845573285,
+        "heldoutProgress": -0.3484375,
+        "heldoutWrongDirection": 0.67421875,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.86111111111111,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 309,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2744748259992775,
+      "checkpoint": "29dfa4cbce6220b7899839d175c5028659d39b2c08c8f1f31b743529419b65f8",
+      "scores": {
+        "heldoutSuccess": 0.6,
+        "sourceSuccess": 0.45,
+        "trainingEarlySuccess": 0.55,
+        "trainingLateSuccess": 0.67,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.19143077389472082,
+        "heldoutProgress": 0.4765625,
+        "heldoutWrongDirection": 0.26171875,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22906,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 11.125,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 309,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2909494060004363,
+      "checkpoint": "1e16fd4b0f3167d0f3fa7a8275ba846bc8e61397a3e7d9f3bb1efbe789492d14",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 0.9625,
+        "trainingEarlySuccess": 0.55,
+        "trainingLateSuccess": 0.38,
+        "reversedBefore": 0,
+        "reversedAfter": 0.4875,
+        "sourceAfterReversal": 0.45,
+        "heldoutFinalError": 0.10942701831903093,
+        "heldoutProgress": 0.5625,
+        "heldoutWrongDirection": 0.21875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22879,
+        "candidateProducts": 10343,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.7875,
+        "sourceRetentionDelta": -0.5125
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "arm": "evidence",
+      "seed": 310,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2121470649999537,
+      "checkpoint": "97b287695ffa3723d2926d96bc47668de70e73d3d71dc3e8ff9dd0c510fc6502",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.54,
+        "reversedBefore": 0,
+        "reversedAfter": 0.5,
+        "sourceAfterReversal": 0.5625,
+        "heldoutFinalError": 0.10654110785343077,
+        "heldoutProgress": 0.565625,
+        "heldoutWrongDirection": 0.2171875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22760,
+        "candidateProducts": 10490,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6375,
+        "sourceRetentionDelta": -0.4375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "random_growth",
+      "seed": 310,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2853504160011653,
+      "checkpoint": "43e148a228d845c616d32a131b6bb7e8cbb0148d3a9ca811235b91365981d89e",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.3,
+        "trainingLateSuccess": 0.53,
+        "reversedBefore": 0,
+        "reversedAfter": 1,
+        "sourceAfterReversal": 0,
+        "heldoutFinalError": 0.11591489451351777,
+        "heldoutProgress": 0.5265625,
+        "heldoutWrongDirection": 0.23671875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22550,
+        "candidateProducts": 10436,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6375,
+        "sourceRetentionDelta": -1
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "fixed",
+      "seed": 310,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2192178860004788,
+      "checkpoint": "d9b0c5f42ea1118e40409fec66e099f208422f2cb112a504d4b8b25b6233cf46",
+      "scores": {
+        "heldoutSuccess": 0.45,
+        "sourceSuccess": 0.5625,
+        "trainingEarlySuccess": 0.35,
+        "trainingLateSuccess": 0.42,
+        "reversedBefore": 0.5,
+        "reversedAfter": 0.5,
+        "sourceAfterReversal": 0.4375,
+        "heldoutFinalError": 0.7596862873175031,
+        "heldoutProgress": -0.3640625,
+        "heldoutWrongDirection": 0.68203125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.666666666666666,
+        "sourceRetentionDelta": -0.125
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "frozen",
+      "seed": 310,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.1833601979997184,
+      "checkpoint": "904881a4fd242318a256b91d8832b6b7e0aa5c16aa14d0a697336eb04f83c120",
+      "scores": {
+        "heldoutSuccess": 0.55,
+        "sourceSuccess": 0.4375,
+        "trainingEarlySuccess": 0.1,
+        "trainingLateSuccess": 0.23,
+        "reversedBefore": 0.5,
+        "reversedAfter": 0.5,
+        "sourceAfterReversal": 0.4375,
+        "heldoutFinalError": 0.6741923111719672,
+        "heldoutProgress": -0.21875,
+        "heldoutWrongDirection": 0.609375,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 23040,
+        "candidateProducts": 0,
+        "feedbackCalls": 0,
+        "firstHitStep": 10.613636363636363,
+        "sourceRetentionDelta": 0
+      },
+      "connectionTopology": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "privileged",
+      "seed": 310,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.2051546090006013,
+      "checkpoint": "bc81ae400fbeda89db6a890d536d904767ff6c6ce244ae2a50897d832e55289c",
+      "scores": {
+        "heldoutSuccess": 1,
+        "sourceSuccess": 1,
+        "trainingEarlySuccess": 0.4,
+        "trainingLateSuccess": 0.81,
+        "reversedBefore": 0,
+        "reversedAfter": 0.125,
+        "sourceAfterReversal": 0.4625,
+        "heldoutFinalError": 0.08606664651795672,
+        "heldoutProgress": 0.5859375,
+        "heldoutWrongDirection": 0.20703125,
+        "connections": 4,
+        "newConnections": 0,
+        "prunedConnections": 0,
+        "synapticProducts": 22756,
+        "candidateProducts": 0,
+        "feedbackCalls": 1920,
+        "firstHitStep": 10.6375,
+        "sourceRetentionDelta": -0.5375
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "arm": "evidence_delay2",
+      "seed": 310,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 1.207623895999859,
+      "checkpoint": "e3b26e9d864907ea8f352e30289f75fbf6a389516fc24aa0aa790601875addbf",
+      "scores": {
+        "heldoutSuccess": 0.5,
+        "sourceSuccess": 0.4625,
+        "trainingEarlySuccess": 0.1,
+        "trainingLateSuccess": 0.36,
+        "reversedBefore": 0,
+        "reversedAfter": 1,
+        "sourceAfterReversal": 0,
+        "heldoutFinalError": 0.21182825898409527,
+        "heldoutProgress": 0.4390625,
+        "heldoutWrongDirection": 0.28046875,
+        "connections": 4,
+        "newConnections": 4,
+        "prunedConnections": 4,
+        "synapticProducts": 22982,
+        "candidateProducts": 10372,
+        "feedbackCalls": 960,
+        "firstHitStep": 10.775,
+        "sourceRetentionDelta": -0.4625
+      },
+      "connectionTopology": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "baseline": "random_growth"
+}

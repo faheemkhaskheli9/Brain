@@ -1,0 +1,2067 @@
+{
+  "schema": "brain-result/1",
+  "experiment": "brain/context-checkpoint-retrieval",
+  "commit": "2341f7014c68260993e128279c8317559779bddc",
+  "created": "2026-11-12T07:47:03Z",
+  "command": "python research/evaluate_context_memory.py --seeds 401 402 403 404 405 406 407 408 409 410 --train-episodes 120 --adapt-episodes 40 --eval-episodes 80 --probe-trials 6 --probe-steps 3",
+  "environment": {
+    "runtime": "3.13.5",
+    "world": "SimpleJointBody"
+  },
+  "config": {
+    "seeds": [
+      401,
+      402,
+      403,
+      404,
+      405,
+      406,
+      407,
+      408,
+      409,
+      410
+    ],
+    "arms": [
+      "single",
+      "bank_latest",
+      "bank_random",
+      "bank_probe",
+      "bank_oracle"
+    ],
+    "policyConfig": {
+      "inputs": 24,
+      "actions": 2,
+      "max_edges": 4,
+      "max_fanout": 2,
+      "learning_rate": 0.06,
+      "eligibility_decay": 0.8,
+      "activity_threshold": 0.01,
+      "weight_bound": 4,
+      "grow_every": 80,
+      "warmup": 80,
+      "candidate_decay": 0.99,
+      "candidate_min_score": 0.75,
+      "growth_strength": 0.04,
+      "min_prune_age": 1000,
+      "max_candidates": 64,
+      "min_error_rate": 0.15,
+      "error_window": 80,
+      "max_delayed_steps": 16
+    },
+    "selector": "detached checkpoint candidates scored with DEV motor progress rewards; no hidden motor sign",
+    "contextTiming": "training and adaptation regime boundaries supplied by experimenter; not autonomously detected",
+    "policyTraining": "one shared base and changed-motor checkpoint per seed for all arms",
+    "evaluation": "held-out source/reversed tasks, independent of probe tasks",
+    "limitations": "engineered target delta, two trained contexts, extra probes/restarts, no neuronal memory simulation"
+  },
+  "budgets": {
+    "trainBodyActionsPerArm": 1920,
+    "adaptBodyActionsPerArm": 640,
+    "frozenReverseActionsPerArm": 1280,
+    "frozenReturnActionsPerArm": 1280,
+    "probeActionsPerBankArm": 72,
+    "probeActionsSingleArm": 0,
+    "maxSavedContexts": 2,
+    "synapsesPerContext": 4
+  },
+  "metrics": {
+    "returnSuccess": "higher",
+    "reversedSuccess": "higher",
+    "retentionDelta": "higher",
+    "probeActions": "lower",
+    "memoryBytes": "lower"
+  },
+  "runs": [
+    {
+      "arm": "single",
+      "seed": 401,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3830122150011448,
+      "scores": {
+        "reversedSuccess": 0.925,
+        "returnSuccess": 0,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.925,
+        "retentionDelta": -1,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7788,
+        "storedModels": 1,
+        "firstHitStep": null,
+        "returnFinalError": 0.9871165804555639,
+        "trainingSynapticProducts": 10217,
+        "trainingCandidateProducts": 13939
+      },
+      "checkpoint": "b7d8e299759def7b2bf1b2dcd15827c961fefe4d2cfdb2153bdf2965fd1b6c82",
+      "sourceCheckpoint": "79294a6cac8d9fac5a282b354ffc77783a2a7c3e53d1667f322bf56a9ba4174a",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.5902728250002838
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 401,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3696744270000636,
+      "scores": {
+        "reversedSuccess": 0.925,
+        "returnSuccess": 0,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.925,
+        "retentionDelta": -1,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15559,
+        "storedModels": 2,
+        "firstHitStep": null,
+        "returnFinalError": 0.9871165804555639,
+        "trainingSynapticProducts": 10217,
+        "trainingCandidateProducts": 13939
+      },
+      "checkpoint": "b7d8e299759def7b2bf1b2dcd15827c961fefe4d2cfdb2153bdf2965fd1b6c82",
+      "sourceCheckpoint": "79294a6cac8d9fac5a282b354ffc77783a2a7c3e53d1667f322bf56a9ba4174a",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.5902728250002838
+    },
+    {
+      "arm": "bank_random",
+      "seed": 401,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40222458700009156,
+      "scores": {
+        "reversedSuccess": 0,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.925,
+        "retentionDelta": 0,
+        "correctReverseSelection": 0,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15559,
+        "storedModels": 2,
+        "firstHitStep": 7.3,
+        "returnFinalError": 0.08591820212550602,
+        "trainingSynapticProducts": 10217,
+        "trainingCandidateProducts": 13939
+      },
+      "checkpoint": "b7d8e299759def7b2bf1b2dcd15827c961fefe4d2cfdb2153bdf2965fd1b6c82",
+      "sourceCheckpoint": "79294a6cac8d9fac5a282b354ffc77783a2a7c3e53d1667f322bf56a9ba4174a",
+      "selected": [
+        0,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.5902728250002838
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 401,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3989428870008851,
+      "scores": {
+        "reversedSuccess": 0.925,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.925,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15559,
+        "storedModels": 2,
+        "firstHitStep": 7.3,
+        "returnFinalError": 0.08591820212550602,
+        "trainingSynapticProducts": 10217,
+        "trainingCandidateProducts": 13939
+      },
+      "checkpoint": "b7d8e299759def7b2bf1b2dcd15827c961fefe4d2cfdb2153bdf2965fd1b6c82",
+      "sourceCheckpoint": "79294a6cac8d9fac5a282b354ffc77783a2a7c3e53d1667f322bf56a9ba4174a",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.5902728250002838
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 401,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39066389400068147,
+      "scores": {
+        "reversedSuccess": 0.925,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.925,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15559,
+        "storedModels": 2,
+        "firstHitStep": 7.3,
+        "returnFinalError": 0.08591820212550602,
+        "trainingSynapticProducts": 10217,
+        "trainingCandidateProducts": 13939
+      },
+      "checkpoint": "b7d8e299759def7b2bf1b2dcd15827c961fefe4d2cfdb2153bdf2965fd1b6c82",
+      "sourceCheckpoint": "79294a6cac8d9fac5a282b354ffc77783a2a7c3e53d1667f322bf56a9ba4174a",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.5902728250002838
+    },
+    {
+      "arm": "single",
+      "seed": 402,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3891404339992732,
+      "scores": {
+        "reversedSuccess": 0.525,
+        "returnSuccess": 0.5125,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.525,
+        "retentionDelta": -0.48750000000000004,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7814,
+        "storedModels": 1,
+        "firstHitStep": 7.2682926829268295,
+        "returnFinalError": 0.7048138004644979,
+        "trainingSynapticProducts": 10197,
+        "trainingCandidateProducts": 14023
+      },
+      "checkpoint": "aa7dc59366776dd629b20e6abf4aefc5d7236458bc5db13ca96757be3d3ea979",
+      "sourceCheckpoint": "c5830d5ec345116629450dbe1731b1701cf0743ea2e894ddc36302186ed48f3e",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.45206963199962047
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 402,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.44411934399977326,
+      "scores": {
+        "reversedSuccess": 0.525,
+        "returnSuccess": 0.5125,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.525,
+        "retentionDelta": -0.48750000000000004,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15604,
+        "storedModels": 2,
+        "firstHitStep": 7.2682926829268295,
+        "returnFinalError": 0.7048138004644979,
+        "trainingSynapticProducts": 10197,
+        "trainingCandidateProducts": 14023
+      },
+      "checkpoint": "aa7dc59366776dd629b20e6abf4aefc5d7236458bc5db13ca96757be3d3ea979",
+      "sourceCheckpoint": "c5830d5ec345116629450dbe1731b1701cf0743ea2e894ddc36302186ed48f3e",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.45206963199962047
+    },
+    {
+      "arm": "bank_random",
+      "seed": 402,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39814946799924655,
+      "scores": {
+        "reversedSuccess": 0.525,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.525,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15604,
+        "storedModels": 2,
+        "firstHitStep": 7.1625,
+        "returnFinalError": 0.11231017162559534,
+        "trainingSynapticProducts": 10197,
+        "trainingCandidateProducts": 14023
+      },
+      "checkpoint": "aa7dc59366776dd629b20e6abf4aefc5d7236458bc5db13ca96757be3d3ea979",
+      "sourceCheckpoint": "c5830d5ec345116629450dbe1731b1701cf0743ea2e894ddc36302186ed48f3e",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.45206963199962047
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 402,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.38360699099939666,
+      "scores": {
+        "reversedSuccess": 0.525,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.525,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15604,
+        "storedModels": 2,
+        "firstHitStep": 7.1625,
+        "returnFinalError": 0.11231017162559534,
+        "trainingSynapticProducts": 10197,
+        "trainingCandidateProducts": 14023
+      },
+      "checkpoint": "aa7dc59366776dd629b20e6abf4aefc5d7236458bc5db13ca96757be3d3ea979",
+      "sourceCheckpoint": "c5830d5ec345116629450dbe1731b1701cf0743ea2e894ddc36302186ed48f3e",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.45206963199962047
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 402,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40049184800045623,
+      "scores": {
+        "reversedSuccess": 0.525,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.525,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15604,
+        "storedModels": 2,
+        "firstHitStep": 7.1625,
+        "returnFinalError": 0.11231017162559534,
+        "trainingSynapticProducts": 10197,
+        "trainingCandidateProducts": 14023
+      },
+      "checkpoint": "aa7dc59366776dd629b20e6abf4aefc5d7236458bc5db13ca96757be3d3ea979",
+      "sourceCheckpoint": "c5830d5ec345116629450dbe1731b1701cf0743ea2e894ddc36302186ed48f3e",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.45206963199962047
+    },
+    {
+      "arm": "single",
+      "seed": 403,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3891556139988097,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.5125,
+        "sourceBefore": 0.75,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": -0.23750000000000004,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7786,
+        "storedModels": 1,
+        "firstHitStep": 7.195121951219512,
+        "returnFinalError": 0.7161297358820434,
+        "trainingSynapticProducts": 10208,
+        "trainingCandidateProducts": 14022
+      },
+      "checkpoint": "4f5a5bcdd62664e273a51080e0fdf5c7583b52a62f9e178f4e41ed926efea147",
+      "sourceCheckpoint": "0e89509bb42c164bd8a038689f5df91d31aa7acc474dee91faec9410995d5c16",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.4724690839993855
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 403,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4070403570003691,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.5125,
+        "sourceBefore": 0.75,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": -0.23750000000000004,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15576,
+        "storedModels": 2,
+        "firstHitStep": 7.195121951219512,
+        "returnFinalError": 0.7161297358820434,
+        "trainingSynapticProducts": 10208,
+        "trainingCandidateProducts": 14022
+      },
+      "checkpoint": "4f5a5bcdd62664e273a51080e0fdf5c7583b52a62f9e178f4e41ed926efea147",
+      "sourceCheckpoint": "0e89509bb42c164bd8a038689f5df91d31aa7acc474dee91faec9410995d5c16",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4724690839993855
+    },
+    {
+      "arm": "bank_random",
+      "seed": 403,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39856972800043877,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.5125,
+        "sourceBefore": 0.75,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": -0.23750000000000004,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15576,
+        "storedModels": 2,
+        "firstHitStep": 7.195121951219512,
+        "returnFinalError": 0.7161297358820434,
+        "trainingSynapticProducts": 10208,
+        "trainingCandidateProducts": 14022
+      },
+      "checkpoint": "4f5a5bcdd62664e273a51080e0fdf5c7583b52a62f9e178f4e41ed926efea147",
+      "sourceCheckpoint": "0e89509bb42c164bd8a038689f5df91d31aa7acc474dee91faec9410995d5c16",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4724690839993855
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 403,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40935045200058084,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.75,
+        "sourceBefore": 0.75,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15576,
+        "storedModels": 2,
+        "firstHitStep": 7.316666666666666,
+        "returnFinalError": 0.16338685414631382,
+        "trainingSynapticProducts": 10208,
+        "trainingCandidateProducts": 14022
+      },
+      "checkpoint": "4f5a5bcdd62664e273a51080e0fdf5c7583b52a62f9e178f4e41ed926efea147",
+      "sourceCheckpoint": "0e89509bb42c164bd8a038689f5df91d31aa7acc474dee91faec9410995d5c16",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4724690839993855
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 403,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39718474999972386,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.75,
+        "sourceBefore": 0.75,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15576,
+        "storedModels": 2,
+        "firstHitStep": 7.316666666666666,
+        "returnFinalError": 0.16338685414631382,
+        "trainingSynapticProducts": 10208,
+        "trainingCandidateProducts": 14022
+      },
+      "checkpoint": "4f5a5bcdd62664e273a51080e0fdf5c7583b52a62f9e178f4e41ed926efea147",
+      "sourceCheckpoint": "0e89509bb42c164bd8a038689f5df91d31aa7acc474dee91faec9410995d5c16",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4724690839993855
+    },
+    {
+      "arm": "single",
+      "seed": 404,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3673745760006568,
+      "scores": {
+        "reversedSuccess": 0.6375,
+        "returnSuccess": 0.175,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.6375,
+        "retentionDelta": -0.825,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7792,
+        "storedModels": 1,
+        "firstHitStep": 6.285714285714286,
+        "returnFinalError": 0.9143953192677341,
+        "trainingSynapticProducts": 10219,
+        "trainingCandidateProducts": 13965
+      },
+      "checkpoint": "3a9e1bb8e85f059b40ed0eb62a863b4d5316dbd3091b6a8a8523e1c230733ed0",
+      "sourceCheckpoint": "745f3f9d2974031cc392dba6928eaca26db549af856eb3eef8693fc2899cf671",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.45916174199919624
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 404,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4683742329998495,
+      "scores": {
+        "reversedSuccess": 0.6375,
+        "returnSuccess": 0.175,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.6375,
+        "retentionDelta": -0.825,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15586,
+        "storedModels": 2,
+        "firstHitStep": 6.285714285714286,
+        "returnFinalError": 0.9143953192677341,
+        "trainingSynapticProducts": 10219,
+        "trainingCandidateProducts": 13965
+      },
+      "checkpoint": "3a9e1bb8e85f059b40ed0eb62a863b4d5316dbd3091b6a8a8523e1c230733ed0",
+      "sourceCheckpoint": "745f3f9d2974031cc392dba6928eaca26db549af856eb3eef8693fc2899cf671",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.45916174199919624
+    },
+    {
+      "arm": "bank_random",
+      "seed": 404,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40956506799921044,
+      "scores": {
+        "reversedSuccess": 0,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.6375,
+        "retentionDelta": 0,
+        "correctReverseSelection": 0,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15586,
+        "storedModels": 2,
+        "firstHitStep": 7.425,
+        "returnFinalError": 0.04279296929291297,
+        "trainingSynapticProducts": 10219,
+        "trainingCandidateProducts": 13965
+      },
+      "checkpoint": "3a9e1bb8e85f059b40ed0eb62a863b4d5316dbd3091b6a8a8523e1c230733ed0",
+      "sourceCheckpoint": "745f3f9d2974031cc392dba6928eaca26db549af856eb3eef8693fc2899cf671",
+      "selected": [
+        0,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.45916174199919624
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 404,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4174500529989018,
+      "scores": {
+        "reversedSuccess": 0.6375,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.6375,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15586,
+        "storedModels": 2,
+        "firstHitStep": 7.425,
+        "returnFinalError": 0.04279296929291297,
+        "trainingSynapticProducts": 10219,
+        "trainingCandidateProducts": 13965
+      },
+      "checkpoint": "3a9e1bb8e85f059b40ed0eb62a863b4d5316dbd3091b6a8a8523e1c230733ed0",
+      "sourceCheckpoint": "745f3f9d2974031cc392dba6928eaca26db549af856eb3eef8693fc2899cf671",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.45916174199919624
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 404,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3716135180002311,
+      "scores": {
+        "reversedSuccess": 0.6375,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.6375,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15586,
+        "storedModels": 2,
+        "firstHitStep": 7.425,
+        "returnFinalError": 0.04279296929291297,
+        "trainingSynapticProducts": 10219,
+        "trainingCandidateProducts": 13965
+      },
+      "checkpoint": "3a9e1bb8e85f059b40ed0eb62a863b4d5316dbd3091b6a8a8523e1c230733ed0",
+      "sourceCheckpoint": "745f3f9d2974031cc392dba6928eaca26db549af856eb3eef8693fc2899cf671",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.45916174199919624
+    },
+    {
+      "arm": "single",
+      "seed": 405,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.35641256899907603,
+      "scores": {
+        "reversedSuccess": 0.725,
+        "returnSuccess": 0,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.725,
+        "retentionDelta": -1,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7764,
+        "storedModels": 1,
+        "firstHitStep": null,
+        "returnFinalError": 0.9909623077134062,
+        "trainingSynapticProducts": 10175,
+        "trainingCandidateProducts": 14035
+      },
+      "checkpoint": "894c0d630d51495c57abdb4e8f358a62ac0d4bc70d39cfb2f1599e1d50f463f0",
+      "sourceCheckpoint": "500284db9e79f40e0f73587bed86bb4c565c3e931d8b86db7275b3870d245d84",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.470670512999277
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 405,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4101368090014148,
+      "scores": {
+        "reversedSuccess": 0.725,
+        "returnSuccess": 0,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.725,
+        "retentionDelta": -1,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15547,
+        "storedModels": 2,
+        "firstHitStep": null,
+        "returnFinalError": 0.9909623077134062,
+        "trainingSynapticProducts": 10175,
+        "trainingCandidateProducts": 14035
+      },
+      "checkpoint": "894c0d630d51495c57abdb4e8f358a62ac0d4bc70d39cfb2f1599e1d50f463f0",
+      "sourceCheckpoint": "500284db9e79f40e0f73587bed86bb4c565c3e931d8b86db7275b3870d245d84",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.470670512999277
+    },
+    {
+      "arm": "bank_random",
+      "seed": 405,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39608156999929633,
+      "scores": {
+        "reversedSuccess": 0.725,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.725,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15547,
+        "storedModels": 2,
+        "firstHitStep": 7.375,
+        "returnFinalError": 0.058234355160411075,
+        "trainingSynapticProducts": 10175,
+        "trainingCandidateProducts": 14035
+      },
+      "checkpoint": "894c0d630d51495c57abdb4e8f358a62ac0d4bc70d39cfb2f1599e1d50f463f0",
+      "sourceCheckpoint": "500284db9e79f40e0f73587bed86bb4c565c3e931d8b86db7275b3870d245d84",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.470670512999277
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 405,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40243230299893185,
+      "scores": {
+        "reversedSuccess": 0.725,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.725,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15547,
+        "storedModels": 2,
+        "firstHitStep": 7.375,
+        "returnFinalError": 0.058234355160411075,
+        "trainingSynapticProducts": 10175,
+        "trainingCandidateProducts": 14035
+      },
+      "checkpoint": "894c0d630d51495c57abdb4e8f358a62ac0d4bc70d39cfb2f1599e1d50f463f0",
+      "sourceCheckpoint": "500284db9e79f40e0f73587bed86bb4c565c3e931d8b86db7275b3870d245d84",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.470670512999277
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 405,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40401786099937453,
+      "scores": {
+        "reversedSuccess": 0.725,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.725,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15547,
+        "storedModels": 2,
+        "firstHitStep": 7.375,
+        "returnFinalError": 0.058234355160411075,
+        "trainingSynapticProducts": 10175,
+        "trainingCandidateProducts": 14035
+      },
+      "checkpoint": "894c0d630d51495c57abdb4e8f358a62ac0d4bc70d39cfb2f1599e1d50f463f0",
+      "sourceCheckpoint": "500284db9e79f40e0f73587bed86bb4c565c3e931d8b86db7275b3870d245d84",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          1
+        ],
+        "return": [
+          1,
+          -1
+        ]
+      },
+      "trainingSecondsShared": 0.470670512999277
+    },
+    {
+      "arm": "single",
+      "seed": 406,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.36350004299856664,
+      "scores": {
+        "reversedSuccess": 0.575,
+        "returnSuccess": 0.5375,
+        "sourceBefore": 0.725,
+        "reversedTrainedReference": 0.575,
+        "retentionDelta": -0.1875,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7785,
+        "storedModels": 1,
+        "firstHitStep": 7.6976744186046515,
+        "returnFinalError": 0.6885756378144038,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 13934
+      },
+      "checkpoint": "d31cd824a4b7868392ac70a601ef8c02ba67c4a333756eae7e393723c1bd3398",
+      "sourceCheckpoint": "3be47b802fd633d15b20723ac4653c0691fa8b7854726f426aece5fca6ca5c3e",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.4695657980009855
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 406,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.37917475900030695,
+      "scores": {
+        "reversedSuccess": 0.575,
+        "returnSuccess": 0.5375,
+        "sourceBefore": 0.725,
+        "reversedTrainedReference": 0.575,
+        "retentionDelta": -0.1875,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15560,
+        "storedModels": 2,
+        "firstHitStep": 7.6976744186046515,
+        "returnFinalError": 0.6885756378144038,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 13934
+      },
+      "checkpoint": "d31cd824a4b7868392ac70a601ef8c02ba67c4a333756eae7e393723c1bd3398",
+      "sourceCheckpoint": "3be47b802fd633d15b20723ac4653c0691fa8b7854726f426aece5fca6ca5c3e",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          0
+        ]
+      },
+      "trainingSecondsShared": 0.4695657980009855
+    },
+    {
+      "arm": "bank_random",
+      "seed": 406,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.41333745700103464,
+      "scores": {
+        "reversedSuccess": 0.575,
+        "returnSuccess": 0.725,
+        "sourceBefore": 0.725,
+        "reversedTrainedReference": 0.575,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15560,
+        "storedModels": 2,
+        "firstHitStep": 7.706896551724138,
+        "returnFinalError": 0.20728126758741922,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 13934
+      },
+      "checkpoint": "d31cd824a4b7868392ac70a601ef8c02ba67c4a333756eae7e393723c1bd3398",
+      "sourceCheckpoint": "3be47b802fd633d15b20723ac4653c0691fa8b7854726f426aece5fca6ca5c3e",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          0
+        ]
+      },
+      "trainingSecondsShared": 0.4695657980009855
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 406,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.38203177499963203,
+      "scores": {
+        "reversedSuccess": 0.575,
+        "returnSuccess": 0.725,
+        "sourceBefore": 0.725,
+        "reversedTrainedReference": 0.575,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15560,
+        "storedModels": 2,
+        "firstHitStep": 7.706896551724138,
+        "returnFinalError": 0.20728126758741922,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 13934
+      },
+      "checkpoint": "d31cd824a4b7868392ac70a601ef8c02ba67c4a333756eae7e393723c1bd3398",
+      "sourceCheckpoint": "3be47b802fd633d15b20723ac4653c0691fa8b7854726f426aece5fca6ca5c3e",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          0
+        ]
+      },
+      "trainingSecondsShared": 0.4695657980009855
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 406,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4218315159996564,
+      "scores": {
+        "reversedSuccess": 0.575,
+        "returnSuccess": 0.725,
+        "sourceBefore": 0.725,
+        "reversedTrainedReference": 0.575,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15560,
+        "storedModels": 2,
+        "firstHitStep": 7.706896551724138,
+        "returnFinalError": 0.20728126758741922,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 13934
+      },
+      "checkpoint": "d31cd824a4b7868392ac70a601ef8c02ba67c4a333756eae7e393723c1bd3398",
+      "sourceCheckpoint": "3be47b802fd633d15b20723ac4653c0691fa8b7854726f426aece5fca6ca5c3e",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          0
+        ]
+      },
+      "trainingSecondsShared": 0.4695657980009855
+    },
+    {
+      "arm": "single",
+      "seed": 407,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.37396683000042685,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.525,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": -0.475,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7791,
+        "storedModels": 1,
+        "firstHitStep": 7.261904761904762,
+        "returnFinalError": 0.706729249932449,
+        "trainingSynapticProducts": 10122,
+        "trainingCandidateProducts": 14032
+      },
+      "checkpoint": "9205e199da1050876f445845031e1562c4b80202ae17a94d6b6f46c38d81a57f",
+      "sourceCheckpoint": "b6a44e19fdcb33364bfbe7dfd84d0c6ed02085ec076bdc245a55d52b12f2c6d5",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.44903838699974585
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 407,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.38018161000036343,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 0.525,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": -0.475,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15574,
+        "storedModels": 2,
+        "firstHitStep": 7.261904761904762,
+        "returnFinalError": 0.706729249932449,
+        "trainingSynapticProducts": 10122,
+        "trainingCandidateProducts": 14032
+      },
+      "checkpoint": "9205e199da1050876f445845031e1562c4b80202ae17a94d6b6f46c38d81a57f",
+      "sourceCheckpoint": "b6a44e19fdcb33364bfbe7dfd84d0c6ed02085ec076bdc245a55d52b12f2c6d5",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          -0.3333333333333333
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.44903838699974585
+    },
+    {
+      "arm": "bank_random",
+      "seed": 407,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3996917280001071,
+      "scores": {
+        "reversedSuccess": 0,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": 0,
+        "correctReverseSelection": 0,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15574,
+        "storedModels": 2,
+        "firstHitStep": 7.35,
+        "returnFinalError": 0.04239531638006634,
+        "trainingSynapticProducts": 10122,
+        "trainingCandidateProducts": 14032
+      },
+      "checkpoint": "9205e199da1050876f445845031e1562c4b80202ae17a94d6b6f46c38d81a57f",
+      "sourceCheckpoint": "b6a44e19fdcb33364bfbe7dfd84d0c6ed02085ec076bdc245a55d52b12f2c6d5",
+      "selected": [
+        0,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          -0.3333333333333333
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.44903838699974585
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 407,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.41455953600052453,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15574,
+        "storedModels": 2,
+        "firstHitStep": 7.35,
+        "returnFinalError": 0.04239531638006634,
+        "trainingSynapticProducts": 10122,
+        "trainingCandidateProducts": 14032
+      },
+      "checkpoint": "9205e199da1050876f445845031e1562c4b80202ae17a94d6b6f46c38d81a57f",
+      "sourceCheckpoint": "b6a44e19fdcb33364bfbe7dfd84d0c6ed02085ec076bdc245a55d52b12f2c6d5",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          -0.3333333333333333
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.44903838699974585
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 407,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4068272900003649,
+      "scores": {
+        "reversedSuccess": 0.5,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.5,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15574,
+        "storedModels": 2,
+        "firstHitStep": 7.35,
+        "returnFinalError": 0.04239531638006634,
+        "trainingSynapticProducts": 10122,
+        "trainingCandidateProducts": 14032
+      },
+      "checkpoint": "9205e199da1050876f445845031e1562c4b80202ae17a94d6b6f46c38d81a57f",
+      "sourceCheckpoint": "b6a44e19fdcb33364bfbe7dfd84d0c6ed02085ec076bdc245a55d52b12f2c6d5",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          -0.3333333333333333
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.44903838699974585
+    },
+    {
+      "arm": "single",
+      "seed": 408,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.38776445999974385,
+      "scores": {
+        "reversedSuccess": 0.4875,
+        "returnSuccess": 0.55,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4875,
+        "retentionDelta": -0.44999999999999996,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7786,
+        "storedModels": 1,
+        "firstHitStep": 7.409090909090909,
+        "returnFinalError": 0.6900829664654927,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 14078
+      },
+      "checkpoint": "1b94ad9fbc8cabbdb14bd57312f62dc879c999f39d1b4b850c7118fdf2eb586b",
+      "sourceCheckpoint": "d4fa1ef921bdab13cdcbb76402c9fd26e4331557befdd5fa52d0dfbf9917a395",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.4622057769993262
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 408,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4060881919995154,
+      "scores": {
+        "reversedSuccess": 0.4875,
+        "returnSuccess": 0.55,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4875,
+        "retentionDelta": -0.44999999999999996,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15579,
+        "storedModels": 2,
+        "firstHitStep": 7.409090909090909,
+        "returnFinalError": 0.6900829664654927,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 14078
+      },
+      "checkpoint": "1b94ad9fbc8cabbdb14bd57312f62dc879c999f39d1b4b850c7118fdf2eb586b",
+      "sourceCheckpoint": "d4fa1ef921bdab13cdcbb76402c9fd26e4331557befdd5fa52d0dfbf9917a395",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.4622057769993262
+    },
+    {
+      "arm": "bank_random",
+      "seed": 408,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.40713446299923817,
+      "scores": {
+        "reversedSuccess": 0.4875,
+        "returnSuccess": 0.55,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4875,
+        "retentionDelta": -0.44999999999999996,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15579,
+        "storedModels": 2,
+        "firstHitStep": 7.409090909090909,
+        "returnFinalError": 0.6900829664654927,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 14078
+      },
+      "checkpoint": "1b94ad9fbc8cabbdb14bd57312f62dc879c999f39d1b4b850c7118fdf2eb586b",
+      "sourceCheckpoint": "d4fa1ef921bdab13cdcbb76402c9fd26e4331557befdd5fa52d0dfbf9917a395",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.4622057769993262
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 408,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.41388494199964043,
+      "scores": {
+        "reversedSuccess": 0.4875,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4875,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15579,
+        "storedModels": 2,
+        "firstHitStep": 7.4375,
+        "returnFinalError": 0.133256911093717,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 14078
+      },
+      "checkpoint": "1b94ad9fbc8cabbdb14bd57312f62dc879c999f39d1b4b850c7118fdf2eb586b",
+      "sourceCheckpoint": "d4fa1ef921bdab13cdcbb76402c9fd26e4331557befdd5fa52d0dfbf9917a395",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.4622057769993262
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 408,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39059941500090645,
+      "scores": {
+        "reversedSuccess": 0.4875,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4875,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15579,
+        "storedModels": 2,
+        "firstHitStep": 7.4375,
+        "returnFinalError": 0.133256911093717,
+        "trainingSynapticProducts": 10204,
+        "trainingCandidateProducts": 14078
+      },
+      "checkpoint": "1b94ad9fbc8cabbdb14bd57312f62dc879c999f39d1b4b850c7118fdf2eb586b",
+      "sourceCheckpoint": "d4fa1ef921bdab13cdcbb76402c9fd26e4331557befdd5fa52d0dfbf9917a395",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.4622057769993262
+    },
+    {
+      "arm": "single",
+      "seed": 409,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3733939970006759,
+      "scores": {
+        "reversedSuccess": 0.55,
+        "returnSuccess": 0.45,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.55,
+        "retentionDelta": -0.55,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7781,
+        "storedModels": 1,
+        "firstHitStep": 7.388888888888889,
+        "returnFinalError": 0.7482577719841208,
+        "trainingSynapticProducts": 10106,
+        "trainingCandidateProducts": 14044
+      },
+      "checkpoint": "1747fb6173566a7efe4efd9a2956e467bd80c1b4501c915bd725a376e2d3b352",
+      "sourceCheckpoint": "1e0037925c010a8d19615aeae1015437e11daec956237fe0cf8a2a15a17a8ee4",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.4758798430011666
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 409,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4142672689995379,
+      "scores": {
+        "reversedSuccess": 0.55,
+        "returnSuccess": 0.45,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.55,
+        "retentionDelta": -0.55,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15591,
+        "storedModels": 2,
+        "firstHitStep": 7.388888888888889,
+        "returnFinalError": 0.7482577719841208,
+        "trainingSynapticProducts": 10106,
+        "trainingCandidateProducts": 14044
+      },
+      "checkpoint": "1747fb6173566a7efe4efd9a2956e467bd80c1b4501c915bd725a376e2d3b352",
+      "sourceCheckpoint": "1e0037925c010a8d19615aeae1015437e11daec956237fe0cf8a2a15a17a8ee4",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4758798430011666
+    },
+    {
+      "arm": "bank_random",
+      "seed": 409,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3881096990007791,
+      "scores": {
+        "reversedSuccess": 0.55,
+        "returnSuccess": 0.45,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.55,
+        "retentionDelta": -0.55,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15591,
+        "storedModels": 2,
+        "firstHitStep": 7.388888888888889,
+        "returnFinalError": 0.7482577719841208,
+        "trainingSynapticProducts": 10106,
+        "trainingCandidateProducts": 14044
+      },
+      "checkpoint": "1747fb6173566a7efe4efd9a2956e467bd80c1b4501c915bd725a376e2d3b352",
+      "sourceCheckpoint": "1e0037925c010a8d19615aeae1015437e11daec956237fe0cf8a2a15a17a8ee4",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4758798430011666
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 409,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.4231104950013105,
+      "scores": {
+        "reversedSuccess": 0.55,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.55,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15591,
+        "storedModels": 2,
+        "firstHitStep": 7.425,
+        "returnFinalError": 0.17242458352692686,
+        "trainingSynapticProducts": 10106,
+        "trainingCandidateProducts": 14044
+      },
+      "checkpoint": "1747fb6173566a7efe4efd9a2956e467bd80c1b4501c915bd725a376e2d3b352",
+      "sourceCheckpoint": "1e0037925c010a8d19615aeae1015437e11daec956237fe0cf8a2a15a17a8ee4",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4758798430011666
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 409,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.37785030100167205,
+      "scores": {
+        "reversedSuccess": 0.55,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.55,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15591,
+        "storedModels": 2,
+        "firstHitStep": 7.425,
+        "returnFinalError": 0.17242458352692686,
+        "trainingSynapticProducts": 10106,
+        "trainingCandidateProducts": 14044
+      },
+      "checkpoint": "1747fb6173566a7efe4efd9a2956e467bd80c1b4501c915bd725a376e2d3b352",
+      "sourceCheckpoint": "1e0037925c010a8d19615aeae1015437e11daec956237fe0cf8a2a15a17a8ee4",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0
+        ],
+        "return": [
+          1,
+          -0.3333333333333333
+        ]
+      },
+      "trainingSecondsShared": 0.4758798430011666
+    },
+    {
+      "arm": "single",
+      "seed": 410,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3713998220009671,
+      "scores": {
+        "reversedSuccess": 0.4625,
+        "returnSuccess": 0.4625,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4625,
+        "retentionDelta": -0.5375,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 0,
+        "probeRewardCalls": 0,
+        "memoryBytes": 7811,
+        "storedModels": 1,
+        "firstHitStep": 7.378378378378378,
+        "returnFinalError": 0.7341425156093987,
+        "trainingSynapticProducts": 10019,
+        "trainingCandidateProducts": 14283
+      },
+      "checkpoint": "7e544e2e57683a282c5cb04c166d6d3bb39d098e69cca988d69a9c491cbfae6c",
+      "sourceCheckpoint": "1829df6a20b4989d409ebf2c5be22186d41484227ebfdbb1d23090e7484b6841",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": null,
+        "return": null
+      },
+      "trainingSecondsShared": 0.48963377099971694
+    },
+    {
+      "arm": "bank_latest",
+      "seed": 410,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.3979900309986988,
+      "scores": {
+        "reversedSuccess": 0.4625,
+        "returnSuccess": 0.4625,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4625,
+        "retentionDelta": -0.5375,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15598,
+        "storedModels": 2,
+        "firstHitStep": 7.378378378378378,
+        "returnFinalError": 0.7341425156093987,
+        "trainingSynapticProducts": 10019,
+        "trainingCandidateProducts": 14283
+      },
+      "checkpoint": "7e544e2e57683a282c5cb04c166d6d3bb39d098e69cca988d69a9c491cbfae6c",
+      "sourceCheckpoint": "1829df6a20b4989d409ebf2c5be22186d41484227ebfdbb1d23090e7484b6841",
+      "selected": [
+        1,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.48963377099971694
+    },
+    {
+      "arm": "bank_random",
+      "seed": 410,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.39588195299984363,
+      "scores": {
+        "reversedSuccess": 0,
+        "returnSuccess": 0.4625,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4625,
+        "retentionDelta": -0.5375,
+        "correctReverseSelection": 0,
+        "correctReturnSelection": 0,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15598,
+        "storedModels": 2,
+        "firstHitStep": 7.378378378378378,
+        "returnFinalError": 0.7341425156093987,
+        "trainingSynapticProducts": 10019,
+        "trainingCandidateProducts": 14283
+      },
+      "checkpoint": "7e544e2e57683a282c5cb04c166d6d3bb39d098e69cca988d69a9c491cbfae6c",
+      "sourceCheckpoint": "1829df6a20b4989d409ebf2c5be22186d41484227ebfdbb1d23090e7484b6841",
+      "selected": [
+        0,
+        1
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.48963377099971694
+    },
+    {
+      "arm": "bank_probe",
+      "seed": 410,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.419539034999616,
+      "scores": {
+        "reversedSuccess": 0.4625,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4625,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15598,
+        "storedModels": 2,
+        "firstHitStep": 7.3,
+        "returnFinalError": 0.037616310250258175,
+        "trainingSynapticProducts": 10019,
+        "trainingCandidateProducts": 14283
+      },
+      "checkpoint": "7e544e2e57683a282c5cb04c166d6d3bb39d098e69cca988d69a9c491cbfae6c",
+      "sourceCheckpoint": "1829df6a20b4989d409ebf2c5be22186d41484227ebfdbb1d23090e7484b6841",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.48963377099971694
+    },
+    {
+      "arm": "bank_oracle",
+      "seed": 410,
+      "split": "eval",
+      "status": "ok",
+      "seconds": 0.5149009890010348,
+      "scores": {
+        "reversedSuccess": 0.4625,
+        "returnSuccess": 1,
+        "sourceBefore": 1,
+        "reversedTrainedReference": 0.4625,
+        "retentionDelta": 0,
+        "correctReverseSelection": 1,
+        "correctReturnSelection": 1,
+        "probeActions": 72,
+        "probeRewardCalls": 72,
+        "memoryBytes": 15598,
+        "storedModels": 2,
+        "firstHitStep": 7.3,
+        "returnFinalError": 0.037616310250258175,
+        "trainingSynapticProducts": 10019,
+        "trainingCandidateProducts": 14283
+      },
+      "checkpoint": "7e544e2e57683a282c5cb04c166d6d3bb39d098e69cca988d69a9c491cbfae6c",
+      "sourceCheckpoint": "1829df6a20b4989d409ebf2c5be22186d41484227ebfdbb1d23090e7484b6841",
+      "selected": [
+        1,
+        0
+      ],
+      "probeScores": {
+        "reverse": [
+          -1,
+          0.6666666666666666
+        ],
+        "return": [
+          1,
+          0.6666666666666666
+        ]
+      },
+      "trainingSecondsShared": 0.48963377099971694
+    }
+  ],
+  "baseline": "bank_latest"
+}

@@ -656,8 +656,13 @@ const mapSyn = (s, f) => ({ P: Object.fromEntries(SYN.map(k => [k, f(s.P[k])])),
 function gauss(rand) { return Math.sqrt(-2 * Math.log(rand() + 1e-12)) * Math.cos(2 * Math.PI * rand()); }
 
 export class World {
-  constructor(seed = 1, retina = GAINS.retina) {
+  constructor(seed = 1, retina = GAINS.retina, scaffold = "curriculum") {
     if (retina !== "rays" && retina !== "grid") throw new Error(`unknown retina "${retina}": use "rays" or "grid"`);
+    if (!["curriculum", "unscaffolded"].includes(scaffold)) throw new Error(`unknown scaffold "${scaffold}"`);
+    // Experimental environment intervention. "curriculum" preserves legacy behaviour.
+    // "unscaffolded" never grants automatic leg resets or narrows the body's actions by stage.
+    // The pen/board scene remains an explicit environmental scaffold in BOTH arms.
+    this.scaffold = scaffold;
     this.rand = rng(seed);
     this.brain = new Brain(this.rand, retina);
     this.hippo = new Hippocampus(GAINS.memCap, this.brain.nIn);
@@ -677,6 +682,10 @@ export class World {
   // stage on review episodes (see finish).
   get mode() { return STAGES[this.playing].key; }
   get window() { return this.windows[this.stage]; }
+
+  // Expose the historical developmental shortcut instead of silently treating it as learned.
+  bodyScaffoldActive() { return this.scaffold === "curriculum" && (this.stage > 0 || this.graduated); }
+  actionSetIndex() { return this.board ? 2 : this.bodyScaffoldActive() ? 1 : 0; }
 
   reset() {
     // Free play (perform "any"): a random scene each episode; the brain must find its skill itself.
@@ -858,14 +867,13 @@ export class World {
 
   step() {
     const b = this.brain, m = this.mode;
-    // Once walking is learned the gait is automatic (a practised skill runs as a habit, as spinal
-    // pattern generators and the cerebellum take over): a pushed leg swings forward by reflex,
-    // and later stages only choose which leg to push, or to grasp. The habit comes from the
-    // brain's development and the action set from the body's situation, not from the task (#61).
-    const habit = this.stage > 0 || this.graduated;
+    // HISTORICAL SCAFFOLD, NOT A LEARNED HABIT: curriculum stage unlocks automatic gait
+    // and removes lift actions. Keep it by default for compatibility, but measure its effect
+    // against the opt-in unscaffolded arm before making general-learning claims.
+    const habit = this.bodyScaffoldActive();
     if (habit && !GAINS.cpg) { this.legs = [1, 1]; this.hip = [1, 1]; this.omega = [0, 0]; }   // the CPG keeps its own rhythm   // jointed: the reflex brings both hips forward, at rest
     if (this.task >= 0) (this.perf.scene[m] ??= { n: 0, ok: 0, slots: Array(GAINS.slots).fill(0) }).slots[this.slot]++;
-    const set = this.board ? 2 : habit ? 1 : 0;
+    const set = this.actionSetIndex();
     if (GAINS.hebb && (this.developing || GAINS.hebbOnline && b.learning)) b.hebbian(this.x);   // learned features (#65 item 4)
     const a = b.act(this.h, ACT_SETS[set]), mu = b.pi[a];
     this.lastAction = a;
@@ -1035,7 +1043,8 @@ export class World {
   toJSON() {
     const b = this.brain, arr = a => Array.from(a);
     // A save made while performing resumes training on its own stage.
-    return { version: 5, retina: b.rows > 1 ? "grid" : "rays", rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
+    return { version: 5, retina: b.rows > 1 ? "grid" : "rays", scaffold: this.scaffold,
+      rand: this.episodeRand, stage: this.stage, playing: this.task >= 0 ? this.stage : this.playing, episode: this.episode,
       graduated: this.graduated, passedRate: this.passedRate, windows: this.windows,
       passedAt: Array.from(this.passedAt, x => x ?? null),
       brain: { idx: arr(b.idx), wIn: arr(b.wIn), bias: arr(b.bias), gate: arr(b.gate), v: arr(b.v), P: arr(b.P), hh: b.hh,
@@ -1101,7 +1110,8 @@ export class World {
   static fromJSON(o) {   // o comes from a user's file: check its shape before trusting it
     o = World.migrate(o);   // first: ob below must point at the migrated brain
     const retinaOk = o && ["rays", "grid"].includes(o.retina);   // the retina sets the brain's shape, so build that one
-    const w = new World(1, retinaOk ? o.retina : "rays"), b = w.brain, ob = o && o.brain;
+    const w = new World(1, retinaOk ? o.retina : "rays", o?.scaffold ?? "curriculum"),
+      b = w.brain, ob = o && o.brain;
     const KEYS = ["idx", "wIn", "bias", "gate", "v", "P", "proto", "uses"];
     let sy = null;   // the SI record: three Float32Arrays per weight array, each its shape, Omega and omega >= 0
     try { sy = mapSyn(ob.syn, s => fromB64(s, Float32Array)); } catch {}

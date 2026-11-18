@@ -1,9 +1,12 @@
 # Brain World: a creature that learns on its own
 
 A 3D browser simulation. A creature with a colour retina, a fovea, a cochlea, two legs, an arm and a
-pen learns five skills in a row from reward alone: **walk, grasp, listen, read, write**. Nothing is
-scripted. It gets a dopamine signal (a reward prediction error), and its synapses change where an
-eligibility trace meets that signal. Brain Lab (`game/play.py`) has you operate one mechanism at a time.
+pen trains on five engineered curriculum skills: **walk, grasp, listen, read, write**.
+The scenes, rewards, sensory mappings, legal actions and the later-stage automatic gait scaffold
+are programmed; the actor/critic weights are updated from experienced rewards rather than scripted
+solutions. This is within-environment local learning, not demonstrated general intelligence.
+A reward-prediction error (called dopamine in the model) modulates synaptic eligibility traces.
+Brain Lab (`game/play.py`) has you operate one mechanism at a time.
 Here you watch the mechanisms work together in one learner.
 
 A user guide with a screenshot of every feature is in [docs/app-guide.md](../../docs/app-guide.md).
@@ -765,6 +768,133 @@ over 8 seeds. Paired sign-flip p against scratch:
   and no reliable gain after adaptation (0.41 vs 0.29, p 0.66), at the cost of most of copy. This
   matches "New letters" above.
 
+The [executed ten-seed M0c study](../../research/m0c-ten-seed-evidence-2026-11-17.md) reports **0% heldout physical delivery by the current flat Brain learner** on legacy and two structural stress directions, versus **100% by a supplied public-sensor maze heuristic**; this is a negative learning result, not demonstrated generalization.
+
+[Executed ten-seed calibration](../../research/m0c-fixed-calibration-results-2026-11-17.md): Brain repeated-task delivery 5.00% to 9.17% (paired improvement CI spans zero), versus 0.83% to 100% for public tabular Q. This is a diagnostic learning gap, not independent structural transfer.
+
+The [executed 10-seed native Brain credit audit](../../research/m0c-sensory-credit-results-2026-11-18.md) measured 97.5% delivery on a *different* two-action task, 10.0% on a three-action task, 0% without previous-step eligibility traces and 2.5% without critic bootstrap; these do not prove independent transfer or isolate all confounds.
+
+## M0c causal credit and sensory audit (#112/#153)
+
+Six controlled native Brain arms test its direct observation channels, policy entropy,
+goal-counterfactual sensitivity, terminal/bootstrap credit, and an explicit no-reward
+control on repeated two- and three-step pickup/delivery tasks. **No backprop** is
+introduced. This is a mechanism diagnostic, not a structural transfer claim.
+
+```bash
+node game/world/test_stateful_credit_probe.mjs
+node game/world/stateful_credit_probe.mjs 1 2 3 --checkpoints 0,250,1000,4000 --repeats 12 --out /tmp/credit.json
+python research/result_schema.py --check /tmp/credit.json
+```
+
+See the [preregistered adversarial protocol](../../research/m0c-sensory-credit-audit-2026-11-18.md).
+
+## M0c fixed-task learning diagnosis (#112/#153)
+
+To diagnose zero heldout delivery, use the backprop-free learner and public-state Q
+on a **single repeated** pickup–east–drop task. Compare native reward,
+exploration, supplied goal-distance feedback shaping, zero feedback, and random.
+This is a learnability calibration, **not a transfer benchmark**.
+
+```bash
+node game/world/test_stateful_calibration.mjs
+node game/world/stateful_calibration.mjs 1 2 3 --checkpoints 0,250,1000,4000 --repeats 12 --out /tmp/m0c-calibration.json
+python research/result_schema.py --check /tmp/m0c-calibration.json
+```
+
+See the [reproducible calibration protocol](../../research/m0c-fixed-calibration-protocol-2026-11-17.md).
+
+## Structural transfer stress (M0c, #110/#112)
+
+Run ten-seed, frozen heldout construction baselines with independently sampled
+**scattered obstacles → barrier corridor** or the reverse direction. Both
+families use variable starting positions, public sensory observation, the same
+six primitive actions, and a separately audited **offline** BFS feasibility
+filter. This tests changes in authored obstacle topology within a 5×5 toy
+world, not biological/general intelligence.
+
+```bash
+node game/world/test_stateful_structural.mjs
+node game/world/stateful_construct_controls.mjs 1 2 3 --protocol scattered-to-barrier --train-steps 2500 --train-tasks 32 --dev-tasks 16 --eval-tasks 16 --repeats 2 --out /tmp/m0c-stress.json
+python research/result_schema.py --check /tmp/m0c-stress.json
+```
+
+See [dated research protocol](../../research/m0c-structural-transfer-protocol-2026-11-17.md)
+and [ten-seed evidence workflow](../../.github/workflows/m0c-evidence.yml).
+**The legacy generator is preserved** for regression comparison.
+
+## Same-environment public-observation controls (M0c, #112/#153)
+
+The legacy stateful acquire–carry–place environment now has **same-simulator**
+flat Brain, goal-masked Brain, tabular-Q absolute/relative, uniform-random and
+public-sensor maze-heuristic controls. All use the same six primitives,
+`stateful_construct.mjs` observations/transitions/rewards, and a per-trained-arm
+exact primitive-decision budget. The Q table and heuristic see only public
+observations; the relative-Q representation and grid pathfinding are
+**engineered inductive biases**, not learned by Brain.
+
+```bash
+node game/world/test_stateful_construct_controls.mjs
+node game/world/stateful_construct_controls.mjs 1 2 3 --train-steps 10000 --train-tasks 32 --dev-tasks 16 --eval-tasks 16 --repeats 2 --out /tmp/m0c.json
+python research/result_schema.py --check /tmp/m0c.json
+```
+
+The runner reports full task-structure fingerprints, duplicate counts,
+source/development/goal-pair-held-out success, real environment actions,
+failed attempts and model-size estimates in `brain-result/1`. Its fixed
+start/four-obstacle templates are **not** a sealed stress generator or
+evidence of independent composition. Scientific success on new structural
+families is not established. See the [M0c research note](../../research/m0c-stateful-construction-controls-2026-11-17.md).
+
+## Backprop-free construction policy pilot (#112, research baseline)
+
+`construct_learner.mjs` reuses the *actual Brain World local three-factor actor-critic*
+as a goal-conditioned pen policy. A supplied sensor map shows required 5x5
+cells, symmetry, stroke budget and marks already drawn; the policy chooses
+between the six supplied strokes and a supplied **submit** action (using
+the grasp action index). The verifier supplies only terminal success/failure
+reward. This is a separate experimental task interface; it does not modify
+Brain World's main curriculum or provide the creature with an oracle solution.
+
+```bash
+node game/world/test_construct_learner.mjs
+node game/world/construct_learner.mjs 1 2 3 --train-steps 10000 --train-tasks 64 --eval-tasks 30 --repeats 5 --out /tmp/construction-learner.json
+python research/result_schema.py --check /tmp/construction-learner.json
+```
+
+The arms are an unchanged `learning-off` network, a `goal-masked` learner,
+a goal-conditioned `learner`, and a `random-valid` syntactic control.
+The three network arms are compared at approximately matched total training
+decisions (episode-boundary overshoot is reported); `random-valid` requires
+no training. Frozen, disjoint training and evaluation task families are both
+scored; the script hashes the actor/critic before and after frozen evaluation.
+This is a **pilot, not a confirmed transfer result**. The learned policy has
+no compositional skill hierarchy, mistake-memory retrieval, planning or
+creativity claim. Do not tune it on the frozen evaluation tasks.
+
+### Controlled pretraining versus scratch adaptation (experimental)
+
+The `construct_transfer.mjs` **pilot** extends the goal-conditioned baseline with
+a disjoint *adaptation* task list and a distinct held-out *final evaluation*
+task list from the same previously unseen constraint families. It reports
+separate pretraining, adaptation and frozen-evaluation decision budgets for
+\`pretrained\`, \`scratch\`, \`goal-masked\`, \`frozen\` and \`random-valid\`.
+Scoring freezes weights and restores the training RNG stream. These are
+**not** sealed stress-test results or evidence of general skill composition.
+
+```bash
+node game/world/test_construct_transfer.mjs
+node game/world/construct_transfer.mjs 1 2 3 --train-steps 10000 --adapt-steps 2000 --train-tasks 64 --adapt-tasks 12 --eval-tasks 30 --repeats 5 --out /tmp/construct-transfer.json
+python research/result_schema.py --check /tmp/construct-transfer.json
+```
+
+Do not optimize against the final held-out instances; use a separately
+defined development set. Report total pretraining **plus** adaptation decisions
+when comparing to scratch, as well as adaptation-only differences. A positive
+pilot is insufficient for the registered compositional-transfer acceptance
+criteria: it still needs independent stress generators, exact-memory-only and
+shared-network backprop controls, larger paired seeds and uncertainty bounds.
+
 ## Construction tasks (#110)
 
 `construct.mjs` is a task suite, not a trained arm: draw with the six pen strokes under constraints
@@ -788,7 +918,33 @@ result yet: scoring the backprop-free creature on these tasks is the next step.
 | retrieval (library replay) | 1.72 | 0.00 |
 | search (mutate retrieved) | 1.77 | 0.49 |
 
-Search finds about twice the novel drawings of random generation (+0.22, p 0.004) and no more valid ones than plain retrieval, whose gain over random is the library itself. The candidate log and rejection reasons per seed are in `research/results/novelty-2026-11-11.json`. With only 63 possible drawings, budgets of 63 or more enumerate everything, so the gap closes as the budget grows.
+**Adversarial finding (2026-11-12): these legacy figures are NOT a fair-search result.**
+The random arm samples illegal stroke IDs, repeats and over-budget drawings, while
+the search arm uses additional graded constraint-penalty queries without charging them
+to its eight validator calls. Retain the historic artifact for audit, not as proof
+of a novelty gain over a valid or equal-information baseline.
+
+A corrected, separate **matched-candidate benchmark** is available:
+
+```bash
+node game/world/test_novelty_fair.mjs
+node game/world/novelty_fair.mjs --tasks 30 --budget 8 --out /tmp/novelty-fair.json
+python research/result_schema.py --check /tmp/novelty-fair.json
+```
+
+Every arm uses exactly eight validator evaluations per task. `random-valid`
+samples legal unique stroke sets within the budget; `retrieval` replays the
+same training-solution library; `mutate-blind` mutates its examples without
+using feedback; `search-binary` adapts to the charged yes/no verifier; and
+`search-graded` additionally receives a numerical constraint penalty for
+those same eight candidates. **Graded feedback calls are reported separately
+and cannot be credited as a fair information-equivalent advantage**.
+The runner records per-candidate audit traces and exports `brain-result/1`.
+This is still engineered search, not a learned creature. The 63-drawing search
+space remains a regression toy rather than an open-ended creativity test.
+
+The implementation and adversarial research gates are documented in
+[the implementation plan](../../research/adversarial-implementation-plan.md).
 
 ## Navigation: hard rooms (#108)
 
@@ -1000,6 +1156,26 @@ kept them.
 - Limbs in a physics engine (for example Rapier). The torque and pattern-generator legs (#38) are
   hand-written dynamics, not physics, and the discrete legs stay the default.
 
+## Frozen option evaluation integrity (#112/#154; research-only)
+
+The separate [stateful construction option pilot](stateful_options.mjs) scores
+backprop-free policies on an isolated deep copy, including eligibility,
+synaptic-importance, hidden, and optional cached state. Evaluation uses its
+own RNG, not a temporarily swapped training RNG. [Audit, tests, and remaining
+limitations](../../research/stateful-frozen-evaluation-audit-2026-11-12.md).
+This is an evaluation integrity change, **not** a demonstrated gain in
+compositional transfer or evidence of AGI. Direct `episode(..., {learn:false})`
+on a live model is still a stateful performance step; use `scoreTasks`
+when isolation is required.
+
+The [exact-decision-budget audit](../../research/stateful-decision-budget-audit-2026-11-12.md)
+describes the follow-up M0b repair: every training action, including EXIT,
+counts toward the declared primitive-decision budget. A final partial episode
+is labelled as truncated rather than a task-level failure. This is an
+evaluation integrity change, not an improved learning claim.
+
+[Exact-budget 10-seed result](../../research/stateful-options-exact-negative-2026-11-12.md): all six non-oracle arms scored **0.000 held-out task completion**, despite passing integrity checks; the privileged BFS ceiling reached 1.000. The primary option-transfer hypothesis **failed**. Full raw arm-by-seed records and the statistical gate are archived permanently in Git. Do not claim learned generalization from this pilot.
+
 ## References
 
 - McClelland, McNaughton and O'Reilly (1995) "Why there are complementary learning systems in the
@@ -1029,3 +1205,36 @@ kept them.
   closure in kittens", *J Physiol* 206:419. doi:10.1113/jphysiol.1970.sp009022
 - Ijspeert (2008) "Central pattern generators for locomotion control in animals and robots: a
   review", *Neural Netw* 21:642. https://pubmed.ncbi.nlm.nih.gov/18555958/
+
+## Fair novelty baseline (10 seeds, 2026-11-12; #111)
+
+The original `novelty.mjs` comparison is **confounded**: random generated
+malformed and duplicate strokes and engineered search used uncharged graded
+penalties. The follow-up `novelty_fair.mjs` evaluation uses legal random
+drawings, retrieval, blind mutation, binary-feedback mutation, and a
+**separately priced privileged graded-feedback arm**. Every arm receives
+8 validator calls per task on 30 frozen held-out tasks for each of seeds 1–10.
+
+| Arm | Valid drawings/task | Novel valid drawings/task |
+|---|---:|---:|
+| legal random | 2.287 | 0.583 |
+| retrieval | 2.070 | 0.000 |
+| blind mutation | 1.963 | 0.523 |
+| binary-feedback search | 2.227 | 0.620 |
+| privileged graded-feedback search | 2.313 | 0.587 |
+
+**With legal random at 0.583 and binary search at 0.620, no reliable search
+advantage is established** (paired delta +0.037 novel drawings/task, 95%
+paired bootstrap CI −0.060 to +0.160, exact paired sign-flip p = 0.709).
+Graded search at 0.587 is also not distinguishable from legal random in
+this 10-seed run (p = 1.000). These are *engineered candidate generators*;
+no trained creature is scored. Retrieval scoring zero novelty is expected
+because the prior solution library is excluded from novelty.
+
+Reproduce with `node game/world/novelty_fair.mjs 1 2 3 4 5 6 7 8 9 10
+--tasks 30 --budget 8 --out /tmp/novelty-fair.json`. The 50 run summaries
+are in `research/results/novelty-fair-2026-11-12.json`. The full 1,500
+task-arm candidate audit is archived in [the successful GitHub Actions
+experiment](https://github.com/faheemkhaskheli9/Brain/actions/runs/43129642597)
+(90-day artifact retention). Further details and limitations:
+[adversarial evidence report](../../research/novelty-fair-report-2026-11-12.md).

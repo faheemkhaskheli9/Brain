@@ -1,4 +1,36 @@
+
+- [Closed-loop sparse reaching](closed-loop-reaching-pilot.md) ([10-seed outcomes](closed-loop-reaching-results-2026-11-12.md), including failed superiority criterion and reversal forgetting) — opt-in learned motor action through visual/S1 packets and the existing joint-body simulator; preregistered frozen transfer, reversal and delayed-feedback controls. **Toy task, not a human connectome.**
+
+- [Sparse context memory](context-memory-pilot.md) ([ten-seed negative primary finding](context-memory-results-2026-11-12.md)) — two independently learned bounded synaptic checkpoint policies, reward-probe retrieval, source-task retention after motor reversal; preregistered controls and result schema. Not autonomous context discovery.
+
+- [Online reward-based motor context](online-context-pilot.md) ([10-seed evaluation](online-context-results-2026-11-12.md)) — causal reward-triggered switching of stored sparse motor policies on one lived stream; no candidate resets or externally signaled change boundary during evaluation; fixed controls, cost and preregistration.
+
+- [Continuous motor and delayed-reward pilot](continuous-motor-pilot.md) ([frozen 10-seed results and objective-mismatch finding](continuous-motor-results-2026-11-12.md)) — one persistent physical joint across target and motor-rule changes, three-action reward latency and eight matched policy-selection arms. This is a preregistered toy experiment, not a biologically accurate brain.
 # research/
+
+## Executing the Brain research program
+
+- [Executed ten-seed native Brain credit study](m0c-sensory-credit-results-2026-11-18.md): 60 valid runs; two-step 97.5%, three-step 10%, removing prior eligibility traces 0%; independent transfer not shown, scientific HOLD.
+- [M0c sensory-input and TD-credit adversarial diagnostic](m0c-sensory-credit-audit-2026-11-18.md): controlled direct-channel audit, frozen target counterfactual, goal masking, trace/critic ablations, short-task and zero-reward controls on the native backprop-free Brain; ten-seed evidence pending.
+- [Executed ten-seed fixed-task learning diagnostic](m0c-fixed-calibration-results-2026-11-17.md): Brain 5% to 9.17% same-task delivery (paired gain CI includes zero); public-state Q reaches 100% on the repeated task, but not validated independent transfer. Raw data and uncertainty archived. **M1 HOLD.**
+- [M0c fixed-geometry feedback/exploration calibration](m0c-fixed-calibration-protocol-2026-11-17.md): seven-arm same-task diagnosis with input representation, exploration, engineered feedback, negative controls and frozen learning checkpoints; 10-seed evidence pending.
+- [Executed M0c ten-seed negative result and raw evidence](m0c-ten-seed-evidence-2026-11-17.md): 180 arm/seed records; Brain 0% physical heldout delivery on legacy and both obstacle-transfer directions; engineered heuristic 100%. **Exploratory, M1 still HOLD.**
+- [M0c bidirectional structural stress and ten-seed evidence protocol](m0c-structural-transfer-protocol-2026-11-17.md): randomized starts, scattered-vs-divider topologies, offline feasibility accounting, reproducible ten-seed artifact workflow, paired CIs and explicit stop/go limits; no AGI claim.
+
+
+- [Frozen exact-budget negative learning result (10 seeds)](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/stateful-options-exact-negative-2026-11-12.md): all non-oracle arms failed held-out tasks; full raw `brain-result/1` and gate saved in [Git archive](https://github.com/faheemkhaskheli9/Brain/blob/fix/options-exact-decision-budget-20261112/research/results/stateful-options-exact-2026-11-12.tar.br). Do not claim an option-transfer win.
+
+
+- [M0c same-environment construction learnability controls](m0c-stateful-construction-controls-2026-11-17.md): six public-observation control arms, matched primitive actions, deduplicated structural fingerprints and exact training decision accounting; exploratory fixed-generator pilot only.
+- [Execution addendum: M0a/M0b tests and detailed M0c handoff](agi-execution-addendum-2026-11-12.md): status, critical adversarial findings, next implementation sequence and independent benchmark skepticism.
+- [AGI research execution blueprint v1.1](agi-execution-blueprint-v1.1-2026-11-12.md): revised canonical M0-to-M8 implementation protocol, explicit code-backed measurement blockers and ordered PR handoffs; **M0 is ready for coding, later stages conditional**.
+- [Historical execution blueprint v1.0](agi-execution-blueprint-2026-11-12.md): preserved predecessor for the Git review record.
+- [M0 code-audit knowledge note](agi-audit-knowledge-2026-11-12.md): precise source inspection, important negative limitations, primary external references, and open falsification questions; not an experiment.
+- [Append-only adversarial review ledger](agi-review-ledger.md): chronological review rounds, rejected shortcuts, changed decisions, and a repeatable process to preserve subsequent review history in Git.
+- [Existing adversarial implementation plan](adversarial-implementation-plan.md) and [sparse brain experiment plan](sparse-brain-next-implementation-plan.md) remain detailed source plans; issue #120 owns goals and #136 owns ordering.
+
+
+- [Sparse structural-plasticity pilot](sparse-plasticity-pilot.md) — reward-modulated micro-synapse formation/pruning, explicit connection budgets and controls; [10-seed result](sparse-plasticity-results-2026-11-12.md) (toy task, non-anatomical).
 
 | Path | What |
 |---|---|

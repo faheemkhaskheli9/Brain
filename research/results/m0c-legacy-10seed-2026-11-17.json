@@ -1,0 +1,3314 @@
+{
+ "baseline": "tabular-relative",
+ "budgets": {
+  "evaluationEpisodesPerSplit": 32,
+  "exactPrimitiveDecisionsPerTrainedArm": 10000,
+  "offlineGeneratorOracleQueries": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "oracleQueriesPerArm": 0,
+  "physicalTransitionsCharged": true
+ },
+ "command": "node game/world/stateful_construct_controls.mjs 1 2 3 4 5 6 7 8 9 10 --protocol legacy --train-steps 10000 --train-tasks 32 --dev-tasks 16 --eval-tasks 16 --repeats 2 --out /tmp/m0c-legacy.json",
+ "commit": "511f6c6",
+ "config": {
+  "arms": [
+   "flat",
+   "flat-goal-masked",
+   "tabular-absolute",
+   "tabular-relative",
+   "uniform-random",
+   "public-maze-heuristic"
+  ],
+  "devTasks": 16,
+  "evalTasks": 16,
+  "generatorAudits": {
+   "1": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "2": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "3": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "4": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "5": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "6": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "7": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "8": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "9": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   },
+   "10": {
+    "protocol": "legacy",
+    "totalOfflineOracleQueries": 0
+   }
+  },
+  "limitations": "Legacy: 16 templated configurations/split. Structural stress: two authored 5x5 families with shifted starts and different wall topologies. Generator uses BFS offline with recorded queries; no independently sealed 20-seed confirmatory transfer, no gradient RL comparator, no AGI claim.",
+  "manifests": {
+   "1": {
+    "counts": {
+     "dev": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "heldout": {
+      "duplicates": 4,
+      "tasks": 16,
+      "uniqueStructures": 12
+     },
+     "train": {
+      "duplicates": 19,
+      "tasks": 32,
+      "uniqueStructures": 13
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "e2cc912ff3d0ea608bf11dc76aea46a0a650b459bdaf1fa376f2c722e960c67a",
+     "heldout": "2dc0d1656acb37ea98e5d3284b58a79a0b0918b952343759e8870033eabaef69",
+     "train": "ea75e1eb67f437995e8f923bf348400a4c36bddd53aa889b3d24f95761c70f37"
+    }
+   },
+   "2": {
+    "counts": {
+     "dev": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "heldout": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "train": {
+      "duplicates": 20,
+      "tasks": 32,
+      "uniqueStructures": 12
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "2accad1da91b53b0d63a658ae87e9be484d333d35a0290e192feef5c57c6bab5",
+     "heldout": "b8c4371fa1e0f2280af070b839d6e69a1822fa786fc4531652ab0c07fef60e67",
+     "train": "83a063875841ab44a7bd25f15e5c843f58f2cbae747d6329235ee9e245652382"
+    }
+   },
+   "3": {
+    "counts": {
+     "dev": {
+      "duplicates": 6,
+      "tasks": 16,
+      "uniqueStructures": 10
+     },
+     "heldout": {
+      "duplicates": 7,
+      "tasks": 16,
+      "uniqueStructures": 9
+     },
+     "train": {
+      "duplicates": 18,
+      "tasks": 32,
+      "uniqueStructures": 14
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "24e5615d679302d9e858558b9316a9b233fc88fef6009da65f904b9e1e0ff93d",
+     "heldout": "0f6beb97b3fbd4d0569fe9b4a59f7a5e295c3e740bbc114c5921b86b25852ccd",
+     "train": "cd6b982d60ce1c31d72aad4ca00c5252444bfbc800acb0f58231fe0340e93bcb"
+    }
+   },
+   "4": {
+    "counts": {
+     "dev": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "heldout": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "train": {
+      "duplicates": 17,
+      "tasks": 32,
+      "uniqueStructures": 15
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "0c00105bf1c01073cc3a5cb228e266d88982a40d357e4980225ec019b362ceb6",
+     "heldout": "6afbfb021e0548804471817c33ebe855f27b7af56736eae78d11eb953f4f0cef",
+     "train": "0fcfd093fd8a1736f7b51df55edbe885e078a5cfc7278958d2735b34e1aca6f9"
+    }
+   },
+   "5": {
+    "counts": {
+     "dev": {
+      "duplicates": 7,
+      "tasks": 16,
+      "uniqueStructures": 9
+     },
+     "heldout": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "train": {
+      "duplicates": 18,
+      "tasks": 32,
+      "uniqueStructures": 14
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "959ea91dd13ad427fa672e6cbb186e01bce04d8a1c8d3d35e5d93b83a3924525",
+     "heldout": "d28b7734822c1ada3240c125e203507efbba12f4d637e15693b961ec14715875",
+     "train": "8c62efe1f9c93a261f7809c977ef10c5b5b4507bd110de4d4f57f5b6c94bf171"
+    }
+   },
+   "6": {
+    "counts": {
+     "dev": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "heldout": {
+      "duplicates": 6,
+      "tasks": 16,
+      "uniqueStructures": 10
+     },
+     "train": {
+      "duplicates": 19,
+      "tasks": 32,
+      "uniqueStructures": 13
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "da8d47b76f15e4ab01c12d956e179044be58727b24a690fe6f64907a81874876",
+     "heldout": "31cb489fb166fefec734bcb3f3c4b89e5fbbfeef573ea42aadeb3c031d87d16c",
+     "train": "b524efb46f506dcd0f08c12af1e17c739cac15a3a4f60282a4d4507c24db4751"
+    }
+   },
+   "7": {
+    "counts": {
+     "dev": {
+      "duplicates": 7,
+      "tasks": 16,
+      "uniqueStructures": 9
+     },
+     "heldout": {
+      "duplicates": 5,
+      "tasks": 16,
+      "uniqueStructures": 11
+     },
+     "train": {
+      "duplicates": 21,
+      "tasks": 32,
+      "uniqueStructures": 11
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "965fc8f3e03ffb475d802c16bf2da3ab1dcaa77d6b6b783322303b6832db1559",
+     "heldout": "490681bddcfdf6c5adc60c9c24f2c2cf8282ab7dff94dbe2d153229a14ab14a7",
+     "train": "522ed0513ca49afd62d94731c8f9e7b21427a4100744c5462a40362842e6f10e"
+    }
+   },
+   "8": {
+    "counts": {
+     "dev": {
+      "duplicates": 8,
+      "tasks": 16,
+      "uniqueStructures": 8
+     },
+     "heldout": {
+      "duplicates": 7,
+      "tasks": 16,
+      "uniqueStructures": 9
+     },
+     "train": {
+      "duplicates": 19,
+      "tasks": 32,
+      "uniqueStructures": 13
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "db630393b343636b1dbb48592dbd5450f9164a7e503540c61df9b07936b31281",
+     "heldout": "dd4d648f3dbc18060dd158038e5d446af1fd7cb69b24f942d17c9195c7132b43",
+     "train": "48a7a1ba4ee9204a34c775b096a308a406a5d258462149d136b7315b4fb35a65"
+    }
+   },
+   "9": {
+    "counts": {
+     "dev": {
+      "duplicates": 7,
+      "tasks": 16,
+      "uniqueStructures": 9
+     },
+     "heldout": {
+      "duplicates": 6,
+      "tasks": 16,
+      "uniqueStructures": 10
+     },
+     "train": {
+      "duplicates": 18,
+      "tasks": 32,
+      "uniqueStructures": 14
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "115226504d1dbcfc108e518e18d161563bb0c01b1ae45e676432e7f9cf9cf98e",
+     "heldout": "3bfd35c9f49a078dd8bf8a568b27ebe6975749f8e7873ef4434a0a66a838607e",
+     "train": "5e1e921ec163ea3402f9da76bff700915c7e561c445006546555bd57d9885f8b"
+    }
+   },
+   "10": {
+    "counts": {
+     "dev": {
+      "duplicates": 7,
+      "tasks": 16,
+      "uniqueStructures": 9
+     },
+     "heldout": {
+      "duplicates": 6,
+      "tasks": 16,
+      "uniqueStructures": 10
+     },
+     "train": {
+      "duplicates": 20,
+      "tasks": 32,
+      "uniqueStructures": 12
+     }
+    },
+    "fingerprint": "start+item+goal+sorted-walls+horizon+dynamics; no ID/seed",
+    "generator": "legacy fixed START, corners, four wall maps",
+    "hashes": {
+     "dev": "5995a992b411d08e803d27fdcf3b9feb837a0663dca5b0442a91e955dc2f170f",
+     "heldout": "7af63bec3e30b1fa2ac4cf13db6075aa275dcabaaf194c6458d261b3b17f78c3",
+     "train": "c1ec3ef18d8f027bf721b579b25bf63f92c7274b5e9dab80b5c5aaf01dfcd8d5"
+    }
+   }
+  },
+  "protocol": "legacy",
+  "provenance": "all controls share stateful_construct.observe/transition and six public actions; heuristic uses only locally discovered walls; relative tabular has authored coordinate inductive bias; flat uses existing backprop-free Brain; no oracle during any learning/evaluation",
+  "repeats": 2,
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "trainSteps": 10000,
+  "trainTasks": 32
+ },
+ "created": "2026-11-17T12:56:42Z",
+ "environment": {
+  "runtime": "node v22.23.4",
+  "world": "brain.js save v5"
+ },
+ "experiment": "brain-world/stateful-construct-m0c-controls",
+ "metrics": {
+  "development.success": "higher",
+  "heldout.invalidPerEpisode": "lower",
+  "heldout.success": "higher",
+  "modelBytesEstimate": "lower",
+  "source.success": "higher",
+  "trainDecisions": "lower"
+ },
+ "runs": [
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.59375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.09375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.5625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.741,
+   "seed": 1,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1269,
+     "envSteps": 1269,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 12.59375,
+     "success": 0.03125
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 1.015,
+   "seed": 1,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1232,
+     "envSteps": 1232,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 28,
+     "invalidPerEpisode": 20.6875,
+     "rewardPerEpisode": -2.323125000000001,
+     "success": 0.125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1254,
+     "envSteps": 1254,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 20.28125,
+     "rewardPerEpisode": -2.4200000000000004,
+     "success": 0.03125
+    },
+    "modelBytesEstimate": 95919,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1110,
+     "envSteps": 1110,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 26,
+     "invalidPerEpisode": 1.09375,
+     "rewardPerEpisode": -0.33656249999999993,
+     "success": 0.1875
+    },
+    "tableStates": 1353,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 262,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.096,
+   "seed": 1,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 914,
+     "envSteps": 914,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 17,
+     "invalidPerEpisode": 7.5,
+     "rewardPerEpisode": -0.3509375,
+     "success": 0.46875
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1224,
+     "envSteps": 1224,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 15.3125,
+     "rewardPerEpisode": -1.1112500000000007,
+     "success": 0.0625
+    },
+    "modelBytesEstimate": 46035,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 740,
+     "envSteps": 740,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 12,
+     "invalidPerEpisode": 4.375,
+     "rewardPerEpisode": 0.22124999999999984,
+     "success": 0.625
+    },
+    "tableStates": 679,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 306,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.062,
+   "seed": 1,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.03125,
+     "rewardPerEpisode": -2.6159375000000007,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.34375,
+     "rewardPerEpisode": -2.5753125000000003,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.40625,
+     "rewardPerEpisode": -2.7821875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 1,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 320,
+     "envSteps": 320,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0700000000000005,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 384,
+     "envSteps": 384,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0500000000000007,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 400,
+     "envSteps": 400,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0450000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.012,
+   "seed": 1,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 15.09375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 15.34375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.875,
+   "seed": 2,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.96875,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.8125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.84375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.846,
+   "seed": 2,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1271,
+     "envSteps": 1271,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 20.8125,
+     "rewardPerEpisode": -2.517500000000001,
+     "success": 0.03125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.5625,
+     "rewardPerEpisode": -2.5168749999999998,
+     "success": 0
+    },
+    "modelBytesEstimate": 103703,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 736,
+     "envSteps": 736,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 14,
+     "invalidPerEpisode": 3.25,
+     "rewardPerEpisode": 0.14312499999999997,
+     "success": 0.5625
+    },
+    "tableStates": 1466,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 286,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.081,
+   "seed": 2,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1099,
+     "envSteps": 1099,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 24,
+     "invalidPerEpisode": 8.875,
+     "rewardPerEpisode": -0.8934375000000001,
+     "success": 0.25
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 9.75,
+     "rewardPerEpisode": -0.9425000000000008,
+     "success": 0
+    },
+    "modelBytesEstimate": 45750,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 968,
+     "envSteps": 968,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 22,
+     "invalidPerEpisode": 3.875,
+     "rewardPerEpisode": -0.1106250000000003,
+     "success": 0.3125
+    },
+    "tableStates": 675,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 286,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.068,
+   "seed": 2,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.90625,
+     "rewardPerEpisode": -2.5809375000000006,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.3125,
+     "rewardPerEpisode": -2.6843749999999997,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.46875,
+     "rewardPerEpisode": -2.6265625000000004,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 2,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 336,
+     "envSteps": 336,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0650000000000006,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 384,
+     "envSteps": 384,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0500000000000007,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 368,
+     "envSteps": 368,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0550000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.013,
+   "seed": 2,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.0625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.6875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.65625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.968,
+   "seed": 3,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.5625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.1875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.46875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 1.008,
+   "seed": 3,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1186,
+     "envSteps": 1186,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 28,
+     "invalidPerEpisode": 19.28125,
+     "rewardPerEpisode": -2.1765625,
+     "success": 0.125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.40625,
+     "rewardPerEpisode": -2.7321875,
+     "success": 0
+    },
+    "modelBytesEstimate": 117375,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": -0.4399999999999999,
+     "success": 0
+    },
+    "tableStates": 1659,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 258,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.094,
+   "seed": 3,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1100,
+     "envSteps": 1100,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 26,
+     "invalidPerEpisode": 5.65625,
+     "rewardPerEpisode": -0.5878125000000004,
+     "success": 0.1875
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 973,
+     "envSteps": 973,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 18,
+     "invalidPerEpisode": 5.28125,
+     "rewardPerEpisode": -0.21062500000000023,
+     "success": 0.4375
+    },
+    "modelBytesEstimate": 47650,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 658,
+     "envSteps": 658,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 8,
+     "invalidPerEpisode": 0.5625,
+     "rewardPerEpisode": 0.5974999999999997,
+     "success": 0.75
+    },
+    "tableStates": 703,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 291,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.066,
+   "seed": 3,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.8125,
+     "rewardPerEpisode": -2.5206250000000003,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.71875,
+     "rewardPerEpisode": -2.891562500000001,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.0625,
+     "rewardPerEpisode": -2.660625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.005,
+   "seed": 3,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 304,
+     "envSteps": 304,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0750000000000004,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 376,
+     "envSteps": 376,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0525000000000002,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 400,
+     "envSteps": 400,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0450000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 3,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.40625,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.53125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.91,
+   "seed": 4,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.09375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.15625,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.881,
+   "seed": 4,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.0625,
+     "rewardPerEpisode": -2.669375000000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.625,
+     "rewardPerEpisode": -2.505,
+     "success": 0
+    },
+    "modelBytesEstimate": 120330,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1172,
+     "envSteps": 1172,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 28,
+     "invalidPerEpisode": 2.3125,
+     "rewardPerEpisode": -0.5118750000000001,
+     "success": 0.125
+    },
+    "tableStates": 1701,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 257,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.086,
+   "seed": 4,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 988,
+     "envSteps": 988,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 19,
+     "invalidPerEpisode": 10.875,
+     "rewardPerEpisode": -0.5834375,
+     "success": 0.40625
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 742,
+     "envSteps": 742,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 10,
+     "invalidPerEpisode": 3.625,
+     "rewardPerEpisode": 0.3224999999999999,
+     "success": 0.6875
+    },
+    "modelBytesEstimate": 51013,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 440,
+     "envSteps": 440,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 2,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 0.9568750000000003,
+     "success": 0.9375
+    },
+    "tableStates": 752,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 316,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.086,
+   "seed": 4,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.4375,
+     "rewardPerEpisode": -2.5768750000000002,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.25,
+     "rewardPerEpisode": -2.6549999999999994,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.28125,
+     "rewardPerEpisode": -2.6809375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 4,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 296,
+     "envSteps": 296,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0775000000000003,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 424,
+     "envSteps": 424,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0375000000000003,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 384,
+     "envSteps": 384,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0500000000000003,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 4,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.15625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 11.96875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.53125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.894,
+   "seed": 5,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 10.90625,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.09375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.71875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.955,
+   "seed": 5,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.71875,
+     "rewardPerEpisode": -2.7303124999999997,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1278,
+     "envSteps": 1278,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 18.40625,
+     "rewardPerEpisode": -2.2196874999999996,
+     "success": 0.0625
+    },
+    "modelBytesEstimate": 111926,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 676,
+     "envSteps": 676,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 12,
+     "invalidPerEpisode": 2.90625,
+     "rewardPerEpisode": 0.19781249999999984,
+     "success": 0.625
+    },
+    "tableStates": 1582,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 308,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.072,
+   "seed": 5,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1210,
+     "envSteps": 1210,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 29,
+     "invalidPerEpisode": 7.96875,
+     "rewardPerEpisode": -1.0212500000000007,
+     "success": 0.09375
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 984,
+     "envSteps": 984,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 22,
+     "invalidPerEpisode": 5.8125,
+     "rewardPerEpisode": -0.41625000000000006,
+     "success": 0.3125
+    },
+    "modelBytesEstimate": 50125,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 634,
+     "envSteps": 634,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 10,
+     "invalidPerEpisode": 4.9375,
+     "rewardPerEpisode": 0.20812499999999978,
+     "success": 0.6875
+    },
+    "tableStates": 739,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 290,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.061,
+   "seed": 5,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.71875,
+     "rewardPerEpisode": -2.7303124999999997,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.0625,
+     "rewardPerEpisode": -2.578125,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.625,
+     "rewardPerEpisode": -2.56375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.006,
+   "seed": 5,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 360,
+     "envSteps": 360,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0575000000000006,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 344,
+     "envSteps": 344,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0625000000000004,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 336,
+     "envSteps": 336,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0650000000000002,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 5,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.9375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.53125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.90625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.865,
+   "seed": 6,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.78125,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.5,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.15625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.854,
+   "seed": 6,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.78125,
+     "rewardPerEpisode": -2.6009375000000006,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.21875,
+     "rewardPerEpisode": -2.5665625,
+     "success": 0
+    },
+    "modelBytesEstimate": 99096,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 776,
+     "envSteps": 776,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 14,
+     "invalidPerEpisode": 1.59375,
+     "rewardPerEpisode": 0.22781249999999986,
+     "success": 0.5625
+    },
+    "tableStates": 1399,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 287,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.071,
+   "seed": 6,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1193,
+     "envSteps": 1193,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 27,
+     "invalidPerEpisode": 11.875,
+     "rewardPerEpisode": -0.8162500000000003,
+     "success": 0.15625
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1068,
+     "envSteps": 1068,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 23,
+     "invalidPerEpisode": 2.0625,
+     "rewardPerEpisode": -0.18281250000000007,
+     "success": 0.28125
+    },
+    "modelBytesEstimate": 46351,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 720,
+     "envSteps": 720,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 12,
+     "invalidPerEpisode": 0.71875,
+     "rewardPerEpisode": 0.4421875000000001,
+     "success": 0.625
+    },
+    "tableStates": 684,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 302,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.067,
+   "seed": 6,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.125,
+     "rewardPerEpisode": -2.6437500000000007,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.375,
+     "rewardPerEpisode": -2.5874999999999995,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.84375,
+     "rewardPerEpisode": -2.7778125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.006,
+   "seed": 6,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 336,
+     "envSteps": 336,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0650000000000006,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 400,
+     "envSteps": 400,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0450000000000004,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 400,
+     "envSteps": 400,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0450000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 6,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.5,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.78125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.3125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.96,
+   "seed": 7,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.59375,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.15625,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.8125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.929,
+   "seed": 7,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.96875,
+     "rewardPerEpisode": -2.5465625,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.59375,
+     "rewardPerEpisode": -2.4965625000000014,
+     "success": 0
+    },
+    "modelBytesEstimate": 108151,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 609,
+     "envSteps": 609,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 7,
+     "invalidPerEpisode": 1.90625,
+     "rewardPerEpisode": 0.5540625000000001,
+     "success": 0.78125
+    },
+    "tableStates": 1530,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 277,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.069,
+   "seed": 7,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 741,
+     "envSteps": 741,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 9,
+     "invalidPerEpisode": 4.90625,
+     "rewardPerEpisode": 0.13593749999999988,
+     "success": 0.71875
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 976,
+     "envSteps": 976,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 22,
+     "invalidPerEpisode": 8.53125,
+     "rewardPerEpisode": -0.3365625000000003,
+     "success": 0.3125
+    },
+    "modelBytesEstimate": 46833,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 880,
+     "envSteps": 880,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 18,
+     "invalidPerEpisode": 1.625,
+     "rewardPerEpisode": 0.01562500000000014,
+     "success": 0.4375
+    },
+    "tableStates": 691,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 278,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.066,
+   "seed": 7,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.96875,
+     "rewardPerEpisode": -2.5465625,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.53125,
+     "rewardPerEpisode": -2.594687500000001,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.15625,
+     "rewardPerEpisode": -2.5671875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.005,
+   "seed": 7,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 336,
+     "envSteps": 336,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0650000000000002,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 384,
+     "envSteps": 384,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0500000000000003,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 368,
+     "envSteps": 368,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0550000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 7,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.71875,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.21875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.15625,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.894,
+   "seed": 8,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.6875,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.1875,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.96875,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.85,
+   "seed": 8,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.4375,
+     "rewardPerEpisode": -2.7993750000000004,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.78125,
+     "rewardPerEpisode": -2.5709374999999994,
+     "success": 0
+    },
+    "modelBytesEstimate": 105206,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 832,
+     "envSteps": 832,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 16,
+     "invalidPerEpisode": 0.8125,
+     "rewardPerEpisode": 0.19562499999999985,
+     "success": 0.5
+    },
+    "tableStates": 1486,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 275,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.101,
+   "seed": 8,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1099,
+     "envSteps": 1099,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 23,
+     "invalidPerEpisode": 13.03125,
+     "rewardPerEpisode": -0.7953125000000003,
+     "success": 0.28125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1250,
+     "envSteps": 1250,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 10.34375,
+     "rewardPerEpisode": -0.9628125000000002,
+     "success": 0.0625
+    },
+    "modelBytesEstimate": 46325,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 700,
+     "envSteps": 700,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 10,
+     "invalidPerEpisode": 1.9375,
+     "rewardPerEpisode": 0.45749999999999996,
+     "success": 0.6875
+    },
+    "tableStates": 683,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 306,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.075,
+   "seed": 8,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.40625,
+     "rewardPerEpisode": -2.799687500000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.5,
+     "rewardPerEpisode": -2.6475,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 24.34375,
+     "rewardPerEpisode": -2.8190625000000002,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 8,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 360,
+     "envSteps": 360,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0575000000000003,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 432,
+     "envSteps": 432,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0350000000000004,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 408,
+     "envSteps": 408,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0425000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 8,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.53125,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.84375,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.5,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.842,
+   "seed": 9,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.78125,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 11.78125,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.871,
+   "seed": 9,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.21875,
+     "rewardPerEpisode": -2.7590624999999998,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 20.71875,
+     "rewardPerEpisode": -2.5615624999999995,
+     "success": 0
+    },
+    "modelBytesEstimate": 108968,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 852,
+     "envSteps": 852,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 18,
+     "invalidPerEpisode": 1.90625,
+     "rewardPerEpisode": 0.02968749999999988,
+     "success": 0.4375
+    },
+    "tableStates": 1540,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 276,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.079,
+   "seed": 9,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1279,
+     "envSteps": 1279,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 31,
+     "invalidPerEpisode": 12.625,
+     "rewardPerEpisode": -1.074375,
+     "success": 0.03125
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1242,
+     "envSteps": 1242,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 7,
+     "rewardPerEpisode": -0.7750000000000004,
+     "success": 0.0625
+    },
+    "modelBytesEstimate": 50169,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 700,
+     "envSteps": 700,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 12,
+     "invalidPerEpisode": 4.5625,
+     "rewardPerEpisode": 0.2568749999999999,
+     "success": 0.625
+    },
+    "tableStates": 740,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 324,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.067,
+   "seed": 9,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.15625,
+     "rewardPerEpisode": -2.7571874999999997,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.1875,
+     "rewardPerEpisode": -2.5893749999999995,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 22.09375,
+     "rewardPerEpisode": -2.6153124999999995,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 9,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 352,
+     "envSteps": 352,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0600000000000003,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 424,
+     "envSteps": 424,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0375000000000003,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 376,
+     "envSteps": 376,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0525000000000004,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.003,
+   "seed": 9,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.1875,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.25,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.883,
+   "seed": 10,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "flat-goal-masked",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 14.53125,
+     "success": 0
+    },
+    "heldout": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 12.65625,
+     "success": 0
+    },
+    "modelBytesEstimate": 150464,
+    "oracleQueries": 0,
+    "source": {
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 13.28125,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 250,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.889,
+   "seed": 10,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-absolute",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1252,
+     "envSteps": 1252,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 30,
+     "invalidPerEpisode": 22.78125,
+     "rewardPerEpisode": -2.5728125000000004,
+     "success": 0.0625
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.15625,
+     "rewardPerEpisode": -2.5084375000000003,
+     "success": 0
+    },
+    "modelBytesEstimate": 96483,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 912,
+     "envSteps": 912,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 20,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 0.09874999999999981,
+     "success": 0.375
+    },
+    "tableStates": 1366,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 293,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.075,
+   "seed": 10,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "tabular-relative",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 906,
+     "envSteps": 906,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 19,
+     "invalidPerEpisode": 4.25,
+     "rewardPerEpisode": -0.15281250000000016,
+     "success": 0.40625
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1156,
+     "envSteps": 1156,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 23,
+     "invalidPerEpisode": 6.6875,
+     "rewardPerEpisode": -0.6278125000000002,
+     "success": 0.28125
+    },
+    "modelBytesEstimate": 43546,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 606,
+     "envSteps": 606,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 8,
+     "invalidPerEpisode": 0.1875,
+     "rewardPerEpisode": 0.6349999999999999,
+     "success": 0.75
+    },
+    "tableStates": 642,
+    "trainDecisions": 10000,
+    "trainEnvSteps": 10000,
+    "trainEpisodes": 329,
+    "truncatedTrain": 1
+   },
+   "seconds": 0.06,
+   "seed": 10,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "uniform-random",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 23.90625,
+     "rewardPerEpisode": -2.762187500000001,
+     "success": 0
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.75,
+     "rewardPerEpisode": -2.5675000000000003,
+     "success": 0
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 1280,
+     "envSteps": 1280,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 32,
+     "invalidPerEpisode": 21.9375,
+     "rewardPerEpisode": -2.609375,
+     "success": 0
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.004,
+   "seed": 10,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "checkpoint": null,
+   "reason": null,
+   "scores": {
+    "development": {
+     "censored": 0,
+     "decisions": 320,
+     "envSteps": 320,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0700000000000005,
+     "success": 1
+    },
+    "heldout": {
+     "censored": 0,
+     "decisions": 392,
+     "envSteps": 392,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0475000000000003,
+     "success": 1
+    },
+    "modelBytesEstimate": 0,
+    "oracleQueries": 0,
+    "source": {
+     "censored": 0,
+     "decisions": 384,
+     "envSteps": 384,
+     "episodes": 32,
+     "exits": 0,
+     "failed": 0,
+     "invalidPerEpisode": 0,
+     "rewardPerEpisode": 1.0500000000000003,
+     "success": 1
+    },
+    "tableStates": 0,
+    "trainDecisions": 0,
+    "trainEnvSteps": 0,
+    "trainEpisodes": 0,
+    "truncatedTrain": 0
+   },
+   "seconds": 0.002,
+   "seed": 10,
+   "split": "legacy-goal-pair-holdout",
+   "status": "ok"
+  }
+ ],
+ "schema": "brain-result/1"
+}

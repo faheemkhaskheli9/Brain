@@ -1,0 +1,192 @@
+{
+  "arms": {
+    "flat-brain": {
+      "afterCi95": [
+        0.025,
+        0.15833333333333333
+      ],
+      "afterSuccess": 0.09166666666666666,
+      "beforeSuccess": 0.05,
+      "pairedGain": 0.04166666666666667,
+      "pairedGainCi95": [
+        -0.008333333333333333,
+        0.10833333333333332
+      ],
+      "successfulTrainingDeliveries": 166,
+      "successfulTrainingPickups": 1686,
+      "totalTrainingDecisions": 40000,
+      "totalTrainingEnvironmentSteps": 40000,
+      "variantCi95": [
+        0.020833333333333332,
+        0.09166666666666666
+      ],
+      "variantSuccess": 0.05416666666666666
+    },
+    "q-absolute": {
+      "afterCi95": [
+        1,
+        1
+      ],
+      "afterSuccess": 1,
+      "beforeSuccess": 0.008333333333333333,
+      "pairedGain": 0.9916666666666666,
+      "pairedGainCi95": [
+        0.975,
+        1
+      ],
+      "successfulTrainingDeliveries": 8209,
+      "successfulTrainingPickups": 9069,
+      "totalTrainingDecisions": 40000,
+      "totalTrainingEnvironmentSteps": 40000,
+      "variantCi95": [
+        0.008333333333333333,
+        0.05
+      ],
+      "variantSuccess": 0.029166666666666664
+    },
+    "q-relative": {
+      "afterCi95": [
+        1,
+        1
+      ],
+      "afterSuccess": 1,
+      "beforeSuccess": 0.008333333333333333,
+      "pairedGain": 0.9916666666666666,
+      "pairedGainCi95": [
+        0.975,
+        1
+      ],
+      "successfulTrainingDeliveries": 8159,
+      "successfulTrainingPickups": 9107,
+      "totalTrainingDecisions": 40000,
+      "totalTrainingEnvironmentSteps": 40000,
+      "variantCi95": [
+        0.5,
+        0.6041666666666667
+      ],
+      "variantSuccess": 0.55
+    },
+    "q-relative-explore50": {
+      "afterCi95": [
+        1,
+        1
+      ],
+      "afterSuccess": 1,
+      "beforeSuccess": 0.008333333333333333,
+      "pairedGain": 0.9916666666666666,
+      "pairedGainCi95": [
+        0.975,
+        1
+      ],
+      "successfulTrainingDeliveries": 3519,
+      "successfulTrainingPickups": 5735,
+      "totalTrainingDecisions": 40000,
+      "totalTrainingEnvironmentSteps": 40000,
+      "variantCi95": [
+        0.4625,
+        0.6
+      ],
+      "variantSuccess": 0.5333333333333333
+    },
+    "q-relative-no-reward": {
+      "afterCi95": [
+        0,
+        0.025
+      ],
+      "afterSuccess": 0.008333333333333333,
+      "beforeSuccess": 0.008333333333333333,
+      "pairedGain": 0,
+      "pairedGainCi95": [
+        0,
+        0
+      ],
+      "successfulTrainingDeliveries": 123,
+      "successfulTrainingPickups": 1442,
+      "totalTrainingDecisions": 40000,
+      "totalTrainingEnvironmentSteps": 40000,
+      "variantCi95": [
+        0.008333333333333333,
+        0.05
+      ],
+      "variantSuccess": 0.029166666666666664
+    },
+    "q-relative-potential": {
+      "afterCi95": [
+        1,
+        1
+      ],
+      "afterSuccess": 1,
+      "beforeSuccess": 0.008333333333333333,
+      "pairedGain": 0.9916666666666666,
+      "pairedGainCi95": [
+        0.975,
+        1
+      ],
+      "successfulTrainingDeliveries": 8690,
+      "successfulTrainingPickups": 9611,
+      "totalTrainingDecisions": 40000,
+      "totalTrainingEnvironmentSteps": 40000,
+      "variantCi95": [
+        0.5333333333333333,
+        0.6333333333333333
+      ],
+      "variantSuccess": 0.5875
+    },
+    "uniform-random": {
+      "afterCi95": [
+        0,
+        0.025
+      ],
+      "afterSuccess": 0.008333333333333333,
+      "beforeSuccess": 0.008333333333333333,
+      "pairedGain": 0,
+      "pairedGainCi95": [
+        0,
+        0
+      ],
+      "successfulTrainingDeliveries": 0,
+      "successfulTrainingPickups": 0,
+      "totalTrainingDecisions": 0,
+      "totalTrainingEnvironmentSteps": 0,
+      "variantCi95": [
+        0.008333333333333333,
+        0.05
+      ],
+      "variantSuccess": 0.029166666666666664
+    }
+  },
+  "brainMinusRelativeQ": -0.9083333333333332,
+  "brainMinusRelativeQCi95": [
+    -0.9749999999999999,
+    -0.8416666666666666
+  ],
+  "checkpointDecisions": [
+    0,
+    250,
+    1000,
+    4000
+  ],
+  "limitations": [
+    "single repeatedly trained geometry, not independent transfer",
+    "relative Q embeds supplied goal-coordinate expertise",
+    "potential shaping is supplied feedback and not part of native rewards",
+    "different model sizes/inductive biases, no controlled causal conclusion"
+  ],
+  "metric": "physical delivered item (same repeated training task)",
+  "promotionDecision": "HOLD: no sealed structural transfer or retention evidence",
+  "schema": "brain-m0c-fixed-calibration-analysis/1",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "sourceCommit": "a053179",
+  "sourceExperiment": "brain-world/m0c-fixed-geometry-calibration"
+}

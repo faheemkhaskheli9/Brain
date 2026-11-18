@@ -1,0 +1,118 @@
+{
+  "arms": {
+    "flat": {
+      "deltaVsRandom": 0,
+      "deltaVsRandomCi95": [
+        0,
+        0
+      ],
+      "developmentSuccess": 0.003125,
+      "heldoutCi95": [
+        0,
+        0
+      ],
+      "heldoutDecisionsTotal": 12800,
+      "heldoutSuccess": 0,
+      "trainDecisionsTotal": 25000
+    },
+    "flat-goal-masked": {
+      "deltaVsRandom": 0.003125,
+      "deltaVsRandomCi95": [
+        0,
+        0.009375
+      ],
+      "developmentSuccess": 0,
+      "heldoutCi95": [
+        0,
+        0.009375
+      ],
+      "heldoutDecisionsTotal": 12785,
+      "heldoutSuccess": 0.003125,
+      "trainDecisionsTotal": 25000
+    },
+    "public-maze-heuristic": {
+      "deltaVsRandom": 1,
+      "deltaVsRandomCi95": [
+        1,
+        1
+      ],
+      "developmentSuccess": 1,
+      "heldoutCi95": [
+        1,
+        1
+      ],
+      "heldoutDecisionsTotal": 3828,
+      "heldoutSuccess": 1,
+      "trainDecisionsTotal": 0
+    },
+    "tabular-absolute": {
+      "deltaVsRandom": 0,
+      "deltaVsRandomCi95": [
+        0,
+        0
+      ],
+      "developmentSuccess": 0.003125,
+      "heldoutCi95": [
+        0,
+        0
+      ],
+      "heldoutDecisionsTotal": 12800,
+      "heldoutSuccess": 0,
+      "trainDecisionsTotal": 25000
+    },
+    "tabular-relative": {
+      "deltaVsRandom": 0.009375,
+      "deltaVsRandomCi95": [
+        0,
+        0.025
+      ],
+      "developmentSuccess": 0.025,
+      "heldoutCi95": [
+        0,
+        0.025
+      ],
+      "heldoutDecisionsTotal": 12758,
+      "heldoutSuccess": 0.009375,
+      "trainDecisionsTotal": 25000
+    },
+    "uniform-random": {
+      "deltaVsRandom": 0,
+      "deltaVsRandomCi95": [
+        0,
+        0
+      ],
+      "developmentSuccess": 0.003125,
+      "heldoutCi95": [
+        0,
+        0
+      ],
+      "heldoutDecisionsTotal": 12800,
+      "heldoutSuccess": 0,
+      "trainDecisionsTotal": 0
+    }
+  },
+  "bestNonFlatOnDevelopment": "public-maze-heuristic",
+  "flatMinusBestHeldoutCi95": [
+    -1,
+    -1
+  ],
+  "flatMinusBestHeldoutDelta": -1,
+  "limitations": "CI checks trace integrity, not scientific superiority. Authored 5x5 topology; relative-Q and public maze heuristic are engineered priors.",
+  "primaryMetric": "physical heldout delivery success",
+  "promotion": "HOLD: exploratory legacy or authored structural family; no sealed 20-seed confirmation, no justified M1 claim.",
+  "protocol": "scattered-to-barrier",
+  "schema": "brain-m0c-analysis/1",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "trainStepsPerLearnedArm": 2500
+}
