@@ -69,6 +69,10 @@ jobs:
               result = json.load(stream)
           print('M0D_MATCHED_REPLAY_JSON=' +
                 json.dumps(result, separators=(',', ':'), sort_keys=True))
+          with open('/tmp/m0d-matched-credit-analysis.json', encoding='utf-8') as stream:
+              analysis = json.load(stream)
+          print('M0D_ANALYSIS_JSON=' +
+                json.dumps(analysis, separators=(',', ':'), sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
