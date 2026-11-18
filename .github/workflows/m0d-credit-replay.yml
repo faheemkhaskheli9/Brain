@@ -1,0 +1,75 @@
+name: M0d identical public-transition credit replay (exploratory)
+
+on:
+  pull_request:
+    paths:
+      - game/world/stateful_credit_replay.mjs
+      - game/world/test_stateful_credit_replay.mjs
+      - .github/workflows/m0d-credit-replay.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  matched-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Verify forced-action and frozen-update regressions
+        run: node game/world/test_stateful_credit_replay.mjs
+      - name: Replay ten paired streams once per learning-rule arm
+        run: |
+          node game/world/stateful_credit_replay.mjs 1 2 3 4 5 6 7 8 9 10 \
+            --episodes 12 --out /tmp/m0d-matched-credit.json
+      - name: Reject missing arms, differing data or uncharged policy interactions
+        run: |
+          python research/result_schema.py --check /tmp/m0d-matched-credit.json
+          python - <<'PY'
+          import json
+          from collections import defaultdict
+
+          path = "/tmp/m0d-matched-credit.json"
+          with open(path, encoding="utf-8") as stream:
+              data = json.load(stream)
+          required = set(data["config"]["arms"])
+          assert len(required) == 7
+          by_seed = defaultdict(list)
+          for row in data["runs"]:
+              assert row["status"] == "ok", row
+              by_seed[row["seed"]].append(row)
+          assert set(by_seed) == set(range(1, 11))
+          for seed, rows in by_seed.items():
+              assert {row["arm"] for row in rows} == required, seed
+              hashes = {row["scores"]["streamHash"] for row in rows}
+              costs = {row["scores"]["recordedEnvironmentSteps"] for row in rows}
+              assert len(hashes) == len(costs) == 1, seed
+              assert all(row["scores"]["policyOracleQueries"] == 0 and
+                         row["scores"]["policyEnvironmentInteractions"] == 0 and
+                         row["scores"]["replayDecisions"] == next(iter(costs))
+                         for row in rows), seed
+          print("M0d identical-experience integrity: 70/70 complete")
+          PY
+      - name: Publish entire evidence stream for preservation
+        run: |
+          python - <<'PY'
+          import json
+          with open('/tmp/m0d-matched-credit.json', encoding='utf-8') as stream:
+              result = json.load(stream)
+          print('M0D_MATCHED_REPLAY_JSON=' +
+                json.dumps(result, separators=(',', ':'), sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m0d-matched-credit-${{ github.sha }}
+          path: /tmp/m0d-matched-credit.json
+          if-no-files-found: warn
+          retention-days: 30
