@@ -142,7 +142,9 @@ export function replay(seed, arm, stream) {
         throw new Error("eligibility not cleared at replay episode boundary");
     }
   } finally {
-    brain.update = originalUpdate;
+    // Never leave a method override as an own field: full-state cloning
+    // rejects function-valued fields even when they equal the prototype.
+    delete brain.update;
   }
   const digest = modelDigest(model), afterProbe = policyProbe(model, seed);
   if (modelDigest(model) !== digest)
