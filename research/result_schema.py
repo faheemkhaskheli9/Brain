@@ -89,6 +89,9 @@ def validate(r):
         return errs
     if r["schema"] != SCHEMA:
         errs.append(f"schema: {r['schema']!r}, expected {SCHEMA!r}")
+    # Without declared outcomes, even an all-failed experiment falsely passes the evidence gate.
+    if not r["metrics"]:
+        errs.append("metrics: empty; declare at least one outcome metric")
     for name, d in r["metrics"].items():
         if d not in ("higher", "lower"):
             errs.append(f"metrics.{name}: {d!r}, expected 'higher' or 'lower'")
