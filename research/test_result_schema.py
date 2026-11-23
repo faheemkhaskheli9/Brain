@@ -61,6 +61,12 @@ def test_invalid():
     bad(lambda r: r.pop("commit"), "commit")
     bad(lambda r: r.update(schema="brain-result/0"), "schema")
     bad(lambda r: r["metrics"].update(x="up"), "metrics.x")
+    bad(lambda r: r.update(metrics={}), "metrics: empty")
+    all_failed = sample()
+    all_failed["metrics"] = {}
+    for run in all_failed["runs"]:
+        run.update(status="failed", reason="planned failure", scores={})
+    assert any("metrics: empty" in e for e in rs.validate(all_failed))
     bad(lambda r: r["runs"][2].pop("reason"), "needs a reason")
     bad(lambda r: r["runs"][0].update(status="passed"), "status")
     bad(lambda r: r["runs"][0]["scores"].pop("x"), "lacks metric")
@@ -71,6 +77,20 @@ def test_invalid():
     bad(lambda r: r["runs"].append(copy.deepcopy(r["runs"][0])), "duplicate")
     bad(lambda r: r.update(baseline="z"), "baseline")
     bad(lambda r: r["runs"][0].update(seed=True), "seed")
+
+
+
+def test_empty_metrics_cli():
+    record = sample()
+    record["metrics"] = {}
+    with tempfile.TemporaryDirectory() as directory:
+        path = os.path.join(directory, "no-outcomes.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(record, fh)
+        result = subprocess.run([sys.executable, os.path.join(HERE, "result_schema.py"),
+                                 "--check", path], capture_output=True, text=True, check=False)
+    assert result.returncode == 1, result
+    assert "metrics: empty" in result.stdout, result.stdout
 
 
 def test_sign_flip():
