@@ -13,3 +13,6 @@ research/data/microns_cotuned_inputs_*.npz
 
 # Private correction-memory snapshots (may contain user-provided text)
 *.mistakes.json
+
+# Local agent notes (not published)
+CLAUDE.md

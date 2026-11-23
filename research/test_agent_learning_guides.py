@@ -16,7 +16,7 @@ class GuideSetupTests(unittest.TestCase):
             self.assertIn(phrase, claude.lower())
 
     def test_harness_entrypoints_link_to_existing_guides(self):
-        paths = ("CLAUDE.md", "GEMINI.md", ".github/copilot-instructions.md",
+        paths = ("GEMINI.md", ".github/copilot-instructions.md",
                  ".cursor/rules/verified-feedback.mdc")
         for filename in paths:
             with self.subTest(filename=filename):
