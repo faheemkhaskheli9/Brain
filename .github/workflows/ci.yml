@@ -182,6 +182,13 @@ jobs:
           python research/analyze_m0c_credit_probe.py /tmp/m0c-credit-smoke.json
       - name: M0c causal diagnostic evidence mutation gate
         run: python research/test_analyze_m0c_credit_probe.py
+      - name: M0c frozen-step credit protocol regressions and smoke
+        run: |
+          node game/world/test_stateful_credit_protocol.mjs
+          python research/test_analyze_m0c_credit_protocol.py
+          node game/world/stateful_credit_protocol.mjs --budget 30 --repeats 1 --dev-seeds 101 --out /tmp/m0c-protocol-smoke.json 1
+          python research/result_schema.py --check /tmp/m0c-protocol-smoke.json
+          python research/analyze_m0c_credit_protocol.py /tmp/m0c-protocol-smoke.json
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
         run: |
           node game/world/test_stateful_options.mjs

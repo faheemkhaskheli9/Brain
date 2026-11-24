@@ -1,0 +1,61 @@
+name: M0c frozen-step credit protocol
+
+on:
+  pull_request:
+    paths:
+      - game/world/stateful_credit_protocol.mjs
+      - game/world/test_stateful_credit_protocol.mjs
+      - research/analyze_m0c_credit_protocol.py
+      - .github/workflows/m0c-credit-protocol.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mechanism:
+    name: Dev-selected step size, two-scale ablations, heldout goals (10 seeds)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test layouts, controls, scaling and analyzer gates
+        run: |
+          node game/world/test_stateful_credit_protocol.mjs
+          python research/test_analyze_m0c_credit_protocol.py
+      - name: Select step size on dev seeds, then run 10 evaluation seeds
+        run: |
+          node game/world/stateful_credit_protocol.mjs --out /tmp/m0c-protocol.json \
+            1 2 3 4 5 6 7 8 9 10
+      - name: Check integrity and preregistered contrasts
+        run: |
+          python research/result_schema.py --check /tmp/m0c-protocol.json
+          python research/analyze_m0c_credit_protocol.py /tmp/m0c-protocol.json \
+            /tmp/m0c-protocol-analysis.json
+      - name: Expose complete evidence for Git archiving
+        run: |
+          python - <<'PY'
+          import json
+          for path, marker in (
+              ('/tmp/m0c-protocol.json', 'M0C_PROTOCOL_JSON='),
+              ('/tmp/m0c-protocol-analysis.json', 'M0C_PROTOCOL_ANALYSIS_JSON='),
+          ):
+              with open(path, encoding='utf-8') as fh:
+                  content = json.load(fh)
+              print(marker + json.dumps(content, sort_keys=True, separators=(',', ':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m0c-credit-protocol-${{ github.sha }}
+          path: |
+            /tmp/m0c-protocol.json
+            /tmp/m0c-protocol-analysis.json
+          if-no-files-found: warn
+          retention-days: 30
