@@ -290,3 +290,29 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
   - No mechanism claim beyond "same per-weight step".
   - HOLD M1–M8; no claims.tsv change.
 - **Next:** per-arm dev-tuned or function-space-matched steps with an extended grid; broader goal coverage with interior heldout goals tested against the 1/2 ceiling; then independent heldout families (#112/#153/#154).
+
+## Round 30 — own-step and wide-goal transfer protocol executed (2026-11-26)
+
+- **Inspected baseline:** branch commit 9bb9f1e (Round 29). New `own_step_transfer_protocol.mjs` and analyzer. `matched_step_credit_protocol.mjs` gained goal-map arguments, `evalArm` and a `flag-only` arm; it reproduces Round 29 rows bit for bit. Brain source unchanged. Run at preregistration commit 5117332, local container, not CI. Details: [preregistration](m0c-own-step-transfer-protocol-2026-11-26.md), [results](m0c-own-step-transfer-results-2026-11-26.md).
+- **Why:**
+  - Round 29 held every arm at native's step, and no-hidden peaked at the grid edge.
+  - The goal is a one-hot cell, so a heldout goal's input was never active in training; 3 trained goals allow a fixed route per goal.
+- **Design:**
+  - Part A: each arm selects its own matched step on dev goals and seeds from a grid extended to 0.512, and is evaluated on 20 seeds.
+  - Part B: one-drop family with 19 trained goals and 5 never-trained interior goals (goal-blind ceiling 1/5), 64,000 decisions (budget from a dev-seed pilot), arms native, mask-goal and flag-only at native's dev-selected step.
+  - 5 tests, Holm.
+- **Results:**
+  - Own steps: native 0.004, trace-one-step 0.016, no-hidden 0.064; none at the grid edge.
+  - Hidden layer: native − no-hidden = −10.7 pp (Holm 0.035), **reversed**.
+  - Eligibility: +1.0 pp, not significant.
+  - Goal use on trained goals: +38.6 pp (3 goals); native 63.3% vs a 1/19 ceiling (19 goals).
+  - Heldout: native 21.4% vs a 1/5 ceiling, +1.4 pp, CI [−1.3, +4.1], not significant. **No transfer.**
+- **Adversarial correction:**
+  - Native's heldout behaviour depends on the goal input (2–4 goals delivered per repeat), but total success equals the goal-blind ceiling.
+  - Flag-only reaches only 4.1% on heldout goals.
+  - Heldout goal-use vs mask-goal (+21.2 pp) is significant only because mask-goal falls far below its own ceiling. It is not evidence of transfer.
+- **Verdict:**
+  - Goal-conditional learning on trained goals is supported in this toy family.
+  - Transfer to untrained goal cells, a hidden-layer benefit and an eligibility benefit are not supported.
+  - HOLD M1–M8; no claims.tsv change.
+- **Next:** independent heldout families (#112/#153/#154); a preregistered relational goal-coding adapter arm, to separate the learner from the one-hot encoding; own-step arms on the wide family.
