@@ -78,6 +78,9 @@ for (const r of rows) {
   assert.equal(r.scores.onlineOracleQueries, 0);
   assert.equal(r.scores.primary, r.scores.after.train);
 }
+// The yoked tape must not just replay the learner's own rewards (run-1 degeneracy).
+const yr = rows.find(r => r.arm === "yoked-reward@x1").scores.training;
+assert.ok(yr.tapeMatchesOwnRewards < 1, "yoked tape equals own rewards: control is degenerate");
 const mg = rows.find(r => r.arm === "mask-goal@x1").scores.goalSensitivity;
 assert.equal(mg.startL1, 0); assert.equal(mg.carryingL1, 0);
 console.log("stateful credit protocol tests passed");

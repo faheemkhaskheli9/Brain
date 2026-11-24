@@ -1,7 +1,8 @@
 // M0c frozen-step-size credit protocol (#112/#153), follow-up to Round 27 of the review ledger.
 // 1. Learning-rate scale is SELECTED on development goals and seeds only, then frozen.
 // 2. Ablations are reported at two step sizes: inherited (x1) and the selected one.
-// 3. zero-feedback is replaced by a yoked-reward control (native's reward tape, nonzero TD error).
+// 3. zero-feedback is replaced by a yoked-reward control: the reward tape of a separate DONOR
+//    native learner (different init and RNG), so its TD error is nonzero but not action-contingent.
 // 4. An "aligned" adapter layout moves the 3 item cells off Brain's multiplicative gain inputs.
 // 5. Training and scoring use VARYING goals; heldout goals are never trained.
 // Brain source and its backprop-free rule are unchanged; GAINS.lrP/lrV are scaled per run and restored.
@@ -21,6 +22,7 @@ export const GOALS = Object.freeze({
 export const DEV_SEEDS = Object.freeze([101, 102, 103, 104, 105]);
 export const SCALES = Object.freeze([1, 2, 4, 8]);
 export const START = Object.freeze([2, 0]);
+export const DONOR_SALT = 503;
 const key = p => p.join(",");
 export function assertGoalSplits() {
   const all = Object.values(GOALS).flat().map(key);
@@ -75,8 +77,8 @@ export function withScale(scale, fn) {
   try { return fn(); } finally { [GAINS.lrP, GAINS.lrV] = saved; }
 }
 
-export function makeModel(seed, arm) {
-  const model = createModel(mix(seed, 211), "flat");
+export function makeModel(seed, arm, salt = 211) {
+  const model = createModel(mix(seed, salt), "flat");
   if (arm === "no-hidden") for (const b of model.brains) b.gate.fill(0);
   return model;
 }
@@ -209,15 +211,20 @@ export function runSeed(seed, scale, { budget = 8000, repeats = 12 } = {}) {
   if (!Number.isSafeInteger(seed) || seed < 0 || DEV_SEEDS.includes(seed))
     throw new Error("evaluation seeds must be disjoint from development seeds");
   return withScale(scale, () => {
+    // Amendment 1: yoking to this seed's own native tape was degenerate (same init and RNG
+    // replay native's actions, so tape == own reward). The donor uses another init and RNG.
     let tape = null;
     return ARMS.map(arm => attempt({ arm: `${arm}@x${scale}`, seed, split: "eval" }, () => {
-      if (arm === "yoked-reward" && !tape) throw new Error("native reward tape unavailable");
+      if (arm === "yoked-reward")
+        tape = train(makeModel(seed, "native", DONOR_SALT), "native", "train", seed, budget).rewards;
       const model = makeModel(seed, arm);
       const before = { train: score(model, arm, "train", repeats, seed),
         heldout: score(model, arm, "heldout", repeats, seed) };
       const t = train(model, arm, "train", seed, budget, { tape });
-      if (arm === "native") tape = t.rewards;
+      const ownRewards = t.rewards;
       delete t.rewards;
+      if (arm === "yoked-reward")
+        t.tapeMatchesOwnRewards = ownRewards.filter((r, i) => r === tape[i]).length / budget;
       const after = { train: score(model, arm, "train", repeats, seed),
         heldout: score(model, arm, "heldout", repeats, seed) };
       return { scale, baseArm: arm, before, training: t, after, primary: after.train,

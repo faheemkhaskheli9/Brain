@@ -73,3 +73,9 @@ node game/world/stateful_credit_protocol.mjs --out OUT.json 1 2 3 4 5 6 7 8 9 10
 python research/result_schema.py --check OUT.json
 python research/analyze_m0c_credit_protocol.py OUT.json ANALYSIS.json
 ```
+
+## Amendment 1 (2026-11-24, after run 1; appended, design above unchanged otherwise)
+
+**Defect found in run 1 (code-observed):** in the preregistered `yoked-reward` arm, the tape came from native on the *same* seed. Yoked shares native's initial weights and action RNG, so it replays native's actions, its tape reward equals its own reward at every step, and it learns exactly as native does. Every one of the 20 seed × scale rows was identical to native. The control tested nothing.
+
+**Fix:** the tape now comes from a separate donor native learner on the same seed, goal order, budget and scale, but with a different initialisation and RNG (`DONOR_SALT` 503). Each row logs `tapeMatchesOwnRewards`. The analyzer rejects any row where this is 1. All other arms, the selection and the analysis are unchanged. Run 1's raw output is preserved as `results/m0c-frozen-step-run1-degenerate-yoke-2026-11-24.json`; the current analyzer rejects it because the field is missing.

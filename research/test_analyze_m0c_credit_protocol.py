@@ -73,6 +73,13 @@ class ProtocolTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate(r)
 
+    def test_rejects_degenerate_yoke(self):
+        r = self.mutated()
+        row = next(x for x in r["runs"] if x["arm"].startswith("yoked-reward@"))
+        row["scores"]["training"]["tapeMatchesOwnRewards"] = 1.0
+        with self.assertRaises(ValueError):
+            validate(r)
+
     def test_error_rows_score_zero_not_dropped(self):
         r = self.mutated()
         row = next(x for x in r["runs"] if x["split"] == "eval" and

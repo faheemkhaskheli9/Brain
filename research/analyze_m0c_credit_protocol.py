@@ -137,6 +137,8 @@ def validate(record):
                 if arm == "mask-goal" and (s["goalSensitivity"]["startL1"] != 0 or
                                            s["goalSensitivity"]["carryingL1"] != 0):
                     raise ValueError("goal mask bypass detected")
+                if arm == "yoked-reward" and not t.get("tapeMatchesOwnRewards", 1) < 1:
+                    raise ValueError("yoked tape replays own rewards: degenerate control")
                 if arm == "aligned" and s["fanIn"]["gainIndicesUsed"] != 0:
                     raise ValueError("aligned layout still drives gain inputs")
     return rows, means, best
