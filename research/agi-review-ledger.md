@@ -236,3 +236,27 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
 - **Attack:** `learn` divides lrP/lrV by 1 + running |h|² (≈ 40–80 here), so the effective step is ~40–80× below nominal with GAINS tuned for Brain World, not this adapter. Scaling lrP and lrV together (seeds 1–10, same 4,000 decisions): native-three 10.0% → 60.8% (×2), 84.2% (×4), 98.3% (×8), divergence at ×16. Trace-one-step rises to 60% at ×16 and beats native there; no-bootstrap stays ≤ 2.5%.
 - **Corrections:** the Round 24/26 "learning-rule/credit bottleneck" and the ablation ranking are step-size dependent, not established mechanisms. At ×8 goal counterfactual L1 falls to 0.008 and goal-masked delivery reaches 69–95%: memorised action sequence, not goal following. Zero-feedback has δ ≡ 0 and equals the untrained policy seed for seed, so it is not an informative control. Construct channels land on Brain World input slots (gain inputs on item cells, ~11% of fan-in on always-zero inputs).
 - **Boundary:** in-sample sweep on the scored task, five grid points, no correction for multiple comparisons; not a tuned result and not transfer. HOLD M1–M8; no claims.tsv change. Next: dev-only step-size selection then freeze, shuffled-reward control, fixed input mapping, ablations at ≥ 2 step sizes, then heldout families (#112/#153/#154).
+
+## Round 28 — frozen-step credit protocol executed (2026-11-24)
+
+- **Inspected baseline:** main [761ca92](https://github.com/faheemkhaskheli9/Brain/commit/761ca92d046b27300be40b637c07f6d9e86bfc6a). New `stateful_credit_protocol.mjs` and analyzer; Brain source unchanged. Local container run, not CI. Details: [preregistration](m0c-frozen-step-credit-protocol-2026-11-24.md), [results](m0c-frozen-step-credit-results-2026-11-24.md).
+- **Design:** the lrP/lrV scale is selected on development goals and seeds only (×8 wins: 19.4% dev), then frozen. Seven arms run at ×1 and ×8 on varying train goals, with untrained heldout goals, 10 eval seeds, exact sign-flip tests and Holm correction over 12 contrasts.
+- **Self-attack (run 1):** the preregistered yoked-reward arm used the same seed's native tape and was identical to native in all 20 rows, a degenerate control. Raw output is preserved. Amendment 1 switches to a donor tape, and the analyzer now rejects a tape that equals the learner's own rewards. Every other arm reproduced exactly in run 2.
+- **Results (×8, trained / heldout):**
+  - native 40.0% / 12.1%
+  - mask-goal 31.7% / 1.3%
+  - yoked 2.5% / 4.2%
+  - trace-one-step 66.7% / 22.5%
+  - no-bootstrap 2.5% / 5.8%
+  - no-hidden 72.5% / 10.0%, at a ~9× larger effective step
+  - aligned equal to native
+
+  At ×1 every arm is at ~3%, i.e. no learning.
+- **Verdict:**
+  - No contrast passes Holm.
+  - Goal-conditional learning on trained goals is not supported: +8.3 pp over goal-masked, CI includes 0.
+  - Heldout goal use above goal-blind is supported descriptively: +10.8 pp, CI [+3.3, +19.2], at a low absolute level.
+  - Eligibility traces hurt at ×8 (bootstrap CI only).
+  - The hidden-layer effect is confounded by the |h|² step normaliser.
+  - HOLD M1–M8; no claims.tsv change.
+- **Next:** a step normaliser independent of hidden width, ≥ 20 seeds or fewer contrasts, a family where one memorised route cannot reach 1/k, then independent heldout families (#112/#153/#154).
