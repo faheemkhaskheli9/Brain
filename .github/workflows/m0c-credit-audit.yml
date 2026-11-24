@@ -51,7 +51,7 @@ jobs:
                   content = json.load(fh)
               print(marker + json.dumps(content, sort_keys=True, separators=(',', ':')))
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: m0c-credit-audit-${{ github.sha }}

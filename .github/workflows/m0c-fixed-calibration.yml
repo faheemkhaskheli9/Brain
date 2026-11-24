@@ -49,7 +49,7 @@ jobs:
               analysis = json.load(stream)
           print('M0C_FIXED_ANALYSIS_JSON=' + json.dumps(analysis, separators=(',', ':'), sort_keys=True))
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: m0c-fixed-calibration-${{ github.sha }}
