@@ -47,9 +47,18 @@ export function matchedLearn(brain, eta, reward, next, end) {
   } finally { [GAINS.lrP, GAINS.lrV] = saved; }
 }
 
+// flag-only (used by the Round 30 transfer protocol): goal plane zeroed, at-goal flag kept.
+export const SENSE_ARMS = Object.freeze([...ARMS, "flag-only"]);
+function senseFor(task, state, arm) {
+  if (arm !== "flag-only") return sense(task, state, arm);
+  const y = sense(task, state, "native");
+  y.fill(0, 50, 75);
+  return y;
+}
+
 export function rollout(model, arm, task, { learn = false, eta = null, cap = task.maxSteps,
   rewards = null } = {}) {
-  if (!ARMS.includes(arm) || !Number.isSafeInteger(cap) || cap < 1 || cap > task.maxSteps)
+  if (!SENSE_ARMS.includes(arm) || !Number.isSafeInteger(cap) || cap < 1 || cap > task.maxSteps)
     throw new Error("invalid protocol episode");
   const brain = model.brains[0], was = [brain.learning, brain.greedy];
   brain.learning = learn; brain.greedy = false;
@@ -59,13 +68,13 @@ export function rollout(model, arm, task, { learn = false, eta = null, cap = tas
   try {
     for (let k = 0; k < cap; k++) {
       if (learn && arm === "trace-one-step") { brain.ev.fill(0); brain.eP.fill(0); }
-      const action = brain.act(brain.encode(sense(task, state, arm), 0), ALLOWED);
+      const action = brain.act(brain.encode(senseFor(task, state, arm), 0), ALLOWED);
       const result = step(task, state, action);
       out.decisions++;
       out.misplaced += Number(result.reason === "misplaced");
       if (learn) {
         rewards?.push(result.reward);
-        const next = result.done ? null : brain.encode(sense(task, result.state, arm), 0);
+        const next = result.done ? null : brain.encode(senseFor(task, result.state, arm), 0);
         const applied = matchedLearn(brain, eta, result.reward, next, result.done || k === cap - 1);
         if (!Number.isFinite(brain.dopamine)) throw new Error("nonfinite TD error");
         out.tdAbsSum += Math.abs(brain.dopamine);
@@ -81,10 +90,10 @@ export function rollout(model, arm, task, { learn = false, eta = null, cap = tas
 
 // Frozen scoring with common random numbers: repeat r uses the same evaluation seed for every
 // goal, so a goal-blind policy follows one trajectory per repeat and succeeds on <= 1 goal.
-export function score(model, arm, split, repeats, seed) {
+export function score(model, arm, split, repeats, seed, goals = GOALS) {
   const perGoal = {}, perRepeat = new Array(repeats).fill(0);
   let wins = 0, misplaced = 0, n = 0;
-  for (const goal of GOALS[split]) {
+  for (const goal of goals[split]) {
     let w = 0;
     for (let r = 0; r < repeats; r++) {
       const x = rollout(cloneForEvaluation(model, mix(seed, 1009 + r * 17)), arm,
@@ -94,17 +103,17 @@ export function score(model, arm, split, repeats, seed) {
     perGoal[key(goal)] = w / repeats; wins += w;
   }
   return { success: wins / n, episodes: n, deliveries: wins, misplaced, perGoal,
-    goalBlindCeiling: 1 / GOALS[split].length, maxGoalsPerRepeat: Math.max(...perRepeat) };
+    goalBlindCeiling: 1 / goals[split].length, maxGoalsPerRepeat: Math.max(...perRepeat) };
 }
 
 function policyAt(brain, task, state, arm) {
-  return Array.from(brain.policy(brain.encode(sense(task, state, arm), 0), ALLOWED,
+  return Array.from(brain.policy(brain.encode(senseFor(task, state, arm), 0), ALLOWED,
     new Float32Array(brain.pi.length))).slice(0, ALLOWED.length);
 }
 const l1 = (p, q) => p.reduce((s, v, i) => s + Math.abs(v - q[i]), 0);
-export function goalSensitivity(model, arm, seed) {
+export function goalSensitivity(model, arm, seed, goals = GOALS) {
   const brain = cloneForEvaluation(model, seed).brains[0];
-  const tasks = GOALS.train.map(g => taskFor(g, "train"));
+  const tasks = goals.train.map(g => taskFor(g, "train"));
   const pairs = fn => {
     const p = tasks.map(fn), d = [];
     for (let i = 0; i < p.length; i++) for (let j = i + 1; j < p.length; j++) d.push(l1(p[i], p[j]));
@@ -115,11 +124,11 @@ export function goalSensitivity(model, arm, seed) {
 }
 
 // Goal order comes from a seed-only RNG: every arm and eta sees the same goal sequence.
-export function train(model, arm, split, seed, budget, eta) {
+export function train(model, arm, split, seed, budget, eta, goals = GOALS) {
   const R = rng(mix(seed, 307)), rewards = [];
   let decisions = 0, episodes = 0, deliveries = 0, td = 0, stepSum = 0, stepMaxDev = 0;
   while (decisions < budget) {
-    const goal = GOALS[split][Math.floor(R() * GOALS[split].length)];
+    const goal = goals[split][Math.floor(R() * goals[split].length)];
     const x = rollout(model, arm, taskFor(goal, split), { learn: true, eta, rewards,
       cap: Math.min(12, budget - decisions) });
     decisions += x.decisions; episodes++; deliveries += Number(x.success);
@@ -130,7 +139,7 @@ export function train(model, arm, split, seed, budget, eta) {
     maxStepRelDev: stepMaxDev, eta };
 }
 
-function attempt(fields, fn) {
+export function attempt(fields, fn) {
   const start = Date.now();
   try {
     const scores = fn();
@@ -140,7 +149,7 @@ function attempt(fields, fn) {
       seconds: (Date.now() - start) / 1000, scores: {} });
   }
 }
-const label = (arm, eta) => `${arm}@eta${eta}`;
+export const label = (arm, eta) => `${arm}@eta${eta}`;
 
 // Dev selection. Every arm is run for a descriptive per-arm curve; only native rows choose eta.
 // Rule (preregistered): highest mean native dev success; divergence = 0; ties -> smaller eta.
@@ -167,21 +176,23 @@ export function select({ seeds = DEV_SEEDS, etas = ETAS, budget = 8000, repeats 
   return { rows, curves, selected, second, evalEtas: [selected, second], perArmBest };
 }
 
-export function runSeed(seed, eta, { budget = 8000, repeats = 12 } = {}) {
+export function evalArm(seed, arm, eta, { budget = 8000, repeats = 12, goals = GOALS,
+  split = "eval" } = {}) {
   if (!Number.isSafeInteger(seed) || seed < 0 || DEV_SEEDS.includes(seed))
     throw new Error("evaluation seeds must be disjoint from development seeds");
-  return ARMS.map(arm => attempt({ arm: label(arm, eta), seed, split: "eval" }, () => {
-    const model = makeModel(seed, arm);
-    const before = { train: score(model, arm, "train", repeats, seed),
-      heldout: score(model, arm, "heldout", repeats, seed) };
-    const training = train(model, arm, "train", seed, budget, eta);
-    const after = { train: score(model, arm, "train", repeats, seed),
-      heldout: score(model, arm, "heldout", repeats, seed) };
+  return attempt({ arm: label(arm, eta), seed, split }, () => {
+    const model = makeModel(seed, arm === "flag-only" ? "native" : arm);
+    const both = () => ({ train: score(model, arm, "train", repeats, seed, goals),
+      heldout: score(model, arm, "heldout", repeats, seed, goals) });
+    const before = both();
+    const training = train(model, arm, "train", seed, budget, eta, goals);
+    const after = both();
     return { eta, baseArm: arm, before, training, after, primary: after.train,
-      goalSensitivity: goalSensitivity(model, arm, mix(seed, 401)),
+      goalSensitivity: goalSensitivity(model, arm, mix(seed, 401), goals),
       modelBytes: modelBytes(model), onlineOracleQueries: 0 };
-  }));
+  });
 }
+export const runSeed = (seed, eta, opts = {}) => ARMS.map(arm => evalArm(seed, arm, eta, opts));
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2);
