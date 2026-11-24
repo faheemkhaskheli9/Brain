@@ -260,3 +260,59 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
   - The hidden-layer effect is confounded by the |h|² step normaliser.
   - HOLD M1–M8; no claims.tsv change.
 - **Next:** a step normaliser independent of hidden width, ≥ 20 seeds or fewer contrasts, a family where one memorised route cannot reach 1/k, then independent heldout families (#112/#153/#154).
+
+## Round 29 — matched-step, one-drop credit protocol executed (2026-11-25)
+
+- **Inspected baseline:** main [af40c8d](https://github.com/faheemkhaskheli9/Brain/commit/af40c8d2371f1db157e09f916d9eccd2913a5833). New `matched_step_credit_protocol.mjs` and analyzer; Brain source unchanged. Run at preregistration commit 88dc3c9, local container, not CI. Details: [preregistration](m0c-matched-step-credit-protocol-2026-11-25.md), [results](m0c-matched-step-credit-results-2026-11-25.md).
+- **Defects fixed from Round 28 (code-observed):**
+  - Per-weight step depended on hidden width (no-hidden ~9× larger).
+  - Misplaced drops were not terminal, so a goal-blind sweep of all three goals fit in 12 steps.
+  - Scoring drew different random numbers per goal.
+  - 10 seeds against 12 contrasts.
+- **Design:**
+  - Every arm learns at exactly η per weight; the analyzer gates this to 1e-9 relative.
+  - η is selected on dev goals and seeds (native arm), then frozen.
+  - A misplaced drop ends the episode, and scoring uses common random numbers, so goal-blind success is at most 1/k exactly (gated).
+  - 20 seeds; 3 contrasts × 2 η; Holm.
+- **Results:**
+  - Selected η 0.004, second-best 0.008.
+  - Native trained 67.2% vs goal-masked 28.6% (+38.6 pp, Holm p 1e-5), and +33.9 pp above the 1/3 goal-blind ceiling.
+  - Heldout: native 8.8% vs 0% masked, but far below the 1/2 ceiling.
+  - Hidden layer: +63.3 / +44.9 pp, Holm-significant at both η.
+  - Eligibility: +12.5 pp at 0.004 (significant), −10.1 pp at 0.008 (not significant).
+- **Adversarial correction:**
+  - No-hidden tuned to its own dev optimum (η 0.064, grid edge) beats native's dev best (54.4% vs 43.3%). The hidden-layer finding holds only at a matched per-weight step.
+  - Trace-one-step's Round 28 advantage is mostly a larger-effective-step effect.
+  - Native diverges or collapses on 6/20 seeds at η 0.008.
+- **Verdict:**
+  - Goal-conditional learning on trained goals is supported in this one toy family.
+  - Transfer to untrained goal positions is not supported.
+  - No mechanism claim beyond "same per-weight step".
+  - HOLD M1–M8; no claims.tsv change.
+- **Next:** per-arm dev-tuned or function-space-matched steps with an extended grid; broader goal coverage with interior heldout goals tested against the 1/2 ceiling; then independent heldout families (#112/#153/#154).
+
+## Round 30 — own-step and wide-goal transfer protocol executed (2026-11-26)
+
+- **Inspected baseline:** branch commit 9bb9f1e (Round 29). New `own_step_transfer_protocol.mjs` and analyzer. `matched_step_credit_protocol.mjs` gained goal-map arguments, `evalArm` and a `flag-only` arm; it reproduces Round 29 rows bit for bit. Brain source unchanged. Run at preregistration commit 5117332, local container, not CI. Details: [preregistration](m0c-own-step-transfer-protocol-2026-11-26.md), [results](m0c-own-step-transfer-results-2026-11-26.md).
+- **Why:**
+  - Round 29 held every arm at native's step, and no-hidden peaked at the grid edge.
+  - The goal is a one-hot cell, so a heldout goal's input was never active in training; 3 trained goals allow a fixed route per goal.
+- **Design:**
+  - Part A: each arm selects its own matched step on dev goals and seeds from a grid extended to 0.512, and is evaluated on 20 seeds.
+  - Part B: one-drop family with 19 trained goals and 5 never-trained interior goals (goal-blind ceiling 1/5), 64,000 decisions (budget from a dev-seed pilot), arms native, mask-goal and flag-only at native's dev-selected step.
+  - 5 tests, Holm.
+- **Results:**
+  - Own steps: native 0.004, trace-one-step 0.016, no-hidden 0.064; none at the grid edge.
+  - Hidden layer: native − no-hidden = −10.7 pp (Holm 0.035), **reversed**.
+  - Eligibility: +1.0 pp, not significant.
+  - Goal use on trained goals: +38.6 pp (3 goals); native 63.3% vs a 1/19 ceiling (19 goals).
+  - Heldout: native 21.4% vs a 1/5 ceiling, +1.4 pp, CI [−1.3, +4.1], not significant. **No transfer.**
+- **Adversarial correction:**
+  - Native's heldout behaviour depends on the goal input (2–4 goals delivered per repeat), but total success equals the goal-blind ceiling.
+  - Flag-only reaches only 4.1% on heldout goals.
+  - Heldout goal-use vs mask-goal (+21.2 pp) is significant only because mask-goal falls far below its own ceiling. It is not evidence of transfer.
+- **Verdict:**
+  - Goal-conditional learning on trained goals is supported in this toy family.
+  - Transfer to untrained goal cells, a hidden-layer benefit and an eligibility benefit are not supported.
+  - HOLD M1–M8; no claims.tsv change.
+- **Next:** independent heldout families (#112/#153/#154); a preregistered relational goal-coding adapter arm, to separate the learner from the one-hot encoding; own-step arms on the wide family.

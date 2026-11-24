@@ -1,0 +1,61 @@
+name: M0c own-step and wide-goal transfer protocol
+
+on:
+  pull_request:
+    paths:
+      - game/world/own_step_transfer_protocol.mjs
+      - game/world/matched_step_credit_protocol.mjs
+      - game/world/test_own_step_transfer_protocol.mjs
+      - research/analyze_m0c_own_step_transfer.py
+      - .github/workflows/m0c-own-step-transfer.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mechanism:
+    name: Own step per arm and wide-goal transfer (20 seeds)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test own-step selection, wide ceiling and analyzer gates
+        run: |
+          node game/world/test_own_step_transfer_protocol.mjs
+          python research/test_analyze_m0c_own_step_transfer.py
+      - name: Select steps on dev seeds, then run 20 evaluation seeds
+        run: |
+          node game/world/own_step_transfer_protocol.mjs --out /tmp/m0c-own.json
+      - name: Check integrity and preregistered contrasts
+        run: |
+          python research/result_schema.py --check /tmp/m0c-own.json
+          python research/analyze_m0c_own_step_transfer.py /tmp/m0c-own.json \
+            /tmp/m0c-own-analysis.json
+      - name: Expose complete evidence for Git archiving
+        run: |
+          python - <<'PY'
+          import json
+          for path, marker in (
+              ('/tmp/m0c-own.json', 'M0C_OWN_JSON='),
+              ('/tmp/m0c-own-analysis.json', 'M0C_OWN_ANALYSIS_JSON='),
+          ):
+              with open(path, encoding='utf-8') as fh:
+                  content = json.load(fh)
+              print(marker + json.dumps(content, sort_keys=True, separators=(',', ':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m0c-own-step-${{ github.sha }}
+          path: |
+            /tmp/m0c-own.json
+            /tmp/m0c-own-analysis.json
+          if-no-files-found: warn
+          retention-days: 30
