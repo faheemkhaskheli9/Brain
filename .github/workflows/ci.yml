@@ -189,6 +189,13 @@ jobs:
           node game/world/stateful_credit_protocol.mjs --budget 30 --repeats 1 --dev-seeds 101 --out /tmp/m0c-protocol-smoke.json 1
           python research/result_schema.py --check /tmp/m0c-protocol-smoke.json
           python research/analyze_m0c_credit_protocol.py /tmp/m0c-protocol-smoke.json
+      - name: M0c matched-step one-drop credit protocol regressions and smoke
+        run: |
+          node game/world/test_matched_step_credit_protocol.mjs
+          python research/test_analyze_m0c_matched_step.py
+          node game/world/matched_step_credit_protocol.mjs --budget 30 --repeats 1 --dev-seeds 101 --etas 0.004,0.016 --out /tmp/m0c-matched-smoke.json 1
+          python research/result_schema.py --check /tmp/m0c-matched-smoke.json
+          python research/analyze_m0c_matched_step.py /tmp/m0c-matched-smoke.json
       - name: Backprop-free stateful option pilot, masking and frozen tests (#112)
         run: |
           node game/world/test_stateful_options.mjs

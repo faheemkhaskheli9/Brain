@@ -1,0 +1,60 @@
+name: M0c matched-step credit protocol
+
+on:
+  pull_request:
+    paths:
+      - game/world/matched_step_credit_protocol.mjs
+      - game/world/test_matched_step_credit_protocol.mjs
+      - research/analyze_m0c_matched_step.py
+      - .github/workflows/m0c-matched-step.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mechanism:
+    name: Matched step, one-drop goal-blind ceiling, two step sizes (20 seeds)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test matched step, one-drop ceiling and analyzer gates
+        run: |
+          node game/world/test_matched_step_credit_protocol.mjs
+          python research/test_analyze_m0c_matched_step.py
+      - name: Select eta on dev seeds, then run 20 evaluation seeds
+        run: |
+          node game/world/matched_step_credit_protocol.mjs --out /tmp/m0c-matched.json
+      - name: Check integrity and preregistered contrasts
+        run: |
+          python research/result_schema.py --check /tmp/m0c-matched.json
+          python research/analyze_m0c_matched_step.py /tmp/m0c-matched.json \
+            /tmp/m0c-matched-analysis.json
+      - name: Expose complete evidence for Git archiving
+        run: |
+          python - <<'PY'
+          import json
+          for path, marker in (
+              ('/tmp/m0c-matched.json', 'M0C_MATCHED_JSON='),
+              ('/tmp/m0c-matched-analysis.json', 'M0C_MATCHED_ANALYSIS_JSON='),
+          ):
+              with open(path, encoding='utf-8') as fh:
+                  content = json.load(fh)
+              print(marker + json.dumps(content, sort_keys=True, separators=(',', ':')))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m0c-matched-step-${{ github.sha }}
+          path: |
+            /tmp/m0c-matched.json
+            /tmp/m0c-matched-analysis.json
+          if-no-files-found: warn
+          retention-days: 30
