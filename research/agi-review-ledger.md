@@ -260,3 +260,33 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
   - The hidden-layer effect is confounded by the |h|² step normaliser.
   - HOLD M1–M8; no claims.tsv change.
 - **Next:** a step normaliser independent of hidden width, ≥ 20 seeds or fewer contrasts, a family where one memorised route cannot reach 1/k, then independent heldout families (#112/#153/#154).
+
+## Round 29 — matched-step, one-drop credit protocol executed (2026-11-25)
+
+- **Inspected baseline:** main [af40c8d](https://github.com/faheemkhaskheli9/Brain/commit/af40c8d2371f1db157e09f916d9eccd2913a5833). New `matched_step_credit_protocol.mjs` and analyzer; Brain source unchanged. Run at preregistration commit 88dc3c9, local container, not CI. Details: [preregistration](m0c-matched-step-credit-protocol-2026-11-25.md), [results](m0c-matched-step-credit-results-2026-11-25.md).
+- **Defects fixed from Round 28 (code-observed):**
+  - Per-weight step depended on hidden width (no-hidden ~9× larger).
+  - Misplaced drops were not terminal, so a goal-blind sweep of all three goals fit in 12 steps.
+  - Scoring drew different random numbers per goal.
+  - 10 seeds against 12 contrasts.
+- **Design:**
+  - Every arm learns at exactly η per weight; the analyzer gates this to 1e-9 relative.
+  - η is selected on dev goals and seeds (native arm), then frozen.
+  - A misplaced drop ends the episode, and scoring uses common random numbers, so goal-blind success is at most 1/k exactly (gated).
+  - 20 seeds; 3 contrasts × 2 η; Holm.
+- **Results:**
+  - Selected η 0.004, second-best 0.008.
+  - Native trained 67.2% vs goal-masked 28.6% (+38.6 pp, Holm p 1e-5), and +33.9 pp above the 1/3 goal-blind ceiling.
+  - Heldout: native 8.8% vs 0% masked, but far below the 1/2 ceiling.
+  - Hidden layer: +63.3 / +44.9 pp, Holm-significant at both η.
+  - Eligibility: +12.5 pp at 0.004 (significant), −10.1 pp at 0.008 (not significant).
+- **Adversarial correction:**
+  - No-hidden tuned to its own dev optimum (η 0.064, grid edge) beats native's dev best (54.4% vs 43.3%). The hidden-layer finding holds only at a matched per-weight step.
+  - Trace-one-step's Round 28 advantage is mostly a larger-effective-step effect.
+  - Native diverges or collapses on 6/20 seeds at η 0.008.
+- **Verdict:**
+  - Goal-conditional learning on trained goals is supported in this one toy family.
+  - Transfer to untrained goal positions is not supported.
+  - No mechanism claim beyond "same per-weight step".
+  - HOLD M1–M8; no claims.tsv change.
+- **Next:** per-arm dev-tuned or function-space-matched steps with an extended grid; broader goal coverage with interior heldout goals tested against the 1/2 ceiling; then independent heldout families (#112/#153/#154).
