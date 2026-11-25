@@ -11,6 +11,7 @@
 ## Executing the Brain research program
 
 - [Adversarial step-size review of the credit audit](m0c-credit-step-size-review-2026-11-23.md): exact reproduction; scaling lrP/lrV ×8 lifts three-action delivery 10% → 98.3% (in-sample), ablation ranking flips with step size, zero-feedback control is tautological; HOLD.
+- [Independent goal-pair fixtures and audit](m0c-independent-goal-pairs-results-2026-11-25.md): two held-out topologies, verified 50% goal-blind ceiling, and 87.5% / 90.0% public-heuristic completion. Learner transfer is unmeasured.
 - [Frozen-step credit protocol results](m0c-frozen-step-credit-results-2026-11-24.md): dev-selected ×8; nothing learns at ×1; native 40% vs goal-masked 31.7% on trained goals (not significant), heldout +10.8 pp over goal-blind; trace-one-step and no-hidden beat native at ×8 (no-hidden step-confounded); no Holm-significant contrast; degenerate run-1 yoke preserved; HOLD.
 - [Frozen-step credit protocol (preregistration)](m0c-frozen-step-credit-protocol-2026-11-24.md): step size selected on dev goals/seeds only, ablations at two step sizes, yoked-reward control, gain-input layout fix, varying and heldout goals; Holm-corrected paired contrasts.
 - [Executed ten-seed native Brain credit study](m0c-sensory-credit-results-2026-11-18.md): 60 valid runs; two-step 97.5%, three-step 10%, removing prior eligibility traces 0%; independent transfer not shown, scientific HOLD.
