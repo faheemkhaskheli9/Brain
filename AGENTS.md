@@ -3,6 +3,8 @@
 This repo is a knowledge base on the human brain: anatomy, function, and how to
 build digital simulations and brain-inspired learning systems.
 
+The Brain World creature must remain backprop-free; outside LLM assistants are interfaces/baselines, not evidence of learning by the creature. Prefer small reproducible tests, existing backlog issues and evidence-backed changes.
+
 ## Consulting it
 
 1. Read `INDEX.md` and match your task against the **Tags** and **Use when** columns,

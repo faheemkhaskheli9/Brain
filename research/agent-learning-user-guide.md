@@ -7,7 +7,7 @@
 | Mechanism | What actually changes? | Persists across new sessions? | Changes LLM parameters? |
 |---|---|---|---|
 | Conversation reflection | The current conversation context | Usually no, unless product explicitly stores it | No |
-| Project instructions (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`) | Reusable rules given at inference time | Yes, while files are present and the agent reads them | No |
+| Project instructions (`AGENTS.md`, `GEMINI.md`) | Reusable rules given at inference time | Yes, while files are present and the agent reads them | No |
 | Skills (`SKILL.md`) | A discoverable, versioned procedure | Yes, when installed/discovered | No |
 | Verified mistake memory | External stored failures and confirmed corrections | Yes, if saved/reloaded | No |
 | RAG / knowledge base | The retrieved evidence available at inference | Yes, if index and sources persist | No |
@@ -64,7 +64,7 @@ Start with **`AGENTS.md`** (repository policy) and the specialized **verified-ag
 
 | Agent / product | Repository instruction entry point | Specialized skill location / invocation | How to begin |
 |---|---|---|---|
-| **Claude Code** | `CLAUDE.md` points to `AGENTS.md` | `.claude/skills/verified-agent-learning/SKILL.md`; invoke `/verified-agent-learning` or request it by name | Launch `claude` in Brain's root |
+| **Claude Code** | `AGENTS.md` (add your own local `CLAUDE.md` that points to it if you want auto-loading) | `.claude/skills/verified-agent-learning/SKILL.md`; invoke `/verified-agent-learning` or request it by name | Launch `claude` in Brain's root |
 | **OpenAI Codex CLI / IDE** | `AGENTS.md` | `.agents/skills/verified-agent-learning/SKILL.md`; invoke `$verified-agent-learning` where supported | Launch `codex` in repo root |
 | **ChatGPT on web / Work** | Ask it to inspect the connected repository and read `AGENTS.md` | Local repo `SKILL.md` is **not automatically installed** into ChatGPT web; explicitly link the workflow or package as a separately installed plugin | Connect GitHub; in Work ask to read this guide and execute the verified workflow |
 | **GitHub Copilot coding agent / VS Code** | `AGENTS.md`, optionally `.github/copilot-instructions.md` | VS Code Copilot supports `.github/skills/<name>/SKILL.md`, but don't assume the coding agent loads our Claude/Codex copies | Open repo in VS Code Agent mode or assign a GitHub issue to Copilot; refer to the workflow explicitly |
@@ -76,7 +76,7 @@ Start with **`AGENTS.md`** (repository policy) and the specialized **verified-ag
 
 ### Claude Code, step by step
 
-1. Check out the branch above, open the repo root in a terminal and run `claude`. Read `CLAUDE.md` and `AGENTS.md`.
+1. Check out the branch above, open the repo root in a terminal and run `claude`. Read `AGENTS.md`.
 2. Type `/verified-agent-learning` if available, followed by a description of the failure, or ask Claude: “Use the verified-agent-learning skill on this failure.”
 3. Allow it to reproduce the error using the **smallest safe test**, fix the code, rerun the failing test and an old regression test. Do not treat its verbal self-review as verification.
 4. If it finds a second independently confirmed failure of the same type, ask it to **propose** a minimal skill change and a test. Review/approve before applying.
