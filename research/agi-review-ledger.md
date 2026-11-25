@@ -260,3 +260,9 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
   - The hidden-layer effect is confounded by the |h|² step normaliser.
   - HOLD M1–M8; no claims.tsv change.
 - **Next:** a step normaliser independent of hidden width, ≥ 20 seeds or fewer contrasts, a family where one memorised route cannot reach 1/k, then independent heldout families (#112/#153/#154).
+
+## Round 29 — branching improvement decision (2026-11-25)
+
+- **Proposed, not executed:** baseline [af40c8d](https://github.com/faheemkhaskheli9/Brain/commit/af40c8d2371f1db157e09f916d9eccd2913a5833). [Detailed plan and adversarial review](m0c-branching-improvement-plan-2026-11-25.md).
+- **Decision:** prioritize width-independent effective-step diagnostics, anti-memorization families and adequately powered goal-conditioned confirmation. Retain legacy default, use existing issues #112/#153/#154; M1–M8 HOLD.
+- **Falsifier:** matched-step hidden ablation and sealed structural-family evaluation, with goal-blind and public-history controls. No code/tests executed, no claims.tsv changes; independent review pending.
