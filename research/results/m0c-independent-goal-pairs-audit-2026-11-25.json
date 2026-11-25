@@ -1,0 +1,1887 @@
+{
+ "schema": "brain-result/1",
+ "experiment": "brain-world/m0c-goal-pair-fixture-audit",
+ "commit": "a2970d5",
+ "created": "2026-11-25T17:09:48Z",
+ "command": "node game/world/stateful_goal_pairs.mjs research/results/m0c-independent-goal-pairs-audit-2026-11-25.json 1 2 3 4 5 6 7 8 9 10",
+ "environment": {
+  "runtime": "node v24.22.3",
+  "world": "brain.js save v5"
+ },
+ "config": {
+  "seeds": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "count": 6,
+  "repeats": 3,
+  "families": {
+   "train": "open",
+   "dev": "open",
+   "scattered": "scattered",
+   "barrier": "barrier"
+  },
+  "manifests": {
+   "1": {
+    "hashes": {
+     "train": "737186e2a4bef36e6fa9d0a8acc064fa5ae6d0528f3cb9985de90f0c9362b3bb",
+     "dev": "583b7c874ea5ed0e5991bdafa3b4e0e3274ba0659e338ba4c22f77b69a610052",
+     "heldout": "d5cfbe7a38fba6949ef1c72af7357eb712c42a693122c90914f2c369f648d957"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "ee247f697224e4094c4399c2a057e0e3978722be569195f88075fcc9ba1e78f4",
+     "dev": "f2418115448fae0b4f2c1bb4f8a24bf50605cbfaba406e4488243ebc0d72e80c",
+     "scattered": "cb4293aea596392b1589158b290d9839c5afecc236a13f227a7f9a01ef7b04e9",
+     "barrier": "e748e512e58674863cc407bbeeefae58ea5b9a0cbf9923ff0dfec05950161a93"
+    },
+    "generation": {
+     "train": {
+      "candidates": 18,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 18,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 53,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 55,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "2": {
+    "hashes": {
+     "train": "b62029ae08709fad047dcfdfc4d25042f7f5c6c573849ecefd07d4b869e4135b",
+     "dev": "42ebda753e362528459995df253b85a0676311b01d1d49cae3e12654006e240a",
+     "heldout": "87e2d58cffceb239fd5aee3c99999c49b6a1afbb7aa09c1ce64286e811c0f25b"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "6362bb523d655fbdd9932e5eda04508942970faab6d02bb079bd85589db0ea1c",
+     "dev": "f9cce793aab3217088b11b8597df921fc3738808a84be7d2bb4119a8cf5c641b",
+     "scattered": "185fb9b6bdd7844c89e4971b2f12d084b66520d6a068c5f7210888e01fe7784e",
+     "barrier": "faef9d785ffafb1a5f0fe3d4296520e283049409a85d11d8eacf65c065c98323"
+    },
+    "generation": {
+     "train": {
+      "candidates": 9,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 12,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 27,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 58,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "3": {
+    "hashes": {
+     "train": "91edc20e6bdaeec2100acb3acdaf0c2b218c283cc86bd53cab5f2dc0bd758a5e",
+     "dev": "3d01f9b69840839d5a655418f71919ae3b2c5c97b2a323a526fa3c9725febb10",
+     "heldout": "3e1aa4eab56978269e9d281fc2203a9a31ccdf535c555180581170ded2863ef7"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "a6d367d1f2895b9f6b5462452c98f99aae51e4e2c7271c9b66fafab5bd655908",
+     "dev": "0cbc3c6effc99481bddb717c8b4250edbf91ae05d8004b2cc4777bcabc3a96a4",
+     "scattered": "aae07f78201ed6f8cac7ea8f9bb2055fda18c18ce8ff1ba0e80445e2c2c759fe",
+     "barrier": "c788867961efdccab49566f130aa5c307ee34c49c178134322854b97eef3c0bb"
+    },
+    "generation": {
+     "train": {
+      "candidates": 12,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 20,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 52,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 147,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "4": {
+    "hashes": {
+     "train": "db1ccd0fa84cd0b1ae56833e455aa20a6affd58377455ef5aeaa70750e1bedf0",
+     "dev": "1dc11fa19477e54be1e5a3ff39a877d9e26a92ad9c25774a4abea055f2719308",
+     "heldout": "4c8421c6e3e862811924d91e2ceba53079e7e9a0c6abb47492893331c8cf7bd5"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "6aca0c8c37c81a2dee305d04b47f75267d15cd3ce74eef86e8958a160d100427",
+     "dev": "3cda1cb070c0c32de7e40e6ee089d5de987d482d4a525fdf9d2f1252b6103f79",
+     "scattered": "1f6c758f3167ae797838ca287f30498cc7ed9476e89f6211cd38064127fe8b36",
+     "barrier": "ed0e4d9532c6bb9a0e38a99424ff5b3f703b763589a9a2eeb949da7bdf5b3d30"
+    },
+    "generation": {
+     "train": {
+      "candidates": 10,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 18,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 39,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 59,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "5": {
+    "hashes": {
+     "train": "c4cdf793667bf04bc0dcc7de40c1b1aa39d9a82d8a852d45f02421735ef2287d",
+     "dev": "e142daec80005242b4ad7068216ca452f370bde29310ae7191b26c82af85d5cf",
+     "heldout": "bc8a365dcf634b4343629de7051cb4ad829ed6077e84806d294a90a047a54226"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "577d75f1870e6c7fa91a26450aa5eb9399991cebd98bcbaad91e97a1748682dc",
+     "dev": "96315d172ec1e948c76f0200f20157f32dfa805b566fa235481f757ace4e8523",
+     "scattered": "81d380041f20539c0fb427072ef4090c40aff6f1ab0c3405dcf4d749d603e82b",
+     "barrier": "d43159c5c7b5e7beae48e34045188652b47ec416f07ddad3f3a6a9cc4788df5e"
+    },
+    "generation": {
+     "train": {
+      "candidates": 12,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 19,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 53,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 51,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "6": {
+    "hashes": {
+     "train": "85a66e2a9dfc20ce28524ec4c2045f5468bb7ba1e10696f0cb3756fdb7ec4887",
+     "dev": "fa529b860fe6bbbb268c84ad45044e5c054dfd06a9521587a97bafef001ea9ee",
+     "heldout": "250724039e0331e1202267742cd1e585206ddde34a7619540de3cc721d445df2"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "9b79c2efbaf074c7d10350a289ad9170d8602a18bd562f999d07fd9e4cb7daa9",
+     "dev": "28bf9126883f0e8492049e0b9028c875fd9d0b02e31cb6b1b17811c1b58f274d",
+     "scattered": "765ffd193b0bfb4a04a78ade252b8c385ba18a7ccbf40d257ff9dd9c0436d07d",
+     "barrier": "edcacf18f4cabc2403bba67886e098d5a3225924e4a8c944941e43afc4b9dc59"
+    },
+    "generation": {
+     "train": {
+      "candidates": 11,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 18,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 68,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 141,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "7": {
+    "hashes": {
+     "train": "e95e40e4f569e4cd600a5b5d7488b08e6293fef9f6709d3cf4caf008e9829f8a",
+     "dev": "9081ee71e05f6a6248c0a1103197942e325ec86560f11a5c5fa104f6f4e987a9",
+     "heldout": "4ebca75dc1636adbd32899ed45520beaa89403fd095d01a2aadffe15886f82ac"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "ff6cb4e518fe9fc295a9f7e6761f908ff5970d28471efea2a327ef53f84b2246",
+     "dev": "d94be2f0761467ffc3119aab63fa7e8617959239e86f490f1c2c10a9eaf3088a",
+     "scattered": "0ebbfae11441ebd31b08d8e0781569c492bf490e7159f2e4ed608cc4d8a68d6d",
+     "barrier": "d47f2f2cfa9add37f9a47d2b35a7f56bff57f826baab6ac01155fd5830a2f109"
+    },
+    "generation": {
+     "train": {
+      "candidates": 8,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 11,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 43,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 42,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "8": {
+    "hashes": {
+     "train": "787b1ee977b1342b758542eb01e273e938a0d27313482b91e4e04431798eeddf",
+     "dev": "8975ec544f2f3105f28ae1870c47a2ab046a84ba3f811afb25a582df8b3ede15",
+     "heldout": "754886343c147a3c3619133adeb02e09bc4c2e7815978407ac92ed084885af45"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "155d957e3dfba9d4343fe2b847e48cf2576c142d392d0d7e40fa70412da0aab2",
+     "dev": "2c59b77825f417a8806e753beb786ce017dc96b0a96cca58e2ea21b768fec314",
+     "scattered": "3ba1bed4fbd7cc77a518effb718c4647edde5cdabc6cef66be90823246d273d5",
+     "barrier": "486a79cf9180bd1da340d797fd4d32022a89888efe0a89518872f9046c6e0302"
+    },
+    "generation": {
+     "train": {
+      "candidates": 9,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 10,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 40,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 22,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "9": {
+    "hashes": {
+     "train": "4e916552344fc532c484769fd6c32349827653f5017d18da956729e8f52ba298",
+     "dev": "9db6266ab400e956fca07916d30eb3d05f6aa3e49be38d339e914e28763c7d3f",
+     "heldout": "a5e8052b67de8c64f920f710940c7e3c0a0e6348dd6dc1bd9bd25ab436891586"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "c8f292991d638e8db12ffeced479ad693c219a07b3850bc6d8967ee22473c464",
+     "dev": "735af8179748a2ba418bbbb05ed95154b13f3e1680afa2b55f9c162faad619ce",
+     "scattered": "4a4472c4b977b9b8e420257de6139f7b24e7e8f42664ac52f2de48e991f2cc8d",
+     "barrier": "d2e3d6f619234f9068380415f7e01499624483efd7cc948446aa54733ef29133"
+    },
+    "generation": {
+     "train": {
+      "candidates": 10,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 17,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 64,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 64,
+      "oracleQueries": 12
+     }
+    }
+   },
+   "10": {
+    "hashes": {
+     "train": "c8da0fc65ae6dbe9b4716d9d337ee820d5ab7aee8f004b0f8651c4f3920be11a",
+     "dev": "1ccc4918579ba10035c610c7ecee19c4c1cd23f8b62a24b23074b0e2e37aefdd",
+     "heldout": "db7b18f9d9b46f9ce5f55c4d6a8b4d2308ac75679762212e8ca5e581bb002282"
+    },
+    "counts": {
+     "train": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "dev": {
+      "tasks": 12,
+      "uniqueStructures": 12,
+      "duplicates": 0
+     },
+     "heldout": {
+      "tasks": 24,
+      "uniqueStructures": 24,
+      "duplicates": 0
+     }
+    },
+    "familyHashes": {
+     "train": "734a377ad070d9540550bf083ddae8956eeb96eec5171341cbee0b386368f8ba",
+     "dev": "25a537619e5c0940502cf47a34eb84dd9c4b9a178b7fecc342fc90a058cc87fb",
+     "scattered": "fb45061fa6012a83cf9d1bce4d0310bb61ba4da516e0f6cff7aedad74ba43ab8",
+     "barrier": "a61191a532b543906e1683cc5e33a3ea05c0afe4f1f04ac143cd13cfb40a7aed"
+    },
+    "generation": {
+     "train": {
+      "candidates": 10,
+      "oracleQueries": 12
+     },
+     "dev": {
+      "candidates": 16,
+      "oracleQueries": 12
+     },
+     "scattered": {
+      "candidates": 20,
+      "oracleQueries": 12
+     },
+     "barrier": {
+      "candidates": 90,
+      "oracleQueries": 12
+     }
+    }
+   }
+  },
+  "dynamics": "one-drop-v1"
+ },
+ "budgets": {
+  "trainDecisionsPerArm": 0,
+  "onlineOracleQueries": 0,
+  "repeats": 3
+ },
+ "metrics": {
+  "success": "higher"
+ },
+ "baseline": "goal-blind-random",
+ "runs": [
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 1,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.006380619999999993,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 1,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0019961590000000056,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 1,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0017422930000000178,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 1,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008083239999999989,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 1,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0035190100000000086,
+   "scores": {
+    "success": 0.9166666666666666,
+    "deliveries": 33,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 1,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.002416897000000006,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 1,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0017877780000000029,
+   "scores": {
+    "success": 0.8333333333333334,
+    "deliveries": 30,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 1,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007757819999999924,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 2,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0017605869999999869,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 264,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 2,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00043481400000001713,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 264,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 2,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.000718356,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 264,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 2,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0005092939999999828,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 264,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 2,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0015674759999999993,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 2,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0005225189999999884,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 2,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0012476359999999999,
+   "scores": {
+    "success": 0.9166666666666666,
+    "deliveries": 33,
+    "episodes": 36,
+    "decisions": 336,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 2,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0014964929999999868,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 330,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 3,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.000837268000000023,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 324,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 3,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00045730600000001685,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 324,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 3,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0011156389999999873,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 318,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 3,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00046595199999998726,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 318,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 3,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007608649999999954,
+   "scores": {
+    "success": 0.8333333333333334,
+    "deliveries": 30,
+    "episodes": 36,
+    "decisions": 318,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 3,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008086339999999837,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 318,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 3,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0012428879999999936,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 3,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0005917879999999798,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 4,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0015482400000000212,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 312,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 4,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008896959999999865,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 312,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 4,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0009157749999999965,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 264,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 4,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0003985160000000008,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 264,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 4,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0012479669999999885,
+   "scores": {
+    "success": 0.75,
+    "deliveries": 27,
+    "episodes": 36,
+    "decisions": 312,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 4,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007991169999999955,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 312,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 4,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008174599999999828,
+   "scores": {
+    "success": 0.9166666666666666,
+    "deliveries": 33,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 4,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0006320539999999824,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 296,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 5,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008131919999999866,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 5,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00040530899999998836,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 278,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 5,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.000498864999999995,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 5,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0003837979999999845,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 5,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007757530000000088,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 336,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 5,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.000977090000000004,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 336,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 5,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007693710000000066,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 5,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004033550000000048,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 6,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0015967109999999991,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 306,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 6,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004765720000000044,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 306,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 6,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0005990119999999876,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 6,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00028394099999999866,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 6,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0005659800000000246,
+   "scores": {
+    "success": 0.8333333333333334,
+    "deliveries": 30,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 6,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0003429229999999848,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 6,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008061399999999992,
+   "scores": {
+    "success": 0.75,
+    "deliveries": 27,
+    "episodes": 36,
+    "decisions": 312,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 6,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004249759999999867,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 312,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 7,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008102369999999724,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 7,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004161799999999971,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 7,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.001020981000000006,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 258,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 7,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0006637130000000297,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 258,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 7,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0008541490000000067,
+   "scores": {
+    "success": 0.8333333333333334,
+    "deliveries": 30,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 7,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0005682539999999676,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 7,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0010072560000000408,
+   "scores": {
+    "success": 0.8333333333333334,
+    "deliveries": 30,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 7,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0006760759999999663,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 8,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007114129999999932,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 234,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 8,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0002657570000000078,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 234,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 8,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004199459999999817,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 240,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 8,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0002761169999999993,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 240,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 8,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0009357630000000086,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 342,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 8,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004018520000000194,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 342,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 8,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0011779359999999884,
+   "scores": {
+    "success": 0.8333333333333334,
+    "deliveries": 30,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 8,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004215389999999957,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 9,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007138170000000059,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 318,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 9,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0004340029999999615,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 318,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 9,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0009062880000000178,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 9,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0003068249999999466,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 9,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.000633326000000011,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 9,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0003655949999999848,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 300,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 9,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0009522230000000036,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 9,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0010389850000000252,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 294,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 10,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007065630000000169,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 10,
+   "split": "train",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00037431100000003426,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 10,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0006299600000000396,
+   "scores": {
+    "success": 1,
+    "deliveries": 36,
+    "episodes": 36,
+    "decisions": 342,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 10,
+   "split": "dev",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.00044574499999998807,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 342,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 10,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0009123389999999745,
+   "scores": {
+    "success": 0.5833333333333334,
+    "deliveries": 21,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 10,
+   "split": "scattered",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.001137028999999984,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 288,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "public-maze-heuristic",
+   "seed": 10,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.001067528999999979,
+   "scores": {
+    "success": 0.9166666666666666,
+    "deliveries": 33,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 2,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  },
+  {
+   "arm": "goal-blind-random",
+   "seed": 10,
+   "split": "barrier",
+   "status": "ok",
+   "reason": null,
+   "seconds": 0.0007061419999999998,
+   "scores": {
+    "success": 0,
+    "deliveries": 0,
+    "episodes": 36,
+    "decisions": 282,
+    "maxGoalsPerRepeat": 0,
+    "goalBlindCeiling": 0.5
+   },
+   "checkpoint": null
+  }
+ ]
+}

@@ -260,3 +260,10 @@ Reviewed baseline: main at 49e2c6f1; checked AGENTS.md, INDEX.md, #120/#136, imp
   - The hidden-layer effect is confounded by the |h|² step normaliser.
   - HOLD M1–M8; no claims.tsv change.
 - **Next:** a step normaliser independent of hidden width, ≥ 20 seeds or fewer contrasts, a family where one memorised route cannot reach 1/k, then independent heldout families (#112/#153/#154).
+
+## M0c fixture audit — independent counterfactual goal layouts (2026-11-25)
+
+- **Source and review:** main af40c8d, the proposed PR #215 at f11de9c, and PR #214 at e271ab8. The fixture [protocol](m0c-independent-goal-pairs-protocol-2026-11-25.md) is pinned at a2970d5. Existing issues #112, #153 and #154 cover the follow-up.
+- **Attack:** goal masking can leak through a goal-specific start, clock, action mask or random seed. Multiple drops also let one blind route try both targets. Paired starts, geometry, clocks and action RNG are identical. Scoring stops at the first carrying drop, and rejects different masked action traces. An independent simulator search checks for tied shortest directions that could invalidate exclusivity.
+- **Evidence:** [fixture results](m0c-independent-goal-pairs-results-2026-11-25.md), 10 seeds and 80 status rows. Both walled topologies cleared 50% public-heuristic completion. All 480 offline oracle checks passed; the random control got zero deliveries. Node construction, structural, credit and option regressions passed with lint, index, code blocks, claims and result-schema checks.
+- **Limits and next falsifier:** the heuristic and offset adapter are engineered. Public diagnostic fixtures and tight horizons leave broader transfer and recovery untested. Compare learned absolute, relative and masked arms under a frozen, matched protocol with externally held layouts. No claim change. M1–M8 HOLD.

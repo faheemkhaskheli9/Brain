@@ -164,6 +164,11 @@ jobs:
           node game/world/test_stateful_structural.mjs
           node game/world/stateful_construct_controls.mjs 1 --protocol scattered-to-barrier --train-steps 17 --train-tasks 4 --dev-tasks 3 --eval-tasks 3 --repeats 1 --out /tmp/m0c-stress-smoke.json
           python research/result_schema.py --check /tmp/m0c-stress-smoke.json
+      - name: M0c counterfactual goal pairs and independent topology fixtures (#112)
+        run: |
+          node game/world/test_stateful_goal_pairs.mjs
+          node game/world/stateful_goal_pairs.mjs /tmp/m0c-goal-pairs-smoke.json 1 2
+          python research/result_schema.py --check /tmp/m0c-goal-pairs-smoke.json
       - name: M0c fixed-task exploration/credit probe and frozen feedback tests
         run: |
           node game/world/test_stateful_calibration.mjs
