@@ -28,7 +28,7 @@ function draw(R, pool) {
   return pool.splice(randomIndex(R, pool.length), 1)[0];
 }
 
-function candidate(R, family, split, seed, index) {
+export function drawStructuralCandidate(R, family, split, seed, index) {
   let walls = [], start, item, goal;
   if (family === "scattered") {
     const pool = cells(), count = 2 + randomIndex(R, 5);
@@ -75,7 +75,7 @@ export function generateStructural(seed, split, family, n = 24, seen = new Set()
   while (tasks.length < n) {
     if (++stats.attempted > n * 200)
       throw new Error("structural generator exhausted unique feasible candidates");
-    const task = candidate(R, family, split, seed, tasks.length);
+    const task = drawStructuralCandidate(R, family, split, seed, tasks.length);
     if (!task) { stats.invalidRejected++; continue; }
     const id = physicalFingerprint(task);
     if (seen.has(id)) { stats.duplicateRejected++; continue; }
